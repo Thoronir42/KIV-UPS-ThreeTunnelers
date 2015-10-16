@@ -64,17 +64,14 @@ public class Engine extends Application {
         ATunnelersStage newStage;
         switch(stageReturn){
             case ATunnelersStage.CLOSE:
-                System.out.println("Nice exit.");
                 Runtime.getRuntime().exit(0);
                 break;
             case ATunnelersStage.CHANGE_TO_GAME:
-                System.out.println("Going to game now");
                 MenuStage oldStage = (MenuStage)this.getStage();
                  newStage = new GameStage(oldStage.getReturnNetworks());
                 this.changeStage(newStage);                
                 break;
             case ATunnelersStage.CHANGE_TO_MENU:
-                System.out.println("Going to menu now");
                 newStage = MenuStage.getInstance();
                 newStage.changeScene(MainMenuScene.class);
                 this.changeStage(newStage);

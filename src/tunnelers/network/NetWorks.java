@@ -39,8 +39,7 @@ public class NetWorks extends Thread{
     synchronized public void sendMessage(String message){
         try{
             byte[] buffer = message.getBytes();
-
-            System.out.format(" Odesilam data (%d)%n", message.length());
+            
             DatagramPacket send = new DatagramPacket(buffer, buffer.length, address, port);
             datagramSocket.send(send);
         } catch (IOException e ){
@@ -54,8 +53,6 @@ public class NetWorks extends Thread{
             DatagramPacket recv = new DatagramPacket(buffer, buffer.length );
             datagramSocket.receive( recv );
             String data = new String( buffer );
-            System.out.format( "Datain:\t%s%n", data);
-            System.out.println("Networks received message "+data);
             if(this.runner != null){
                 
                 this.runner.passMessage(data);
@@ -73,7 +70,6 @@ public class NetWorks extends Thread{
         this.communicationRelevant = true;
         while(communicationRelevant){
             handleMessage();
-            System.out.println("Message handled");
         }
     }
     

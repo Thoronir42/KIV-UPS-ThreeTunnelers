@@ -46,7 +46,8 @@ public class JoinScene extends AMenuScene{
     }
 
     protected TextField tf_adress,
-                      tf_port;
+                        tf_port,
+                        tf_clientName;
     
     public JoinScene(Parent root, double width, double height) {
         super(root, width, height, "Join Game");
@@ -70,11 +71,18 @@ public class JoinScene extends AMenuScene{
         next = scene.tf_port = new TextField(String.valueOf(settings.getDefaultPort()));
         root.add(next, 1, 1);
         
+        next = new Label("Client name:");
+        root.add(next, 0, 2);
+        
+        next = scene.tf_clientName = new TextField("Faggot");
+        root.add(next, 1, 2);
+        
+        
         next = new Button("Connect!");
         ((Button)next).setOnAction((ActionEvent event) -> {
             scene.connect();
         });
-        root.add(next, 0, 2);
+        root.add(next, 0, 3);
     }
     
     private void connect(){

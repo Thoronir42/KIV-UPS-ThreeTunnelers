@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import tunnelers.network.NetWorks;
@@ -71,6 +72,11 @@ public class LobbyScene extends AGameScene{
         
         next = scene.tf_chatIn = new TextField();
         root.add(next, 0, 1);
+        next.setOnKeyPressed((KeyEvent event) -> {
+            if(event.getCode() == KeyCode.ENTER){
+                scene.handleKeyPressed(KeyCode.ENTER);
+            }
+        });
         
         next = new Button("Send");
         ((Button)next).setOnAction((ActionEvent event) -> {

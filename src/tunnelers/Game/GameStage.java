@@ -14,10 +14,10 @@ import tunnelers.network.NetWorks;
 public class GameStage extends ATunnelersStage{
 
     protected NetWorks networks;
+    protected GameChat chatbox;
     
     public GameStage(NetWorks networks) {
         this.networks = networks;
-        this.setScene(LobbyScene.getInstance(networks));
         this.networks.setHandleMessage(new MessagePasser(){
             @Override
             public void run(){
@@ -25,6 +25,8 @@ public class GameStage extends ATunnelersStage{
                 handleNetworkCommand(this.getMessage());
             }
         });
+        this.setScene(LobbyScene.getInstance(networks));
+        this.chatbox = new GameChat();
         this.networks.start();
     }
 
