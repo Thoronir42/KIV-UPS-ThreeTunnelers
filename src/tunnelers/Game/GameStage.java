@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import tunnelers.ATunnelersStage;
 import tunnelers.network.MessagePasser;
 import tunnelers.network.NetWorks;
+import tunnelers.structure.Player;
 
 /**
  *
@@ -14,19 +15,18 @@ import tunnelers.network.NetWorks;
 public class GameStage extends ATunnelersStage{
 
     protected NetWorks networks;
-    protected GameChat chatbox;
+    protected GameChat gamechat;
     
     public GameStage(NetWorks networks) {
         this.networks = networks;
         this.networks.setHandleMessage(new MessagePasser(){
             @Override
             public void run(){
-                System.out.println("Stage received message "+this.getMessage());
                 handleNetworkCommand(this.getMessage());
             }
         });
         this.setScene(LobbyScene.getInstance(networks));
-        this.chatbox = new GameChat();
+        this.gamechat = new GameChat();
         this.networks.start();
     }
 
@@ -62,9 +62,23 @@ public class GameStage extends ATunnelersStage{
     protected NetWorks getNetworks(){
         return this.networks;
     }
+    protected GameChat getGamechat(){
+        return this.gamechat;
+    }
     
     public void handleNetworkCommand(String command){
         AGameScene scene = (AGameScene)this.getScene();
+        switch("message"){
+            default:
+                System.err.println("Incomming command not recognised");
+                break;
+            case "message":
+                String[] segs = command.split(":");
+                this.gamechat.addMessage(new Player(segs[0]), segs[1]);
+                ((AGameScene)this.getScene()).updateChatbox();
+                break;
+        }
+        
         scene.handleNetworkCommand(command);
     }
     

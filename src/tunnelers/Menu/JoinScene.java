@@ -86,11 +86,12 @@ public class JoinScene extends AMenuScene{
     }
     
     private void connect(){
-        String address = tf_adress.getText();
+        String address = tf_adress.getText(),
+               client = tf_clientName.getText();
         int port = Integer.parseInt(tf_port.getText());
         System.out.format("Connecting to: %s:%d%n", address, port);
         try{
-            NetWorks nw = new NetWorks(address, port);
+            NetWorks nw = new NetWorks(address, port, client);
             getStage().gotoLobby(nw);
         } catch (IOException e) {
             System.err.println(e.getMessage());

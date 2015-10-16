@@ -50,7 +50,7 @@ public class BackServer extends Thread
     }
     synchronized public void sendMessage(String text) throws IOException{
         byte[] buffer = text.getBytes();
-        System.out.print("Odesilam = "+text+" o velikosti "+buffer.length+" \n");
+        System.out.print(">>> "+text+" ("+buffer.length+") \n");
         
         InetAddress adresa = lastReceived.getAddress();
         int port = lastReceived.getPort();

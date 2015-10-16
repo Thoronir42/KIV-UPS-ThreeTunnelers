@@ -20,10 +20,11 @@ public class Player {
     private Color color;
     private Tank tank;
     
-    public Player(String name) throws PlayerException{
+    public Player(String name){
+    //public Player(String name) throws PlayerException{
         int newID = num_of_instances + 1;
         if(newID > Settings.MAX_PLAYERS){
-            throw new PlayerException(newID);
+            //throw new PlayerException(newID);
         }
         this.playerID = num_of_instances = newID;
         this.name = name;

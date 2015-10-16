@@ -100,6 +100,10 @@ public class LobbyScene extends AGameScene{
                 break;
         }
     }
-    
-    
+
+    @Override
+    public void updateChatbox() {
+        GameStage stage = this.getStage();
+        this.ta_chatBox.setText(stage.getGamechat().getLog());
+    }    
 }

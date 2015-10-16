@@ -17,14 +17,15 @@ public class NetWorks extends Thread{
     private static final int BUFFER_SIZE = 64;
     
     private final DatagramSocket datagramSocket;
-    InetAddress address;
-    int port;
+    InetAddress address;        int port;
+    String clientName;
     private boolean communicationRelevant;
     private MessagePasser runner;
     
-    public NetWorks(String adress, int port) throws IOException{
+    public NetWorks(String adress, int port, String clientName) throws IOException{
         this.address = InetAddress.getByName(adress);
         this.port = port;
+        this.clientName = clientName;
         this.datagramSocket = new DatagramSocket( );
     }
     
@@ -38,7 +39,7 @@ public class NetWorks extends Thread{
     
     synchronized public void sendMessage(String message){
         try{
-            byte[] buffer = message.getBytes();
+            byte[] buffer = (clientName+":"+message).getBytes();
             
             DatagramPacket send = new DatagramPacket(buffer, buffer.length, address, port);
             datagramSocket.send(send);
@@ -54,9 +55,8 @@ public class NetWorks extends Thread{
             datagramSocket.receive( recv );
             String data = new String( buffer );
             if(this.runner != null){
-                
                 this.runner.passMessage(data);
-                
+                System.out.println("Passing: "+data);
             } else {
                 System.err.format("\"%s\" was not handled, no handler found.%n", data);
             }

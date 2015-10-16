@@ -31,4 +31,6 @@ public abstract class AGameScene extends ATunnelersScene{
     
     abstract void handleNetworkCommand(String command);
     
+    abstract void updateChatbox();
+    
 }

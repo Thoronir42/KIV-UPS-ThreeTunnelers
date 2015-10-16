@@ -55,6 +55,10 @@ public class Engine extends Application {
         stage.setOnHidden((WindowEvent event) -> {
             stageHidden(stage.getReturnCode());
         });
+        
+        stage.setResizable(false);
+        
+        
         this.currentStage = stage;
         this.currentStage.show();
     }
