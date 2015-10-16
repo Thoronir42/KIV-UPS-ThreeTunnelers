@@ -9,7 +9,7 @@ import tunnelers.structure.Player;
  */
 public class GameChat {
     
-    private final int MAX_MESSAGES = 36;
+    private final int MAX_MESSAGES = 12;
     
     private ChatMessage[] messages;
     private int messageTop = 0;
@@ -28,12 +28,19 @@ public class GameChat {
     public String getLog(){
         String chatLog = "";
         int i = messageTop - 1;
-        
-        while(i != messageTop && messages[i] != null){
-            chatLog = messages[i].toString() + "\n" + chatLog;
-            if(--i < 0){
-                i = messageTop - 1;
+        int msgCount = 0;
+        try{
+            while(i != messageTop && messages[i] != null){
+                chatLog = i +" "+ messages[i].toString() + "\n" + chatLog;
+                msgCount++;
+                if(--i < 0){
+                    i = MAX_MESSAGES - 1;
+                }
             }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println(msgCount+"/"+i+"/"+MAX_MESSAGES);
         }
         
         return chatLog;

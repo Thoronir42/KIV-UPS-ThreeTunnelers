@@ -1,6 +1,8 @@
 package tunnelers.Menu;
 
 import javafx.event.ActionEvent;
+import javafx.geometry.NodeOrientation;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
@@ -34,13 +36,14 @@ public class MainMenuScene extends AMenuScene{
             createButton(scene, "joinGame"),
             createButton(scene, "settings"),
             createButton(scene, "exit"),
-            
         };
         
         
         for(int i = 0; i < buttons.length; i++){
-            root.add(buttons[i], i, i);
+            root.add(buttons[i], 0, i);
         }
+        root.setAlignment(Pos.CENTER);
+        root.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
         return scene;
         
     }

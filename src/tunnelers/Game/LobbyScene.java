@@ -66,7 +66,10 @@ public class LobbyScene extends AGameScene{
     
     private static void addComponents(GridPane root, LobbyScene scene){
         Node next = scene.ta_chatBox = new TextArea("Mlehh");
-        next.setDisable(true);
+        scene.ta_chatBox.setWrapText(true);
+        scene.ta_chatBox.setPrefColumnCount(40);
+        scene.ta_chatBox.setPrefRowCount(10);
+        //next.setDisable(true);
         
         root.add(next, 0, 0);
         

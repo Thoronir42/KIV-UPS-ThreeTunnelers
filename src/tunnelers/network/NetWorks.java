@@ -56,7 +56,7 @@ public class NetWorks extends Thread{
             String data = new String( buffer );
             if(this.runner != null){
                 this.runner.passMessage(data);
-                System.out.println("Passing: "+data);
+                
             } else {
                 System.err.format("\"%s\" was not handled, no handler found.%n", data);
             }
@@ -75,6 +75,8 @@ public class NetWorks extends Thread{
     
     synchronized public void endCommunication(){
         this.communicationRelevant = false;
+        super.interrupt();
+        this.datagramSocket.close();
     }
     
     

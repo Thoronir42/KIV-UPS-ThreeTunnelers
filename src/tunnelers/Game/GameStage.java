@@ -39,6 +39,7 @@ public class GameStage extends ATunnelersStage{
     public void exit() {
         try {
             this.networks.endCommunication();
+            this.networks.interrupt();
             this.networks.join();
             System.out.println("NetWorks ended succesfully");
             super.exit();
@@ -68,11 +69,11 @@ public class GameStage extends ATunnelersStage{
     
     public void handleNetworkCommand(String command){
         AGameScene scene = (AGameScene)this.getScene();
-        switch("message"){
+        switch(0){
             default:
                 System.err.println("Incomming command not recognised");
                 break;
-            case "message":
+            case 0:
                 String[] segs = command.split(":");
                 this.gamechat.addMessage(new Player(segs[0]), segs[1]);
                 ((AGameScene)this.getScene()).updateChatbox();
