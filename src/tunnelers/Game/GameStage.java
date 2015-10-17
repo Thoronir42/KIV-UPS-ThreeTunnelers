@@ -80,7 +80,7 @@ public class GameStage extends ATunnelersStage{
                 break;
         }
         
-        scene.handleNetworkCommand(command);
+        
     }
     
 }

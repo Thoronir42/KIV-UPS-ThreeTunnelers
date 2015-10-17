@@ -56,20 +56,13 @@ public class LobbyScene extends AGameScene{
     public LobbyScene(Parent root, double width, double height) {
         super(root, width, height, "Join Game");
     }
-
-    @Override
-    void handleNetworkCommand(String command) {
-        this.ta_chatBox.setText(command);
-    }
-    
-    
     
     private static void addComponents(GridPane root, LobbyScene scene){
-        Node next = scene.ta_chatBox = new TextArea("Mlehh");
+        Node next = scene.ta_chatBox = new TextArea();
         scene.ta_chatBox.setWrapText(true);
         scene.ta_chatBox.setPrefColumnCount(40);
         scene.ta_chatBox.setPrefRowCount(10);
-        //next.setDisable(true);
+        next.setDisable(true);
         
         root.add(next, 0, 0);
         

@@ -29,8 +29,6 @@ public abstract class AGameScene extends ATunnelersScene{
         this.getStage().getNetworks().sendMessage(message);
     }
     
-    abstract void handleNetworkCommand(String command);
-    
     abstract void updateChatbox();
     
 }
