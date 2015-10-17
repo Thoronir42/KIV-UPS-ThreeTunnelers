@@ -1,5 +1,7 @@
 package tunnelers.Game;
 
+import generic.CyclicArray;
+import java.util.Iterator;
 import javafx.scene.paint.Color;
 import tunnelers.structure.Player;
 
@@ -9,40 +11,30 @@ import tunnelers.structure.Player;
  */
 public class GameChat {
     
-    private final int MAX_MESSAGES = 12;
+    private final int MAX_MESSAGES = 6;
     
-    private ChatMessage[] messages;
-    private int messageTop = 0;
+    private final CyclicArray<ChatMessage> messages;
     public GameChat(){
-         messages = new ChatMessage[MAX_MESSAGES];
+         messages = new CyclicArray<>(ChatMessage.class, MAX_MESSAGES);
     }
     
     public void addMessage(Player p, String text){
         ChatMessage message = new ChatMessage(p, text);
-        messages[messageTop++] = message;
-        if(messageTop >= MAX_MESSAGES){
-            messageTop = 0;
-        }
+        addMessage(message);
+    }
+    
+    public void addMessage(ChatMessage message){
+        this.messages.add(message);
     }
     
     public String getLog(){
-        String chatLog = "";
-        int i = messageTop - 1;
-        int msgCount = 0;
-        try{
-            while(i != messageTop && messages[i] != null){
-                chatLog = i +" "+ messages[i].toString() + "\n" + chatLog;
-                msgCount++;
-                if(--i < 0){
-                    i = MAX_MESSAGES - 1;
-                }
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
-        } finally {
-            System.out.println(msgCount+"/"+i+"/"+MAX_MESSAGES);
+        String chatLog = ""; int msgCount = 0;
+        Iterator it = this.messages.iterator();
+        while(it.hasNext()){
+            chatLog = (++msgCount) +" "+ it.next().toString() + "\n" + chatLog;
+            
         }
-        
+        System.out.println(msgCount+"/"+MAX_MESSAGES);
         return chatLog;
     }
 }
