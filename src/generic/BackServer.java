@@ -4,36 +4,48 @@ import java.net.*;
 import java.io.*;
 import java.util.Scanner;
 
-//	-Djava.net.preferIPv4Stack=true
 public class BackServer extends Thread
 {
-    private static final int BUFFER_SIZE = 60; 
+    private static final int BUFFER_SIZE = 60;
     
     DatagramSocket ds;    
-    
     private DatagramPacket lastReceived;
-    
-    public boolean cont;
     
     @Override
     public void run(){
         try {
             ds = new DatagramSocket( tunnelers.structure.Settings.DEFAULT_PORT );
             
-            cont = true;
-            while (cont) {
+            while (true) {
                 System.out.format("Serverrr (%s:%d) ceka...%n", InetAddress.getLocalHost().getHostAddress(), ds.getLocalPort());
                 
                 String data = receiveMessage();
                 System.out.println( ">> "+data);
                 
-                if(!data.contains(":")){
-                    data = "NA:"+data;
-                }
-                sendMessage(data);
+                String reply = processData(data);
+                
+                sendMessage(reply);
             }
         } catch (Exception e) {
             System.err.println("Receiving message failed: " + e.getLocalizedMessage());
+        }
+    }
+    
+    private String processData(String input){
+        if(!input.contains(":")){ input = "NA:"+input; }
+        String[] segs = input.split(":");
+        return "SRV:" + replyFor(segs[1].trim());
+        
+    }
+    private String replyFor(String message){
+        System.out.format(">> Proccessing message '%s'...", message);
+        switch(message){
+            default:
+                System.out.println(" it's not recognised.");
+                return message;
+            case "handshake-rq":
+                System.out.println(" it's a handshake request.");
+                return "handshake-ok";
         }
     }
     
@@ -61,7 +73,6 @@ public class BackServer extends Thread
     
     synchronized public void stopServer() throws InterruptedException{
         super.interrupt();
-        this.cont = false;
         this.ds.close();
     }
     

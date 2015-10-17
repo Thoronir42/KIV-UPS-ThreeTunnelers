@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import javafx.event.Event;
 
 
 
@@ -22,19 +21,29 @@ public class NetWorks extends Thread{
     private boolean communicationRelevant;
     private MessagePasser runner;
     
-    public NetWorks(String adress, int port, String clientName) throws IOException{
+    public NetWorks(String adress, int port, String clientName) throws IOException, NetworksException{
         this.address = InetAddress.getByName(adress);
         this.port = port;
         this.clientName = clientName;
         this.datagramSocket = new DatagramSocket( );
+        if (!this.handshake()){
+            throw new NetworksException("Handshake failed");
+        }
+    }
+    
+    public void issueCommand(INetworkCommand cmd){
+        sendMessage(cmd.getCommandCode());
     }
     
     public void setHandleMessage(MessagePasser r){
         this.runner = r;
     }
     
-    public void issueCommand(INetworkCommand cmd){
-        sendMessage(cmd.getCommandCode());
+    private String receiveMessage() throws IOException{        
+        byte[] buffer = new byte[BUFFER_SIZE];
+        DatagramPacket recv = new DatagramPacket(buffer, buffer.length );
+        datagramSocket.receive( recv );
+        return new String( buffer );
     }
     
     synchronized public void sendMessage(String message){
@@ -44,16 +53,13 @@ public class NetWorks extends Thread{
             DatagramPacket send = new DatagramPacket(buffer, buffer.length, address, port);
             datagramSocket.send(send);
         } catch (IOException e ){
-            System.err.println(e.getMessage());
+            System.err.println("Unable to send network message: "+e.getMessage());
         }
     }
     
     public void handleMessage(){
-        byte[] buffer = new byte[BUFFER_SIZE];
         try{
-            DatagramPacket recv = new DatagramPacket(buffer, buffer.length );
-            datagramSocket.receive( recv );
-            String data = new String( buffer );
+            String data = receiveMessage();
             if(this.runner != null){
                 this.runner.passMessage(data);
                 
@@ -65,6 +71,17 @@ public class NetWorks extends Thread{
         }
     }
 
+    synchronized private boolean handshake(){
+        try{
+            this.sendMessage("handshake-rq");
+            String reply = this.receiveMessage().trim();
+            System.out.println(reply);
+            return reply.equals("SRV:handshake-ok");
+        } catch (IOException e) {
+            return false;
+        }
+    }
+    
     @Override
     public void run() {
         this.communicationRelevant = true;
@@ -77,7 +94,12 @@ public class NetWorks extends Thread{
         this.communicationRelevant = false;
         super.interrupt();
         this.datagramSocket.close();
+    }    
+}
+
+class NetworksException extends IOException{
+
+    NetworksException(String msg) {
+        super(msg);
     }
-    
-    
 }

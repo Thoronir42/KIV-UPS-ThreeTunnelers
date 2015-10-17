@@ -28,13 +28,12 @@ public class GameChat {
     }
     
     public String getLog(){
-        String chatLog = ""; int msgCount = 0;
+        String chatLog = "";
         Iterator it = this.messages.iterator();
         while(it.hasNext()){
-            chatLog = (++msgCount) +" "+ it.next().toString() + "\n" + chatLog;
+            chatLog = it.next().toString() + "\n" + chatLog;
             
         }
-        System.out.println(msgCount+"/"+MAX_MESSAGES);
         return chatLog;
     }
 }
