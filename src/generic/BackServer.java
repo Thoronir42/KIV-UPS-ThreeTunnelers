@@ -22,7 +22,7 @@ public class BackServer extends Thread
             
             cont = true;
             while (cont) {
-                System.out.format("Serverrr (%s:%d) ceka...%n", ds.getLocalSocketAddress(), ds.getLocalPort());
+                System.out.format("Serverrr (%s:%d) ceka...%n", InetAddress.getLocalHost().getHostAddress(), ds.getLocalPort());
                 
                 String data = receiveMessage();
                 System.out.println( ">> "+data);
@@ -33,7 +33,7 @@ public class BackServer extends Thread
                 sendMessage(data);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Receiving message failed: " + e.getLocalizedMessage());
         }
     }
     
@@ -59,18 +59,27 @@ public class BackServer extends Thread
         ds.send( sendX );
     }
     
-    public static void main( String[] args ) throws InterruptedException, IOException
+    synchronized public void stopServer() throws InterruptedException{
+        super.interrupt();
+        this.cont = false;
+        this.ds.close();
+    }
+    
+    public static void main( String[] args )
     {
-        BackServer server = new BackServer();
-        server.start();
-        Scanner sc = new Scanner(System.in);
-        String text;
-        while((text = sc.nextLine())!= "exit"){
-            server.sendMessage("SRV:" + text);
+        try{
+            BackServer server = new BackServer();
+            server.start();
+            Scanner sc = new Scanner(System.in);
+            String text;
+            while(!"exit".equals(text = sc.nextLine())){
+                server.sendMessage("SRV:" + text);
+            }
+            System.out.println("Stopping server");
+            server.stopServer();
+        } catch (InterruptedException | IOException e){
+            System.err.println(e.getMessage());
         }
-        server.cont = false;
-        server.join();
-        
         
     }
 }
