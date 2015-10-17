@@ -1,7 +1,6 @@
 package tunnelers.Menu;
 
 import java.lang.reflect.InvocationTargetException;
-import javafx.stage.WindowEvent;
 import tunnelers.ATunnelersStage;
 import tunnelers.network.NetWorks;
 
@@ -41,7 +40,7 @@ public class MenuStage extends ATunnelersStage {
     }
     
     @Override
-    public void changeScene(Class reqScene){
+    public final void changeScene(Class reqScene){
         AMenuScene scene = classToInstance(reqScene);
         if(scene == null){
             return;

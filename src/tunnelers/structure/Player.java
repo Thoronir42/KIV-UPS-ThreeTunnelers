@@ -9,7 +9,6 @@ import javafx.scene.paint.Color;
  * @author Stepan
  */
 public class Player {
-    
     private static int num_of_instances = 0;
     
     

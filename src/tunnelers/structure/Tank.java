@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
  *
  * @author Stepan
  */
-public class Tank implements GameObject{
+public class Tank implements GameEntity{
 
     private final Color tankColor;
     private Direction direction;
