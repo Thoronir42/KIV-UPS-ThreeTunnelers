@@ -31,7 +31,7 @@ public class NetWorks extends Thread{
         }
     }
     
-    public void issueCommand(INetworkCommand cmd){
+    public void issueCommand(ANetworkCommand cmd){
         sendMessage(cmd.getCommandCode());
     }
     
