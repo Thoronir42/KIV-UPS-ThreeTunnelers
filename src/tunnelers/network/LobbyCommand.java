@@ -9,16 +9,16 @@ public class LobbyCommand extends ANetworkCommand{
     protected static final char AREA_LETTER = 'L';
     
     Action commandAction;
-    int param;
+    Object[] params;
     
-    public LobbyCommand(Action a, int param){
+    public LobbyCommand(Action a, Object[] params){
         this.commandAction = a;
-        this.param = param;
+        this.params = params;
     }
     
     @Override
     public String getCommandCode() {
-        return this.getAreaLetter() + this.getCommandHandle();
+        return this.getAreaLetter() + this.getCommandHandle(); // ...
     }
     
     protected char getAreaLetter(){
@@ -30,25 +30,31 @@ public class LobbyCommand extends ANetworkCommand{
     }
     
     public enum Action{
-        Join("U_THERE"),
-        Disconnect("I_MUST_GO"),
-        Kick("SEE_YA"),
-        ChangeColor("IM_BLU"),
-        IAm("I_AM"),
-        WhoIs("WHO_IS"),
-        Start("LETS_GO"),
+        Join("U_THERE", 0),
+        Disconnect("I_MUST_GO", 0),
+        Kick("SEE_YA", 1),
+        ChangeColor("IM_BLU", 1),
+        IAm("I_AM", 1),
+        WhoIs("WHO_IS", 1),
+        Start("LETS_GO", 0),
         
-        WhoAreYou("WHO_R_U"),
-        PlayerJoined("OTHR_HELLO"),
-        PlayerDisconnected("OTHR_BYE"),
-        PlayerIs("THEY_ARE"),
-        GameStarted("ITS_ON"),
+        WhoAreYou("WHO_R_U", 0),
+        PlayerJoined("OTHR_HELLO", 2),
+        PlayerDisconnected("OTHR_BYE", 1),
+        PlayerIs("THEY_ARE", 2),
+        GameStarted("ITS_ON", 0),
         ;
         
         private String handle;
+        private int paramCount;
         
-        private Action(String handle){
+        private Action(String handle, int paramCount){
             this.handle = handle;
+            this.paramCount = paramCount;
+        }
+        
+        public boolean paramsOk(int n){
+            return n == this.paramCount;
         }
     }
     

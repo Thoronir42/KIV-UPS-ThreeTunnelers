@@ -6,6 +6,9 @@ package tunnelers.network;
  */
 public abstract class ANetworkCommand {
     
+    protected char COMMAND_SPLIT = '|';
+    
+    
     public abstract String getCommandCode();
     
 }
