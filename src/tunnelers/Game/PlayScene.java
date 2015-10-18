@@ -9,29 +9,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import tunnelers.network.NetWorks;
 
 /**
  *
  * @author Stepan
  */
 public class PlayScene extends AGameScene{
-
-    private static PlayScene instance;
-    private NetWorks nw;
     
-    
-    
-    public static PlayScene getInstance(NetWorks nw) throws IllegalStateException{
-        if(instance == null){
-            instance = createInstance();
-        }        
-        if(nw != null){
-            instance.nw = nw;
-        } else if (instance.nw == null){
-            throw new IllegalStateException("Lobby didn't receive NetWorks container and none was previously set.");
-        }
-        return instance;
+    public static PlayScene getInstance(){
+        return createInstance();
     }
     
     private static PlayScene createInstance(){

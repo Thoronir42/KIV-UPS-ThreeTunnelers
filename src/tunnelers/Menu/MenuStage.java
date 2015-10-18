@@ -1,6 +1,6 @@
 package tunnelers.Menu;
 
-import java.lang.reflect.InvocationTargetException;
+
 import tunnelers.ATunnelersStage;
 import tunnelers.network.NetWorks;
 
@@ -37,38 +37,6 @@ public class MenuStage extends ATunnelersStage {
     protected void prevScene(){
         AMenuScene scene = (AMenuScene)this.getScene();
         this.changeScene(scene.getPrevScene());
-    }
-    
-    @Override
-    public final void changeScene(Class reqScene){
-        AMenuScene scene = classToInstance(reqScene);
-        if(scene == null){
-            return;
-        }
-        changeScene(scene);
-    }
-    
-    protected void changeScene(AMenuScene scene){
-        this.setScene(scene);
-        this.setTitle(String.format("%s %s %s",settings.getGameName(), settings.getTitleSeparator(), scene.getName()));
-    }
-    
-    private AMenuScene classToInstance(Class scene){
-        if(scene == null){
-            return null;
-        }
-        if(!AMenuScene.class.isAssignableFrom(scene)){
-            System.out.format("%s not assignable from %s", scene.getSimpleName(), AMenuScene.class.getSimpleName());
-            return null;
-        }
-        try{
-            AMenuScene sceneInstance = (AMenuScene)scene.getDeclaredMethod("getInstance").invoke(null);
-            return sceneInstance;
-        } catch (IllegalAccessException | NoSuchMethodException | 
-                IllegalArgumentException | InvocationTargetException e){
-            System.err.println("Couldn't get instance of new scene: " + e.getMessage());
-        }
-        return null;        
     }
     
     public NetWorks getReturnNetworks(){

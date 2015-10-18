@@ -88,7 +88,7 @@ public class LobbyScene extends AGameScene{
         
         next = new Button("Exit to menu");
         ((Button)next).setOnAction((ActionEvent event) -> {
-            scene.getStage().gotoMenu();
+            scene.getStage().exit();
         });
         root.add(next, 1, 2);
     }

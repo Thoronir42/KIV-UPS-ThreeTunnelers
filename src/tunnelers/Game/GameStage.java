@@ -1,8 +1,10 @@
 package tunnelers.Game;
 
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import tunnelers.ATunnelersScene;
 import tunnelers.ATunnelersStage;
 import tunnelers.network.MessagePasser;
 import tunnelers.network.NetWorks;
@@ -42,22 +44,10 @@ public class GameStage extends ATunnelersStage{
             this.networks.interrupt();
             this.networks.join();
             System.out.println("NetWorks ended succesfully");
-            super.exit();
         } catch (InterruptedException ex) {
             Logger.getLogger(GameStage.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    
-    
-    @Override
-    public void changeScene(Class scene) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    public void gotoMenu(){
-        this.returnValue = CHANGE_TO_MENU;
-        this.close();
+        super.exit(CHANGE_TO_MENU);
     }
     
     protected NetWorks getNetworks(){
@@ -76,11 +66,17 @@ public class GameStage extends ATunnelersStage{
             case 0:
                 String[] segs = command.split(":");
                 this.gamechat.addMessage(new Player(segs[0]), segs[1]);
-                ((AGameScene)this.getScene()).updateChatbox();
+                scene.updateChatbox();
                 break;
         }
-        
-        
     }
+
+    @Override
+    protected void changeScene(ATunnelersScene scene) {
+        super.changeScene(scene);
+        ((AGameScene) scene).updateChatbox();
+    }
+    
+    
     
 }

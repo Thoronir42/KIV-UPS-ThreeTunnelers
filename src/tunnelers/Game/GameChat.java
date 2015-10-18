@@ -11,7 +11,7 @@ import tunnelers.structure.Player;
  */
 public class GameChat {
     
-    private final int MAX_MESSAGES = 6;
+    private final int MAX_MESSAGES = 12;
     
     private final CyclicArray<ChatMessage> messages;
     public GameChat(){
