@@ -8,7 +8,7 @@ import tunnelers.ATunnelersScene;
 import tunnelers.ATunnelersStage;
 import tunnelers.network.MessagePasser;
 import tunnelers.network.NetWorks;
-import tunnelers.structure.Player;
+import tunnelers.Game.structure.Player;
 
 /**
  *

@@ -3,7 +3,7 @@ package tunnelers;
 import java.lang.reflect.InvocationTargetException;
 import javafx.stage.Stage;
 import tunnelers.Menu.AMenuScene;
-import tunnelers.structure.Settings;
+import tunnelers.Game.structure.Settings;
 
 /**
  *

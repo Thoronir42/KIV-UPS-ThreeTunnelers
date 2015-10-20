@@ -1,4 +1,4 @@
-package tunnelers.structure;
+package tunnelers.Game.structure;
 
 
 

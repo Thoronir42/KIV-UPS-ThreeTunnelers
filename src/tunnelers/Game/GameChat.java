@@ -3,7 +3,7 @@ package tunnelers.Game;
 import generic.CyclicArray;
 import java.util.Iterator;
 import javafx.scene.paint.Color;
-import tunnelers.structure.Player;
+import tunnelers.Game.structure.Player;
 
 /**
  *

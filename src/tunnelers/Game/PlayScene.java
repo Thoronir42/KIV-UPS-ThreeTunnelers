@@ -49,7 +49,7 @@ public class PlayScene extends AGameScene{
         
         scene.ta_chatBox = new TextArea();
         scene.ta_chatBox.setWrapText(true);
-        scene.ta_chatBox.setPrefColumnCount(40);
+        scene.ta_chatBox.setPrefWidth(120);
         scene.ta_chatBox.setPrefRowCount(10);
         scene.ta_chatBox.setDisable(true);
         vertical.getChildren().add(scene.ta_chatBox);
