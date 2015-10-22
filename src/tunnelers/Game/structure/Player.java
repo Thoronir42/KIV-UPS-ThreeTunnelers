@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
  */
 public class Player {
     private static int num_of_instances = 0;
-    
+    private final static Settings settings = Settings.getInstance();
     
     private final int playerID;
     private final String name;
@@ -27,6 +27,7 @@ public class Player {
         }
         this.playerID = num_of_instances = newID;
         this.name = name;
+        this.setColor(newID);
     }
     
     public Color getColor(){
@@ -34,7 +35,7 @@ public class Player {
     }
     
     public void setColor(int colorId){
-        this.color = Settings.getColor(this.color, colorId);
+        this.color = settings.getColor(this.color, colorId);
     }
     
     public void handleControl(Control control){
@@ -43,6 +44,10 @@ public class Player {
 
     public String getName() {
         return this.name;
+    }
+    
+    public String toString(){
+        return String.format("[%2d] %16s (%s)", this.playerID, this.name, this.color);
     }
     
 }

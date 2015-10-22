@@ -9,6 +9,10 @@ import javafx.scene.canvas.GraphicsContext;
  * @author Stepan
  */
 public class TunnelMap {
+
+    public static TunnelMap getMockMap() {
+        return new TunnelMap(20, 12, 8);
+    }
     
     private final Chunk[][] map;
     protected int mapWidth, mapHeight;
@@ -45,6 +49,13 @@ public class TunnelMap {
 
         public Chunk(){
             this.map = new Block[chunkSize][chunkSize];
+            for(int row = 0; row < chunkSize; row++){
+                for(int col = 0; col < chunkSize; col++){
+                    int val = Settings.getRandInt(100);
+                    this.map[row][col] = (val < 80) ? Block.Breakable :
+                            (val < 95) ? Block.Tough : Block.Base;
+                }
+            }
         }
     }
     

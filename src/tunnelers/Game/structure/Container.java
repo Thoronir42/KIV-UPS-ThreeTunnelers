@@ -6,15 +6,20 @@ package tunnelers.Game.structure;
  */
 public class Container {
     
-    private Player[] players;
-    private TunnelMap map;
+    private final Player[] players;
+    private final TunnelMap map;
     
-    public Container(){
-        
+    public Container(Player[] players, TunnelMap map){
+        this.players = players;
+        this.map = map;
     }
     
     public int getPlayerCount(){
         return players.length;
+    }
+    
+    public Player[] getPlayers(){
+        return this.players;
     }
     
 }
