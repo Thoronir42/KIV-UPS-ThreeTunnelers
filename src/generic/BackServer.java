@@ -33,19 +33,19 @@ public class BackServer extends Thread
     
     private String processData(String input){
         if(!input.contains(":")){ input = "NA:"+input; }
-        String[] segs = input.split(":");
-        return "SRV:" + replyFor(segs[1].trim());
+        String[] segs = input.trim().split(":");
+        return replyFor(segs[0], segs[1]);
         
     }
-    private String replyFor(String message){
+    private String replyFor(String author, String message){
         System.out.format(">> Proccessing message '%s'...", message);
         switch(message){
             default:
                 System.out.println(" it's not recognised.");
-                return message;
+                return author+"(wat):"+message;
             case "handshake-rq":
                 System.out.println(" it's a handshake request.");
-                return "handshake-ok";
+                return author+":handshake-ok";
         }
     }
     

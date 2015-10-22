@@ -1,5 +1,7 @@
 package tunnelers.Game.structure;
 
+import java.util.Arrays;
+import java.util.Random;
 import javafx.scene.paint.Color;
 
 
@@ -20,21 +22,24 @@ public class Settings {
     public static final String GAME_NAME = "Three Tunnelers",
                                TITLE_SEPARATOR = "|";
     public static final Color[] PLAYER_COLORS;
-    public static final boolean[] PLAYER_COLOR_USAGE;
+    
+    private static final Random RNG;
     
     static{
         PLAYER_COLORS = preparePlayerColors();
-        PLAYER_COLOR_USAGE = preparePlayerColorUsage(PLAYER_COLORS.length);
+        RNG = new Random(420);
     }
 
-    static Color getColor(Color color, int colorId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    static int getRandInt(int i) {
+        return RNG.nextInt(i);
     }
     
     
     private int playerCount;
     private int width = WIDTH_DEFAULT, height = HEIGHT_DEFAULT;
     private final long delay;
+    public final boolean[] playerColorUsage;
+    
     
     private static Settings instance;
     
@@ -65,9 +70,39 @@ public class Settings {
     }
     
     
+    Color getColor(Color color, int colorId) {
+        boolean available = !this.playerColorUsage[colorId];
+        int oldCol = (color == null) ? -1 : Arrays.asList(PLAYER_COLORS).indexOf(color);
+        
+        if(oldCol == -1){
+            if(available){
+                this.playerColorUsage[colorId] = true;
+                return PLAYER_COLORS[colorId];
+            } else {
+                return this.getColor(null, this.colorFirstUnused());
+            }
+        } else {
+            if (!available || oldCol == colorId ){
+                return color;
+            }
+            this.playerColorUsage[oldCol] = false;
+            return getColor(null, colorId);
+        }
+    }
+    
+    private int colorFirstUnused(){
+        for(int i = 0; i < PLAYER_COLORS.length; i++){
+            if (!this.playerColorUsage[i]){
+                return i;
+            }
+        }
+        return -1;
+    }
+    
     private Settings(){
         this.playerCount = MIN_PLAYERS;
         this.delay = (long)(1000.0 / TICK_RATE);
+        this.playerColorUsage = preparePlayerColorUsage(PLAYER_COLORS.length);
     }
     
     public static Settings getInstance(){

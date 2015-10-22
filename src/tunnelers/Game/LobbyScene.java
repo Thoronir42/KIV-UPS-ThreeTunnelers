@@ -1,6 +1,7 @@
 package tunnelers.Game;
 
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -39,7 +40,8 @@ public class LobbyScene extends AGameScene{
     private static LobbyScene createInstance(){
         GridPane root = new GridPane();
         root.setHgap(4);
-        root.setVgap(8);
+        root.setVgap(20);
+        root.setAlignment(Pos.CENTER);
         
         root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.BURLYWOOD.hashCode()));
         LobbyScene scene = new LobbyScene(root, settings.getWidth(), settings.getHeight());

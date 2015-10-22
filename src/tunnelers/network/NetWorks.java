@@ -76,7 +76,7 @@ public class NetWorks extends Thread{
             this.sendMessage("handshake-rq");
             String reply = this.receiveMessage().trim();
             System.out.println(reply);
-            return reply.equals("SRV:handshake-ok");
+            return reply.equals(this.clientName+":handshake-ok");
         } catch (IOException e) {
             return false;
         }
