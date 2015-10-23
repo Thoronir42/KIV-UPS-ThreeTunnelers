@@ -9,6 +9,10 @@ import javafx.scene.paint.Color;
  * @author Stepan
  */
 public class Player {
+    
+    public static final Color COL_ENERGY = Color.DEEPPINK,
+                              COL_HITPOINTS = Color.LAWNGREEN;
+    
     private static int num_of_instances = 0;
     private final static Settings settings = Settings.getInstance();
     
