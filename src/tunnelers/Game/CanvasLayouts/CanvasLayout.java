@@ -13,7 +13,7 @@ public abstract class CanvasLayout {
     // TODO: implement dynamic layout chosing
     public static CanvasLayout choseIdeal(Container container) {
         try{
-            return new CanLayout_2x2(container);
+            return RectangularCanLayout.getLayoutFor(container);
         } catch (CanvasLayoutException e){
             throw new IllegalArgumentException(String.format("Could not find layout suitable for %d players.", container.getPlayerCount()));
         }

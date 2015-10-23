@@ -12,18 +12,32 @@ import tunnelers.Game.structure.Player;
  *
  * @author Stepan
  */
-public abstract class ARectangularCanLayout extends CanvasLayout{
+public class RectangularCanLayout extends CanvasLayout{
     
-    public ARectangularCanLayout(Container c) {
+    private final int rows, cols;
+    
+    static CanvasLayout getLayoutFor(Container c) throws CanvasLayoutException{
+        int playerCount = c.getPlayerCount();
+        int rows = 1, cols = 2;
+        while (rows * cols < playerCount){
+            if(cols > rows){ rows++; }
+            else { cols++; }
+        }
+        return new RectangularCanLayout(c, rows, cols);
+    }
+    
+    public RectangularCanLayout(Container c, int rows, int cols) {
         super(c);
+        this.rows = rows;
+        this.cols = cols;
     }
     
     @Override
     public int getPlayerCapacity(){ return this.getRowAmount() * this.getColAmount(); }
     
     
-    protected abstract int getRowAmount();
-    protected abstract int getColAmount();
+    protected int getRowAmount(){ return this.rows; }
+    protected int getColAmount(){ return this.cols; }
     
     @Override
     public void drawLayout(GraphicsContext g) {
