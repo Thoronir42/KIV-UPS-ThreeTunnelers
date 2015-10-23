@@ -20,7 +20,7 @@ public class GameStage extends ATunnelersStage{
     
     public GameStage(NetWorks networks) {
         this.networks = networks;
-        this.networks.setHandleMessage(new MessagePasser(){
+        this.networks.setMessageHandler(new MessagePasser(){
             @Override
             public void run(){
                 handleNetworkCommand(this.getMessage());
@@ -28,7 +28,6 @@ public class GameStage extends ATunnelersStage{
         });
         this.setScene(LobbyScene.getInstance(networks));
         this.gamechat = new GameChat();
-        this.networks.start();
     }
 
     @Override
@@ -39,7 +38,7 @@ public class GameStage extends ATunnelersStage{
     @Override
     public void exit() {
         try {
-            this.networks.endCommunication();
+            this.networks.disconnect();
             this.networks.interrupt();
             this.networks.join();
             System.out.println("NetWorks ended succesfully");

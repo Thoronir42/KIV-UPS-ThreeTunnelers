@@ -18,7 +18,12 @@ public class LobbyCommand extends ANetworkCommand{
     
     @Override
     public String getCommandCode() {
-        return this.getAreaLetter() + this.getCommandHandle(); // ...
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getAreaLetter()).append(COMMAND_SPLIT).append(this.getCommandHandle());
+        for(Object o : params){
+            //sb.append(COMMAND_SPLIT).append(sb);
+        }
+        return sb.toString();
     }
     
     protected char getAreaLetter(){
@@ -30,7 +35,7 @@ public class LobbyCommand extends ANetworkCommand{
     }
     
     public enum Action{
-        Join("U_THERE", 0),
+        Join("U_THERE", 1),
         Disconnect("I_MUST_GO", 0),
         Kick("SEE_YA", 1),
         ChangeColor("IM_BLU", 1),

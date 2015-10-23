@@ -14,28 +14,47 @@ import java.net.InetAddress;
 public class NetWorks extends Thread{
     
     private static final int BUFFER_SIZE = 64;
+    private static final int HANDSHAKE_ATTEMPTS = 10;
+
+    public static NetWorks connectTo(String address, int port, String client) throws IOException, NetworksException, InterruptedException{
+        NetWorks tmp = new NetWorks(address, port, client);
+        tmp.start();
+        if (!tmp.handshake()){
+            throw new NetworksException("Handshake failed");
+        }
+        return tmp;
+    }
     
     private final DatagramSocket datagramSocket;
     InetAddress address;        int port;
     String clientName;
-    private boolean communicationRelevant;
+    private boolean connectionConfirmed = false;
     private MessagePasser runner;
     
     public NetWorks(String adress, int port, String clientName) throws IOException, NetworksException{
+        this.datagramSocket = new DatagramSocket(  );
+        //datagramSocket.connect(address, port);
+        System.out.println("Socket connected: "+datagramSocket.isConnected());
         this.address = InetAddress.getByName(adress);
         this.port = port;
         this.clientName = clientName;
-        this.datagramSocket = new DatagramSocket( );
-        if (!this.handshake()){
-            throw new NetworksException("Handshake failed");
-        }
+        
+        
+        this.setMessageHandler(new MessagePasser(){
+            @Override
+            public void run(){
+                confirmHandshake();
+            }
+        });
     }
     
     public void issueCommand(ANetworkCommand cmd){
-        sendMessage(cmd.getCommandCode());
+        String code = cmd.getCommandCode();
+        System.out.println(code);
+        sendMessage(code);
     }
     
-    public void setHandleMessage(MessagePasser r){
+    public final void setMessageHandler(MessagePasser r){
         this.runner = r;
     }
     
@@ -57,12 +76,13 @@ public class NetWorks extends Thread{
         }
     }
     
-    public void handleMessage(){
+    private void handleMessage(){
         try{
+            System.out.format("Waiting for server...\n");
             String data = receiveMessage();
             if(this.runner != null){
-                this.runner.passMessage(data);
-                
+                System.out.format("Handling: %s\n", data);
+                this.runner.passMessage(data);                
             } else {
                 System.err.format("\"%s\" was not handled, no handler found.%n", data);
             }
@@ -73,28 +93,40 @@ public class NetWorks extends Thread{
 
     synchronized private boolean handshake(){
         try{
-            this.sendMessage("handshake-rq");
-            String reply = this.receiveMessage().trim();
-            System.out.println(reply);
-            return reply.equals(this.clientName+":handshake-ok");
-        } catch (IOException e) {
-            return false;
+            int attemptsLeft = HANDSHAKE_ATTEMPTS;
+            while(attemptsLeft > 0){
+                this.issueCommand(new LobbyCommand(LobbyCommand.Action.Join, new Object[]{HANDSHAKE_ATTEMPTS - attemptsLeft}));
+                wait(20);
+                if(this.connectionConfirmed){
+                    return true;
+                }
+                System.out.println("Connection failed, retrying "+attemptsLeft+" more times...");
+                sleep(750);
+                attemptsLeft--;
+            }
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
         }
+        this.disconnect();
+        return false;
+    }
+    synchronized private void confirmHandshake(){
+        this.connectionConfirmed = true;
     }
     
     @Override
     public void run() {
-        this.communicationRelevant = true;
-        while(communicationRelevant){
+        while(true){
             handleMessage();
+            if(!connectionConfirmed){ break; }
         }
     }
     
-    synchronized public void endCommunication(){
-        this.communicationRelevant = false;
+    synchronized public void disconnect(){
+        this.connectionConfirmed = false;
         super.interrupt();
         this.datagramSocket.close();
-    }    
+    }
 }
 
 class NetworksException extends IOException{
