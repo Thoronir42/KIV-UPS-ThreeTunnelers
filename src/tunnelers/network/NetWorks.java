@@ -13,8 +13,9 @@ import java.net.InetAddress;
  */
 public class NetWorks extends Thread{
     
-    private static final int BUFFER_SIZE = 64;
-    private static final int HANDSHAKE_ATTEMPTS = 10;
+    private static final int BUFFER_SIZE = 512;
+    private static final int HANDSHAKE_ATTEMPTS = 4;
+    private static final int HANDSHAKE_WAIT_MILLIS = 950;
 
     public static NetWorks connectTo(String address, int port, String client) throws IOException, NetworksException, InterruptedException{
         NetWorks tmp = new NetWorks(address, port, client);
@@ -62,7 +63,7 @@ public class NetWorks extends Thread{
         byte[] buffer = new byte[BUFFER_SIZE];
         DatagramPacket recv = new DatagramPacket(buffer, buffer.length );
         datagramSocket.receive( recv );
-        return new String( buffer );
+        return (new String(buffer)).trim();
     }
     
     synchronized public void sendMessage(String message){
@@ -78,10 +79,8 @@ public class NetWorks extends Thread{
     
     private void handleMessage(){
         try{
-            System.out.format("Waiting for server...\n");
             String data = receiveMessage();
             if(this.runner != null){
-                System.out.format("Handling: %s\n", data);
                 this.runner.passMessage(data);                
             } else {
                 System.err.format("\"%s\" was not handled, no handler found.%n", data);
@@ -101,7 +100,7 @@ public class NetWorks extends Thread{
                     return true;
                 }
                 System.out.println("Connection failed, retrying "+attemptsLeft+" more times...");
-                sleep(750);
+                sleep(HANDSHAKE_WAIT_MILLIS);
                 attemptsLeft--;
             }
         } catch (InterruptedException e) {

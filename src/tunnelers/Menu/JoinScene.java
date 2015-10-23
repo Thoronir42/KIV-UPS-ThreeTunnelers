@@ -2,6 +2,7 @@ package tunnelers.Menu;
 
 import java.io.IOException;
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -29,11 +30,11 @@ public class JoinScene extends AMenuScene{
     private static JoinScene createInstance(){
         GridPane root = new GridPane();
         root.setHgap(4);
-        root.setVgap(8);
+        root.setVgap(18);
         
         root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.BLUEVIOLET.hashCode()));
         JoinScene scene = new JoinScene(root, settings.getWidth(), settings.getHeight());
-        
+        root.setAlignment(Pos.CENTER);
         addComponents(root, scene);
         
         return scene;
@@ -88,7 +89,7 @@ public class JoinScene extends AMenuScene{
         try{
             NetWorks nw = NetWorks.connectTo(address, port, client);
             getStage().gotoLobby(nw);
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             System.err.println(e.getMessage());
         }
     }

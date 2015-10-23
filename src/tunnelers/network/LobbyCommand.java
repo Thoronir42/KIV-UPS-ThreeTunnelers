@@ -21,7 +21,7 @@ public class LobbyCommand extends ANetworkCommand{
         StringBuilder sb = new StringBuilder();
         sb.append(this.getAreaLetter()).append(COMMAND_SPLIT).append(this.getCommandHandle());
         for(Object o : params){
-            //sb.append(COMMAND_SPLIT).append(sb);
+            sb.append(COMMAND_SPLIT).append(o.toString());
         }
         return sb.toString();
     }

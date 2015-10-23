@@ -40,10 +40,11 @@ public class MainMenuScene extends AMenuScene{
         
         
         for(int i = 0; i < buttons.length; i++){
+            buttons[i].setPrefHeight(42);
+            buttons[i].setPrefWidth(140);
             root.add(buttons[i], 0, i);
         }
         root.setAlignment(Pos.CENTER);
-        root.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
         return scene;
         
     }
