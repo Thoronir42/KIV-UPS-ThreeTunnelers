@@ -24,21 +24,8 @@ public class PlayScene extends AGameScene{
         return createInstance();
     }
     
-    private static Container mockContainer(){
-        Player[] players = new Player[]{
-            new Player("Yahoo"),
-            new Player("Yello"),
-            new Player("Yoda"),
-            new Player("Ludo")
-        };
-        TunnelMap map = TunnelMap.getMockMap();
-        Container c = new Container(players, map);
-        
-        return c;
-    }
-    
     private static PlayScene createInstance(){
-        return createInstance(mockContainer());
+        return createInstance(Container.mockContainer());
     }
     
     private static PlayScene createInstance(Container c){

@@ -31,7 +31,7 @@ public class Player {
         }
         this.playerID = num_of_instances = newID;
         this.name = name;
-        this.setColor(newID);
+        this.setColor(newID - 1);
     }
     
     public Color getColor(){

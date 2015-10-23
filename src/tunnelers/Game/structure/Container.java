@@ -6,6 +6,18 @@ package tunnelers.Game.structure;
  */
 public class Container {
     
+    public static Container mockContainer(){
+        Player[] players = new Player[]{
+            new Player("Yahoo"),
+            new Player("Yello"),
+            new Player("Yoda"),
+        };
+        TunnelMap map = TunnelMap.getMockMap();
+        Container c = new Container(players, map);
+        
+        return c;
+    }
+    
     private final Player[] players;
     private final TunnelMap map;
     

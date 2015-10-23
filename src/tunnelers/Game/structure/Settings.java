@@ -71,7 +71,7 @@ public class Settings {
     
     
     Color getColor(Color color, int colorId) {
-        boolean available = !this.playerColorUsage[colorId];
+        boolean available = (colorId >= 0 && colorId < PLAYER_COLORS.length) && !this.playerColorUsage[colorId];
         int oldCol = (color == null) ? -1 : Arrays.asList(PLAYER_COLORS).indexOf(color);
         
         if(oldCol == -1){
@@ -79,7 +79,12 @@ public class Settings {
                 this.playerColorUsage[colorId] = true;
                 return PLAYER_COLORS[colorId];
             } else {
-                return this.getColor(null, this.colorFirstUnused());
+                int unused = this.colorFirstUnused();
+                if(unused != -1){
+                    return this.getColor(null, unused);
+                } else {
+                    return PLAYER_COLORS[getRandInt(PLAYER_COLORS.length)];
+                }
             }
         } else {
             if (!available || oldCol == colorId ){
