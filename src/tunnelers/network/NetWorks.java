@@ -17,28 +17,28 @@ public class NetWorks extends Thread{
     private static final int HANDSHAKE_ATTEMPTS = 4;
     private static final int HANDSHAKE_WAIT_MILLIS = 950;
 
-    public static NetWorks connectTo(String address, int port, String client) throws IOException, NetworksException, InterruptedException{
+    public static NetWorks connectTo(String address, int port, String client) throws IOException, InterruptedException{
         NetWorks tmp = new NetWorks(address, port, client);
         tmp.start();
-        if (!tmp.handshake()){
-            throw new NetworksException("Handshake failed");
-        }
+        tmp.handshake();
         return tmp;
     }
     
     private final DatagramSocket datagramSocket;
     InetAddress address;        int port;
     String clientName;
-    private boolean connectionConfirmed = false;
     private MessagePasser runner;
+    private Status status;
+    private String disconnectReason;
     
-    public NetWorks(String adress, int port, String clientName) throws IOException, NetworksException{
+    private NetWorks(String adress, int port, String clientName) throws IOException, NetworksException{
         this.datagramSocket = new DatagramSocket(  );
         //datagramSocket.connect(address, port);
         System.out.println("Socket connected: "+datagramSocket.isConnected());
         this.address = InetAddress.getByName(adress);
         this.port = port;
         this.clientName = clientName;
+        this.status = Status.Joining;
         
         
         this.setMessageHandler(new MessagePasser(){
@@ -96,7 +96,7 @@ public class NetWorks extends Thread{
             while(attemptsLeft > 0){
                 this.issueCommand(new LobbyCommand(LobbyCommand.Action.Join, new Object[]{HANDSHAKE_ATTEMPTS - attemptsLeft}));
                 wait(20);
-                if(this.connectionConfirmed){
+                if(serverResponded()){
                     return true;
                 }
                 System.out.println("Connection failed, retrying "+attemptsLeft+" more times...");
@@ -106,26 +106,76 @@ public class NetWorks extends Thread{
         } catch (InterruptedException e) {
             System.out.println(e.getMessage());
         }
-        this.disconnect();
+        this.disconnect(Status.ServerUnreachable);
         return false;
     }
     synchronized private void confirmHandshake(){
-        this.connectionConfirmed = true;
+        this.status = Status.ServerReady;
     }
+    
+    private boolean keepRunning(){
+        return (this.status != Status.Disconnected &&
+                this.status != Status.ServerFull &&
+                this.status != Status.ServerUnreachable);
+    }
+    private boolean serverResponded(){
+        return this.status != Status.Joining;
+    }
+    
     
     @Override
     public void run() {
-        while(true){
+        while(this.keepRunning()){
             handleMessage();
-            if(!connectionConfirmed){ break; }
         }
     }
     
-    synchronized public void disconnect(){
-        this.connectionConfirmed = false;
+    public boolean canConnect(){
+        return this.status == Status.ServerReady;
+    }
+    
+    public void disconnect(){
+        this.disconnect(Status.Disconnected);
+    }
+    
+    synchronized public void disconnect(String reason){
+        this.disconnectReason = reason;
+        this.disconnect(Status.Kicked);
+    }
+    
+    synchronized private void disconnect(Status status){
         super.interrupt();
+        this.status = status;
         this.datagramSocket.close();
     }
+
+    public String getStatusLabel() {
+        switch(this.status){
+            default:
+                return "Unknown status";
+            case Joining:
+                return String.format("Attempting to join %s:%d", this.address.getHostAddress(), this.port);
+            case ServerUnreachable:
+                return String.format("No host found at %s:%d", this.address.getHostAddress(), this.port);
+            case ServerFull:
+                return String.format("Server on %s:%d is already full", this.address.getHostAddress(), this.port);
+            case ServerReady:
+                return String.format("Server %s:%d is ready to be joined", this.address.getHostAddress(), this.port);
+            case Connected:
+                return String.format("Connected to %s:%d", this.address.getHostAddress(), this.port);
+            case Disconnected:
+                return String.format("Disconnected from %s:%d", this.address.getHostAddress(), this.port);
+        }
+        
+    }
+    
+    private enum Status{
+        Joining, 
+        ServerReady, ServerUnreachable, ServerFull,
+        Connected,
+        Disconnected, Kicked
+    }
+    
 }
 
 class NetworksException extends IOException{

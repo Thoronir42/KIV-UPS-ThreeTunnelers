@@ -36,7 +36,6 @@ public class JoinScene extends AMenuScene{
         JoinScene scene = new JoinScene(root, settings.getWidth(), settings.getHeight());
         root.setAlignment(Pos.CENTER);
         addComponents(root, scene);
-        
         return scene;
         
     }
@@ -44,6 +43,8 @@ public class JoinScene extends AMenuScene{
     protected TextField tf_adress,
                         tf_port,
                         tf_clientName;
+    protected Button but_join;
+    protected Label lbl_conInfo;
     
     public JoinScene(Parent root, double width, double height) {
         super(root, width, height, "Join Game");
@@ -74,21 +75,30 @@ public class JoinScene extends AMenuScene{
         root.add(next, 1, 2);
         
         
-        next = new Button("Connect!");
+        next = scene.but_join = new Button("Connect!");
         ((Button)next).setOnAction((ActionEvent event) -> {
             scene.connect();
         });
         root.add(next, 0, 3);
+        
+        next = scene.lbl_conInfo = new Label();
+        scene.lbl_conInfo.setText("Waiting...");
+        root.add(next, 0, 4);
     }
     
     private void connect(){
-        String address = tf_adress.getText(),
-               client = tf_clientName.getText();
-        int port = Integer.parseInt(tf_port.getText());
-        System.out.format("Connecting to: %s:%d%n", address, port);
         try{
+            String address = tf_adress.getText(),
+                   client = tf_clientName.getText();
+            int port = Integer.parseInt(tf_port.getText());
+            System.out.format("Connecting to: %s:%d%n", address, port);
+
             NetWorks nw = NetWorks.connectTo(address, port, client);
-            getStage().gotoLobby(nw);
+            if(nw.canConnect()){
+                this.getStage().gotoLobby(nw);
+            } else {
+                this.lbl_conInfo.setText(nw.getStatusLabel());
+            }
         } catch (IOException | InterruptedException e) {
             System.err.println(e.getMessage());
         }
