@@ -3,17 +3,15 @@ package tunnelers.Game.CanvasLayouts;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import tunnelers.Game.structure.Container;
-import tunnelers.Game.structure.Player;
 
 /**
  *
  * @author Stepan
  */
 public abstract class CanvasLayout {
-    // TODO: implement dynamic layout chosing
-    public static CanvasLayout choseIdeal(Container container) {
+    public static CanvasLayout choseIdeal(Container container, Dimension2D d) {
         try{
-            return RectangularCanLayout.getLayoutFor(container);
+            return RectangularCanLayout.getLayoutFor(container, d);
         } catch (CanvasLayoutException e){
             throw new IllegalArgumentException(String.format("Could not find layout suitable for %d players.", container.getPlayerCount()));
         }
@@ -30,6 +28,4 @@ public abstract class CanvasLayout {
     }
     
     public abstract void drawLayout(GraphicsContext g);
-    
-    protected abstract void drawPlayerArea(GraphicsContext g, Dimension2D bounds, Player p);
 }

@@ -1,5 +1,6 @@
 package tunnelers.Game.structure;
 
+import tunnelers.Settings;
 import javafx.geometry.Point2D;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;

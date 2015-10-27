@@ -30,5 +30,9 @@ public abstract class AGameScene extends ATunnelersScene{
     }
     
     abstract void updateChatbox();
+
+    public void drawScene() {
+        
+    }
     
 }

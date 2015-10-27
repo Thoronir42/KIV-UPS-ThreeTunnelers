@@ -1,5 +1,7 @@
 package tunnelers.Game.structure;
 
+import javafx.geometry.Point2D;
+import tunnelers.Settings;
 import javafx.scene.paint.Color;
 
 
@@ -52,6 +54,10 @@ public class Player {
     
     public String toString(){
         return String.format("[%2d] %16s (%s)", this.playerID, this.name, this.color);
+    }
+
+    public Point2D getLocation() {
+        return this.tank.getLocation();
     }
     
 }

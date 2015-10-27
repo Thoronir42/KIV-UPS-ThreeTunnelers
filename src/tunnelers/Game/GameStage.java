@@ -71,8 +71,11 @@ public class GameStage extends ATunnelersStage{
 
     @Override
     protected void changeScene(ATunnelersScene scene) {
-        super.changeScene(scene);
-        ((AGameScene) scene).updateChatbox();
+        AGameScene sc = (AGameScene)scene;
+        super.changeScene(sc);
+        sc.updateChatbox();
+        sc.drawScene();
+        
     }
     
     

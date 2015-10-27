@@ -2,6 +2,7 @@ package tunnelers.Game.structure;
 
 
 
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
@@ -35,6 +36,10 @@ public class Tank implements GameEntity{
     public int update() {
         
         return 0;
+    }
+
+    Point2D getLocation() {
+        return this.location;
     }
     
 }
