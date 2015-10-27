@@ -8,13 +8,13 @@ public class BackServer extends Thread
 {
     private static final int BUFFER_SIZE = 60;
     
-    DatagramSocket ds;    
+    DatagramSocket ds;
     private DatagramPacket lastReceived;
     
     @Override
     public void run(){
         try {
-            ds = new DatagramSocket( tunnelers.Game.structure.Settings.DEFAULT_PORT );
+            ds = new DatagramSocket( tunnelers.Settings.DEFAULT_PORT );
             
             while (true) {
                 System.out.format("Serverrr (%s:%d) ceka...%n", InetAddress.getLocalHost().getHostAddress(), ds.getLocalPort());

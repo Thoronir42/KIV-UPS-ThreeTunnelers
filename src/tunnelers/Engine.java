@@ -7,7 +7,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import tunnelers.Game.GameStage;
 import tunnelers.Menu.MainMenuScene;
-import tunnelers.Game.structure.Settings;
 
 /**
  *

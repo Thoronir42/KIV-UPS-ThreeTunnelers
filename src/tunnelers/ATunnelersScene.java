@@ -9,7 +9,6 @@ package tunnelers;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import tunnelers.Game.structure.Settings;
 
 /**
  *
