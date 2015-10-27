@@ -1,4 +1,4 @@
-package tunnelers.Game.structure;
+package tunnelers;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -30,7 +30,7 @@ public class Settings {
         RNG = new Random(420);
     }
 
-    static int getRandInt(int i) {
+    public static int getRandInt(int i) {
         return RNG.nextInt(i);
     }
     
@@ -69,8 +69,12 @@ public class Settings {
         return usage;
     }
     
+    public static Color getRandColor(){
+        int i = getRandInt(PLAYER_COLORS.length);
+        return PLAYER_COLORS[i];
+    }
     
-    Color getColor(Color color, int colorId) {
+    public Color getColor(Color color, int colorId) {
         boolean available = (colorId >= 0 && colorId < PLAYER_COLORS.length) && !this.playerColorUsage[colorId];
         int oldCol = (color == null) ? -1 : Arrays.asList(PLAYER_COLORS).indexOf(color);
         
