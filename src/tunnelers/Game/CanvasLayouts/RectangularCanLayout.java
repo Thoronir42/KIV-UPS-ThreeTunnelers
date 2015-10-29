@@ -70,20 +70,20 @@ public class RectangularCanLayout extends CanvasLayout{
     
     private class PlayerArea{
         
-        private final Dimension2D playerAreaBounds;
+        private final Dimension2D bounds;
         private final Rectangle viewWindow;
-        //private final int blockSize;
-        //private final Dimension2D blocks;
+        private final Dimension2D blockSize;
+        private final Dimension2D blocks;
         
         PlayerArea(Dimension2D playerAreaBounds){
-            this.playerAreaBounds = playerAreaBounds;
+            this.bounds = playerAreaBounds;
             this.viewWindow = new Rectangle(playerAreaBounds.getWidth() * 0.9, playerAreaBounds.getHeight() * 0.6);
-            //this.blockSize = getBlockSize();
-            //this.blocks = getBlocks();
+            this.blockSize = getBlockSize();
+            this.blocks = getBlocks();
         }
         
         public Dimension2D getBounds(){
-            return this.playerAreaBounds;
+            return this.bounds;
         }
         
         protected void draw(GraphicsContext g, Dimension2D bounds, Player p) {
@@ -94,7 +94,7 @@ public class RectangularCanLayout extends CanvasLayout{
 
             
             g.translate(bounds.getWidth() * 0.05, bounds.getHeight() * 0.05);
-            drawViewWindow(g, viewWindow);//, p.getLocation());
+            drawViewWindow(g, viewWindow, p.getLocation());
             g.setTransform(defTransform);
 
             Rectangle inBounds = new Rectangle(bounds.getWidth() * 0.8, bounds.getHeight() * 0.1);
@@ -113,30 +113,43 @@ public class RectangularCanLayout extends CanvasLayout{
             g.fillRect(r.getX(), r.getY(), r.getWidth(), r.getHeight());
         }
 
-        private void drawViewWindow(GraphicsContext g, Rectangle bounds){//, Point2D center){
+        private void drawViewWindow(GraphicsContext g, Rectangle bounds, Point2D center){
 
             g.setStroke(Color.DIMGREY);
             g.setLineWidth(2);
             g.strokeRect(0, 0, bounds.getWidth(), bounds.getHeight());
-
-            /*Point2D[] corners = {
+            Point2D[] corners = {
                 new Point2D(center.getX() - blocks.getWidth() / 2, center.getY() - blocks.getHeight() / 2 ),
                 new Point2D(center.getX() + blocks.getWidth() / 2, center.getY() - blocks.getHeight() / 2 ),
                 new Point2D(center.getX() - blocks.getWidth() / 2, center.getY() + blocks.getHeight() / 2 ),
                 new Point2D(center.getX() + blocks.getWidth() / 2, center.getY() + blocks.getHeight() / 2 ),
-            };*/
+            };
 
             g.setFill(Settings.getRandColor());
             g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
         }
         
         
-        private int getBlockSize(){
-            return (int)(Math.min(playerAreaBounds.getHeight(),
-                                  playerAreaBounds.getWidth()) / 60);
+        private Dimension2D getBlockSize(){
+            double width, height;
+            int tmp;
+            double bWidth = this.bounds.getWidth(), bHeight = this.bounds.getHeight();
+            if(bWidth < bHeight){
+                width = bWidth / Settings.MIN_BLOCKS_ON_DIMENSION;    
+                tmp = (int)Math.ceil(bHeight / width);
+                if(tmp % 2 == 0){ tmp--; }
+                height = bHeight / tmp;
+            } else {
+                height = bHeight / Settings.MIN_BLOCKS_ON_DIMENSION;    
+                tmp = (int)Math.ceil(bWidth / height);
+                if(tmp % 2 == 0){ tmp--; }
+                width = bWidth / tmp;
+            }
+            return new Dimension2D(width, height);
         }
-        /*private Dimension2D getBlocks(){
-            
-        }*/
+        private Dimension2D getBlocks(){
+            return new Dimension2D(Math.ceil(bounds.getWidth() / this.blockSize.getWidth()),
+                    Math.ceil(bounds.getHeight() / this.blockSize.getHeight()));
+        }
     }
 }
