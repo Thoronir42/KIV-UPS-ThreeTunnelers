@@ -18,6 +18,7 @@ public class Player {
     private static int num_of_instances = 0;
     private final static Settings settings = Settings.getInstance();
     
+    
     private final int playerID;
     private final String name;
     private short activeX, activeY;
@@ -40,7 +41,7 @@ public class Player {
         return this.color;
     }
     
-    public void setColor(int colorId){
+    public final void setColor(int colorId){
         this.color = settings.getColor(this.color, colorId);
     }
     
@@ -52,12 +53,17 @@ public class Player {
         return this.name;
     }
     
+    @Override
     public String toString(){
         return String.format("[%2d] %16s (%s)", this.playerID, this.name, this.color);
     }
 
     public Point2D getLocation() {
         return this.tank.getLocation();
+    }
+
+    void setTank(Tank t) {
+        this.tank = t;
     }
     
 }

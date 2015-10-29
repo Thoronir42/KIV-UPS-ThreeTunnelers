@@ -1,5 +1,7 @@
 package tunnelers.Game.structure;
 
+import javafx.geometry.Point2D;
+
 /**
  *
  * @author Stepan
@@ -13,6 +15,11 @@ public class Container {
             new Player("Yoda"),
         };
         TunnelMap map = TunnelMap.getMockMap();
+        for(Player p : players){
+            Point2D baseCenter = map.getMapSpot();
+            Tank t = new Tank(p, baseCenter);
+            p.setTank(t);
+        }
         Container c = new Container(players, map);
         
         return c;

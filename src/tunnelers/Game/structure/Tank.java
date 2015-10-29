@@ -1,8 +1,5 @@
 package tunnelers.Game.structure;
 
-
-
-import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
@@ -12,7 +9,6 @@ import javafx.scene.paint.Color;
  */
 public class Tank implements GameEntity{
 
-    private final Color tankColor;
     private Direction direction;
     private Point2D location;
     private Player player;
@@ -23,9 +19,12 @@ public class Tank implements GameEntity{
     public Tank(Player player, Point2D initialLocation){
         this.direction = Direction.North;
         this.player = player;
-        this.tankColor = player.getColor();
         this.location = initialLocation;
         
+    }
+    
+    public Color getColor(){
+        return this.player.getColor();
     }
     
     public void changeDirection(Direction d){

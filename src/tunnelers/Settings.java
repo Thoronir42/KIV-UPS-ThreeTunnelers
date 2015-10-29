@@ -24,6 +24,7 @@ public class Settings {
     public static final Color[] PLAYER_COLORS;
     
     private static final Random RNG;
+    public static double MIN_BLOCKS_ON_DIMENSION = 65;
     
     static{
         PLAYER_COLORS = preparePlayerColors();

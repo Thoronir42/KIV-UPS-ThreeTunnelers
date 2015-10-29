@@ -44,6 +44,10 @@ public class TunnelMap {
             }
         }
     }
+
+    Point2D getMapSpot() {
+        return new Point2D(Settings.getRandInt(mapWidth), Settings.getRandInt(mapWidth));
+    }
     
     class Chunk{
         protected Block[][] map;
