@@ -24,7 +24,8 @@ public class Settings {
     public static final Color[] PLAYER_COLORS;
     
     private static final Random RNG;
-    public static double MIN_BLOCKS_ON_DIMENSION = 65;
+    public static final double MIN_BLOCKS_ON_DIMENSION = 15;
+    public static final int MOCK_CHUNK_SIZE = 24;
     
     static{
         PLAYER_COLORS = preparePlayerColors();
@@ -34,10 +35,20 @@ public class Settings {
     public static int getRandInt(int i) {
         return RNG.nextInt(i);
     }
+
+    public static Color getRandColor(double opacity) {
+        int i = getRandInt(PLAYER_COLORS.length);
+        Color c = PLAYER_COLORS[i];
+        
+        return Color.color(c.getRed(), c.getGreen(), c.getBlue(), opacity);
+    }
     
     
-    private int playerCount;
-    private int width = WIDTH_DEFAULT, height = HEIGHT_DEFAULT;
+    public static Color getRandColor(){
+        return getRandColor(1);
+    }
+    
+    private final int width = WIDTH_DEFAULT, height = HEIGHT_DEFAULT;
     private final long delay;
     public final boolean[] playerColorUsage;
     
@@ -68,11 +79,6 @@ public class Settings {
             usage[i] = false;
         }
         return usage;
-    }
-    
-    public static Color getRandColor(){
-        int i = getRandInt(PLAYER_COLORS.length);
-        return PLAYER_COLORS[i];
     }
     
     public Color getColor(Color color, int colorId) {
@@ -110,7 +116,6 @@ public class Settings {
     }
     
     private Settings(){
-        this.playerCount = MIN_PLAYERS;
         this.delay = (long)(1000.0 / TICK_RATE);
         this.playerColorUsage = preparePlayerColorUsage(PLAYER_COLORS.length);
     }

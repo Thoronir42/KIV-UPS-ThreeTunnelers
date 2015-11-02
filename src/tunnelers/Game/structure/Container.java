@@ -1,6 +1,10 @@
 package tunnelers.Game.structure;
 
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.shape.Rectangle;
+import tunnelers.Settings;
 
 /**
  *
@@ -10,13 +14,11 @@ public class Container {
     
     public static Container mockContainer(){
         Player[] players = new Player[]{
-            new Player("Yahoo"),
-            new Player("Yello"),
-            new Player("Yoda"),
+            new Player("Yahoo"),new Player("Yahoo"),new Player("Yahoo"),
         };
         TunnelMap map = TunnelMap.getMockMap();
         for(Player p : players){
-            Point2D baseCenter = map.getMapSpot();
+            Point2D baseCenter = map.getFreeBaseSpot();
             Tank t = new Tank(p, baseCenter);
             p.setTank(t);
         }
@@ -39,6 +41,17 @@ public class Container {
     
     public Player[] getPlayers(){
         return this.players;
+    }
+
+    public int getMapWidth(){
+        return this.map.mapWidth;
+    }
+    public int getMapHeight(){
+        return this.map.mapHeight;
+    }
+    
+    public void drawMap(GraphicsContext g,Dimension2D blockSize, Rectangle render) {
+        this.map.drawMapSection(g, blockSize, render);
     }
     
 }

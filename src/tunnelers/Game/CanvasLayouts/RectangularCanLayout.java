@@ -73,13 +73,13 @@ public class RectangularCanLayout extends CanvasLayout{
         private final Dimension2D bounds;
         private final Rectangle viewWindow;
         private final Dimension2D blockSize;
-        private final Dimension2D blocks;
+        private final Rectangle render;
         
         PlayerArea(Dimension2D playerAreaBounds){
             this.bounds = playerAreaBounds;
-            this.viewWindow = new Rectangle(playerAreaBounds.getWidth() * 0.9, playerAreaBounds.getHeight() * 0.6);
+            this.viewWindow = new Rectangle(bounds.getWidth() * 0.05, bounds.getHeight() * 0.05, bounds.getWidth() * 0.9, bounds.getHeight() * 0.6);
             this.blockSize = getBlockSize();
-            this.blocks = getBlocks();
+            this.render = getRender();
         }
         
         public Dimension2D getBounds(){
@@ -91,10 +91,9 @@ public class RectangularCanLayout extends CanvasLayout{
 
             g.setFill(p.getColor());
             g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
-
             
-            g.translate(bounds.getWidth() * 0.05, bounds.getHeight() * 0.05);
-            drawViewWindow(g, viewWindow, p.getLocation());
+            g.translate(viewWindow.getX(), viewWindow.getY());
+            drawViewWindow(g, p.getLocation());
             g.setTransform(defTransform);
 
             Rectangle inBounds = new Rectangle(bounds.getWidth() * 0.8, bounds.getHeight() * 0.1);
@@ -113,27 +112,44 @@ public class RectangularCanLayout extends CanvasLayout{
             g.fillRect(r.getX(), r.getY(), r.getWidth(), r.getHeight());
         }
 
-        private void drawViewWindow(GraphicsContext g, Rectangle bounds, Point2D center){
-
+        private void drawViewWindow(GraphicsContext g, Point2D center){
+            Affine defTransform = g.getTransform();
             g.setStroke(Color.DIMGREY);
             g.setLineWidth(2);
-            g.strokeRect(0, 0, bounds.getWidth(), bounds.getHeight());
-            Point2D[] corners = {
-                new Point2D(center.getX() - blocks.getWidth() / 2, center.getY() - blocks.getHeight() / 2 ),
-                new Point2D(center.getX() + blocks.getWidth() / 2, center.getY() - blocks.getHeight() / 2 ),
-                new Point2D(center.getX() - blocks.getWidth() / 2, center.getY() + blocks.getHeight() / 2 ),
-                new Point2D(center.getX() + blocks.getWidth() / 2, center.getY() + blocks.getHeight() / 2 ),
-            };
-
-            g.setFill(Settings.getRandColor());
-            g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
+            g.strokeRect(0, 0, viewWindow.getWidth(), viewWindow.getHeight());
+            clampRender(render, center);
+            try{
+                g.translate(-render.getX(), -render.getY());
+                container.drawMap(g, blockSize, render);
+            } catch (Exception e){ e.printStackTrace(); } finally {
+                g.setTransform(defTransform);
+            }
+            
+            if(false){
+                this.renderStatic(g, render);
+            }
+            
+        }
+        
+        private void clampRender(Rectangle render, Point2D center){
+            
+        }
+        
+        private void renderStatic(GraphicsContext g, Rectangle render) {
+            for(int row = 0; row < render.getWidth(); row++){
+                for(int col = 0; col < render.getHeight(); col++){
+                    g.setFill(Settings.getRandColor(0.2));
+                    g.fillRect(col*blockSize.getWidth(), row*blockSize.getHeight(), blockSize.getWidth(), blockSize.getHeight());
+                }
+            }
         }
         
         
         private Dimension2D getBlockSize(){
             double width, height;
             int tmp;
-            double bWidth = this.bounds.getWidth(), bHeight = this.bounds.getHeight();
+            double bWidth = this.viewWindow.getWidth(),
+                   bHeight = this.viewWindow.getHeight();
             if(bWidth < bHeight){
                 width = bWidth / Settings.MIN_BLOCKS_ON_DIMENSION;    
                 tmp = (int)Math.ceil(bHeight / width);
@@ -147,9 +163,11 @@ public class RectangularCanLayout extends CanvasLayout{
             }
             return new Dimension2D(width, height);
         }
-        private Dimension2D getBlocks(){
-            return new Dimension2D(Math.ceil(bounds.getWidth() / this.blockSize.getWidth()),
-                    Math.ceil(bounds.getHeight() / this.blockSize.getHeight()));
+        private Rectangle getRender(){
+            return new Rectangle(Math.ceil(viewWindow.getHeight() / this.blockSize.getHeight()),
+                    Math.ceil(viewWindow.getWidth() / this.blockSize.getWidth()));
         }
+
+        
     }
 }

@@ -4,6 +4,8 @@ import tunnelers.Settings;
 import javafx.geometry.Point2D;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.shape.Rectangle;
+import tunnelers.Game.TunColors;
 
 /**
  *
@@ -12,7 +14,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class TunnelMap {
 
     public static TunnelMap getMockMap() {
-        return new TunnelMap(20, 12, 8);
+        return new TunnelMap(Settings.MOCK_CHUNK_SIZE, 12, 8);
     }
     
     private final Chunk[][] map;
@@ -21,11 +23,21 @@ public class TunnelMap {
     
     
     public TunnelMap(int chunkSize, int width, int height){
-        map = new Chunk[width][height];
         this.mapWidth = width;
         this.mapHeight = height;
         this.chunkSize = chunkSize;
+        map = initChunky(width, height);
     }
+    private Chunk[][] initChunky(int width, int height) {
+        Chunk[][] tmp = new Chunk[width][height];
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+                tmp[i][j] = new Chunk(i, j);
+            }
+        }
+        return tmp;
+    }
+    
     
     public void updateChunk(int x, int y, char[][] chunkData) throws ChunkException{
         if((x < 0 || x >= this.mapWidth)||(y < 0 || y >= this.mapHeight)){
@@ -34,40 +46,72 @@ public class TunnelMap {
     }
     
     
-    public void drawMapSection(GraphicsContext g, Point2D location, Dimension2D size){
-        boolean[][] chunkDrawn = new boolean[mapWidth][mapHeight];
-        int minX = (int)location.getX(), minY = (int)location.getY();
-        int maxX = (int)size.getWidth() + minX, maxY = (int)size.getHeight() + minY;
-        for(int y = minY; y < maxY; y++){
-            for (int x = minX; x < maxX; x++){
-                
+    public void drawMapSection(GraphicsContext g, Dimension2D blockSize, Rectangle render){
+        int yMin = (int)(render.getY()),
+            xMin = (int)(render.getX()),
+            xMax = (int)(render.getX() + render.getWidth()),
+            yMax = (int)(render.getY() + render.getHeight());
+        int chTop = Math.max(0, yMin / chunkSize),
+                chLeft = Math.max(0, xMin / chunkSize),
+                chRight = (int)Math.min(this.mapWidth - 1, Math.ceil(xMax * 1.0 / chunkSize)),
+                chBottom= (int)Math.min(this.mapHeight - 1,Math.ceil(yMax * 1.0 / chunkSize));
+        System.out.format("Map: Rendering blocks from [%d,%d] to [%d,%d]%n", xMin, yMin, xMax, yMax);
+        for(int Y = chTop; Y <= chBottom; Y++){
+            for(int X = chLeft; X <chRight; X++){
+                this.map[X][Y].renderChunk(g, xMin, xMax, yMin, yMax, blockSize);
             }
         }
+        
     }
 
-    Point2D getMapSpot() {
-        return new Point2D(Settings.getRandInt(mapWidth), Settings.getRandInt(mapWidth));
+    Point2D getFreeBaseSpot() {
+        return new Point2D(Settings.getRandInt(mapWidth*chunkSize), Settings.getRandInt(mapHeight*chunkSize));
     }
     
     class Chunk{
-        protected Block[][] map;
-
-        public Chunk(){
-            this.map = new Block[chunkSize][chunkSize];
+        protected Block[][] chunkData;
+        private final int selfXmin, selfXmax,
+                    selfYmin, selfYmax;
+        private Chunk(int x, int y){
+            this.chunkData = new Block[chunkSize][chunkSize];
             for(int row = 0; row < chunkSize; row++){
                 for(int col = 0; col < chunkSize; col++){
                     int val = Settings.getRandInt(100);
-                    this.map[row][col] = (val < 80) ? Block.Breakable :
+                    this.chunkData[row][col] = (val < 75) ? Block.Breakable :
                             (val < 95) ? Block.Tough : Block.Base;
                 }
             }
+            this.selfXmin = x * chunkSize;
+            this.selfXmax = ((x + 1) * chunkSize) - 1;
+            this.selfYmin = y * chunkSize;
+            this.selfYmax = ((y + 1) * chunkSize) - 1;
+            System.out.format("Chunk [%d,%d] is from [%d,%d] to [%d,%d]%n",x, y, selfXmin, selfYmin, selfXmax, selfYmax);
         }
+        
+        void renderChunk(GraphicsContext g, int xMin, int xMax, int yMin, int yMax, Dimension2D blockSize){
+            int xFrom = Math.max(xMin, selfXmin),
+                xTo = Math.min(xMax, selfXmax),
+                yFrom = Math.max(yMin, selfYmin),
+                yTo = Math.min(yMax, selfYmax);
+            System.out.format("CHNK: Rendering blocks from [%d,%d] to [%d,%d]%n", xFrom, yFrom, xTo, yTo);
+            for(int y = yFrom; y <= yTo; y++){
+                for(int x = xFrom; x <= xTo; x++){
+                    g.setFill(TunColors.getBlockColor(x, y, this.chunkData[x%chunkSize][y%chunkSize]));
+                    g.fillRect(y*blockSize.getHeight(), x*blockSize.getWidth(), blockSize.getHeight(), blockSize.getWidth());
+                }
+            }
+            g.setFill(Settings.getRandColor(0.5));
+            g.fillRect(xFrom, yFrom, (xTo - xFrom)*blockSize.getWidth(), (yTo - yFrom)*blockSize.getHeight());
+        }
+        
+        
     }
     
-    enum Block{
+    public enum Block{
         Breakable('a'),
         Tough('b'),
-        Base('c'),
+        Empty('c'),
+        Base('d'),
         Undefined('z');
         
         private final char type;
