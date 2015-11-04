@@ -9,18 +9,23 @@ import javafx.scene.paint.Color;
  */
 public class Tank implements GameEntity{
 
+    
+    public static int MAX_HITPOINTS = 20,
+            MAX_ENERGY = 120;
+    
     private Direction direction;
     private Point2D location;
     private Player player;
     
-    protected int HitPoints;
-    protected int EnergyStatus;
+    protected double HitPoints,
+                     EnergyStatus;
     
     public Tank(Player player, Point2D initialLocation){
         this.direction = Direction.North;
         this.player = player;
         this.location = initialLocation;
-        
+        this.HitPoints = MAX_HITPOINTS;
+        this.EnergyStatus = MAX_ENERGY;
     }
     
     public Color getColor(){
@@ -39,6 +44,10 @@ public class Tank implements GameEntity{
 
     Point2D getLocation() {
         return this.location;
+    }
+    
+    void setLocation(Point2D loc){
+        this.location = loc;
     }
     
 }

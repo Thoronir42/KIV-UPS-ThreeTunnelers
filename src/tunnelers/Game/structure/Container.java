@@ -4,7 +4,6 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Rectangle;
-import tunnelers.Settings;
 
 /**
  *

@@ -6,6 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Affine;
+import tunnelers.Game.TunColors;
 import tunnelers.Game.structure.Container;
 import tunnelers.Game.structure.Player;
 import tunnelers.Settings;
@@ -93,7 +94,7 @@ public class RectangularCanLayout extends CanvasLayout{
             g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
             
             g.translate(viewWindow.getX(), viewWindow.getY());
-            drawViewWindow(g, p.getLocation());
+            drawViewWindow(g, p);
             g.setTransform(defTransform);
 
             Rectangle inBounds = new Rectangle(bounds.getWidth() * 0.8, bounds.getHeight() * 0.1);
@@ -112,12 +113,11 @@ public class RectangularCanLayout extends CanvasLayout{
             g.fillRect(r.getX(), r.getY(), r.getWidth(), r.getHeight());
         }
 
-        private void drawViewWindow(GraphicsContext g, Point2D center){
+        private void drawViewWindow(GraphicsContext g, Player p){
             Affine defTransform = g.getTransform();
-            g.setStroke(Color.DIMGREY);
-            g.setLineWidth(2);
-            g.strokeRect(0, 0, viewWindow.getWidth(), viewWindow.getHeight());
-            clampRender(render, center);
+            g.setFill(Color.BLACK);
+            g.fillRect(0, 0, viewWindow.getWidth(), viewWindow.getHeight());
+            clampRender(render, p.getLocation());
             try{
                 g.translate(-render.getX(), -render.getY());
                 container.drawMap(g, blockSize, render);
@@ -126,7 +126,7 @@ public class RectangularCanLayout extends CanvasLayout{
             }
             
             if(false){
-                this.renderStatic(g, render);
+                this.renderStatic(g, render, p.getEnergyPct());
             }
             
         }
@@ -135,10 +135,10 @@ public class RectangularCanLayout extends CanvasLayout{
             
         }
         
-        private void renderStatic(GraphicsContext g, Rectangle render) {
+        private void renderStatic(GraphicsContext g, Rectangle render, double energyPct) {
             for(int row = 0; row < render.getWidth(); row++){
                 for(int col = 0; col < render.getHeight(); col++){
-                    g.setFill(Settings.getRandColor(0.2));
+                    g.setFill(TunColors.getRandStatic(col, row, 1 - energyPct));
                     g.fillRect(col*blockSize.getWidth(), row*blockSize.getHeight(), blockSize.getWidth(), blockSize.getHeight());
                 }
             }
@@ -164,8 +164,10 @@ public class RectangularCanLayout extends CanvasLayout{
             return new Dimension2D(width, height);
         }
         private Rectangle getRender(){
-            return new Rectangle(Math.ceil(viewWindow.getHeight() / this.blockSize.getHeight()),
-                    Math.ceil(viewWindow.getWidth() / this.blockSize.getWidth()));
+            return new Rectangle(
+                    Math.floor(viewWindow.getWidth() / this.blockSize.getWidth()),
+                    Math.floor(viewWindow.getHeight() / this.blockSize.getHeight())
+            );
         }
 
         

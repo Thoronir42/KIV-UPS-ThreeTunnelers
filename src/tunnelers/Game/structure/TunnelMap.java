@@ -18,14 +18,17 @@ public class TunnelMap {
     }
     
     private final Chunk[][] map;
-    protected int mapWidth, mapHeight;
-    protected int chunkSize;
+    protected final int Xchunks, Ychunks;
+    protected final int chunkSize;
+    protected final int mapWidth, mapHeight;
     
     
     public TunnelMap(int chunkSize, int width, int height){
-        this.mapWidth = width;
-        this.mapHeight = height;
+        this.Xchunks = width;
+        this.Ychunks = height;
         this.chunkSize = chunkSize;
+        this.mapWidth = Xchunks * chunkSize;
+        this.mapHeight = Ychunks * chunkSize;
         map = initChunky(width, height);
     }
     private Chunk[][] initChunky(int width, int height) {
@@ -40,8 +43,8 @@ public class TunnelMap {
     
     
     public void updateChunk(int x, int y, char[][] chunkData) throws ChunkException{
-        if((x < 0 || x >= this.mapWidth)||(y < 0 || y >= this.mapHeight)){
-            throw new ChunkException(x, y, mapWidth, mapHeight);
+        if((x < 0 || x >= this.Xchunks)||(y < 0 || y >= this.Ychunks)){
+            throw new ChunkException(x, y, Xchunks, Ychunks);
         }
     }
     
@@ -53,8 +56,8 @@ public class TunnelMap {
             yMax = (int)(render.getY() + render.getHeight());
         int chTop = Math.max(0, yMin / chunkSize),
                 chLeft = Math.max(0, xMin / chunkSize),
-                chRight = (int)Math.min(this.mapWidth - 1, Math.ceil(xMax * 1.0 / chunkSize)),
-                chBottom= (int)Math.min(this.mapHeight - 1,Math.ceil(yMax * 1.0 / chunkSize));
+                chRight = (int)Math.min(this.Xchunks - 1, Math.ceil(xMax * 1.0 / chunkSize)),
+                chBottom= (int)Math.min(this.Ychunks - 1,Math.ceil(yMax * 1.0 / chunkSize));
         System.out.format("Map: Rendering blocks from [%d,%d] to [%d,%d]%n", xMin, yMin, xMax, yMax);
         for(int Y = chTop; Y <= chBottom; Y++){
             for(int X = chLeft; X <chRight; X++){
@@ -65,7 +68,7 @@ public class TunnelMap {
     }
 
     Point2D getFreeBaseSpot() {
-        return new Point2D(Settings.getRandInt(mapWidth*chunkSize), Settings.getRandInt(mapHeight*chunkSize));
+        return new Point2D(Settings.getRandInt(Xchunks*chunkSize), Settings.getRandInt(Ychunks*chunkSize));
     }
     
     class Chunk{
@@ -97,11 +100,11 @@ public class TunnelMap {
             for(int y = yFrom; y <= yTo; y++){
                 for(int x = xFrom; x <= xTo; x++){
                     g.setFill(TunColors.getBlockColor(x, y, this.chunkData[x%chunkSize][y%chunkSize]));
-                    g.fillRect(y*blockSize.getHeight(), x*blockSize.getWidth(), blockSize.getHeight(), blockSize.getWidth());
+                    g.fillRect(x*blockSize.getWidth(), y*blockSize.getHeight(), blockSize.getWidth(), blockSize.getHeight());
                 }
             }
-            g.setFill(Settings.getRandColor(0.5));
-            g.fillRect(xFrom, yFrom, (xTo - xFrom)*blockSize.getWidth(), (yTo - yFrom)*blockSize.getHeight());
+            g.setFill(TunColors.getChunkColor(selfXmin % chunkSize, selfYmin % chunkSize));
+            g.fillRect(xFrom*blockSize.getWidth(), yFrom*blockSize.getHeight(), (xTo - xFrom + 1)*blockSize.getWidth(), (yTo - yFrom + 1)*blockSize.getHeight());
         }
         
         
