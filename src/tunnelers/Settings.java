@@ -24,8 +24,8 @@ public class Settings {
     public static final Color[] PLAYER_COLORS;
     
     private static final Random RNG;
-    public static final double MIN_BLOCKS_ON_DIMENSION = 15;
-    public static final int MOCK_CHUNK_SIZE = 24;
+    public static final double MIN_BLOCKS_ON_DIMENSION = 27;
+    public static final int MOCK_CHUNK_SIZE = 16;
     
     static{
         PLAYER_COLORS = preparePlayerColors();
@@ -34,18 +34,6 @@ public class Settings {
 
     public static int getRandInt(int i) {
         return RNG.nextInt(i);
-    }
-
-    public static Color getRandColor(double opacity) {
-        int i = getRandInt(PLAYER_COLORS.length);
-        Color c = PLAYER_COLORS[i];
-        
-        return Color.color(c.getRed(), c.getGreen(), c.getBlue(), opacity);
-    }
-    
-    
-    public static Color getRandColor(){
-        return getRandColor(1);
     }
     
     private final int width = WIDTH_DEFAULT, height = HEIGHT_DEFAULT;
