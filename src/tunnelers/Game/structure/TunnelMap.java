@@ -52,8 +52,8 @@ public class TunnelMap {
     public void drawMapSection(GraphicsContext g, Dimension2D blockSize, Rectangle render){
         int yMin = (int)(render.getY()),
             xMin = (int)(render.getX()),
-            xMax = (int)(render.getX() + render.getWidth()),
-            yMax = (int)(render.getY() + render.getHeight());
+            xMax = (int)(render.getX() + render.getWidth() - 1),
+            yMax = (int)(render.getY() + render.getHeight() -1);
         int chTop = Math.max(0, yMin / chunkSize),
                 chLeft = Math.max(0, xMin / chunkSize),
                 chRight = (int)Math.min(this.Xchunks - 1, Math.ceil(xMax * 1.0 / chunkSize)),
@@ -68,20 +68,23 @@ public class TunnelMap {
     }
 
     Point2D getFreeBaseSpot() {
-        return new Point2D(Settings.getRandInt(Xchunks*chunkSize), Settings.getRandInt(Ychunks*chunkSize));
+        int x = Settings.getRandInt(Xchunks - 2) + 1, y = Settings.getRandInt(Ychunks - 2) + 1;
+        return new Point2D(x * chunkSize, y * chunkSize);
     }
     
     class Chunk{
         protected Block[][] chunkData;
         private final int selfXmin, selfXmax,
                     selfYmin, selfYmax;
+        private Player assignedPlayer;
+        
         private Chunk(int x, int y){
             this.chunkData = new Block[chunkSize][chunkSize];
             for(int row = 0; row < chunkSize; row++){
                 for(int col = 0; col < chunkSize; col++){
                     int val = Settings.getRandInt(100);
                     this.chunkData[row][col] = (val < 75) ? Block.Breakable :
-                            (val < 95) ? Block.Tough : Block.Base;
+                            (val < 95) ? Block.Tough : Block.BaseWall;
                 }
             }
             this.selfXmin = x * chunkSize;
@@ -89,6 +92,10 @@ public class TunnelMap {
             this.selfYmin = y * chunkSize;
             this.selfYmax = ((y + 1) * chunkSize) - 1;
             System.out.format("Chunk [%d,%d] is from [%d,%d] to [%d,%d]%n",x, y, selfXmin, selfYmin, selfXmax, selfYmax);
+        }
+        
+        void assignPlayer(Player p){
+            this.assignedPlayer = p;
         }
         
         void renderChunk(GraphicsContext g, int xMin, int xMax, int yMin, int yMax, Dimension2D blockSize){
@@ -99,11 +106,16 @@ public class TunnelMap {
             System.out.format("CHNK: Rendering blocks from [%d,%d] to [%d,%d]%n", xFrom, yFrom, xTo, yTo);
             for(int y = yFrom; y <= yTo; y++){
                 for(int x = xFrom; x <= xTo; x++){
-                    g.setFill(TunColors.getBlockColor(x, y, this.chunkData[x%chunkSize][y%chunkSize]));
+                    Block b = this.chunkData[x%chunkSize][y%chunkSize];
+                    if(b == Block.BaseWall && this.assignedPlayer != null){
+                        g.setFill(assignedPlayer.getColor());
+                    } else {
+                        g.setFill(TunColors.getBlockColor(x, y, b));
+                    }
                     g.fillRect(x*blockSize.getWidth(), y*blockSize.getHeight(), blockSize.getWidth(), blockSize.getHeight());
                 }
             }
-            g.setFill(TunColors.getChunkColor(selfXmin % chunkSize, selfYmin % chunkSize));
+            g.setFill(TunColors.getChunkColor(selfXmin / chunkSize, selfYmin / chunkSize));
             g.fillRect(xFrom*blockSize.getWidth(), yFrom*blockSize.getHeight(), (xTo - xFrom + 1)*blockSize.getWidth(), (yTo - yFrom + 1)*blockSize.getHeight());
         }
         
