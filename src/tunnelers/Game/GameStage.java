@@ -1,8 +1,11 @@
 package tunnelers.Game;
 
 
+import javafx.geometry.Point2D;
 import tunnelers.ATunnelersScene;
 import tunnelers.ATunnelersStage;
+import tunnelers.Game.structure.Container;
+import tunnelers.Game.structure.Direction;
 import tunnelers.network.MessagePasser;
 import tunnelers.network.NetWorks;
 import tunnelers.Game.structure.Player;
@@ -15,6 +18,8 @@ public class GameStage extends ATunnelersStage{
 
     protected NetWorks networks;
     protected GameChat gamechat;
+    private Container container;
+    private AGameScene sc;
     
     public GameStage(NetWorks networks) {
         this.networks = networks;
@@ -53,6 +58,37 @@ public class GameStage extends ATunnelersStage{
         return this.gamechat;
     }
     
+    protected Container getContainer(){
+        return this.container;
+    }
+    
+    protected void movePlayer(int pid, Direction d){
+        Player[] players = this.container.getPlayers();
+        Player plr = players[0];
+        Point2D plr_loc = plr.getLocation();
+        double newX = plr_loc.getX(), newY = plr_loc.getY();
+        switch(d){
+            default: return;
+            case North:
+                if(newY > 0){ newY -= 1; }
+            break;
+                
+            case West:
+                if(newX > 0){ newX -= 1; }
+            break;
+                
+            case East:
+                if(newX < this.container.getMapWidth()){ newX += 1; }
+            break;
+                
+            case South:
+                if(newY < this.container.getMapHeight()){ newY += 1; }
+            break;
+        }
+        plr.setLocation(new Point2D(newX, newY));
+        sc.drawScene();
+    }
+    
     public void handleNetworkCommand(String command){
         AGameScene scene = (AGameScene)this.getScene();
         switch(0){
@@ -66,7 +102,7 @@ public class GameStage extends ATunnelersStage{
                 break;
         }
     }
-
+    
     @Override
     protected void changeScene(ATunnelersScene scene) {
         super.changeScene(sc = (AGameScene)scene);

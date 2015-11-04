@@ -21,8 +21,7 @@ public class Player {
     
     private final int playerID;
     private final String name;
-    private short activeX, activeY;
-    private boolean activeShoot;
+    private final Control controlScheme;
     private Color color;
     private Tank tank;
     
@@ -35,6 +34,7 @@ public class Player {
         this.playerID = num_of_instances = newID;
         this.name = name;
         this.setColor(newID - 1);
+        this.controlScheme = new Control();
     }
     
     public Color getColor(){
@@ -61,7 +61,16 @@ public class Player {
     public Point2D getLocation() {
         return this.tank.getLocation();
     }
+    
+    public void setLocation(Point2D loc) {
+        this.tank.setLocation(loc);
+        System.out.println(name + " new location set: " + loc.toString());
+    }
 
+    public double getEnergyPct(){
+        return this.tank.EnergyStatus / Tank.MAX_ENERGY;
+    }
+    
     void setTank(Tank t) {
         this.tank = t;
     }

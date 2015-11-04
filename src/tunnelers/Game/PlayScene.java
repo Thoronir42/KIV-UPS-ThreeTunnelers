@@ -6,12 +6,16 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import tunnelers.Game.CanvasLayouts.CanvasLayout;
 import tunnelers.Game.structure.Container;
+import tunnelers.Game.structure.Direction;
 
 /**
  *
@@ -34,7 +38,13 @@ public class PlayScene extends AGameScene{
         PlayScene scene = new PlayScene(root, settings.getWidth(), settings.getHeight());
         
         addComponents(root, scene);
+        
+        scene.setOnKeyPressed((KeyEvent e) -> {
+            System.out.println("Playscene keypressed:" + e.getCode());
+            scene.handleKeyPressed(e.getCode());
+        });
         scene.setCanvasLayout(c);
+        
         return scene;
         
     }
@@ -62,11 +72,13 @@ public class PlayScene extends AGameScene{
         scene.ta_chatBox.setWrapText(true);
         scene.ta_chatBox.setPrefWidth(chatWidth);
         scene.ta_chatBox.setPrefRowCount(10);
-        scene.ta_chatBox.setDisable(true);
+        scene.ta_chatBox.setEditable(false);
+        scene.ta_chatBox.setBackground(Background.EMPTY);
         vertical.getChildren().add(scene.ta_chatBox);
         
         scene.tf_chatIn = new TextField();
         scene.tf_chatIn.setPrefWidth(chatWidth);
+        scene.tf_chatIn.setDisable(true);
         vertical.getChildren().add(scene.tf_chatIn);
         
         root.setRight(vertical);
@@ -90,4 +102,28 @@ public class PlayScene extends AGameScene{
         GraphicsContext g = this.ca_drawArea.getGraphicsContext2D();
         this.canvasLayout.drawLayout(g);
     }
+    
+    public void handleKeyPressed(KeyCode code){
+        System.out.println(code);
+        switch(code){
+            default: return;
+            case UP:
+                this.getStage().movePlayer(0, Direction.North);
+            break;
+                
+            case LEFT:
+                this.getStage().movePlayer(0, Direction.West);
+            break;
+                
+            case RIGHT:
+                this.getStage().movePlayer(0, Direction.East);
+            break;
+                
+            case DOWN:
+                this.getStage().movePlayer(0, Direction.South);
+            break;
+        }
+        this.drawScene();
+    }
+    
 }
