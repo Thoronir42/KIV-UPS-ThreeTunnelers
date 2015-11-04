@@ -114,7 +114,7 @@ public class TunnelMap {
         Breakable('a'),
         Tough('b'),
         Empty('c'),
-        Base('d'),
+        BaseWall('d'),
         Undefined('z');
         
         private final char type;

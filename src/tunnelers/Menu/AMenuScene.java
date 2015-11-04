@@ -19,10 +19,9 @@ public abstract class AMenuScene extends ATunnelersScene{
         });
     }
     
-    @Override
     public final void handleKeyPressed(KeyCode code) {
-        if(code.equals(KeyCode.ESCAPE)){
-            this.getStage().prevScene();
+        switch(code){
+            case ESCAPE: this.getStage().prevScene(); break;
         }
     }
     

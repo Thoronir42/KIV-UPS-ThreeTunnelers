@@ -28,18 +28,19 @@ public class TunColors {
     public static Color getChunkColor(int x, int y){
         Color[] cols = PLAYER_COLORS;
         int i = (x * 2 + y * 7) % cols.length;
-        return cols[i];
+        return opacify(cols[i], 0.25);
     }
     
     
 
     public static Color getRandColor(double opacity) {
         int i = Settings.getRandInt(PLAYER_COLORS.length);
-        Color c = PLAYER_COLORS[i];
-        
-        return Color.color(c.getRed(), c.getGreen(), c.getBlue(), opacity);
+        return opacify(PLAYER_COLORS[i], opacity);
     }
     
+    private static Color opacify(Color c, double opacity){
+        return Color.color(c.getRed(), c.getGreen(), c.getBlue(), opacity);
+    }
     
     public static Color getRandColor(){
         return getRandColor(1);

@@ -94,8 +94,7 @@ public class LobbyScene extends AGameScene{
         });
         root.add(next, 1, 2);
     }
-
-    @Override
+    
     public void handleKeyPressed(KeyCode code) {
         switch(code){
             case ENTER:

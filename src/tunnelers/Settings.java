@@ -25,7 +25,7 @@ public class Settings {
     
     private static final Random RNG;
     public static final double MIN_BLOCKS_ON_DIMENSION = 27;
-    public static final int MOCK_CHUNK_SIZE = 16;
+    public static final int MOCK_CHUNK_SIZE = 24;
     
     static{
         PLAYER_COLORS = preparePlayerColors();

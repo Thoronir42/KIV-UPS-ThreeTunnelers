@@ -28,5 +28,4 @@ public abstract class AGameScene extends ATunnelersScene{
     public void drawScene() {
         
     }
-    
 }

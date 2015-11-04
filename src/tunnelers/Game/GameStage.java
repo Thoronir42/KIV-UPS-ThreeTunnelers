@@ -1,8 +1,6 @@
 package tunnelers.Game;
 
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import tunnelers.ATunnelersScene;
 import tunnelers.ATunnelersStage;
 import tunnelers.network.MessagePasser;
@@ -43,7 +41,7 @@ public class GameStage extends ATunnelersStage{
             this.networks.join();
             System.out.println("NetWorks ended succesfully");
         } catch (InterruptedException ex) {
-            Logger.getLogger(GameStage.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         super.exit(CHANGE_TO_MENU);
     }
@@ -71,8 +69,7 @@ public class GameStage extends ATunnelersStage{
 
     @Override
     protected void changeScene(ATunnelersScene scene) {
-        AGameScene sc = (AGameScene)scene;
-        super.changeScene(sc);
+        super.changeScene(sc = (AGameScene)scene);
         sc.updateChatbox();
         sc.drawScene();
         
