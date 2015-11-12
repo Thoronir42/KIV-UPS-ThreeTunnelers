@@ -40,7 +40,7 @@ public class RectangularCanLayout extends CanvasLayout{
         this.cols = cols;
         Dimension2D playerAreaBounds = new Dimension2D(canvasArea.getWidth() / cols,
                     canvasArea.getHeight() / rows);
-        this.playerArea = new PlayerArea(playerAreaBounds);
+        this.playerArea = new PlayerArea(playerAreaBounds, c);
     }
     
     @Override
@@ -55,11 +55,13 @@ public class RectangularCanLayout extends CanvasLayout{
         Affine defTransform = g.getTransform();
         Dimension2D playerAreaBounds = this.playerArea.getBounds();
         int row = 0, col = 0;
-        
-        for(Player p : this.container.getPlayers()){
+        Player[] players = this.container.getPlayers();
+		
+		
+        for(int i = 0; i < players.length; i++){
             g.translate(col * playerAreaBounds.getWidth(), row * playerAreaBounds.getHeight());
-            System.out.println("Drawing player "+p.getName());
-            this.playerArea.draw(g, playerAreaBounds, p);
+            System.out.format("Drawing player %s on %s%n",players[i].getName(), players[i].getLocation());
+            this.playerArea.draw(g, playerAreaBounds, players, i);
             
             if(++col >= cols){
                 col = 0;
@@ -75,9 +77,11 @@ public class RectangularCanLayout extends CanvasLayout{
         private final Rectangle viewWindow;
         private final Dimension2D blockSize;
         private final Rectangle render;
+		private final Container container;
         
-        PlayerArea(Dimension2D playerAreaBounds){
+        PlayerArea(Dimension2D playerAreaBounds, Container c){
             this.bounds = playerAreaBounds;
+			this.container = c;
             this.viewWindow = new Rectangle(bounds.getWidth() * 0.05, bounds.getHeight() * 0.05, bounds.getWidth() * 0.9, bounds.getHeight() * 0.6);
             this.blockSize = getBlockSize();
             this.render = getRender();
@@ -87,14 +91,14 @@ public class RectangularCanLayout extends CanvasLayout{
             return this.bounds;
         }
         
-        protected void draw(GraphicsContext g, Dimension2D bounds, Player p) {
+        protected void draw(GraphicsContext g, Dimension2D bounds, Player[] p, int curPlayer) {
             Affine defTransform = g.getTransform();
 
-            g.setFill(p.getColor());
+            g.setFill(p[curPlayer].getColor());
             g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
             
             g.translate(viewWindow.getX(), viewWindow.getY());
-            drawViewWindow(g, p);
+            drawViewWindow(g, p, curPlayer);
             g.setTransform(defTransform);
 
             Rectangle inBounds = new Rectangle(bounds.getWidth() * 0.8, bounds.getHeight() * 0.1);
@@ -113,13 +117,14 @@ public class RectangularCanLayout extends CanvasLayout{
             g.fillRect(r.getX(), r.getY(), r.getWidth(), r.getHeight());
         }
 
-        private void drawViewWindow(GraphicsContext g, Player p){
+        private void drawViewWindow(GraphicsContext g, Player[] p, int curPlayer){
             Affine defTransform = g.getTransform();
             g.setFill(Color.BLACK);
-            g.fillRect(0, 0, viewWindow.getWidth(), viewWindow.getHeight());
-            clampRender(render, p.getLocation());
+            g.fillRect(0-2, 0-2, viewWindow.getWidth()+4, viewWindow.getHeight()+4);
+            clampRender(render, p[curPlayer].getLocation());
             try{
-                g.translate(-render.getX(), -render.getY());
+                g.translate(-render.getX() * blockSize.getWidth(),
+						-render.getY() * blockSize.getHeight());
                 container.drawMap(g, blockSize, render);
             } catch (Exception e){
                 e.printStackTrace();
@@ -128,13 +133,37 @@ public class RectangularCanLayout extends CanvasLayout{
             }
             
             if(false){
-                this.renderStatic(g, render, p.getEnergyPct());
+                this.renderStatic(g, render, p[curPlayer].getEnergyPct());
             }
             
         }
-        
+		
+		private void drawTanks(Rectangle render, Player[]p){
+			
+		}
+		
         private void clampRender(Rectangle render, Point2D center){
-            
+            double halfWidth = render.getWidth() / 2,
+					halfHeight= render.getHeight()/2;
+			double mapWidth = container.getMapWidth(),
+					mapHeight = container.getMapHeight();
+			
+			if(center.getX() - halfWidth < 0){
+				render.setX(0);
+			} else if(center.getX() + halfWidth > mapWidth){
+				System.out.println("ClampRight");
+				render.setX(mapWidth - 2 * halfWidth);
+			} else {
+				render.setX(center.getX() - (int)halfWidth);
+			}
+			
+			if(center.getY() - halfHeight < 0){
+				render.setY(0);
+			} else if(center.getY() + halfHeight > mapHeight){
+				render.setY(mapHeight - 2 * halfHeight);
+			} else {
+				render.setY(center.getY() - (int)halfHeight);
+			}
         }
         
         private void renderStatic(GraphicsContext g, Rectangle render, double energyPct) {
