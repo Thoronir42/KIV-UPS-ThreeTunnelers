@@ -49,7 +49,7 @@ public class NetWorks extends Thread{
         });
     }
     
-    public void issueCommand(ANetworkCommand cmd){
+    public void issueCommand(NetCommand cmd){
         String code = cmd.getCommandCode();
         System.out.println(code);
         sendMessage(code);
@@ -90,13 +90,18 @@ public class NetWorks extends Thread{
         }
     }
 
-    synchronized private boolean handshake(){
+    private boolean handshake(){
         try{
             int attemptsLeft = HANDSHAKE_ATTEMPTS;
             while(attemptsLeft > 0){
-                this.issueCommand(new LobbyCommand(LobbyCommand.Action.Join, new Object[]{HANDSHAKE_ATTEMPTS - attemptsLeft}));
-                wait(20);
-                if(serverResponded()){
+				if(this.joinCancelled()){
+					return false;
+				}
+				NetCommand cmd = new ConnectionCommand.Join(HANDSHAKE_ATTEMPTS - attemptsLeft);
+                this.issueCommand(cmd);
+				
+                sleep(20);
+                if(this.serverResponded()){
                     return true;
                 }
                 System.out.println("Connection failed, retrying "+attemptsLeft+" more times...");
@@ -114,14 +119,20 @@ public class NetWorks extends Thread{
     }
     
     private boolean keepRunning(){
-        return (this.status != Status.Disconnected &&
-                this.status != Status.ServerFull &&
-                this.status != Status.ServerUnreachable);
+        Status[] restricted = new Status[]{Status.Disconnected, Status.JoiningCanceled, Status.ServerFull, Status.ServerUnreachable};
+		for(Status s : restricted){
+			if (this.status == s){
+				return false;
+			}
+		}
+		return true;
     }
     private boolean serverResponded(){
         return this.status != Status.Joining;
     }
-    
+    private boolean joinCancelled(){
+		return this.status == Status.JoiningCanceled;
+	}
     
     @Override
     public void run() {
@@ -149,12 +160,18 @@ public class NetWorks extends Thread{
         this.datagramSocket.close();
     }
 
+	synchronized public void cancelJoinin(){
+		this.status = Status.JoiningCanceled;
+	}
+	
     public String getStatusLabel() {
         switch(this.status){
             default:
                 return "Unknown status";
             case Joining:
                 return String.format("Attempting to join %s:%d", this.address.getHostAddress(), this.port);
+			case JoiningCanceled:
+				return String.format("Attempt to join %s:%d was cancelled by user.", this.address.getHostAddress(), this.port);
             case ServerUnreachable:
                 return String.format("No host found at %s:%d", this.address.getHostAddress(), this.port);
             case ServerFull:
@@ -170,7 +187,7 @@ public class NetWorks extends Thread{
     }
     
     private enum Status{
-        Joining, 
+        Joining, JoiningCanceled,
         ServerReady, ServerUnreachable, ServerFull,
         Connected,
         Disconnected, Kicked
