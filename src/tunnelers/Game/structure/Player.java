@@ -74,7 +74,10 @@ public class Player {
     void setTank(Tank t) {
         this.tank = t;
     }
-    
+	
+	Tank getTank(){
+		return this.tank;
+	}
 }
 
 

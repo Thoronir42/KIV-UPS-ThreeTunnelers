@@ -13,7 +13,7 @@ public class Container {
     
     public static Container mockContainer(){
         Player[] players = new Player[]{
-            new Player("Yahoo"),new Player("Yahoo"),new Player("Yahoo"),
+            new Player("Yahoo"),new Player("Yahoo"),
         };
         TunnelMap map = TunnelMap.getMockMap();
         for(Player p : players){

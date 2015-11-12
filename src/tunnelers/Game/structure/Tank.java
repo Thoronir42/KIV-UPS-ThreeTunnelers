@@ -49,5 +49,32 @@ public class Tank implements GameEntity{
     void setLocation(Point2D loc){
         this.location = loc;
     }
+
+	public Direction getDirection() {
+		return direction;
+	}
+
+	public double getHitPoints() {
+		return HitPoints;
+	}
+
+	public double getEnergyStatus() {
+		return EnergyStatus;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+
+	public void setHitPoints(double HitPoints) {
+		this.HitPoints = HitPoints;
+	}
+
+	public void setEnergyStatus(double EnergyStatus) {
+		this.EnergyStatus = EnergyStatus;
+	}
     
+	
+	
+	
 }
