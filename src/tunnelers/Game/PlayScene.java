@@ -22,13 +22,9 @@ import tunnelers.Game.structure.Direction;
  * @author Stepan
  */
 public class PlayScene extends AGameScene{
-    
-    public static PlayScene getInstance(){
-        return createInstance();
-    }
-    
-    private static PlayScene createInstance(){
-        return createInstance(Container.mockContainer());
+	
+    public static PlayScene getInstance(Container c){
+        return createInstance(c);
     }
     
     private static PlayScene createInstance(Container c){
@@ -81,7 +77,7 @@ public class PlayScene extends AGameScene{
         scene.tf_chatIn.setDisable(true);
         vertical.getChildren().add(scene.tf_chatIn);
         
-        root.setRight(vertical);
+        //root.setRight(vertical);
         root.setOnMouseClicked((MouseEvent e) -> {
             scene.drawScene();
         });

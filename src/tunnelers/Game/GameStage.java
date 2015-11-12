@@ -30,6 +30,7 @@ public class GameStage extends ATunnelersStage{
             }
         });
         this.setScene(LobbyScene.getInstance(networks));
+		this.container = Container.mockContainer();
         this.gamechat = new GameChat();
     }
 
@@ -103,6 +104,11 @@ public class GameStage extends ATunnelersStage{
         }
     }
     
+	protected void beginGame(){
+		AGameScene sc = PlayScene.getInstance(container);
+		this.changeScene(sc);
+	}
+	
     @Override
     protected void changeScene(ATunnelersScene scene) {
         super.changeScene(sc = (AGameScene)scene);

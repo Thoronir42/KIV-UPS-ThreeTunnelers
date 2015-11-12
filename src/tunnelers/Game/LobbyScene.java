@@ -84,7 +84,7 @@ public class LobbyScene extends AGameScene{
         
         next = new Button("Try the PlayScene");
         ((Button)next).setOnAction((ActionEvent event) -> {
-            scene.getStage().changeScene(PlayScene.class);
+            scene.getStage().beginGame();
         });
         root.add(next, 1, 1);
         
