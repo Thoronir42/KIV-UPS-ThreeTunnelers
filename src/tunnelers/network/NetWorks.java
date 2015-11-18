@@ -124,13 +124,7 @@ public class NetWorks extends Thread{
     }
     
     private boolean keepRunning(){
-        Status[] restricted = new Status[]{Status.Disconnected, Status.JoiningCanceled, Status.ServerFull, Status.ServerUnreachable};
-		for(Status s : restricted){
-			if (this.status == s){
-				return false;
-			}
-		}
-		return true;
+        return this.status.keepRunning;
     }
     private boolean serverResponded(){
         return this.status != Status.Joining;
@@ -188,14 +182,27 @@ public class NetWorks extends Thread{
             case Disconnected:
                 return String.format("Disconnected from %s:%d", this.address.getHostAddress(), this.port);
         }   
+    }
 	
+	public String getDisconnectReason(){
+		return this.disconnectReason;
 	}
     
     private enum Status{
-        Joining, JoiningCanceled,
-        ServerReady, ServerUnreachable, ServerFull,
+        Joining, JoiningCanceled(false),
+        ServerReady, ServerUnreachable(false), ServerFull(false),
         Connected,
-        Disconnected, Kicked
+        Disconnected(false), Kicked(false);
+		
+		public final boolean keepRunning;
+		
+		private Status(){
+			this(true);
+		}
+		
+		private Status(boolean keepRunning){
+			this.keepRunning = keepRunning;
+		}
     }
     
 }

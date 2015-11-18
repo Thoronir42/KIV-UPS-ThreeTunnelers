@@ -63,6 +63,10 @@ public abstract class NetCommand {
 	final String commandType;
     final Object[] params;
 	
+	public NetCommand(char aspectLetter, String commandType){
+		this(aspectLetter, commandType, null);
+	}
+	
 	public NetCommand(char aspectLetter, String commandType, Object[] params){
 		this.aspectLetter = aspectLetter;
 		this.commandType = commandType;
