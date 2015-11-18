@@ -12,6 +12,7 @@ public class NetCommandPasser implements Runnable{
         return cmd;
     }
     
+	@Override
     public void run() {
         throw new UnsupportedOperationException("Command hasn't been passed: no uzuý");
     }

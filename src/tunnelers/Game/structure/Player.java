@@ -53,6 +53,10 @@ public class Player {
         return this.name;
     }
     
+	public int getID(){
+		return this.playerID;
+	}
+	
     @Override
     public String toString(){
         return String.format("[%2d] %16s (%s)", this.playerID, this.name, this.color);
