@@ -27,7 +27,8 @@ public class NetWorks extends Thread{
     private final DatagramSocket datagramSocket;
     InetAddress address;        int port;
     String clientName;
-    private MessagePasser runner;
+	
+    private NetCommandPasser cmdPasser;
     private Status status;
     private String disconnectReason;
     
@@ -41,7 +42,7 @@ public class NetWorks extends Thread{
         this.status = Status.Joining;
         
         
-        this.setMessageHandler(new MessagePasser(){
+        this.setCommandPasser(new NetCommandPasser(){
             @Override
             public void run(){
                 confirmHandshake();
@@ -55,8 +56,8 @@ public class NetWorks extends Thread{
         sendMessage(code);
     }
     
-    public final void setMessageHandler(MessagePasser r){
-        this.runner = r;
+    public final void setCommandPasser(NetCommandPasser r){
+        this.cmdPasser = r;
     }
     
     private String receiveMessage() throws IOException{        
@@ -79,11 +80,15 @@ public class NetWorks extends Thread{
     
     private void handleMessage(){
         try{
-            String data = receiveMessage();
-            if(this.runner != null){
-                this.runner.passMessage(data);                
+			String data = receiveMessage();
+            NetCommand cmd = NetCommand.parse(data);
+			if(cmd == null){
+				System.err.println("Netcommand Unrecognised: "+data);
+			}
+            if(this.cmdPasser != null){
+                this.cmdPasser.passCommand(cmd);
             } else {
-                System.err.format("\"%s\" was not handled, no handler found.%n", data);
+                System.err.format("\"%s\" was not handled, no handler found.%n", cmd.getCommandCode());
             }
         } catch (IOException e){
             System.err.println(e.getMessage());
@@ -182,9 +187,9 @@ public class NetWorks extends Thread{
                 return String.format("Connected to %s:%d", this.address.getHostAddress(), this.port);
             case Disconnected:
                 return String.format("Disconnected from %s:%d", this.address.getHostAddress(), this.port);
-        }
-        
-    }
+        }   
+	
+	}
     
     private enum Status{
         Joining, JoiningCanceled,
