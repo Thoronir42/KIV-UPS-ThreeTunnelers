@@ -16,7 +16,8 @@ public class NetWorks extends Thread{
     private static final int BUFFER_SIZE = 512;
     private static final int HANDSHAKE_ATTEMPTS = 4;
     private static final int HANDSHAKE_WAIT_MILLIS = 950;
-
+	private static final int MILLIS_BEFORE_PANIC = 2500;
+	
     public static NetWorks connectTo(String address, int port, String client) throws IOException, InterruptedException{
         NetWorks tmp = new NetWorks(address, port, client);
         tmp.start();

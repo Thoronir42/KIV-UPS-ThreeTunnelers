@@ -24,7 +24,7 @@ public class Engine extends Application {
         this.settings = Settings.getInstance();
         this.timer = new Timer();
         this.changeStage(MenuStage.getInstance());
-        
+        Assets.loadAssets();
         
         /*long delay = settings.getDelay();
         timer.scheduleAtFixedRate(new TimerTask() {

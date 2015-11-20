@@ -1,6 +1,5 @@
 package generic;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -24,7 +23,6 @@ public class NetCmdFormatter {
 		};
 		for(Class c : groups){
 			scanAndFormat(c);
-			Runtime.getRuntime().exit(0);
 		}		
 	}
 	

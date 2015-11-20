@@ -42,6 +42,9 @@ public abstract class NetCommand {
 	}
 	
 	private static Class getCmdClass(char aspect, String command){
+		if(true)
+		return ConnectionCommand.Recievable.ServerReady.class;
+		
 		Class group = getCmdGroup(aspect);
 		Class[] recievableClasses = group.getDeclaredClasses();
 		for(Class c : recievableClasses){
