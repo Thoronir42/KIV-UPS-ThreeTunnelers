@@ -19,9 +19,10 @@ public class GameStage extends ATunnelersStage{
 
     protected NetWorks networks;
     protected GameChat gamechat;
-    private Container container;
+    private final Container container;
     private AGameScene sc;
-    
+    private Impulser impulser;
+	
     public GameStage(NetWorks networks) {
         this.networks = networks;
         this.networks.setCommandPasser(new NetCommandPasser(){
@@ -33,11 +34,14 @@ public class GameStage extends ATunnelersStage{
         this.setScene(LobbyScene.getInstance(networks));
 		this.container = Container.mockContainer();
         this.gamechat = new GameChat();
+		this.impulser = new Impulser(() -> {
+			update();
+		});
     }
 
     @Override
-    public void update() {
-        
+    public final void update() {
+		
     }
 
     @Override
