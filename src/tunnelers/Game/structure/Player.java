@@ -70,11 +70,7 @@ public class Player {
         this.tank.setLocation(loc);
         System.out.println(name + " new location set: " + loc.toString());
     }
-
-    public double getEnergyPct(){
-        return this.tank.EnergyStatus / Tank.MAX_ENERGY;
-    }
-    
+	
     void setTank(Tank t) {
         this.tank = t;
     }

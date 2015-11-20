@@ -1,5 +1,6 @@
 package tunnelers.Game.structure;
 
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
@@ -7,27 +8,27 @@ import javafx.scene.paint.Color;
  *
  * @author Stepan
  */
-public class Tank implements GameEntity{
+public class Tank extends GameEntity{
 
+	private static final Dimension2D TANK_SIZE = new Dimension2D(7, 7);
     
     public static int MAX_HITPOINTS = 20,
             MAX_ENERGY = 120;
     
-    private Direction direction;
-    private Point2D location;
-    private Player player;
-    
-    protected double HitPoints,
-                     EnergyStatus;
+    protected double hitPoints,
+                     energyStatus;
     
     public Tank(Player player, Point2D initialLocation){
-        this.direction = Direction.North;
-        this.player = player;
-        this.location = initialLocation;
-        this.HitPoints = MAX_HITPOINTS;
-        this.EnergyStatus = MAX_ENERGY;
+        super(Direction.North, initialLocation, player);
+        this.hitPoints = MAX_HITPOINTS;
+        this.energyStatus = MAX_ENERGY;
     }
     
+	@Override
+	public Dimension2D getSize(){
+		return TANK_SIZE;
+	}
+	
     public Color getColor(){
         return this.player.getColor();
     }
@@ -42,36 +43,28 @@ public class Tank implements GameEntity{
         return 0;
     }
 
-    Point2D getLocation() {
-        return this.location;
-    }
-    
-    void setLocation(Point2D loc){
-        this.location = loc;
-    }
-
 	public Direction getDirection() {
 		return direction;
 	}
-
-	public double getHitPoints() {
-		return HitPoints;
-	}
-
-	public double getEnergyStatus() {
-		return EnergyStatus;
-	}
-
+	
 	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}
 
-	public void setHitPoints(double HitPoints) {
-		this.HitPoints = HitPoints;
+	public double getHitPoints() {
+		return hitPoints;
 	}
 
-	public void setEnergyStatus(double EnergyStatus) {
-		this.EnergyStatus = EnergyStatus;
+	public void setHitPoints(double hitPoints) {
+		this.hitPoints = hitPoints;
+	}
+
+	public double getEnergyStatus() {
+		return energyStatus;
+	}
+
+	public void setEnergyStatus(double energyStatus) {
+		this.energyStatus = energyStatus;
 	}
     
 	
