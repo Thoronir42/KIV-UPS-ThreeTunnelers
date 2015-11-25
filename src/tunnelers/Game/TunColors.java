@@ -15,6 +15,7 @@ public class TunColors {
     private static final Color breakable = Color.DARKSALMON;
     private static final Color tough = Color.DARKGREY;
     private static final Color empty = Color.DARKRED;
+	private static final Color error = Color.RED;
     
     public static Color getBlockColor(int x, int y, TunnelMap.Block block){
         switch(block){

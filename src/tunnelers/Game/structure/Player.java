@@ -1,8 +1,10 @@
 package tunnelers.Game.structure;
 
+import tunnelers.Game.IO.Controls;
 import javafx.geometry.Point2D;
 import tunnelers.Settings;
 import javafx.scene.paint.Color;
+import tunnelers.Game.IO.Input;
 
 
 
@@ -21,7 +23,7 @@ public class Player {
     
     private final int playerID;
     private final String name;
-    private final Control controlScheme;
+    private final Controls controlScheme;
     private Color color;
     private Tank tank;
     
@@ -34,7 +36,7 @@ public class Player {
         this.playerID = num_of_instances = newID;
         this.name = name;
         this.setColor(newID - 1);
-        this.controlScheme = new Control();
+        this.controlScheme = new Controls();
     }
     
     public Color getColor(){
@@ -45,8 +47,8 @@ public class Player {
         this.color = settings.getColor(this.color, colorId);
     }
     
-    public void handleControl(Control control){
-        
+    public void handleControl(Input input, boolean pressed){
+        this.controlScheme.handleControll(input, pressed);
     }
 
     public String getName() {

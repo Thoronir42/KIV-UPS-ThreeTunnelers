@@ -37,4 +37,11 @@ public enum Direction {
         return this.direction;
     }
     
+	public double getX(){
+		return this.direction.getX();
+	}
+	
+	public double getY(){
+		return this.direction.getY();
+	}
 }

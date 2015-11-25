@@ -1,14 +1,8 @@
-package tunnelers.Game.structure;
+package tunnelers.Game.IO;
 
-/**
- *
- * @author Stepan
- */
-public class Control {
+import tunnelers.Game.structure.Direction;
     
-}
-    
-enum Input{
+public enum Input{
     movUp   (Direction.North),
     movDown (Direction.South),
     movLeft (Direction.West),
@@ -28,4 +22,13 @@ enum Input{
     public Direction getDirection(){
         return this.dir;
     }
+	
+	public double getX(){
+		return this.dir.getX();
+	}
+	
+	public double getY(){
+		return this.dir.getY();
+	}
+	
 }
