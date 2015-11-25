@@ -15,12 +15,20 @@ public abstract class NetCommand {
 		MessageCommand.class
 		
 	};
-	static NetCommand parse(String msg){
+	static NetCommand parse(String msg) throws NetworksException{
 		String[] segments = msg.split(COMMAND_SPLIT);
 		if(segments.length < 2){ return null; }
-		Class command = getCmdClass(segments[0].charAt(0), segments[1]);
-		if(command != null){
-			System.out.println(command.toString());
+		Class cmdClass = getCmdClass(segments[0].charAt(0), segments[1]);
+		Object[] params = getCmdParams(segments);
+		if(cmdClass != null){
+			try {
+				NetCommand nc = (NetCommand)cmdClass.newInstance();
+				nc.setParams(params);
+				return nc;
+				
+			} catch (InstantiationException | IllegalAccessException ex) {
+				throw new NetworksException(ex.getMessage());
+			}
 		}
 		return null;
 	}
@@ -40,26 +48,35 @@ public abstract class NetCommand {
 		
 		return null;
 	}
-	
 	private static Class getCmdClass(char aspect, String command){
-		if(true)
-		return ConnectionCommand.Recievable.ServerReady.class;
 		
 		Class group = getCmdGroup(aspect);
-		Class[] recievableClasses = group.getDeclaredClasses();
-		for(Class c : recievableClasses){
+		Class[] receivableClasses = group.getDeclaredClasses();
+		for(Class c : receivableClasses){
+			if(c.getSimpleName().equals("Receivable")){ continue; }
 			try{
 				Field cmdField = c.getDeclaredField("CMD_TYPE");
 				if(cmdField.get(null).equals(command)){
 					return c;
 				}
 			} catch (NoSuchFieldException | IllegalAccessException e){
-				System.err.println(e.getMessage());
+				System.err.println(e.toString()+" on "+c.getSimpleName());
 			}
 		}
 		
 		
 		return null;
+	}
+
+	private static Object[] getCmdParams(String[] segments) {
+		if(segments.length <= 2){
+			return new Object[0];
+		}
+		Object[] params = new Object[segments.length -2];
+		for(int i = 2; i < segments.length; i++){
+			params[i-2] = segments[i];
+		}
+		return params;
 	}
 	
 	final char aspectLetter;
@@ -67,7 +84,7 @@ public abstract class NetCommand {
     final Object[] params;
 	
 	public NetCommand(char aspectLetter, String commandType){
-		this(aspectLetter, commandType, null);
+		this(aspectLetter, commandType, new Object[0]);
 	}
 	
 	public NetCommand(char aspectLetter, String commandType, Object[] params){
@@ -87,5 +104,9 @@ public abstract class NetCommand {
         }
         return sb.toString();
     }
+
+	private void setParams(Object[] params) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 	
 }

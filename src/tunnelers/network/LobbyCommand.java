@@ -27,7 +27,7 @@ public class LobbyCommand {
 		}
 	}
 	
-	public static abstract class Recievable{
+	public static abstract class Receivable{
 		public static class GameStarted extends NetCommand{
 			public final static String CMD_TYPE = "ITSON";
 			public GameStarted(){

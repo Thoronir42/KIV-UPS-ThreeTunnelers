@@ -133,7 +133,7 @@ public class RectangularCanLayout extends CanvasLayout{
             }
             
             if(false){
-                this.renderStatic(g, render, p[curPlayer].getEnergyPct());
+                //this.renderStatic(g, render, p[curPlayer].getEnergyPct());
             }
             
         }

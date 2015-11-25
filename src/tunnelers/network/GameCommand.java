@@ -6,4 +6,8 @@ package tunnelers.network;
  */
 public class GameCommand {
 	public static final char ASPECT_LETTER = 'G';
+	
+	public static abstract class Receivable{
+		
+	}
 }

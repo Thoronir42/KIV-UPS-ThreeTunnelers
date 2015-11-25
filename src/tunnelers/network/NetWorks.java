@@ -33,10 +33,8 @@ public class NetWorks extends Thread{
     private Status status;
     private String disconnectReason;
     
-    private NetWorks(String adress, int port, String clientName) throws IOException, NetworksException{
-        this.datagramSocket = new DatagramSocket(  );
-        //datagramSocket.connect(address, port);
-        System.out.println("Socket connected: "+datagramSocket.isConnected());
+    private NetWorks(String adress, int port, String clientName) throws IOException{
+        this.datagramSocket = new DatagramSocket();
         this.address = InetAddress.getByName(adress);
         this.port = port;
         this.clientName = clientName;
@@ -46,7 +44,7 @@ public class NetWorks extends Thread{
         this.setCommandPasser(new NetCommandPasser(){
             @Override
             public void run(){
-                confirmHandshake();
+                confirmHandshake(this.getMessage());
             }
         });
     }
@@ -70,7 +68,7 @@ public class NetWorks extends Thread{
     
     synchronized public void sendMessage(String message){
         try{
-            byte[] buffer = (clientName+":"+message).getBytes();
+            byte[] buffer = (message).getBytes();
             
             DatagramPacket send = new DatagramPacket(buffer, buffer.length, address, port);
             datagramSocket.send(send);
@@ -85,6 +83,8 @@ public class NetWorks extends Thread{
             NetCommand cmd = NetCommand.parse(data);
 			if(cmd == null){
 				System.err.println("Netcommand Unrecognised: "+data);
+			} else {
+				System.out.println("Received: "+cmd.getCommandCode());
 			}
             if(this.cmdPasser != null){
                 this.cmdPasser.passCommand(cmd);
@@ -110,7 +110,7 @@ public class NetWorks extends Thread{
                 if(this.serverResponded()){
                     return true;
                 }
-                System.out.println("Connection failed, retrying "+attemptsLeft+" more times...");
+                System.out.println("Host didn't respond, retrying "+attemptsLeft+" more times...");
                 sleep(HANDSHAKE_WAIT_MILLIS);
                 attemptsLeft--;
             }
@@ -120,8 +120,20 @@ public class NetWorks extends Thread{
         this.disconnect(Status.ServerUnreachable);
         return false;
     }
-    synchronized private void confirmHandshake(){
-        this.status = Status.ServerReady;
+    synchronized private void confirmHandshake(NetCommand cmd){
+		if(cmd == null){
+			this.status = Status.ServerUnrecognised;
+			this.disconnectReason = "Server didn't respond properly";
+			return;
+		}
+		
+		if (cmd instanceof ConnectionCommand.Receivable.ServerReady)
+			this.status = Status.ServerReady;
+		else if (cmd instanceof ConnectionCommand.Receivable.ServerFull)
+			this.status = Status.ServerFull;
+		else if(cmd instanceof ConnectionCommand.Receivable.ServerMisunderstood){
+			this.status = Status.ServerUnrecognised;
+		}
     }
     
     private boolean keepRunning(){
@@ -176,6 +188,8 @@ public class NetWorks extends Thread{
                 return String.format("No host found at %s:%d", this.address.getHostAddress(), this.port);
             case ServerFull:
                 return String.format("Server on %s:%d is already full", this.address.getHostAddress(), this.port);
+			case ServerUnrecognised:
+                return String.format("Server on %s:%d wasn't recognised", this.address.getHostAddress(), this.port);
             case ServerReady:
                 return String.format("Server %s:%d is ready to be joined", this.address.getHostAddress(), this.port);
             case Connected:
@@ -190,9 +204,9 @@ public class NetWorks extends Thread{
 	}
     
     private enum Status{
-        Joining, JoiningCanceled(false),
-        ServerReady, ServerUnreachable(false), ServerFull(false),
-        Connected,
+		Joining, JoiningCanceled(false),
+		ServerReady, ServerUnreachable(false), ServerFull(false), ServerUnrecognised(false),
+		Connected,
         Disconnected(false), Kicked(false);
 		
 		public final boolean keepRunning;
@@ -206,11 +220,4 @@ public class NetWorks extends Thread{
 		}
     }
     
-}
-
-class NetworksException extends IOException{
-
-    NetworksException(String msg) {
-        super(msg);
-    }
 }

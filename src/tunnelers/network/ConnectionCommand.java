@@ -32,7 +32,7 @@ public abstract class ConnectionCommand{
 		}
 	}
 	
-	public static abstract class Recievable{
+	public static abstract class Receivable{
 		public static class WhoAreYou extends NetCommand{
 			public final static String CMD_TYPE = "WHOU";
 			public WhoAreYou(){
@@ -72,6 +72,12 @@ public abstract class ConnectionCommand{
 		public static class ServerFull extends NetCommand{
 			public final static String CMD_TYPE = "DONZO";
 			public ServerFull(){
+				super(ASPECT_LETTER, CMD_TYPE);
+			}
+		}
+		public static class ServerMisunderstood extends NetCommand{
+			public final static String CMD_TYPE = "WAT";
+			public ServerMisunderstood(){
 				super(ASPECT_LETTER, CMD_TYPE);
 			}
 		}

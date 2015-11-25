@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class BackServer extends Thread
 {
-    private static final int BUFFER_SIZE = 60;
+    private static final int BUFFER_SIZE = 1024;
     
     DatagramSocket ds;
     private DatagramPacket lastReceived;
@@ -32,20 +32,20 @@ public class BackServer extends Thread
     }
     
     private String processData(String input){
-        if(!input.contains(":")){ input = "NA:"+input; }
-        String[] segs = input.trim().split(":");
+		System.out.format(">> Proccessing message '%s'...", input);
+        String[] segs = input.trim().split("|");
         return replyFor(segs[0], segs[1]);
         
     }
-    private String replyFor(String author, String message){
-        System.out.format(">> Proccessing message '%s'...", message);
-        switch(message){
+    private String replyFor(String group, String type){
+        
+        switch(type){
             default:
                 System.out.println(" it's not recognised.");
-                return author+"(wat):"+message;
-            case "handshake-rq":
+                return "C|WAT|"+group+"|"+type;
+            case "UTHERE":
                 System.out.println(" it's a handshake request.");
-                return author+":handshake-ok";
+                return "C|COME";
         }
     }
     
