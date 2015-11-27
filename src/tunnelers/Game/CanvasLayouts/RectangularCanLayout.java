@@ -125,7 +125,7 @@ public class RectangularCanLayout extends CanvasLayout{
             try{
                 g.translate(-render.getX() * blockSize.getWidth(),
 						-render.getY() * blockSize.getHeight());
-                container.drawMap(g, blockSize, render);
+                container.getMap().drawMapSection(g, blockSize, render);
             } catch (Exception e){
                 e.printStackTrace();
             } finally {

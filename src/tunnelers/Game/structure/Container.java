@@ -1,16 +1,14 @@
 package tunnelers.Game.structure;
 
-import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.shape.Rectangle;
 
 /**
  *
  * @author Stepan
  */
 public class Container {
-    
+    public static final int SERVER_PLAYER_ID = -1;
+	
     public static Container mockContainer(){
         Player[] players = new Player[]{
             new Player("Yahoo"),new Player("Yahoo"),
@@ -25,11 +23,13 @@ public class Container {
         
         return c;
     }
-    
+	
+    private final PlayerSrv playerSrv;
     private final Player[] players;
     private final TunnelMap map;
     
     public Container(Player[] players, TunnelMap map){
+		this.playerSrv = new PlayerSrv();
         this.players = players;
         this.map = map;
     }
@@ -42,15 +42,25 @@ public class Container {
         return this.players;
     }
 
+	public TunnelMap getMap(){
+		return this.map;
+	}
+	
     public int getMapWidth(){
         return this.map.mapWidth;
     }
     public int getMapHeight(){
         return this.map.mapHeight;
     }
-    
-    public void drawMap(GraphicsContext g,Dimension2D blockSize, Rectangle render) {
-        this.map.drawMapSection(g, blockSize, render);
-    }
+
+	public Player getPlayer(int playerId) {
+		if(playerId == SERVER_PLAYER_ID)
+			return this.playerSrv;
+		for(Player p : this.players){
+			if(p.getID() == playerId)
+				return p;
+		}
+		return null;
+	}
     
 }
