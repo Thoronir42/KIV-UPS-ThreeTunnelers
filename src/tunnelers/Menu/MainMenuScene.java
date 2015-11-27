@@ -64,7 +64,7 @@ public class MainMenuScene extends AMenuScene{
             case "joinGame":
                 btn = new Button("Join game...");
                 btn.setOnAction((ActionEvent event) -> {
-                   scene.getStage().changeScene(JoinScene.class);
+                   scene.getStage().changeScene(ServerListScene.class);
                 });
                 break;
             case "settings":

@@ -31,6 +31,13 @@ public class NetWorks extends Thread{
         tmp.handshake();
         return tmp;
     }
+
+	public static boolean serverPresent(String address, int port) {
+		NetCommand.RoomNumber = 00;
+		LeadCommand.StillThere cmd = new LeadCommand.StillThere(0);
+		
+		return false;
+	}
     
     private final DatagramSocket datagramSocket;
     InetAddress address;        int port;

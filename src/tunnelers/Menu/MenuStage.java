@@ -50,7 +50,7 @@ public class MenuStage extends ATunnelersStage {
             this.close();
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
-            this.changeScene(JoinScene.class);
+            this.changeScene(ServerListScene.class);
         }
     }
 }
