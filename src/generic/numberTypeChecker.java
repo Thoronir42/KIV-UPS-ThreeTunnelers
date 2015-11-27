@@ -15,12 +15,8 @@ public class numberTypeChecker {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
-		byte n = 0;
-		for(int i = 0; i < 300; i++){
-			System.out.format("N=%8d\tIS=%s%n", n, Integer.toString(n & 0xFF, 16));
-			
-			n+=258;
-		}
+		int n = 65537*200;
+		System.out.format("%08X%n", n);
 	}
 	
 }
