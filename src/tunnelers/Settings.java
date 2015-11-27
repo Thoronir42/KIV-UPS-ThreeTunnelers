@@ -15,6 +15,7 @@ public class Settings {
 	
     public static final int MIN_PLAYERS = 2,
                              MAX_PLAYERS = 4;
+	
     public static final int TICK_RATE = 30;
     
     public static final int DEFAULT_PORT = 8047;
@@ -39,10 +40,29 @@ public class Settings {
         return RNG.nextInt(i);
     }
     
-    private final int width = WIDTH_DEFAULT, height = HEIGHT_DEFAULT;
+    private int width = WIDTH_DEFAULT, height = HEIGHT_DEFAULT;
     private final long delay;
+	
     public final boolean[] playerColorUsage;
     
+	private String serverAddress = "localhost";
+	private int serverPort = Settings.DEFAULT_PORT;
+
+	public String getServerAddress() {
+		return serverAddress;
+	}
+
+	public void setServerAddress(String serverAddress) {
+		this.serverAddress = serverAddress;
+	}
+
+	public int getServerPort() {
+		return serverPort;
+	}
+
+	public void setServerPort(int serverPort) {
+		this.serverPort = serverPort;
+	}
     
     private static Settings instance;
     
