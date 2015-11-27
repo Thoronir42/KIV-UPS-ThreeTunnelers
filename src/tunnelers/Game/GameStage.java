@@ -9,6 +9,7 @@ import tunnelers.Game.structure.Direction;
 import tunnelers.network.NetCommandPasser;
 import tunnelers.network.NetWorks;
 import tunnelers.Game.structure.Player;
+import tunnelers.network.MessageCommand;
 import tunnelers.network.NetCommand;
 
 /**
@@ -97,16 +98,14 @@ public class GameStage extends ATunnelersStage{
     
     public void handleNetworkCommand(NetCommand command){
         AGameScene scene = (AGameScene)this.getScene();
-        switch(command.toString()){
-            default:
-                System.err.println("Incomming command not recognised");
-                break;
-            case "LEL":
-                String[] segs = command.getCommandCode().split(NetCommand.COMMAND_SPLIT);
-                this.gamechat.addMessage(new Player(segs[0]), segs[1]);
-                scene.updateChatbox();
-                break;
-        }
+        if(command instanceof MessageCommand.Plain){
+			MessageCommand.Plain cmd = (MessageCommand.Plain)command;
+			String msg = cmd.getMessage();
+			this.gamechat.addMessage(new Player(segs[0]), segs[1]);
+			scene.updateChatbox();
+		} else {
+			System.err.println("Incomming command not recognised");
+		}
     }
     
 	protected void beginGame(){

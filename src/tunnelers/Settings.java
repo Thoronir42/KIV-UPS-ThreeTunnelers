@@ -10,6 +10,9 @@ import javafx.scene.paint.Color;
  * @author Stepan
  */
 public class Settings {
+	
+	public static final int VERSION = 00101;
+	
     public static final int MIN_PLAYERS = 2,
                              MAX_PLAYERS = 4;
     public static final int TICK_RATE = 30;

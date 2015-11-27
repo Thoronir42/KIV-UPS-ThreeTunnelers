@@ -5,81 +5,67 @@ package tunnelers.network;
  * @author Stepan
  */
 public abstract class ConnectionCommand{
-    public static final char ASPECT_LETTER = 'C';
 	
-	public static class Join extends NetCommand{
-		public final static String CMD_TYPE = "UTHERE";
-		public Join(int attemptNumber){
-			super(ASPECT_LETTER, CMD_TYPE, new Object[]{attemptNumber});
+	public static class FetchLobbies extends NetCommand{
+		public final static short CMD_NUM = 10;
+		public FetchLobbies(int versionNum){
+			super(CMD_NUM, new Object[]{versionNum});
 		}
 	}
+	
+	public static class CreateLobby extends NetCommand{
+		public final static short CMD_NUM = 11;
+		public CreateLobby(int clientVersion){
+			super(CMD_NUM, new Object[]{clientVersion});
+		}
+	}
+	public static class JoinLobby extends NetCommand{
+		public final static short CMD_NUM = 12;
+		public JoinLobby(int clientVersion, int lobbyNum){
+			super(CMD_NUM, new Object[]{clientVersion, lobbyNum});
+		}
+	}
+	public static class Reconnect extends NetCommand{
+		public static final short CMD_NUM = 13;
+		public Reconnect(int lobbyRoom){
+			super(CMD_NUM, new Object[]{lobbyRoom});
+		}
+	}
+	
 	public static class Disconnect extends NetCommand{
-		public final static String CMD_TYPE = "IMUSTGO";
-		public Disconnect(){
-			super(ASPECT_LETTER, CMD_TYPE);
-		}
-	}
-	public static class Iam extends NetCommand{
-		public final static String CMD_TYPE = "IAM";
-		public Iam(String name){
-			super(ASPECT_LETTER, CMD_TYPE, new Object[]{name});
-		}
-	}
-	public static class WhoIs extends NetCommand{
-		public final static String CMD_TYPE = "WHOS";
-		public WhoIs(int id){
-			super(ASPECT_LETTER, CMD_TYPE, new Object[]{id});
+		public final static short CMD_NUM = 49;
+		public Disconnect(){ this(0); }
+		public Disconnect(int disconnectReason){
+			super(CMD_NUM, new Object[]{disconnectReason});
 		}
 	}
 	
-	public static abstract class Receivable{
-		public static class WhoAreYou extends NetCommand{
-			public final static String CMD_TYPE = "WHOU";
-			public WhoAreYou(){
-				super(ASPECT_LETTER, CMD_TYPE);
-			}
+	//			###		RECEIVABLE		###
+	
+	public static class IncorrectPhase extends NetCommand{
+		public static final short CMD_NUM = 80;
+		public IncorrectPhase(int correctPhase){
+			super(CMD_NUM, new Object[]{correctPhase});
 		}
-		public static class PlayerJoined extends NetCommand{
-			public final static String CMD_TYPE = "OTHRHI";
-			public PlayerJoined(int id){
-				super(ASPECT_LETTER, CMD_TYPE, new Object[]{id});
-			}
+	}
+	
+	public static class GameList extends NetCommand{
+		public static final short CMD_NUM = 90;
+		public GameList(int games, String gamesInfo){
+			super(CMD_NUM, new Object[]{games, gamesInfo});
 		}
-		public static class PlayerDisconnected extends NetCommand{
-			public final static String CMD_TYPE = "OTHRBAI";
-			public PlayerDisconnected(int playerID, String reason){
-				super(ASPECT_LETTER, CMD_TYPE, new Object[]{playerID, reason});
-			}
+	}
+	public static class GameListEnd extends NetCommand{
+		public static final short CMD_NUM = 91;
+		public GameListEnd(){
+			super(CMD_NUM);
 		}
-		public static class PlayerIs extends NetCommand{
-			public final static String CMD_TYPE = "OTHRIS";
-			public PlayerIs(int id, String name){
-				super(ASPECT_LETTER, CMD_TYPE, new Object[]{id, name});
-			}
-		}
-		public static class GameStarted extends NetCommand{
-			public final static String CMD_TYPE = "ITSON";
-			public GameStarted(){
-				super(ASPECT_LETTER, CMD_TYPE);
-			}
-		}
-		public static class ServerReady extends NetCommand{
-			public final static String CMD_TYPE = "COME";
-			public ServerReady(){
-				super(ASPECT_LETTER, CMD_TYPE);
-			}
-		}
-		public static class ServerFull extends NetCommand{
-			public final static String CMD_TYPE = "DONZO";
-			public ServerFull(){
-				super(ASPECT_LETTER, CMD_TYPE);
-			}
-		}
-		public static class ServerMisunderstood extends NetCommand{
-			public final static String CMD_TYPE = "WAT";
-			public ServerMisunderstood(){
-				super(ASPECT_LETTER, CMD_TYPE);
-			}
+	}
+	
+	public static class PlayerDisconnected extends NetCommand{
+		public static short CMD_NUM = 99;
+		public PlayerDisconnected(int playerId, String reason){
+			super(CMD_NUM, new Object[]{playerId, reason});
 		}
 	}
 }

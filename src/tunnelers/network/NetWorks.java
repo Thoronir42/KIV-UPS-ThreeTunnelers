@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import tunnelers.Settings;
 
 
 
@@ -17,6 +18,12 @@ public class NetWorks extends Thread{
     private static final int HANDSHAKE_ATTEMPTS = 4;
     private static final int HANDSHAKE_WAIT_MILLIS = 950;
 	private static final int MILLIS_BEFORE_PANIC = 2500;
+	
+	public static int fetchLobbies(){
+		NetCommand cmd = new ConnectionCommand.FetchLobbies(Settings.VERSION);
+		
+		return 0;
+	}
 	
     public static NetWorks connectTo(String address, int port, String client) throws IOException, InterruptedException{
         NetWorks tmp = new NetWorks(address, port, client);
@@ -83,6 +90,7 @@ public class NetWorks extends Thread{
             NetCommand cmd = NetCommand.parse(data);
 			if(cmd == null){
 				System.err.println("Netcommand Unrecognised: "+data);
+				return;
 			} else {
 				System.out.println("Received: "+cmd.getCommandCode());
 			}
@@ -103,7 +111,7 @@ public class NetWorks extends Thread{
 				if(this.joinCancelled()){
 					return false;
 				}
-				NetCommand cmd = new ConnectionCommand.Join(HANDSHAKE_ATTEMPTS - attemptsLeft);
+				NetCommand cmd = new ConnectionCommand.CreateLobby(HANDSHAKE_ATTEMPTS - attemptsLeft);
                 this.issueCommand(cmd);
 				
                 sleep(20);
@@ -127,13 +135,13 @@ public class NetWorks extends Thread{
 			return;
 		}
 		
-		if (cmd instanceof ConnectionCommand.Receivable.ServerReady)
+		if (cmd instanceof LeadCommand.Approve)
 			this.status = Status.ServerReady;
-		else if (cmd instanceof ConnectionCommand.Receivable.ServerFull)
-			this.status = Status.ServerFull;
-		else if(cmd instanceof ConnectionCommand.Receivable.ServerMisunderstood){
-			this.status = Status.ServerUnrecognised;
-		}
+		else if (cmd instanceof LeadCommand.Deny)
+			switch(0){
+				case 0: this.status = Status.ServerFull; break;
+				case 1: this.status = Status.ServerUnrecognised; break;
+			}
     }
     
     private boolean keepRunning(){

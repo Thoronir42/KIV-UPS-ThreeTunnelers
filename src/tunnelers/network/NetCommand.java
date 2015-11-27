@@ -8,18 +8,19 @@ import java.lang.reflect.Field;
  */
 public abstract class NetCommand {
     
-    public static final String COMMAND_SPLIT = "|";
 	private static final Class[] RcvCmdClasses = {
-		ConnectionCommand.class,
-		GameCommand.class,
-		MessageCommand.class
+		LeadCommand.class, ConnectionCommand.class,
+		GameCommand.class, MessageCommand.class
 		
 	};
+	private static byte RoomNumber;
+	
 	static NetCommand parse(String msg) throws NetworksException{
-		String[] segments = msg.split(COMMAND_SPLIT);
-		if(segments.length < 2){ return null; }
-		Class cmdClass = getCmdClass(segments[0].charAt(0), segments[1]);
-		Object[] params = getCmdParams(segments);
+		String room = msg.substring(0, 1),
+				MID = msg.substring(2, 3),
+				mType= msg.substring(4, 7),
+				body = msg.substring(8);
+		/*
 		if(cmdClass != null){
 			try {
 				NetCommand nc = (NetCommand)cmdClass.newInstance();
@@ -30,13 +31,15 @@ public abstract class NetCommand {
 				throw new NetworksException(ex.getMessage());
 			}
 		}
-		return null;
+		*/
+		System.out.format("%s, %s, %s, %s%n", room, MID, mType, body);
+		return null;				
 	}
     
 	private static Class getCmdGroup(char aspect){
 		for(Class c : RcvCmdClasses){
 			try{
-				Field aspectField = c.getDeclaredField("ASPECT_LETTER");
+				Field aspectField = c.getDeclaredField("CMD_RANGE");
 				if(aspectField.get(null).equals(aspect)){
 					return c;
 				}
@@ -67,46 +70,47 @@ public abstract class NetCommand {
 		
 		return null;
 	}
-
-	private static Object[] getCmdParams(String[] segments) {
-		if(segments.length <= 2){
-			return new Object[0];
-		}
-		Object[] params = new Object[segments.length -2];
-		for(int i = 2; i < segments.length; i++){
-			params[i-2] = segments[i];
-		}
-		return params;
+	
+	static byte LastMsgId = 0;
+	final byte message_id;
+	final short cmd_type;
+    
+	final Object[] params;
+	
+	
+	public NetCommand(short cmd_type){
+		this(cmd_type, new Object[0]);
 	}
 	
-	final char aspectLetter;
-	final String commandType;
-    final Object[] params;
-	
-	public NetCommand(char aspectLetter, String commandType){
-		this(aspectLetter, commandType, new Object[0]);
+	public NetCommand(byte message_id, short cmd_type){
+		this(message_id, cmd_type, new Object[0]);
 	}
 	
-	public NetCommand(char aspectLetter, String commandType, Object[] params){
-		this.aspectLetter = aspectLetter;
-		this.commandType = commandType;
+	public NetCommand(short cmd_type, Object[] params){
+		this(++LastMsgId, cmd_type, params);
+	}
+	
+	public NetCommand(byte message_id, short cmd_type, Object[] params){
+		this.message_id = message_id;
+		this.cmd_type = cmd_type;
 		this.params = params;
 	}
 	
     public String getCommandCode() {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.aspectLetter)
-				.append(COMMAND_SPLIT)
-				.append(this.commandType);
-		
-        for(Object o : params){
-            sb.append(COMMAND_SPLIT).append(o.toString());
-        }
+		sb.append(bts(RoomNumber))
+			.append(bts(this.message_id))
+			.append(sts(this.cmd_type));
+		sb.append("\0");
         return sb.toString();
     }
 
-	private void setParams(Object[] params) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	
+	private String bts(byte  n){ return Integer.toString(n & 0xFF, 16); }
+	private String sts(short n){ return Integer.toString(n & 0xFFFF, 16); }
+	
+	private void strAsParams(String body) {
+		
 	}
 	
 }
