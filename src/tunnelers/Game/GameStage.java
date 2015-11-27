@@ -100,8 +100,9 @@ public class GameStage extends ATunnelersStage{
         AGameScene scene = (AGameScene)this.getScene();
         if(command instanceof MessageCommand.Plain){
 			MessageCommand.Plain cmd = (MessageCommand.Plain)command;
-			String msg = cmd.getMessage();
-			this.gamechat.addMessage(new Player(segs[0]), segs[1]);
+			String msg = cmd.getMessageText();
+			Player p = this.container.getPlayer(cmd.getPlayerId());
+			this.gamechat.addMessage(p, msg);
 			scene.updateChatbox();
 		} else {
 			System.err.println("Incomming command not recognised");

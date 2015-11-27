@@ -11,6 +11,13 @@ public class MessageCommand{
 		public Plain(int playerID, String text) {
 			super(CMD_NUM, new Object[]{playerID, text});
 		}
+		
+		public int getPlayerId(){
+			return 0;
+		}
+		public String getMessageText(){
+			return (String)this.params[1];
+		}
 	}
 	
 	public static class RCON extends NetCommand{
