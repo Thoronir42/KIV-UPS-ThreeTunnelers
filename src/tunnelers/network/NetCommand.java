@@ -13,12 +13,12 @@ public abstract class NetCommand {
 		GameCommand.class, MessageCommand.class
 		
 	};
-	private static byte RoomNumber;
+	public static byte RoomNumber;
 	
 	static NetCommand parse(String msg) throws NetworksException{
-		String room = msg.substring(0, 1),
-				MID = msg.substring(2, 3),
-				mType= msg.substring(4, 7),
+		String room = msg.substring(0, 2),
+				MID = msg.substring(2, 4),
+				mType= msg.substring(4, 8),
 				body = msg.substring(8);
 		/*
 		if(cmdClass != null){
@@ -32,7 +32,7 @@ public abstract class NetCommand {
 			}
 		}
 		*/
-		System.out.format("%s, %s, %s, %s%n", room, MID, mType, body);
+		System.out.format("MSG: %s, %s, %s, %s%n", room, MID, mType, body);
 		return null;				
 	}
     
@@ -105,9 +105,14 @@ public abstract class NetCommand {
         return sb.toString();
     }
 
+	public boolean isLeadCommand(){
+		return this.cmd_type > LeadCommand.CMD_RANGE[0] && this.cmd_type <LeadCommand.CMD_RANGE[1];
+	}
 	
-	private String bts(byte  n){ return Integer.toString(n & 0xFF, 16); }
-	private String sts(short n){ return Integer.toString(n & 0xFFFF, 16); }
+	
+	protected String bts(byte  n){ return String.format("%02X", n); }
+	protected String sts(short n){ return String.format("%04X", n); }
+	protected String its(int n)  { return String.format("%08X", n); }
 	
 	private void strAsParams(String body) {
 		
