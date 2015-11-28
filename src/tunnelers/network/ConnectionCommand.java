@@ -5,6 +5,10 @@ package tunnelers.network;
  * @author Stepan
  */
 public abstract class ConnectionCommand{
+	public static final short[] CMD_RANGE = {10, 99};
+	public static boolean commandBelongs(short t){
+		return t > CMD_RANGE[0] && t < CMD_RANGE[1];
+	}
 	
 	public static class FetchLobbies extends NetCommand{
 		public final static short CMD_NUM = 10;

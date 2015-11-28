@@ -106,7 +106,19 @@ public abstract class NetCommand {
     }
 
 	public boolean isLeadCommand(){
-		return this.cmd_type > LeadCommand.CMD_RANGE[0] && this.cmd_type <LeadCommand.CMD_RANGE[1];
+		return LeadCommand.commandBelongs(this.cmd_type);
+	}
+	public boolean isConnectionCommand(){
+		return ConnectionCommand.commandBelongs(this.cmd_type);
+	}
+	public boolean isMessageCommand(){
+		return MessageCommand.commandBelongs(this.cmd_type);
+	}
+	public boolean isLobbyCommand(){
+		return LobbyCommand.commandBelongs(this.cmd_type);
+	}
+	public boolean isGameCommand(){
+		return GameCommand.commandBelongs(this.cmd_type);
 	}
 	
 	

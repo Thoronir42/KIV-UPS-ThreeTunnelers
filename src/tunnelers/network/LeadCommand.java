@@ -6,7 +6,9 @@ package tunnelers.network;
  */
 public class LeadCommand {
 	public static final short[] CMD_RANGE = {0, 9};
-	
+	public static boolean commandBelongs(short t){
+		return t > CMD_RANGE[0] && t < CMD_RANGE[1];
+	}
 	
 	public static class Approve extends NetCommand{
 		public final static short CMD_NUM = 1;

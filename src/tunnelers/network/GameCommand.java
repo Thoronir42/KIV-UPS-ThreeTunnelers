@@ -5,6 +5,11 @@ package tunnelers.network;
  * @author Stepan
  */
 public class GameCommand {
+	public static final short[] CMD_RANGE = {200, 399};
+	public static boolean commandBelongs(short t){
+		return t > CMD_RANGE[0] && t < CMD_RANGE[1];
+	}
+	
 	public static class ControlSet extends NetCommand{
 		public static final short CMD_NUM = 201;
 		public ControlSet(int ctrlType, int newVal){

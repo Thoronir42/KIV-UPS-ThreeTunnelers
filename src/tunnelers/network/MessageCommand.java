@@ -5,6 +5,10 @@ package tunnelers.network;
  * @author Stepan
  */
 public class MessageCommand{
+	public static final short[] CMD_RANGE = {100, 109};
+	public static boolean commandBelongs(short t){
+		return t > CMD_RANGE[0] && t < CMD_RANGE[1];
+	}
 	
 	public static class Plain extends NetCommand{
 		public final static short CMD_NUM = 100;

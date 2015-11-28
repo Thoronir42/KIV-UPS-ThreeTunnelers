@@ -5,6 +5,11 @@ package tunnelers.network;
  * @author Stepan
  */
 public class LobbyCommand {
+	public static final short[] CMD_RANGE = {110, 199};
+	public static boolean commandBelongs(short t){
+		return t > CMD_RANGE[0] && t < CMD_RANGE[1];
+	}
+	
 	public static class Iam extends NetCommand{
 		public final static short CMD_NUM = 112;
 		public Iam(String name){
