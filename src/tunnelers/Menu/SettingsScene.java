@@ -1,5 +1,7 @@
 package tunnelers.Menu;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -28,6 +30,8 @@ public class SettingsScene extends AMenuScene{
 	
 	protected TextField tf_adress,
                         tf_port;
+	
+	protected Button btn_testServer;
     
     public SettingsScene(Parent root, double width, double height) {
         super(root, width, height, "Nastavení");
@@ -46,7 +50,7 @@ public class SettingsScene extends AMenuScene{
 			this.saveSettings();
 		});
 		
-		Button btn_testServer = new Button("Test serveru");
+		btn_testServer = new Button("Test serveru");
 		btn_testServer.setOnAction((ActionEvent e) -> {
 			this.testServer();
 		});
@@ -83,7 +87,16 @@ public class SettingsScene extends AMenuScene{
 	}
 	
 	private void saveSettings(){
-		
+		try{
+			String address = this.tf_adress.getText();
+			InetAddress.getAllByName(name);
+			int port = Integer.parseInt(this.tf_port.getText());
+			
+			settings.setServerAddress(address);
+			settings.setServerPort(port);
+		} catch (UnknownHostException | NumberFormatException e) {
+			
+		}
 	}
 	
     @Override
