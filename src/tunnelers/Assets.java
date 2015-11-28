@@ -35,6 +35,8 @@ public class Assets {
 	private static Image loadImage(int type){
 		File resFile = new File(RES_PATHS[type]);
 		try{
+			if(true)
+				throw new IOException("Lel");
 			String path = resFile.getCanonicalPath();
 			return new Image("file://"+path);
 		} catch (IOException e){
