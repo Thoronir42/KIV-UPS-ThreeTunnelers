@@ -1,5 +1,6 @@
 package tunnelers.network;
 
+import generic.BackPasser;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -19,7 +20,7 @@ public class NetWorks extends Thread{
     private static final int HANDSHAKE_WAIT_MILLIS = 950;
 	private static final int MILLIS_BEFORE_PANIC = 2500;
 	
-	public static int fetchLobbies(){
+	public static int fetchLobbies(BackPasser<String[]> passer){
 		NetCommand cmd = new ConnectionCommand.FetchLobbies(Settings.VERSION);
 		
 		return 0;
@@ -43,7 +44,7 @@ public class NetWorks extends Thread{
     InetAddress address;        int port;
     String clientName;
 	
-    private NetCommandPasser cmdPasser;
+    private BackPasser<NetCommand> cmdPasser;
     private Status status;
     private String disconnectReason;
     
@@ -55,10 +56,10 @@ public class NetWorks extends Thread{
         this.status = Status.Joining;
         
         
-        this.setCommandPasser(new NetCommandPasser(){
+        this.setCommandPasser(new BackPasser<NetCommand>(){
             @Override
             public void run(){
-                confirmHandshake(this.getMessage());
+                confirmHandshake(this.get());
             }
         });
     }
@@ -69,7 +70,7 @@ public class NetWorks extends Thread{
         sendMessage(code);
     }
     
-    public final void setCommandPasser(NetCommandPasser r){
+    public final void setCommandPasser(BackPasser r){
         this.cmdPasser = r;
     }
     

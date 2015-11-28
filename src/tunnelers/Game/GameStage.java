@@ -6,7 +6,7 @@ import tunnelers.ATunnelersScene;
 import tunnelers.ATunnelersStage;
 import tunnelers.Game.structure.Container;
 import tunnelers.Game.structure.Direction;
-import tunnelers.network.NetCommandPasser;
+import generic.BackPasser;
 import tunnelers.network.NetWorks;
 import tunnelers.Game.structure.Player;
 import tunnelers.network.MessageCommand;
@@ -22,22 +22,18 @@ public class GameStage extends ATunnelersStage{
     protected GameChat gamechat;
     private final Container container;
     private AGameScene sc;
-    private Impulser impulser;
 	
     public GameStage(NetWorks networks) {
         this.networks = networks;
-        this.networks.setCommandPasser(new NetCommandPasser(){
+        this.networks.setCommandPasser(new BackPasser<NetCommand>(){
             @Override
             public void run(){
-                handleNetworkCommand(this.getMessage());
+                handleNetworkCommand(this.get());
             }
         });
         this.setScene(LobbyScene.getInstance(networks));
 		this.container = Container.mockContainer();
         this.gamechat = new GameChat();
-		this.impulser = new Impulser(() -> {
-			update();
-		});
     }
 
     @Override
