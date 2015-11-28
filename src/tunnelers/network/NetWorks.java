@@ -21,7 +21,7 @@ public class NetWorks extends Thread{
 	private static final int MILLIS_BEFORE_PANIC = 2500;
 	
 	public static int fetchLobbies(BackPasser<String[]> passer){
-		NetCommand cmd = new ConnectionCommand.FetchLobbies(Settings.VERSION);
+		NCG.NetCommand cmd = new ConnectionCommand.FetchLobbies(Settings.VERSION);
 		
 		return 0;
 	}
@@ -34,7 +34,7 @@ public class NetWorks extends Thread{
     }
 
 	public static boolean serverPresent(String address, int port) {
-		NetCommand.RoomNumber = 00;
+		NCG.NetCommand.RoomNumber = 00;
 		LeadCommand.StillThere cmd = new LeadCommand.StillThere(0);
 		
 		return false;
@@ -44,7 +44,7 @@ public class NetWorks extends Thread{
     InetAddress address;        int port;
     String clientName;
 	
-    private BackPasser<NetCommand> cmdPasser;
+    private BackPasser<NCG.NetCommand> cmdPasser;
     private Status status;
     private String disconnectReason;
     
@@ -56,7 +56,7 @@ public class NetWorks extends Thread{
         this.status = Status.Joining;
         
         
-        this.setCommandPasser(new BackPasser<NetCommand>(){
+        this.setCommandPasser(new BackPasser<NCG.NetCommand>(){
             @Override
             public void run(){
                 confirmHandshake(this.get());
@@ -64,7 +64,7 @@ public class NetWorks extends Thread{
         });
     }
     
-    public void issueCommand(NetCommand cmd){
+    public void issueCommand(NCG.NetCommand cmd){
         String code = cmd.getCommandCode();
         System.out.println(code);
         sendMessage(code);
@@ -95,7 +95,7 @@ public class NetWorks extends Thread{
     private void handleMessage(){
         try{
 			String data = receiveMessage();
-            NetCommand cmd = NetCommand.parse(data);
+            NCG.NetCommand cmd = NCG.NetCommand.parse(data);
 			if(cmd == null){
 				System.err.println("Netcommand Unrecognised: "+data);
 				return;
@@ -119,7 +119,7 @@ public class NetWorks extends Thread{
 				if(this.joinCancelled()){
 					return false;
 				}
-				NetCommand cmd = new ConnectionCommand.CreateLobby(HANDSHAKE_ATTEMPTS - attemptsLeft);
+				NCG.NetCommand cmd = new ConnectionCommand.CreateLobby(HANDSHAKE_ATTEMPTS - attemptsLeft);
                 this.issueCommand(cmd);
 				
                 sleep(20);
@@ -136,7 +136,7 @@ public class NetWorks extends Thread{
         this.disconnect(Status.ServerUnreachable);
         return false;
     }
-    synchronized private void confirmHandshake(NetCommand cmd){
+    synchronized private void confirmHandshake(NCG.NetCommand cmd){
 		if(cmd == null){
 			this.status = Status.ServerUnrecognised;
 			this.disconnectReason = "Server didn't respond properly";

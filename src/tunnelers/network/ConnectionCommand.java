@@ -4,7 +4,7 @@ package tunnelers.network;
  *
  * @author Stepan
  */
-public abstract class ConnectionCommand{
+public abstract class ConnectionCommand extends NCG {
 	public static final short[] CMD_RANGE = {10, 99};
 	public static boolean commandBelongs(short t){
 		return t > CMD_RANGE[0] && t < CMD_RANGE[1];

@@ -10,7 +10,7 @@ import generic.BackPasser;
 import tunnelers.network.NetWorks;
 import tunnelers.Game.structure.Player;
 import tunnelers.network.MessageCommand;
-import tunnelers.network.NetCommand;
+import tunnelers.network.NCG.NetCommand;
 
 /**
  *

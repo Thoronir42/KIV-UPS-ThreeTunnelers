@@ -4,7 +4,7 @@ package tunnelers.network;
  *
  * @author Stepan
  */
-public class GameCommand {
+public class GameCommand extends NCG {
 	public static final short[] CMD_RANGE = {200, 399};
 	public static boolean commandBelongs(short t){
 		return t > CMD_RANGE[0] && t < CMD_RANGE[1];

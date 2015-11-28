@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  */
 public class NetCommandTest {
 	
-	NetCommand instance;
+	NCG.NetCommand instance;
 	
 	@BeforeClass
 	public static void setUpClass() {
@@ -39,8 +39,8 @@ public class NetCommandTest {
 		String msg = "0A2F00650000";
 		System.out.println("parse msg="+msg);
 		
-		NetCommand expResult = null;
-		NetCommand result = NetCommand.parse(msg);
+		NCG.NetCommand expResult = null;
+		NCG.NetCommand result = NCG.NetCommand.parse(msg);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -67,7 +67,7 @@ public class NetCommandTest {
 	@Test
 	public void testIsLeadCommand() {
 		System.out.println("isLeadCommand");
-		NetCommand instance = null;
+		NCG.NetCommand instance = null;
 		boolean expResult = false;
 		boolean result = instance.isLeadCommand();
 		assertEquals(expResult, result);
@@ -75,7 +75,7 @@ public class NetCommandTest {
 		fail("The test case is a prototype.");
 	}
 
-	public class NetCommandImpl extends NetCommand {
+	public class NetCommandImpl extends NCG.NetCommand {
 
 		public NetCommandImpl() {
 			super((short)0);

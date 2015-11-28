@@ -4,7 +4,7 @@ package tunnelers.network;
  *
  * @author Stepan
  */
-public class LobbyCommand {
+public class LobbyCommand extends NCG {
 	public static final short[] CMD_RANGE = {110, 199};
 	public static boolean commandBelongs(short t){
 		return t > CMD_RANGE[0] && t < CMD_RANGE[1];
