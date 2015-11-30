@@ -9,6 +9,7 @@ import tunnelers.Game.structure.Direction;
 import generic.BackPasser;
 import tunnelers.network.NetWorks;
 import tunnelers.Game.structure.Player;
+import tunnelers.Game.structure.Tank;
 import tunnelers.network.MessageCommand;
 import tunnelers.network.NCG.NetCommand;
 
@@ -49,7 +50,7 @@ public class GameStage extends ATunnelersStage{
             this.networks.join();
             System.out.println("NetWorks ended succesfully");
         } catch (InterruptedException ex) {
-            ex.printStackTrace();
+            System.err.println(ex.getClass().getSimpleName()+": "+ex.getMessage());
         }
         super.exit(CHANGE_TO_MENU);
     }
@@ -66,9 +67,8 @@ public class GameStage extends ATunnelersStage{
     }
     
     protected void movePlayer(int pid, Direction d){
-        Player[] players = this.container.getPlayers();
-        Player plr = players[0];
-        Point2D plr_loc = plr.getLocation();
+        Tank tank = this.container.getPlayer(pid).getTank();
+        Point2D plr_loc = tank.getLocation();
         double newX = plr_loc.getX(), newY = plr_loc.getY();
         switch(d){
             default: return;
@@ -88,7 +88,8 @@ public class GameStage extends ATunnelersStage{
                 if(newY < this.container.getMapHeight()){ newY += 1; }
             break;
         }
-        plr.setLocation(new Point2D(newX, newY));
+        tank.setLocation(new Point2D(newX, newY));
+		tank.setDirection(d);
         sc.drawScene();
     }
     

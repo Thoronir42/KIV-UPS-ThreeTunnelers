@@ -101,22 +101,23 @@ public class PlayScene extends AGameScene{
     
     public void handleKeyPressed(KeyCode code){
         System.out.println(code);
+		int pid = 1;
         switch(code){
             default: return;
             case UP:
-                this.getStage().movePlayer(0, Direction.North);
+                this.getStage().movePlayer(pid, Direction.North);
             break;
                 
             case LEFT:
-                this.getStage().movePlayer(0, Direction.West);
+                this.getStage().movePlayer(pid, Direction.West);
             break;
                 
             case RIGHT:
-                this.getStage().movePlayer(0, Direction.East);
+                this.getStage().movePlayer(pid, Direction.East);
             break;
                 
             case DOWN:
-                this.getStage().movePlayer(0, Direction.South);
+                this.getStage().movePlayer(pid, Direction.South);
             break;
         }
         this.drawScene();
