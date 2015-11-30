@@ -9,6 +9,7 @@ import javafx.scene.transform.Affine;
 import tunnelers.Game.TunColors;
 import tunnelers.Game.structure.Container;
 import tunnelers.Game.structure.Player;
+import tunnelers.Game.structure.Tank;
 import tunnelers.Settings;
 
 /**
@@ -60,7 +61,7 @@ public class RectangularCanLayout extends CanvasLayout{
 		
         for(int i = 0; i < players.length; i++){
             g.translate(col * playerAreaBounds.getWidth(), row * playerAreaBounds.getHeight());
-            System.out.format("Drawing player %s on %s%n",players[i].getName(), players[i].getLocation());
+            System.out.format("Drawing player %s on %s\t",players[i].getName(), players[i].getLocation());
             this.playerArea.draw(g, playerAreaBounds, players, i);
             
             if(++col >= cols){
@@ -72,7 +73,6 @@ public class RectangularCanLayout extends CanvasLayout{
     }
     
     private class PlayerArea{
-        
         private final Dimension2D bounds;
         private final Rectangle viewWindow;
         private final Dimension2D blockSize;
@@ -126,8 +126,9 @@ public class RectangularCanLayout extends CanvasLayout{
                 g.translate(-render.getX() * blockSize.getWidth(),
 						-render.getY() * blockSize.getHeight());
                 container.getMap().drawMapSection(g, blockSize, render);
+				this.drawTanks(g, render, p);
             } catch (Exception e){
-                e.printStackTrace();
+                System.err.println(e.getMessage());
             } finally {
                 g.setTransform(defTransform);
             }
@@ -138,8 +139,16 @@ public class RectangularCanLayout extends CanvasLayout{
             
         }
 		
-		private void drawTanks(Rectangle render, Player[]p){
-			
+		private void drawTanks(GraphicsContext g, Rectangle render, Player[] players){
+			Affine defTransform = g.getTransform();
+			for(Player plr : players){
+				Point2D po = plr.getLocation();
+				Tank t = plr.getTank();
+				po = new Point2D(po.getX() * blockSize.getWidth(), po.getY() * blockSize.getHeight());
+				g.translate(-(render.getX()-po.getX()), -(render.getY() - po.getY()));
+				t.draw(g, blockSize);
+				g.setTransform(defTransform);
+			}
 		}
 		
         private void clampRender(Rectangle render, Point2D center){
@@ -151,7 +160,6 @@ public class RectangularCanLayout extends CanvasLayout{
 			if(center.getX() - halfWidth < 0){
 				render.setX(0);
 			} else if(center.getX() + halfWidth > mapWidth){
-				System.out.println("ClampRight");
 				render.setX(mapWidth - 2 * halfWidth);
 			} else {
 				render.setX(center.getX() - (int)halfWidth);

@@ -77,7 +77,7 @@ public class Player {
         this.tank = t;
     }
 	
-	Tank getTank(){
+	public Tank getTank(){
 		return this.tank;
 	}
 }

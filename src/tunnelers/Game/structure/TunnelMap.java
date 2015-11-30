@@ -56,9 +56,9 @@ public class TunnelMap {
             yMax = (int)(render.getY() + render.getHeight() -1);
         int chTop = Math.max(0, yMin / chunkSize),
                 chLeft = Math.max(0, xMin / chunkSize),
-                chRight = (int)Math.min(this.Xchunks - 1, Math.ceil((xMax + 1.0) / chunkSize)),
+                chRight = (int)Math.min(this.Xchunks, Math.ceil((xMax + 1.0) / chunkSize)),
                 chBottom= (int)Math.min(this.Ychunks - 1,Math.ceil((yMax + 1.0) / chunkSize));
-        System.out.format("Map: Rendering blocks from [%d,%d] to [%d,%d]%n", xMin, yMin, xMax, yMax);
+        System.out.format("Map from [%d,%d] to [%d,%d]%n", xMin, yMin, xMax, yMax);
         for(int Y = chTop; Y <= chBottom; Y++){
             for(int X = chLeft; X <chRight; X++){
                 this.map[X][Y].renderChunk(g, xMin, xMax, yMin, yMax, blockSize);
