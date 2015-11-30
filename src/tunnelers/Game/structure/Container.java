@@ -56,6 +56,7 @@ public class Container {
 	public Player getPlayer(int playerId) {
 		if(playerId == SERVER_PLAYER_ID)
 			return this.playerSrv;
+		
 		for(Player p : this.players){
 			if(p.getID() == playerId)
 				return p;

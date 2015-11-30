@@ -14,19 +14,19 @@ public enum Direction {
     
     
     private final Point2D direction;
-    private final boolean offset;
+    private final boolean diagonal;
     private final int rotation;
     
             
             
     private Direction(int x, int y, boolean offset, int rotation){
         this.direction = new Point2D(x, y);
-        this.offset = offset;
+        this.diagonal = offset;
         this.rotation = rotation;
     }
     
-    public boolean resourceOffset(){
-        return this.offset;
+    public boolean isDiagonal(){
+        return this.diagonal;
     }
     
     public int getRotation(){

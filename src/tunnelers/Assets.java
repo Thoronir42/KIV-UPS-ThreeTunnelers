@@ -6,6 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -18,6 +22,7 @@ public class Assets {
 							TANK_CANNON = 2, TANK_CANNON_DIAG = 3,
 							PROJECTILE = 4, PROJECTILE_DIAG = 5;
 	public final static int RESOURCE_COUNT = 6;
+	
 	private final static String[] RES_PATHS = {
 		"resources/tank_body.png", "resources/tank_body_diag.png",
 		"resources/tank_cannon.png", "resources/tank_cannon_diag.png", 
@@ -33,18 +38,47 @@ public class Assets {
 	}
 	
 	private static Image loadImage(int type){
-		File resFile = new File(RES_PATHS[type]);
+		Image tmp;
 		try{
-			if(true)
+			if(!Settings.ENABLE_IMAGES_FROM_FILES)
 				throw new IOException("Lel");
+			File resFile = new File(RES_PATHS[type]);
 			String path = resFile.getCanonicalPath();
-			return new Image("file://"+path);
+			tmp = new Image("file://"+path);
 		} catch (IOException e){
 			InputStream is = createStdImage(type);
 			System.out.println("Loading img from stream");
-			return new Image(is);
+			tmp =  new Image(is);
 		}
+		return parseImage(tmp);
 	}
+	private static Image parseImage(Image tmp){
+		WritableImage fin = new WritableImage((int)tmp.getWidth(), (int)tmp.getHeight());
+		PixelReader pr = tmp.getPixelReader();
+		PixelWriter pw = fin.getPixelWriter();
+		for(int y = 0; y < tmp.getHeight(); y++){
+			for(int x = 0; x < tmp.getWidth(); x++){
+				pr.getColor(x, y);
+			}
+		}
+		return tmp;
+	}
+	public static Image scale(Image src, int width, int height){
+		WritableImage fin = new WritableImage(width, height);
+		double dX = width / src.getWidth(),
+				dY= height/ src.getHeight();
+		PixelReader pr = src.getPixelReader();
+		PixelWriter pw = fin.getPixelWriter();
+		for(int y = 0; y < width; y++){
+			for(int x = 0; x < height; x++){
+				pw.setColor(x, y, pr.getColor((int)(x/dX), (int)(y/dY)));
+			}
+		}
+		return fin;
+	}
+	
+	
+	
 	private static InputStream createStdImage(int type){
 		String encoded = getEncodedImage(type);
 		byte[] buf = Base64.getDecoder().decode(encoded);
@@ -76,7 +110,10 @@ public class Assets {
 	
 	
 	public static void loadAssets(){
-		
+		for(String path : RES_PATHS){
+			File f = new File(path);
+			printFileToBase64(f);
+		}
 	}
 	public static void printFileToBase64(File file){
 		try {

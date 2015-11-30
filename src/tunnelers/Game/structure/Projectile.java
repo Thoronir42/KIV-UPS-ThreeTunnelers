@@ -2,6 +2,7 @@ package tunnelers.Game.structure;
 
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
+import javafx.scene.canvas.GraphicsContext;
 
 
 
@@ -37,5 +38,11 @@ public class Projectile extends GameEntity{
 				
 		}
 	}
+
+	@Override
+	public void draw(GraphicsContext g, Dimension2D blockSize) {
+	}
+	
+	
     
 }

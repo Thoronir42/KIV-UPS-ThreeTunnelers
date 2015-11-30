@@ -2,6 +2,7 @@ package tunnelers.Game.structure;
 
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  *
@@ -28,7 +29,7 @@ public abstract class GameEntity {
 		return this.location;
 	}
 	
-    void setLocation(Point2D loc){
+    public void setLocation(Point2D loc){
         this.location = loc;
     }
 	
@@ -61,4 +62,6 @@ public abstract class GameEntity {
 	public double getBottomBorder(){
 		return this.getY() + (this.getHeight()- 1) / 2;
 	}
+	
+	public abstract void draw(GraphicsContext g, Dimension2D blockSize);
 }
