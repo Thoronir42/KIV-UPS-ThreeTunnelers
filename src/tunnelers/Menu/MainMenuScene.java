@@ -1,11 +1,15 @@
 package tunnelers.Menu;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import tunnelers.network.NetWorks;
 
 /**
  *
@@ -32,6 +36,7 @@ public class MainMenuScene extends AMenuScene{
         MainMenuScene scene = new MainMenuScene(root, settings.getWidth(), settings.getHeight());
         
         Button[] buttons = new Button[]{
+			createButton(scene, "hella"),
             createButton(scene, "joinGame"),
             createButton(scene, "settings"),
             createButton(scene, "exit"),
@@ -61,8 +66,18 @@ public class MainMenuScene extends AMenuScene{
         Button btn;
         switch(name){
             default: return null;
+			case "hella":
+				btn = new Button("WUBA LUBA DUB DUB");
+				btn.setOnAction((ActionEvent event) -> {
+					try {
+						scene.getStage().gotoLobby(NetWorks.createInstance());
+					} catch (IOException ex) {
+						System.err.println(ex.getLocalizedMessage());
+					}
+				});
+				break;
             case "joinGame":
-                btn = new Button("Join game...");
+                btn = new Button("Seznam serverů");
                 btn.setOnAction((ActionEvent event) -> {
                    scene.getStage().changeScene(ServerListScene.class);
                 });
