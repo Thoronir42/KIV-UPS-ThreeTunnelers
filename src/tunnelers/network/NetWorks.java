@@ -20,18 +20,26 @@ public class NetWorks extends Thread{
     private static final int HANDSHAKE_WAIT_MILLIS = 950;
 	private static final int MILLIS_BEFORE_PANIC = 2500;
 	
+	public static NetWorks createInstance() throws IOException{
+		Settings s = Settings.getInstance();
+		NetWorks nw = new NetWorks (s.getServerAddress(), s.getServerPort(), "Dummy");
+		return nw;
+	}
+	
+	public static NetWorks connectTo(String address, int port, String client) throws IOException, InterruptedException{
+        NetWorks tmp = new NetWorks(address, port, client);
+        tmp.start();
+        tmp.handshake();
+        return tmp;
+    }
+	
 	public static int fetchLobbies(BackPasser<String[]> passer){
 		NCG.NetCommand cmd = new ConnectionCommand.FetchLobbies(Settings.VERSION);
 		
 		return 0;
 	}
 	
-    public static NetWorks connectTo(String address, int port, String client) throws IOException, InterruptedException{
-        NetWorks tmp = new NetWorks(address, port, client);
-        tmp.start();
-        tmp.handshake();
-        return tmp;
-    }
+    
 
 	public static boolean serverPresent(String address, int port) {
 		NCG.NetCommand.RoomNumber = 00;
@@ -47,7 +55,7 @@ public class NetWorks extends Thread{
     private BackPasser<NCG.NetCommand> cmdPasser;
     private Status status;
     private String disconnectReason;
-    
+	
     private NetWorks(String adress, int port, String clientName) throws IOException{
         this.datagramSocket = new DatagramSocket();
         this.address = InetAddress.getByName(adress);
@@ -59,11 +67,11 @@ public class NetWorks extends Thread{
         this.setCommandPasser(new BackPasser<NCG.NetCommand>(){
             @Override
             public void run(){
-                confirmHandshake(this.get());
+                nwInternalHandle(this.get());
             }
         });
     }
-    
+	
     public void issueCommand(NCG.NetCommand cmd){
         String code = cmd.getCommandCode();
         System.out.println(code);
@@ -136,7 +144,7 @@ public class NetWorks extends Thread{
         this.disconnect(Status.ServerUnreachable);
         return false;
     }
-    synchronized private void confirmHandshake(NCG.NetCommand cmd){
+    synchronized private void nwInternalHandle(NCG.NetCommand cmd){
 		if(cmd == null){
 			this.status = Status.ServerUnrecognised;
 			this.disconnectReason = "Server didn't respond properly";
@@ -188,7 +196,7 @@ public class NetWorks extends Thread{
         this.datagramSocket.close();
     }
 
-	synchronized public void cancelJoinin(){
+	synchronized public void cancelJoining(){
 		this.status = Status.JoiningCanceled;
 	}
 	
