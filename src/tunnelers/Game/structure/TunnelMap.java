@@ -67,8 +67,10 @@ public class TunnelMap {
         
     }
 
-    Point2D getFreeBaseSpot() {
+    Point2D getFreeBaseSpot(Player p) {
         int x = Settings.getRandInt(Xchunks - 2) + 1, y = Settings.getRandInt(Ychunks - 2) + 1;
+		Chunk c = this.map[x][y];
+		c.assignedPlayer = p;
         return new Point2D(x * chunkSize, y * chunkSize);
     }
     
@@ -106,16 +108,17 @@ public class TunnelMap {
             for(int y = yFrom; y <= yTo; y++){
                 for(int x = xFrom; x <= xTo; x++){
                     Block b = this.chunkData[x%chunkSize][y%chunkSize];
-                    if(b == Block.BaseWall && this.assignedPlayer != null){
-                        g.setFill(assignedPlayer.getColor());
+                    if(b == Block.BaseWall){
+                        g.setFill(this.assignedPlayer != null ? assignedPlayer.getColor() : TunColors.error);
+						
                     } else {
                         g.setFill(TunColors.getBlockColor(x, y, b));
                     }
                     g.fillRect(x*blockSize.getWidth(), y*blockSize.getHeight(), blockSize.getWidth(), blockSize.getHeight());
                 }
             }
-            g.setFill(TunColors.getChunkColor(selfXmin / chunkSize, selfYmin / chunkSize));
-            g.fillRect(xFrom*blockSize.getWidth(), yFrom*blockSize.getHeight(), (xTo - xFrom + 1)*blockSize.getWidth(), (yTo - yFrom + 1)*blockSize.getHeight());
+            // g.setFill(TunColors.getChunkColor(selfXmin / chunkSize, selfYmin / chunkSize));
+            // g.fillRect(xFrom*blockSize.getWidth(), yFrom*blockSize.getHeight(), (xTo - xFrom + 1)*blockSize.getWidth(), (yTo - yFrom + 1)*blockSize.getHeight());
         }
         
         

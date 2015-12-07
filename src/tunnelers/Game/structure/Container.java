@@ -15,7 +15,7 @@ public class Container {
         };
         TunnelMap map = TunnelMap.getMockMap();
         for(Player p : players){
-            Point2D baseCenter = map.getFreeBaseSpot();
+            Point2D baseCenter = map.getFreeBaseSpot(p);
             Tank t = new Tank(p, baseCenter);
             p.setTank(t);
         }
