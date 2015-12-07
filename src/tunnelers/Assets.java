@@ -103,6 +103,34 @@ public class Assets {
 			throw new IllegalArgumentException("Unrecognised resource const: "+type);
 		return resources[type];
 	}
+	public static Image getImage(int type, Color c){
+		if(type < 0 || type >= RESOURCE_COUNT)
+			throw new IllegalArgumentException("Unrecognised resource const: "+type);
+		return recolor(resources[type], c);
+	}
+	
+	private static Image recolor(Image src, Color c){
+		int width = (int)src.getWidth(),
+			height= (int)src.getHeight();
+		WritableImage fin = new WritableImage(width, height);
+		
+		PixelWriter pw = fin.getPixelWriter();
+		PixelReader pr = src.getPixelReader();
+		
+		for(int y = 0; y < height; y++){
+			for(int x = 0; x < width; x++){
+				Color sc = pr.getColor(x, y);
+				Color fc = new Color(
+						sc.getRed() * c.getRed(), sc.getGreen() * c.getGreen(),
+						sc.getBlue() * c.getBlue(), sc.getOpacity()
+				);
+				pw.setColor(x, y, fc);
+			}
+		}
+		
+		return fin;
+	}
+	
 	
 	
 	public static void loadAssets(){

@@ -13,11 +13,9 @@ import tunnelers.Assets;
  */
 public class Tank extends GameEntity{
 
-    private static final Image iv_body_regular = Assets.getImage(Assets.TANK_BODY),
-			iv_body_diagonal = Assets.getImage(Assets.TANK_BODY_DIAG),
-			iv_cannon_regular = Assets.getImage(Assets.TANK_CANNON),
-			iv_cannon_diagonal= Assets.getImage(Assets.TANK_CANNON_DIAG);
 	public static final Dimension2D TANK_SIZE = new Dimension2D(7, 7);
+    private Image iv_body_regular, iv_body_diagonal,
+			iv_cannon_regular, iv_cannon_diagonal;
 	
 	
     public static int MAX_HITPOINTS = 20,
@@ -31,6 +29,15 @@ public class Tank extends GameEntity{
         super(Direction.North, initialLocation, player);
         this.hitPoints = MAX_HITPOINTS;
         this.energyStatus = MAX_ENERGY;
+		
+		this.initImages();
+    }
+	
+	private void initImages(){
+		this.iv_body_regular = Assets.getImage(Assets.TANK_BODY, this.getColor());
+		iv_body_diagonal = Assets.getImage(Assets.TANK_BODY_DIAG, this.getColor());
+		iv_cannon_regular = Assets.getImage(Assets.TANK_CANNON, this.getColor());
+		iv_cannon_diagonal= Assets.getImage(Assets.TANK_CANNON_DIAG, this.getColor());
     }
     
 	@Override
@@ -78,8 +85,8 @@ public class Tank extends GameEntity{
 
 	@Override
 	public void draw(GraphicsContext g, Dimension2D d) {
-		Image iv_body = this.getBodyImage(TANK_SIZE.getWidth()*d.getWidth(), TANK_SIZE.getHeight() * d.getHeight());
-		Image iv_cannon = this.getCannonImage(TANK_SIZE.getWidth()*d.getWidth(), TANK_SIZE.getHeight() * d.getHeight());
+		Image iv_body = this.getBodyImage();
+		Image iv_cannon = this.getCannonImage();
 		
 		double degrees = this.direction.getRotation() * 90;
 		int dx = (int)(1+ TANK_SIZE.getWidth() / 2),
@@ -92,13 +99,11 @@ public class Tank extends GameEntity{
 			TANK_SIZE.getWidth()*d.getWidth(), TANK_SIZE.getHeight() * d.getHeight());
 	}
 	
-	private Image getBodyImage(double reqWidth, double reqHeight){
-		Image tmp = this.direction.isDiagonal() ? iv_body_diagonal : iv_body_regular;
-		return Assets.scale(tmp, (int)reqWidth, (int)reqHeight);
+	private Image getBodyImage(){
+		return this.direction.isDiagonal() ? iv_body_diagonal : iv_body_regular;
 	}
-	private Image getCannonImage(double reqWidth, double reqHeight){
-		Image tmp = this.direction.isDiagonal() ? iv_cannon_diagonal:iv_cannon_regular;
-		return Assets.scale(tmp, (int)reqWidth, (int)reqHeight);
+	private Image getCannonImage(){
+		return this.direction.isDiagonal() ? iv_cannon_diagonal:iv_cannon_regular;
 	}
 	
 	
