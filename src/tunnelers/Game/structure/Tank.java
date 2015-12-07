@@ -13,11 +13,11 @@ import tunnelers.Assets;
  */
 public class Tank extends GameEntity{
 
-	private static final Dimension2D TANK_SIZE = new Dimension2D(7, 7);
     private static final Image iv_body_regular = Assets.getImage(Assets.TANK_BODY),
 			iv_body_diagonal = Assets.getImage(Assets.TANK_BODY_DIAG),
 			iv_cannon_regular = Assets.getImage(Assets.TANK_CANNON),
 			iv_cannon_diagonal= Assets.getImage(Assets.TANK_CANNON_DIAG);
+	public static final Dimension2D TANK_SIZE = new Dimension2D(7, 7);
 	
 	
     public static int MAX_HITPOINTS = 20,

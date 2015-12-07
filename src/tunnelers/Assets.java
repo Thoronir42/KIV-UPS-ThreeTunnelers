@@ -50,29 +50,25 @@ public class Assets {
 			System.out.println("Loading img from stream");
 			tmp =  new Image(is);
 		}
-		return parseImage(tmp);
+		return scale(tmp, Settings.IMAGE_UPSCALE_MULT, RES_PATHS[type]);
 	}
-	private static Image parseImage(Image tmp){
-		WritableImage fin = new WritableImage((int)tmp.getWidth(), (int)tmp.getHeight());
-		PixelReader pr = tmp.getPixelReader();
-		PixelWriter pw = fin.getPixelWriter();
-		for(int y = 0; y < tmp.getHeight(); y++){
-			for(int x = 0; x < tmp.getWidth(); x++){
-				pr.getColor(x, y);
-			}
-		}
-		return tmp;
-	}
-	public static Image scale(Image src, int width, int height){
+	
+	public static Image scale(Image src, int upscale, String fileName){
+		int width = (int)(src.getWidth() * upscale),
+			height= (int)(src.getHeight()* upscale);
 		WritableImage fin = new WritableImage(width, height);
-		double dX = width / src.getWidth(),
-				dY= height/ src.getHeight();
+		System.out.println(fin.toString());
 		PixelReader pr = src.getPixelReader();
 		PixelWriter pw = fin.getPixelWriter();
+		try{
 		for(int y = 0; y < width; y++){
 			for(int x = 0; x < height; x++){
-				pw.setColor(x, y, pr.getColor((int)(x/dX), (int)(y/dY)));
+				pw.setColor(x, y, pr.getColor(x / upscale, y / upscale));
 			}
+		}
+		} catch (IndexOutOfBoundsException e) {
+			System.err.println("Upscaling of "+ fileName +" failed");
+			return src;
 		}
 		return fin;
 	}
