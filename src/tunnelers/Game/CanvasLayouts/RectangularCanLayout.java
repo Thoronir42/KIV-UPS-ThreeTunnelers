@@ -141,13 +141,18 @@ public class RectangularCanLayout extends CanvasLayout{
 		
 		private void drawTanks(GraphicsContext g, Rectangle render, Player[] players){
 			Affine defTransform = g.getTransform();
+			double bw = blockSize.getWidth(),
+					bh= blockSize.getHeight();
 			for(Player plr : players){
-				Point2D po = plr.getLocation();
 				Tank t = plr.getTank();
-				po = new Point2D(po.getX() * blockSize.getWidth(), po.getY() * blockSize.getHeight());
-				g.translate(-(render.getX()-po.getX()), -(render.getY() - po.getY()));
-				t.draw(g, blockSize);
-				g.setTransform(defTransform);
+				Point2D po = t.getLocation();
+				if(render.contains(po)){
+					po = new Point2D(po.getX() * bw, po.getY() * bh);
+					g.setFill(plr.getColor());
+					g.translate(po.getX(), po.getY());
+					t.draw(g, blockSize);
+					g.setTransform(defTransform);
+				}
 			}
 		}
 		
