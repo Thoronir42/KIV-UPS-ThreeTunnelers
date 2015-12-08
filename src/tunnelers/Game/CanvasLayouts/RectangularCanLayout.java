@@ -61,7 +61,6 @@ public class RectangularCanLayout extends CanvasLayout{
 		
         for(int i = 0; i < players.length; i++){
             g.translate(col * playerAreaBounds.getWidth(), row * playerAreaBounds.getHeight());
-            System.out.format("Drawing player %s on %s\t",players[i].getName(), players[i].getLocation());
             this.playerArea.draw(g, playerAreaBounds, players, i);
             
             if(++col >= cols){

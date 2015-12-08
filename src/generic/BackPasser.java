@@ -18,8 +18,8 @@ public class BackPasser<Type> implements Runnable{
         throw new UnsupportedOperationException("Command hasn't been passed: no uzuý");
     }
     
-    public void passCommand(Type cmd){
-        this.content = cmd;
+    public void pass(Type content){
+        this.content = content;
         this.run();
     }
     

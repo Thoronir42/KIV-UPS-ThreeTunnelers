@@ -134,10 +134,10 @@ public class Assets {
 	
 	
 	public static void loadAssets(){
-		for(String path : RES_PATHS){
+		/*for(String path : RES_PATHS){
 			File f = new File(path);
 			printFileToBase64(f);
-		}
+		}*/
 	}
 	public static void printFileToBase64(File file){
 		try {

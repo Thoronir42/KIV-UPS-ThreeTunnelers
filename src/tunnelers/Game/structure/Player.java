@@ -46,10 +46,6 @@ public class Player {
     public final void setColor(int colorId){
         this.color = settings.getColor(this.color, colorId);
     }
-    
-    public void handleControl(Input input, boolean pressed){
-        this.controlScheme.handleControll(input, pressed);
-    }
 
     public String getName() {
         return this.name;
@@ -79,6 +75,10 @@ public class Player {
 	
 	public Tank getTank(){
 		return this.tank;
+	}
+
+	public Controls getControls() {
+		return this.controlScheme;
 	}
 }
 

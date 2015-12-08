@@ -58,7 +58,6 @@ public class TunnelMap {
                 chLeft = Math.max(0, xMin / chunkSize),
                 chRight = (int)Math.min(this.Xchunks, Math.ceil((xMax + 1.0) / chunkSize)),
                 chBottom= (int)Math.min(this.Ychunks - 1,Math.ceil((yMax + 1.0) / chunkSize));
-        System.out.format("Map from [%d,%d] to [%d,%d]%n", xMin, yMin, xMax, yMax);
         for(int Y = chTop; Y <= chBottom; Y++){
             for(int X = chLeft; X <chRight; X++){
                 this.map[X][Y].renderChunk(g, xMin, xMax, yMin, yMax, blockSize);
@@ -93,7 +92,7 @@ public class TunnelMap {
             this.selfXmax = ((x + 1) * chunkSize) - 1;
             this.selfYmin = y * chunkSize;
             this.selfYmax = ((y + 1) * chunkSize) - 1;
-            System.out.format("Chunk [%d,%d] is from [%d,%d] to [%d,%d]%n",x, y, selfXmin, selfYmin, selfXmax, selfYmax);
+            //System.out.format("Chunk [%d,%d] is from [%d,%d] to [%d,%d]%n",x, y, selfXmin, selfYmin, selfXmax, selfYmax);
         }
         
         void assignPlayer(Player p){
@@ -143,11 +142,6 @@ public class TunnelMap {
     }
     
 }
-
-
-
-
-
 
 class ChunkException extends Exception{
     public ChunkException(int x, int y, int maxX, int maxY){

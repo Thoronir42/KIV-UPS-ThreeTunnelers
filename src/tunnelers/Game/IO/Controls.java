@@ -10,8 +10,7 @@ public class Controls {
 				activeY = 0;
 	public boolean activeShoot = false;
 	
-	
-	public void handleControll(Input type, boolean pressed){
+	public void handleControl(Input type, boolean pressed){
 		if(type.equals(Input.actShoot)){
 			this.activeShoot = pressed;
 			return;

@@ -9,7 +9,7 @@ public enum Input{
     movRight(Direction.East),
     actShoot();
     
-    private Direction dir;
+    private final Direction dir;
     
     private Input(){
         dir = null;

@@ -111,7 +111,7 @@ public class NetWorks extends Thread{
 				System.out.println("Received: "+cmd.getCommandCode());
 			}
             if(this.cmdPasser != null){
-                this.cmdPasser.passCommand(cmd);
+                this.cmdPasser.pass(cmd);
             } else {
                 System.err.format("\"%s\" was not handled, no handler found.%n", cmd.getCommandCode());
             }

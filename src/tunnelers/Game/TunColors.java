@@ -16,6 +16,8 @@ public class TunColors {
     private static final Color tough = Color.DARKGREY;
     private static final Color empty = Color.DARKRED;
 	public  static final Color error = Color.RED;
+	
+	private static final Color cannonColor = Color.GOLD;
     
     public static Color getBlockColor(int x, int y, TunnelMap.Block block){
         switch(block){
@@ -50,4 +52,8 @@ public class TunColors {
     public static Paint getRandStatic(int col, int row, double pct) {
         return getRandColor(0.2);
     }
+	
+	public static Color getCannonColor(){
+		return cannonColor;
+	}
 }
