@@ -2,6 +2,7 @@ package tunnelers.Menu;
 
 
 import tunnelers.ATunnelersStage;
+import tunnelers.Settings;
 import tunnelers.network.NetWorks;
 
 /**
@@ -27,10 +28,9 @@ public class MenuStage extends ATunnelersStage {
     }
     
     @Override
-    public void update(){
-        updateCounter++;
-        if(updateCounter % settings.getDelay() == 0){
-            System.out.printf("Update count: %d\n", updateCounter / settings.getDelay());
+    public void update(long tick){
+        if(tick % Settings.TICK_RATE == 0){
+            System.out.printf("Update count: %d\n", tick / Settings.TICK_RATE);
         }
     }
     

@@ -1,7 +1,7 @@
 package tunnelers;
 
+import generic.BackPasser;
 import tunnelers.Menu.MenuStage;
-import java.util.Timer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -16,24 +16,23 @@ public class Engine extends Application {
     
     
     ATunnelersStage currentStage;
-    Timer timer;
     Settings settings;
-    
+    Impulser imp;
+	
     @Override
     public void start(Stage primaryStage) {
         this.settings = Settings.getInstance();
-        this.timer = new Timer();
+		Assets.loadAssets();
+		Engine e = this;
+		this.imp = new Impulser(new BackPasser<Long>() {
+			@Override
+			public void run() {
+				e.update(this.get());
+			}
+		});
         this.changeStage(MenuStage.getInstance());
-        Assets.loadAssets();
-        
-        /*long delay = settings.getDelay();
-        timer.scheduleAtFixedRate(new TimerTask() {
-
-            @Override
-            public void run() {
-                getStage().update();
-            }
-        }, delay, delay);*/
+        this.imp.start();
+		
     }
 
     /**
@@ -43,12 +42,17 @@ public class Engine extends Application {
         launch(args);
     }
     
+	public void update(long tick){
+		ATunnelersStage s = getStage();
+		s.update(tick);
+	}
+	
     private ATunnelersStage getStage(){
         return this.currentStage;
     }
     private void changeStage(ATunnelersStage stage){
         stage.setOnCloseRequest((WindowEvent event) -> {
-            timer.cancel();
+            this.imp.stopRun();
             stage.exit();
         });
         stage.setOnHidden((WindowEvent event) -> {

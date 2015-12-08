@@ -38,8 +38,10 @@ public class GameStage extends ATunnelersStage{
     }
 
     @Override
-    public final void update() {
-		
+    public final void update(long tick) {
+		if(tick % 4 == 0 && sc instanceof PlayScene){
+			updatePlayers();
+			sc.drawScene();
     }
 
     @Override

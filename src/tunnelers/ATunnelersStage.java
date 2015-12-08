@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 public abstract class ATunnelersStage extends Stage{
     
     protected static Settings settings;
-    protected static long updateCounter;
     
     public static final int CLOSE = 1,
                             CHANGE_TO_MENU = 2,
@@ -18,10 +17,9 @@ public abstract class ATunnelersStage extends Stage{
     
     protected int returnValue = 0;
     
-    public abstract void update();
+    public abstract void update(long tick);
     
     public ATunnelersStage(){
-        updateCounter = 0;
         settings = Settings.getInstance();
     }
     
