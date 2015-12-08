@@ -57,30 +57,19 @@ public class GameStage extends ATunnelersStage{
     protected void updatePlayer(Player p){
         Tank tank = p.getTank();
 		Direction d = p.getControls().getDirection();
-		System.out.println(d);
+		
 		if(d == null){ return; }
         Point2D plr_loc = tank.getLocation();
-        double newX = plr_loc.getX(), newY = plr_loc.getY();
-        switch(d){
-            default: return;
-            case North:
-                if(newY - tank.getHeight()/2 > 0){ newY -= 1; }
-            break;
-                
-            case West:
-                if(newX - tank.getWidth()/2 > 0){ newX -= 1; }
-            break;
-                
-            case East:
-                if(newX + tank.getWidth()/2< this.container.getMapWidth()){ newX += 1; }
-            break;
-                
-            case South:
-                if(newY + tank.getHeight()/2< this.container.getMapHeight()){ newY += 1; }
-            break;
-        }
-        tank.setLocation(new Point2D(newX, newY));
-		tank.setDirection(d);
+        double newX = plr_loc.getX() + d.getX(),
+				newY = plr_loc.getY()+ d.getY();
+        
+        if( (newY - tank.getHeight()/2 > 0) &&
+			(newX - tank.getWidth()/2 > 0) &&
+			(newX + tank.getWidth()/2< this.container.getMapWidth()) &&
+			(newY + tank.getHeight()/2< this.container.getMapHeight())) {
+				tank.setLocation(new Point2D(newX, newY));
+				tank.setDirection(d);
+		}
     }
 	
     @Override
