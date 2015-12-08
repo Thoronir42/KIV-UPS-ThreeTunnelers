@@ -13,13 +13,13 @@ public enum Direction {
     West(-1, 0, false, 2),  NorthWest(-1, -1, true, 3);
 
 	private static final Direction[][] schemeDirs = {
-		{NorthWest, North, NorthEast},
-		{West, null, East},
-		{SouthWest, South, SouthEast}
+		{NorthWest,	North,	NorthEast	},
+		{West,		null,	East		},
+		{SouthWest,	South,	SouthEast	}
 	};
 	
-	public static Direction getDirection(byte X, byte Y) {
-		if(X < -1 || X > 1 || Y < -1 || Y > -1)
+	public static Direction getDirection(int X, int Y) {
+		if((X < -1 || X > 1) || (Y < -1 || Y > 1))
 			return null;
 		return schemeDirs[Y + 1][X + 1];
 	}
