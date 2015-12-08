@@ -1,5 +1,7 @@
 package tunnelers.Game.IO;
 
+import tunnelers.Game.structure.Direction;
+
 
 /**
  *
@@ -22,4 +24,18 @@ public class Controls {
 		this.activeX += addX;
 		this.activeY += addY;
 	}
+	
+	public Direction getDirection(){
+		if(Math.abs(activeX)> 1) activeX = (byte)Math.signum(activeX);
+		if(Math.abs(activeY)> 1) activeY = (byte)Math.signum(activeY);
+		return Direction.getDirection(activeX, activeY);
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Controls{activeX=%d, activeY=%d, activeShoot=%s}",
+				activeX, activeY, activeShoot ? 'Y':'N');
+	}
+	
+	
 }

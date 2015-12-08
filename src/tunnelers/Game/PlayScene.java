@@ -1,12 +1,12 @@
 package tunnelers.Game;
 
+import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -15,7 +15,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import tunnelers.Game.CanvasLayouts.CanvasLayout;
 import tunnelers.Game.structure.Container;
-import tunnelers.Game.structure.Direction;
 
 /**
  *
@@ -36,9 +35,11 @@ public class PlayScene extends AGameScene{
         addComponents(root, scene);
         
         scene.setOnKeyPressed((KeyEvent e) -> {
-            System.out.println("Playscene keypressed:" + e.getCode());
-            scene.handleKeyPressed(e.getCode());
+            scene.getStage().handleKey(e.getCode(), true);
         });
+		scene.setOnKeyReleased((KeyEvent e) -> {
+			scene.getStage().handleKey(e.getCode(), false);
+		});
         scene.setCanvasLayout(c);
         
         return scene;
@@ -95,32 +96,10 @@ public class PlayScene extends AGameScene{
     
     @Override
     public void drawScene(){
-        GraphicsContext g = this.ca_drawArea.getGraphicsContext2D();
-        this.canvasLayout.drawLayout(g);
+		GraphicsContext g = this.ca_drawArea.getGraphicsContext2D();
+		Platform.runLater(() -> {
+			canvasLayout.drawLayout(g);
+		});
+        
     }
-    
-    public void handleKeyPressed(KeyCode code){
-        System.out.println(code);
-		int pid = 1;
-        switch(code){
-            default: return;
-            case UP:
-                this.getStage().movePlayer(pid, Direction.North);
-            break;
-                
-            case LEFT:
-                this.getStage().movePlayer(pid, Direction.West);
-            break;
-                
-            case RIGHT:
-                this.getStage().movePlayer(pid, Direction.East);
-            break;
-                
-            case DOWN:
-                this.getStage().movePlayer(pid, Direction.South);
-            break;
-        }
-        this.drawScene();
-    }
-    
 }
