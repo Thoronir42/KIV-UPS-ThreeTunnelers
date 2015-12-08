@@ -1,5 +1,7 @@
 package tunnelers.Game.IO;
 
+import java.util.HashMap;
+import java.util.Map;
 import tunnelers.Game.structure.Direction;
 
 
@@ -8,33 +10,38 @@ import tunnelers.Game.structure.Direction;
  * @author Stepan
  */
 public class Controls {
-    public byte activeX = 0,
-				activeY = 0;
-	public boolean activeShoot = false;
+    Map<Input, Boolean> keys;
+	
+	public Controls(){
+		keys = new HashMap<>();
+		Input[] inputs = Input.values();
+		for(Input i :inputs){
+			keys.put(i, false);
+		}
+	}
 	
 	public void handleControl(Input type, boolean pressed){
-		if(type.equals(Input.actShoot)){
-			this.activeShoot = pressed;
-			return;
-		}
-		
-		int pressFix = pressed ? 1 : -1;
-		int addX = (int)type.getX() * pressFix,
-			addY = (int)type.getY() * pressFix;
-		this.activeX += addX;
-		this.activeY += addY;
+		keys.put(type, pressed);
 	}
 	
 	public Direction getDirection(){
-		if(Math.abs(activeX)> 1) activeX = (byte)Math.signum(activeX);
-		if(Math.abs(activeY)> 1) activeY = (byte)Math.signum(activeY);
-		return Direction.getDirection(activeX, activeY);
+		int x = getDir(Input.movLeft, Input.movRight),
+			y = getDir(Input.movUp, Input.movDown);
+		return Direction.getDirection(x, y);
+	}
+	private int getDir(Input sub, Input add){
+		if(keys.get(sub) && !keys.get(add))
+			return -1;
+		if(keys.get(add) && !keys.get(sub))
+			return 1;
+		return 0;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Controls{activeX=%d, activeY=%d, activeShoot=%s}",
-				activeX, activeY, activeShoot ? 'Y':'N');
+		return String.format("Controls(Up=%s\t Dw=%s\t Lf=%s\t Rg=%s\t Sh=%s)", 
+				keys.get(Input.movUp), keys.get(Input.movDown), keys.get(Input.movLeft),
+				keys.get(Input.movRight), keys.get(Input.actShoot));
 	}
 	
 	
