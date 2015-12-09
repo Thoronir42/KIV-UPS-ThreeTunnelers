@@ -46,6 +46,7 @@ public class TunnelMap {
         if((x < 0 || x >= this.Xchunks)||(y < 0 || y >= this.Ychunks)){
             throw new ChunkException(x, y, Xchunks, Ychunks);
         }
+		this.map[x][y].applyData(chunkData);
     }
     
     
@@ -66,14 +67,26 @@ public class TunnelMap {
         
     }
 
-    Point2D getFreeBaseSpot(Player p) {
-        int x = Settings.getRandInt(Xchunks - 2) + 1, y = Settings.getRandInt(Ychunks - 2) + 1;
+    Point2D getFreeBaseSpot() {
+        return getFreeBaseSpot(null);
+    }
+	
+	Point2D getFreeBaseSpot(Player p) {
+		int x = Settings.getRandInt(Xchunks - 2) + 1, y = Settings.getRandInt(Ychunks - 2) + 1;
 		Chunk c = this.map[x][y];
 		c.assignedPlayer = p;
         return new Point2D(x * chunkSize, y * chunkSize);
-    }
+	}
+	
+	void assignPlayer(int chX, int chY, Player p){
+		Chunk c = this.map[chX][chY];
+		c.assignedPlayer = p;
+	}
     
     class Chunk{
+		public static final int CHUNK_SIZE_ERROR_Y = 500000,
+				CHUNK_SIZE_ERROR_X = 10000;
+		
         protected Block[][] chunkData;
         private final int selfXmin, selfXmax,
                     selfYmin, selfYmax;
@@ -119,16 +132,48 @@ public class TunnelMap {
             // g.setFill(TunColors.getChunkColor(selfXmin / chunkSize, selfYmin / chunkSize));
             // g.fillRect(xFrom*blockSize.getWidth(), yFrom*blockSize.getHeight(), (xTo - xFrom + 1)*blockSize.getWidth(), (yTo - yFrom + 1)*blockSize.getHeight());
         }
+
+		private int applyData(char[][] chunkData) {
+			int errors = 0;
+			for(int row = 0; row < chunkData.length; row++){
+				if(row > chunkSize){ errors += CHUNK_SIZE_ERROR_Y; break; }
+				char[] chunkRow = chunkData[row];
+				for(int col = 0; col < chunkRow.length; col++){
+					if(col > chunkSize){errors += CHUNK_SIZE_ERROR_X; break; }
+					Block b = Block.getByChar(chunkRow[col]);
+					if(b.equals(Block.Undefined)){ errors++; continue;}
+					this.chunkData[row][col] = b;
+				}
+			}
+			
+			return errors;
+		}
         
         
     }
     
     public enum Block{
-        Breakable('a'),
-        Tough('b'),
-        Empty('c'),
-        BaseWall('d'),
-        Undefined('z');
+        Breakable(Block.C_BREAKABLE),
+        Tough(Block.C_TOUGH),
+        Empty(Block.C_EMPTY),
+        BaseWall(Block.C_BASEWALL),
+        Undefined(Block.C_UNDEFINED);
+		private static final char
+				C_BREAKABLE = 'a',
+				C_TOUGH = 'b',
+				C_EMPTY = 'c',
+				C_BASEWALL = 'd',
+				C_UNDEFINED = 'z';
+
+		private static Block getByChar(char c) {
+			switch(c){
+				default: return Undefined;
+				case C_BREAKABLE: return Breakable;
+				case C_TOUGH: return Tough;
+				case C_EMPTY: return Empty;
+				case C_BASEWALL: return BaseWall;
+			}
+		}
         
         private final char type;
         
