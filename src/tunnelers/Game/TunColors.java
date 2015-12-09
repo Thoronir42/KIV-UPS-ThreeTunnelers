@@ -4,7 +4,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import tunnelers.Game.structure.TunnelMap;
 import tunnelers.Settings;
-import static tunnelers.Settings.PLAYER_COLORS;
 
 /**
  *
@@ -12,33 +11,33 @@ import static tunnelers.Settings.PLAYER_COLORS;
  */
 public class TunColors {
     
-    private static final Color breakable = Color.DARKSALMON;
-    private static final Color tough = Color.DARKGREY;
-    private static final Color empty = Color.DARKRED;
+    private static final Color[] breakable = {Color.BURLYWOOD, Color.BURLYWOOD.interpolate(Color.BROWN, 0.1)};
+    private static final Color[] tough = {Color.DARKGREY};
+    private static final Color[] empty = {Color.DARKRED};
 	public  static final Color error = Color.RED;
 	
 	private static final Color cannonColor = Color.GOLD;
     
     public static Color getBlockColor(int x, int y, TunnelMap.Block block){
-        switch(block){
-            default: return getRandColor();
+		if(block.equals(TunnelMap.Block.Undefined)){ return error; }
+        int var = ((int)Math.abs(Math.sin((x + 2)*7) *6 + Math.cos(y * 21)*6));
+		Color[] c = getColGroup(block);
+		if(c == null){ return error; }
+		return c[var % c.length];
+    }
+	
+	private static Color[] getColGroup(TunnelMap.Block b){
+		switch(b){
             case Breakable: return breakable;
             case Tough: return tough;
             case Empty: return empty;
         }
-    }
-    
-    public static Color getChunkColor(int x, int y){
-        Color[] cols = PLAYER_COLORS;
-        int i = (x * 2 + y * 7) % cols.length;
-        return opacify(cols[i], 0.25);
-    }
-    
-    
+		return null;
+	}
 
-    public static Color getRandColor(double opacity) {
-        int i = Settings.getRandInt(PLAYER_COLORS.length);
-        return opacify(PLAYER_COLORS[i], opacity);
+    public static Color getRandPlayerColor(double opacity) {
+        int i = Settings.getRandInt(Settings.PLAYER_COLORS.length);
+        return opacify(Settings.PLAYER_COLORS[i], opacity);
     }
     
     private static Color opacify(Color c, double opacity){
@@ -46,11 +45,11 @@ public class TunColors {
     }
     
     public static Color getRandColor(){
-        return getRandColor(1);
+        return getRandPlayerColor(1);
     }
 
     public static Paint getRandStatic(int col, int row, double pct) {
-        return getRandColor(0.2);
+        return getRandPlayerColor(0.2);
     }
 	
 	public static Color getCannonColor(){
