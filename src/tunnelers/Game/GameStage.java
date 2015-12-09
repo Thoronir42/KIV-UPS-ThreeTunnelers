@@ -9,6 +9,8 @@ import tunnelers.Game.structure.Direction;
 import generic.BackPasser;
 import javafx.scene.input.KeyCode;
 import tunnelers.Game.IO.Input;
+import tunnelers.Game.IO.KeyMap;
+import tunnelers.Game.IO.PlrInput;
 import tunnelers.network.NetWorks;
 import tunnelers.Game.structure.Player;
 import tunnelers.Game.structure.Tank;
@@ -25,18 +27,18 @@ public class GameStage extends ATunnelersStage{
     protected GameChat gamechat;
     private final Container container;
     private AGameScene sc;
+	private final KeyMap keyMap;
 	
     public GameStage(NetWorks networks) {
         this.networks = networks;
         this.networks.setCommandPasser(new BackPasser<NetCommand>(){
             @Override
-            public void run(){
-                handleNetworkCommand(this.get());
-            }
+            public void run(){ handleNetworkCommand(this.get()); }
         });
         this.setScene(LobbyScene.getInstance(networks));
 		this.container = Container.mockContainer();
         this.gamechat = new GameChat();
+		this.keyMap = settings.getKeyMap();
     }
 
     @Override
@@ -110,17 +112,14 @@ public class GameStage extends ATunnelersStage{
     }
 	
 	void handleKey(KeyCode code, boolean pressed) {
-		int pid = 1;
-		Input i;
-        switch(code){
-            default: return;
-            case UP:   i = Input.movUp; break;
-			case LEFT: i = Input.movLeft; break;
-            case RIGHT:i = Input.movRight; break;
-            case DOWN: i = Input.movDown; break;
-        }
-		Player p = this.container.getPlayer(pid);
-		p.getControls().handleControl(i, pressed);
+		
+		PlrInput pi = this.keyMap.getInput(code);
+        if(pi == null){ return; }
+		int pIndex = pi.player;
+		Input inp = pi.input;
+		
+		Player p = this.container.getPlayer(pIndex);
+		p.getControls().handleControl(inp, pressed);
 		//System.out.format("%s - %s%n", p.getName(), p.getControls());
 	}
 	

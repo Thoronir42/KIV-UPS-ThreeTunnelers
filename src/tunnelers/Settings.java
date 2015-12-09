@@ -1,8 +1,10 @@
 package tunnelers;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Random;
 import javafx.scene.paint.Color;
+import tunnelers.Game.IO.KeyMap;
 
 
 /**
@@ -79,13 +81,27 @@ public class Settings {
     }
     
 	private int width = WIDTH_DEFAULT, height = HEIGHT_DEFAULT;
-    private final long delay;
 	
     public final boolean[] playerColorUsage;
     
 	private String serverAddress = "localhost";
 	private int serverPort = Settings.DEFAULT_PORT;
 
+	private final KeyMap keyMap;
+	
+	
+    private Settings(){
+        this.playerColorUsage = preparePlayerColorUsage(PLAYER_COLORS.length);
+		this.keyMap = new KeyMap();
+		this.initDefaults();
+    }
+	
+	void initDefaults(){
+		keyMap.defaults();
+	}
+	
+	
+	
 	public String getServerAddress() {
 		return serverAddress;
 	}
@@ -101,12 +117,6 @@ public class Settings {
 	public void setServerPort(int serverPort) {
 		this.serverPort = serverPort;
 	}
-	
-	
-    private Settings(){
-        this.delay = (long)(1000.0 / TICK_RATE);
-        this.playerColorUsage = preparePlayerColorUsage(PLAYER_COLORS.length);
-    }
     
     public String getGameName(){
         return GAME_NAME;
@@ -122,9 +132,6 @@ public class Settings {
     }
     public int getTickrate() {
         return TICK_RATE;
-    }
-    public long getDelay(){
-        return this.delay;
     }
 
     public int getDefaultPort() {
@@ -164,5 +171,17 @@ public class Settings {
         }
         return -1;
     }
+	
+	public KeyMap getKeyMap() {
+		return this.keyMap;
+	}
+	
+	void loadConfigFile(String cfgFile) {
+		File f = new File(cfgFile);
+		if(!f.exists()){
+			return;
+		}
+		System.out.println("Config file found but not used.");
+	}
     
 }
