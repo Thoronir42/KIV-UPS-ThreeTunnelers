@@ -38,36 +38,19 @@ public class Settings {
         PLAYER_COLORS = preparePlayerColors();
         RNG = new Random(420);
     }
+	
+	private static Settings instance;
+	
+    public static Settings getInstance(){
+        if(instance == null){
+            instance = new Settings();
+        }
+        return instance;
+    }
 
     public static int getRandInt(int i) {
         return RNG.nextInt(i);
     }
-    
-    private int width = WIDTH_DEFAULT, height = HEIGHT_DEFAULT;
-    private final long delay;
-	
-    public final boolean[] playerColorUsage;
-    
-	private String serverAddress = "localhost";
-	private int serverPort = Settings.DEFAULT_PORT;
-
-	public String getServerAddress() {
-		return serverAddress;
-	}
-
-	public void setServerAddress(String serverAddress) {
-		this.serverAddress = serverAddress;
-	}
-
-	public int getServerPort() {
-		return serverPort;
-	}
-
-	public void setServerPort(int serverPort) {
-		this.serverPort = serverPort;
-	}
-    
-    private static Settings instance;
     
     private static Color[] preparePlayerColors(){
         Color[] colors = new Color[]{
@@ -95,7 +78,60 @@ public class Settings {
         return usage;
     }
     
-    public Color getColor(Color color, int colorId) {
+	private int width = WIDTH_DEFAULT, height = HEIGHT_DEFAULT;
+    private final long delay;
+	
+    public final boolean[] playerColorUsage;
+    
+	private String serverAddress = "localhost";
+	private int serverPort = Settings.DEFAULT_PORT;
+
+	public String getServerAddress() {
+		return serverAddress;
+	}
+
+	public void setServerAddress(String serverAddress) {
+		this.serverAddress = serverAddress;
+	}
+
+	public int getServerPort() {
+		return serverPort;
+	}
+
+	public void setServerPort(int serverPort) {
+		this.serverPort = serverPort;
+	}
+	
+	
+    private Settings(){
+        this.delay = (long)(1000.0 / TICK_RATE);
+        this.playerColorUsage = preparePlayerColorUsage(PLAYER_COLORS.length);
+    }
+    
+    public String getGameName(){
+        return GAME_NAME;
+    }
+    public String getTitleSeparator(){
+        return TITLE_SEPARATOR;
+    }
+    public int getWidth(){
+        return this.width;
+    }
+    public int getHeight(){
+        return this.height;
+    }
+    public int getTickrate() {
+        return TICK_RATE;
+    }
+    public long getDelay(){
+        return this.delay;
+    }
+
+    public int getDefaultPort() {
+        return DEFAULT_PORT;
+    }
+
+	public Color getColor(Color color, int colorId) {
         boolean available = (colorId >= 0 && colorId < PLAYER_COLORS.length) && !this.playerColorUsage[colorId];
         int oldCol = (color == null) ? -1 : Arrays.asList(PLAYER_COLORS).indexOf(color);
         
@@ -127,41 +163,6 @@ public class Settings {
             }
         }
         return -1;
-    }
-    
-    private Settings(){
-        this.delay = (long)(1000.0 / TICK_RATE);
-        this.playerColorUsage = preparePlayerColorUsage(PLAYER_COLORS.length);
-    }
-    
-    public static Settings getInstance(){
-        if(instance == null){
-            instance = new Settings();
-        }
-        return instance;
-    }
-    
-    public String getGameName(){
-        return GAME_NAME;
-    }
-    public String getTitleSeparator(){
-        return TITLE_SEPARATOR;
-    }
-    public int getWidth(){
-        return this.width;
-    }
-    public int getHeight(){
-        return this.height;
-    }
-    public int getTickrate() {
-        return TICK_RATE;
-    }
-    public long getDelay(){
-        return this.delay;
-    }
-
-    public int getDefaultPort() {
-        return DEFAULT_PORT;
     }
     
 }
