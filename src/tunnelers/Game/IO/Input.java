@@ -3,20 +3,22 @@ package tunnelers.Game.IO;
 import tunnelers.Game.structure.Direction;
     
 public enum Input{
-    movUp   (Direction.North),
-    movDown (Direction.South),
-    movLeft (Direction.West),
-    movRight(Direction.East),
-    actShoot();
+    movUp   (Direction.North, 0),
+    movDown (Direction.South, 1),
+    movLeft (Direction.West, 2),
+    movRight(Direction.East, 3),
+    actShoot(4);
     
     private final Direction dir;
-    
-    private Input(){
-        dir = null;
+    private final int intVal;
+	
+    private Input(int intVal){
+        this(null, intVal);
     }
     
-    private Input(Direction dir){
+    private Input(Direction dir, int intVal){
         this.dir = dir;
+		this.intVal = intVal;
     }
     
     public Direction getDirection(){
@@ -29,6 +31,10 @@ public enum Input{
 	
 	public double getY(){
 		return this.dir.getY();
+	}
+
+	public int intVal() {
+		return this.intVal;
 	}
 	
 }

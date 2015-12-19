@@ -23,6 +23,13 @@ public class KeyMap {
 		set(KeyCode.RIGHT, pIndex, Input.movRight);
 		set(KeyCode.DOWN, pIndex, Input.movDown);
 		set(KeyCode.NUMPAD0, pIndex, Input.actShoot);
+		
+		pIndex = 2;
+		set(KeyCode.W, pIndex, Input.movUp);
+		set(KeyCode.A, pIndex, Input.movLeft);
+		set(KeyCode.D, pIndex, Input.movRight);
+		set(KeyCode.S, pIndex, Input.movDown);
+		set(KeyCode.F, pIndex, Input.actShoot);
 	}
 	
 	public void set(KeyCode code, byte pIndex, Input i){

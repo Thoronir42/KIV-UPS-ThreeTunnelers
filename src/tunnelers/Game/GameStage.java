@@ -14,7 +14,10 @@ import tunnelers.Game.IO.PlrInput;
 import tunnelers.network.NetWorks;
 import tunnelers.Game.structure.Player;
 import tunnelers.Game.structure.Tank;
+import tunnelers.network.ConnectionCommand;
+import tunnelers.network.GameCommand;
 import tunnelers.network.MessageCommand;
+import tunnelers.network.NCG;
 import tunnelers.network.NCG.NetCommand;
 
 /**
@@ -112,14 +115,15 @@ public class GameStage extends ATunnelersStage{
     }
 	
 	void handleKey(KeyCode code, boolean pressed) {
-		
 		PlrInput pi = this.keyMap.getInput(code);
         if(pi == null){ return; }
 		int pIndex = pi.player;
 		Input inp = pi.input;
 		
 		Player p = this.container.getPlayer(pIndex);
-		p.getControls().handleControl(inp, pressed);
+		if(p.getControls().handleControl(inp, pressed)){
+			NCG.NetCommand cmd = new GameCommand.ControlSet(inp.intVal(), pressed ? 1 : 0);
+		}
 		//System.out.format("%s - %s%n", p.getName(), p.getControls());
 	}
 	

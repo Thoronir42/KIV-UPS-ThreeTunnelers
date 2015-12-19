@@ -20,8 +20,16 @@ public class Controls {
 		}
 	}
 	
-	public void handleControl(Input type, boolean pressed){
-		keys.put(type, pressed);
+	/**
+	 * 
+	 * @param type Which input is being held
+	 * @param newVal what value is being set under mentioned input
+	 * @return true if the state on the input changed value
+	 */
+	public boolean handleControl(Input type, boolean newVal){
+		boolean prevVal = keys.get(type);
+		keys.put(type, newVal);
+		return prevVal != newVal;
 	}
 	
 	public Direction getDirection(){
