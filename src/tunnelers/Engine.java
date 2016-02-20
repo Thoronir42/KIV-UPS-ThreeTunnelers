@@ -22,7 +22,6 @@ public class Engine extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.settings = Settings.getInstance();
-		Assets.loadAssets();
 		Settings.getInstance().loadConfigFile("config/settings.cfg");
 		Engine e = this;
 		this.imp = new Impulser(new BackPasser<Long>() {

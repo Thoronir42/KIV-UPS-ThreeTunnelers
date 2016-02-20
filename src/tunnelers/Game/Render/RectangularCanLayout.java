@@ -84,8 +84,8 @@ public class RectangularCanLayout extends CanvasLayout{
             this.bounds = playerAreaBounds;
 			this.container = c;
             this.viewWindow = new Rectangle(bounds.getWidth() * 0.05, bounds.getHeight() * 0.05, bounds.getWidth() * 0.9, bounds.getHeight() * 0.6);
-            this.blockSize = getBlockSize();
-            this.render = getRender();
+            this.blockSize = calcBlockSize();
+            this.render = calcRender();
         }
         
         public Dimension2D getBounds(){
@@ -105,10 +105,10 @@ public class RectangularCanLayout extends CanvasLayout{
             Rectangle inBounds = new Rectangle(bounds.getWidth() * 0.8, bounds.getHeight() * 0.1);
             inBounds.setX(bounds.getWidth() * 0.1);
             inBounds.setY(bounds.getHeight() * 0.7);
-            fillStatusBar(g, inBounds, Player.COL_HITPOINTS);
+            fillStatusBar(g, inBounds, TunColors.UI_HITPOINTS);
 
             inBounds.setY(bounds.getHeight() * 0.85);
-            fillStatusBar(g, inBounds, Player.COL_ENERGY);
+            fillStatusBar(g, inBounds, TunColors.UI_ENERGY);
         }
         private void fillStatusBar(GraphicsContext g, Rectangle r, Color c){
             g.setFill(Color.DIMGREY);
@@ -151,7 +151,7 @@ public class RectangularCanLayout extends CanvasLayout{
 					po = new Point2D(po.getX() * bw, po.getY() * bh);
 					g.setFill(plr.getColor());
 					g.translate(po.getX(), po.getY());
-					t.draw(g, blockSize);
+					renderer.drawTank(t);
 					g.setTransform(defTransform);
 				}
 			}
@@ -190,7 +190,7 @@ public class RectangularCanLayout extends CanvasLayout{
         }
         
         
-        private Dimension2D getBlockSize(){
+        private Dimension2D calcBlockSize(){
             double width, height;
             int tmp;
             double bWidth = this.viewWindow.getWidth(),
@@ -208,7 +208,7 @@ public class RectangularCanLayout extends CanvasLayout{
             }
             return new Dimension2D((int)width, (int)height);
         }
-        private Rectangle getRender(){
+        private Rectangle calcRender(){
             return new Rectangle(
                     Math.floor(viewWindow.getWidth() / this.blockSize.getWidth()),
                     Math.floor(viewWindow.getHeight() / this.blockSize.getHeight())

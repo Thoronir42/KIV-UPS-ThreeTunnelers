@@ -17,7 +17,10 @@ public class TunColors {
 	public  static final Color error = Color.RED;
 	
 	private static final Color cannonColor = Color.GOLD;
-    
+	
+	public static final Color UI_ENERGY = Color.DEEPPINK;
+	public static final Color UI_HITPOINTS = Color.LAWNGREEN;
+ 
     public static Color getBlockColor(int x, int y, Block block){
 		if(block.equals(Block.Undefined)){ return error; }
         int var = ((int)Math.abs(Math.sin((x + 2)*7) *6 + Math.cos(y * 21)*6));

@@ -2,13 +2,16 @@ package tunnelers.Game.Render;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
+import tunnelers.Assets;
 import tunnelers.Game.TunColors;
 import tunnelers.Game.map.Block;
 import tunnelers.Game.map.Bounds;
 import tunnelers.Game.map.TunnelMap;
 import tunnelers.Game.map.Chunk;
 import tunnelers.Game.structure.Player;
+import tunnelers.Game.structure.Tank;
 
 /**
  *
@@ -20,12 +23,15 @@ public class Renderer {
 	protected Dimension2D blockSize;
 
 	protected final TunnelMap map;
+	protected final Assets assets;
 
-	public Renderer(GraphicsContext g, TunnelMap map, Dimension2D blockSize) {
+	public Renderer(GraphicsContext g, TunnelMap map, Assets assets, Dimension2D blockSize) {
 		this.g = g;
-		this.blockSize = blockSize;
-
+		
 		this.map = map;
+		this.assets = assets;
+		
+		this.blockSize = blockSize;
 	}
 
 	public void drawMap(Rectangle rendSrc) {
@@ -34,18 +40,19 @@ public class Renderer {
 				xMax = (int) (rendSrc.getX() + rendSrc.getWidth() - 1),
 				yMax = (int) (rendSrc.getY() + rendSrc.getHeight() - 1);
 		Bounds bounds = new Bounds(xMin, xMax, yMin, yMax);
+		
 		int chTop = Math.max(0, yMin / map.chunkSize),
 				chLeft = Math.max(0, xMin / map.chunkSize),
 				chRight = (int) Math.min(map.Xchunks, Math.ceil((xMax + 1.0) / map.chunkSize)),
 				chBottom = (int) Math.min(map.Ychunks - 1, Math.ceil((yMax + 1.0) / map.chunkSize));
 		for (int Y = chTop; Y <= chBottom; Y++) {
 			for (int X = chLeft; X < chRight; X++) {
-				renderChunk(map.getChunk(X, Y), bounds, blockSize);
+				renderChunk(map.getChunk(X, Y), bounds);
 			}
 		}
 	}
 
-	void renderChunk(Chunk chunk, Bounds renderBounds, Dimension2D blockSize) {
+	void renderChunk(Chunk chunk, Bounds renderBounds) {
 		Bounds currentBounds = renderBounds.intersection(chunk.bounds);
 		for (int y = currentBounds.yMin; y <= currentBounds.yMax; y++) {
 			for (int x = currentBounds.xMin; x <= currentBounds.xMax; x++) {
@@ -62,6 +69,29 @@ public class Renderer {
 		}
 		// g.setFill(TunColors.getChunkColor(selfXmin / chunkSize, selfYmin / chunkSize));
 		// g.fillRect(xFrom*blockSize.getWidth(), yFrom*blockSize.getHeight(), (xTo - xFrom + 1)*blockSize.getWidth(), (yTo - yFrom + 1)*blockSize.getHeight());
+	}
+
+	void drawTank(Tank t) {
+		Image iv_body = this.assets.getTankBodyImage(t.getPlayerId() - 1, t.getDirection().isDiagonal());
+		Image iv_cannon = this.assets.getTankCannonImage(t.getDirection().isDiagonal());
+		
+		double bw = blockSize.getWidth(), bh = blockSize.getHeight();
+		
+		int rotation = t.getDirection().getRotation();
+		int dx = (int)( Tank.SIZE.getWidth() / 2),
+			dy = (int)( Tank.SIZE.getHeight() / 2);
+		switch(rotation){
+			case 0: default: break;
+			case 1: g.translate(bw, 0); break;
+			case 2: g.translate(bw, bh);break;
+			case 3: g.translate(0, bh); break;
+		}
+		g.rotate(rotation * 90);
+		g.drawImage(iv_body, -dx*bw, -dy*bh,
+			Tank.SIZE.getWidth()*bw, Tank.SIZE.getHeight() * bh);
+		g.drawImage(iv_cannon, -dx*bw, -dy*bh,
+			Tank.SIZE.getWidth()*bw, Tank.SIZE.getHeight() * bh);
+	
 	}
 
 }

@@ -13,6 +13,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import tunnelers.Assets;
 import tunnelers.Game.Render.CanvasLayout;
 import tunnelers.Game.Render.Renderer;
 import tunnelers.Game.structure.Container;
@@ -88,7 +89,8 @@ public class PlayScene extends AGameScene{
     private void setCanvasLayout(Container container){
 		Dimension2D availableArea = new Dimension2D(this.ca_drawArea.getWidth(), this.ca_drawArea.getHeight());
 		CanvasLayout layout = CanvasLayout.choseIdeal(container, availableArea);
-		Renderer renderer = new Renderer(this.ca_drawArea.getGraphicsContext2D(), container.getMap(), layout.getBlockSize());
+		Assets assets = new Assets(container.getPlayers());
+		Renderer renderer = new Renderer(this.ca_drawArea.getGraphicsContext2D(), container.getMap(), assets, layout.getBlockSize());
 		layout.setRenderer(renderer);
         this.canvasLayout = layout;
     }

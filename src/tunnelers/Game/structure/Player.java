@@ -4,7 +4,6 @@ import tunnelers.Game.IO.Controls;
 import javafx.geometry.Point2D;
 import tunnelers.Settings;
 import javafx.scene.paint.Color;
-import tunnelers.Game.IO.Input;
 
 
 
@@ -14,8 +13,7 @@ import tunnelers.Game.IO.Input;
  */
 public class Player {
     
-    public static final Color COL_ENERGY = Color.DEEPPINK,
-                              COL_HITPOINTS = Color.LAWNGREEN;
+   
     
     private static int num_of_instances = 0;
     private final static Settings settings = Settings.getInstance();

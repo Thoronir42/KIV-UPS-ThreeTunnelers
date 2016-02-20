@@ -2,7 +2,6 @@ package tunnelers.Game.structure;
 
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
  *
@@ -63,5 +62,7 @@ public abstract class GameEntity {
 		return this.getY() + (this.getHeight()- 1) / 2;
 	}
 	
-	public abstract void draw(GraphicsContext g, Dimension2D blockSize);
+	public int getPlayerId(){
+		return this.player.getID();
+	}
 }
