@@ -1,5 +1,6 @@
 package tunnelers.Game.structure;
 
+import tunnelers.Game.map.TunnelMap;
 import javafx.geometry.Point2D;
 
 /**
@@ -47,10 +48,10 @@ public class Container {
 	}
 	
     public int getMapWidth(){
-        return this.map.mapWidth;
+        return this.map.width;
     }
     public int getMapHeight(){
-        return this.map.mapHeight;
+        return this.map.height;
     }
 
 	public Player getPlayer(int playerId) {

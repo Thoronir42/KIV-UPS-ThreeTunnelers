@@ -2,7 +2,7 @@ package tunnelers.Game;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import tunnelers.Game.structure.TunnelMap;
+import tunnelers.Game.map.Block;
 import tunnelers.Settings;
 
 /**
@@ -18,15 +18,15 @@ public class TunColors {
 	
 	private static final Color cannonColor = Color.GOLD;
     
-    public static Color getBlockColor(int x, int y, TunnelMap.Block block){
-		if(block.equals(TunnelMap.Block.Undefined)){ return error; }
+    public static Color getBlockColor(int x, int y, Block block){
+		if(block.equals(Block.Undefined)){ return error; }
         int var = ((int)Math.abs(Math.sin((x + 2)*7) *6 + Math.cos(y * 21)*6));
 		Color[] c = getColGroup(block);
 		if(c == null){ return error; }
 		return c[var % c.length];
     }
 	
-	private static Color[] getColGroup(TunnelMap.Block b){
+	private static Color[] getColGroup(Block b){
 		switch(b){
             case Breakable: return breakable;
             case Tough: return tough;
