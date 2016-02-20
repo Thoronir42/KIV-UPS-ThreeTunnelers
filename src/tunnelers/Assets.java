@@ -10,7 +10,6 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -139,14 +138,4 @@ public class Assets {
 			printFileToBase64(f);
 		}*/
 	}
-	public static void printFileToBase64(File file){
-		try {
-			byte[] encoded = Base64.getEncoder().encode(FileUtils.readFileToByteArray(file));
-			String s = new String(encoded);
-			System.out.println(file.getName() + " " + s);
-		} catch (IOException ex) {
-			System.err.println(ex.getMessage());
-		}
-	}
-	
 }

@@ -1,4 +1,4 @@
-package tunnelers.Game.CanvasLayouts;
+package tunnelers.Game.Render;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -21,10 +21,6 @@ public abstract class CanvasLayout {
     
     public CanvasLayout(Container c){
         this.container = c;
-    }
-    
-    public int getPlayerCapacity(){
-        throw new UnsupportedOperationException("Unimplemented player amount check method");
     }
     
     public abstract void drawLayout(GraphicsContext g);

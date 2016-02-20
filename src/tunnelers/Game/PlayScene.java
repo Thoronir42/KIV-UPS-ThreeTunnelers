@@ -13,7 +13,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import tunnelers.Game.CanvasLayouts.CanvasLayout;
+import tunnelers.Game.Render.CanvasLayout;
 import tunnelers.Game.structure.Container;
 
 /**

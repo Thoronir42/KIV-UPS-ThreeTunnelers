@@ -1,4 +1,4 @@
-package tunnelers.Game.CanvasLayouts;
+package tunnelers.Game.Render;
 
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
@@ -43,9 +43,6 @@ public class RectangularCanLayout extends CanvasLayout{
                     canvasArea.getHeight() / rows);
         this.playerArea = new PlayerArea(playerAreaBounds, c);
     }
-    
-    @Override
-    public int getPlayerCapacity(){ return this.getRowAmount() * this.getColAmount(); }
     
     
     protected int getRowAmount(){ return this.rows; }
