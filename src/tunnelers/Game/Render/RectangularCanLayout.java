@@ -201,7 +201,7 @@ public class RectangularCanLayout extends CanvasLayout{
                 if(tmp % 2 == 0){ tmp--; }
                 width = bWidth / tmp;
             }
-            return new Dimension2D(width, height);
+            return new Dimension2D((int)width, (int)height);
         }
         private Rectangle getRender(){
             return new Rectangle(
