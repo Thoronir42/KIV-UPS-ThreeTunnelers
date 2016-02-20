@@ -67,6 +67,11 @@ public class RectangularCanLayout extends CanvasLayout{
             g.setTransform(defTransform);
         }
     }
+
+	@Override
+	public Dimension2D getBlockSize() {
+		return this.playerArea.blockSize;
+	}
     
     private class PlayerArea{
         private final Dimension2D bounds;
@@ -121,7 +126,7 @@ public class RectangularCanLayout extends CanvasLayout{
             try{
                 g.translate(-render.getX() * blockSize.getWidth(),
 						-render.getY() * blockSize.getHeight());
-                container.getMap().drawMapSection(g, blockSize, render);
+				renderer.drawMap(render);
 				this.drawTanks(g, render, p);
             } catch (Exception e){
                 System.err.println(e.getMessage());
