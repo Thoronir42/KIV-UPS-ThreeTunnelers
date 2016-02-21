@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import tunnelers.Settings;
 import tunnelers.network.NetWorks;
 
 /**
@@ -21,7 +22,9 @@ public class SettingsScene extends AMenuScene {
 	public static SettingsScene getInstance() {
 		GridPane root = new GridPane();
 		root.setStyle("-fx-background-color: #cedace");
-
+		
+		Settings settings = Settings.getInstance();
+		
 		SettingsScene scene = new SettingsScene(root, settings.getWidth(), settings.getHeight());
 		scene.addComponents(root);
 

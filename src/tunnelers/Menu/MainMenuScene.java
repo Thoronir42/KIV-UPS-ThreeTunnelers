@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import tunnelers.Settings;
 import tunnelers.network.NetWorks;
 
 /**
@@ -30,6 +31,9 @@ public class MainMenuScene extends AMenuScene {
 		root.setVgap(8);
 
 		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.BLUEVIOLET.hashCode()));
+		
+		Settings settings = Settings.getInstance();
+		
 		MainMenuScene scene = new MainMenuScene(root, settings.getWidth(), settings.getHeight());
 
 		Button[] buttons = new Button[]{

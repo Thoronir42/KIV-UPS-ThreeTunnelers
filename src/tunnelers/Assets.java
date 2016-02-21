@@ -61,7 +61,6 @@ public class Assets {
 		int width = (int) (src.getWidth() * upscale),
 				height = (int) (src.getHeight() * upscale);
 		WritableImage fin = new WritableImage(width, height);
-		System.out.println(fin.toString());
 		PixelReader pr = src.getPixelReader();
 		PixelWriter pw = fin.getPixelWriter();
 		try {

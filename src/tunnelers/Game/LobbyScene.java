@@ -11,6 +11,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import tunnelers.Settings;
 import tunnelers.network.NetWorks;
 
 /**
@@ -42,6 +43,8 @@ public class LobbyScene extends AGameScene {
 		root.setAlignment(Pos.CENTER);
 
 		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.BURLYWOOD.hashCode()));
+		
+		Settings settings = Settings.getInstance();
 		LobbyScene scene = new LobbyScene(root, settings.getWidth(), settings.getHeight());
 
 		addComponents(root, scene);

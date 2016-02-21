@@ -17,6 +17,7 @@ import tunnelers.Assets;
 import tunnelers.Game.Render.CanvasLayout;
 import tunnelers.Game.Render.Renderer;
 import tunnelers.Game.Frame.Container;
+import tunnelers.Settings;
 
 /**
  *
@@ -32,9 +33,11 @@ public class PlayScene extends AGameScene {
 		BorderPane root = new BorderPane();
 
 		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.DIMGRAY.hashCode()));
+		
+		Settings settings = Settings.getInstance();
 		PlayScene scene = new PlayScene(root, settings.getWidth(), settings.getHeight());
 
-		addComponents(root, scene);
+		addComponents(root, scene, settings);
 
 		scene.setOnKeyPressed((KeyEvent e) -> {
 			scene.getStage().handleKey(e.getCode(), true);
@@ -58,7 +61,7 @@ public class PlayScene extends AGameScene {
 
 	}
 
-	private static void addComponents(BorderPane root, PlayScene scene) {
+	private static void addComponents(BorderPane root, PlayScene scene, Settings settings) {
 		int chatWidth = 160;
 
 		scene.ca_drawArea = new Canvas(settings.getWidth() - chatWidth, settings.getHeight());

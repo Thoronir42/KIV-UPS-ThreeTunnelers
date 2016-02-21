@@ -9,7 +9,7 @@ import javafx.scene.Scene;
  */
 public abstract class ATunnelersScene extends Scene {
 
-	protected static Settings settings = Settings.getInstance();
+	protected Settings settings = Settings.getInstance();
 
 	protected String name;
 	private static int sceneCount = 0;

@@ -28,6 +28,8 @@ public class ServerListScene extends AMenuScene {
 
 	public static ServerListScene getInstance() {
 		BorderPane root = new BorderPane();
+		Settings settings = Settings.getInstance();
+		
 		ServerListScene scene = new ServerListScene(root, settings.getWidth(), settings.getHeight());
 		scene.lobbyPasser = new BackPasser<String[]>() {
 			@Override
