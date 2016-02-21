@@ -1,6 +1,7 @@
 package tunnelers.Game.IO;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 import javafx.scene.input.KeyCode;
 
 /**
@@ -57,4 +58,14 @@ public class KeyMap {
 	public PlrInput getInput(KeyCode code) {
 		return map.get(code);
 	}
+
+	public KeyCode getKey(PlrInput pin) {
+		for (Entry<KeyCode, PlrInput> entry : map.entrySet()) {
+			if (pin.equals(entry.getValue())) {
+				return entry.getKey();
+			}
+
+		}
+		return null;
+	};
 }
