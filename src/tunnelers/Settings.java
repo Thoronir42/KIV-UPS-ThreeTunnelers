@@ -96,7 +96,7 @@ public class Settings {
 	}
 
 	void initDefaults() {
-		keyMap.defaults();
+		keyMap.resetAll();
 	}
 
 	public String getServerAddress() {
