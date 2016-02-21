@@ -4,8 +4,6 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import tunnelers.Assets;
-import tunnelers.Game.TunColors;
 
 /**
  *

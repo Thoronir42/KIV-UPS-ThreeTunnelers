@@ -37,26 +37,27 @@ public class Renderer {
 	public void drawMap(Rectangle rendSrc) {
 		int yMin = (int) (rendSrc.getY()),
 				xMin = (int) (rendSrc.getX()),
-				xMax = (int) (rendSrc.getX() + rendSrc.getWidth() - 1),
+				xMax = (int) (rendSrc.getX() + rendSrc.getWidth()),
 				yMax = (int) (rendSrc.getY() + rendSrc.getHeight() - 1);
 		Bounds bounds = new Bounds(xMin, xMax, yMin, yMax);
+		int chunkSize = this.map.getChunkSize();
 		
-		int chTop = Math.max(0, yMin / map.chunkSize),
-				chLeft = Math.max(0, xMin / map.chunkSize),
-				chRight = (int) Math.min(map.Xchunks, Math.ceil((xMax + 1.0) / map.chunkSize)),
-				chBottom = (int) Math.min(map.Ychunks - 1, Math.ceil((yMax + 1.0) / map.chunkSize));
+		int chTop = Math.max(0, yMin / chunkSize),
+				chLeft = Math.max(0, xMin / chunkSize),
+				chRight = (int) Math.min(map.Xchunks, Math.ceil((xMax + 1.0) / chunkSize)),
+				chBottom = (int) Math.min(map.Ychunks - 1, Math.ceil((yMax + 1.0) / chunkSize));
 		for (int Y = chTop; Y <= chBottom; Y++) {
 			for (int X = chLeft; X < chRight; X++) {
-				renderChunk(map.getChunk(X, Y), bounds);
+				renderChunk(map.getChunk(X, Y), bounds, chunkSize);
 			}
 		}
 	}
 
-	void renderChunk(Chunk chunk, Bounds renderBounds) {
+	void renderChunk(Chunk chunk, Bounds renderBounds, int chunkSize) {
 		Bounds currentBounds = renderBounds.intersection(chunk.bounds);
 		for (int y = currentBounds.yMin; y <= currentBounds.yMax; y++) {
 			for (int x = currentBounds.xMin; x <= currentBounds.xMax; x++) {
-				Block b = chunk.getBlock(x % this.map.chunkSize, y % this.map.chunkSize);
+				Block b = chunk.getBlock(x % chunkSize, y % chunkSize);
 				if (b == Block.BaseWall) {
 					Player p = chunk.getAssignedPlayer();
 					g.setFill(p != null ? p.getColor() : TunColors.error);

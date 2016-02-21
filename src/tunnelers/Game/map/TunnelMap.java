@@ -16,9 +16,24 @@ public class TunnelMap {
 
 	private final Chunk[][] map;
 	public final int Xchunks, Ychunks;
-	public final int chunkSize;
-	public final int width, height;
+	protected final int chunkSize;
+	protected final int width, height;
 
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public int getChunkSize() {
+		return chunkSize;
+	}
+
+	
+	
+	
 	public TunnelMap(int chunkSize, int width, int height) {
 		this.Xchunks = width;
 		this.Ychunks = height;

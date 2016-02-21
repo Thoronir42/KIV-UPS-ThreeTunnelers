@@ -70,8 +70,8 @@ public class GameStage extends ATunnelersStage{
         
         if( (newY - tank.getHeight()/2 > 0) &&
 			(newX - tank.getWidth()/2 > 0) &&
-			(newX + tank.getWidth()/2< this.container.getMapWidth()) &&
-			(newY + tank.getHeight()/2< this.container.getMapHeight())) {
+			(newX + tank.getWidth()/2< this.container.getMap().getWidth()) &&
+			(newY + tank.getHeight()/2< this.container.getMap().getHeight())) {
 				tank.setLocation(new Point2D(newX, newY));
 				tank.setDirection(d);
 		}

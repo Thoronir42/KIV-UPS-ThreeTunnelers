@@ -46,13 +46,6 @@ public class Container {
 	public TunnelMap getMap(){
 		return this.map;
 	}
-	
-    public int getMapWidth(){
-        return this.map.width;
-    }
-    public int getMapHeight(){
-        return this.map.height;
-    }
 
 	public Player getPlayer(int playerId) {
 		if(playerId == SERVER_PLAYER_ID)
