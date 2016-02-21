@@ -1,4 +1,4 @@
-package generic;
+package tunnelers.Game.Render;
 
 import javafx.scene.shape.Rectangle;
 
@@ -6,11 +6,11 @@ import javafx.scene.shape.Rectangle;
  *
  * @author Stepan
  */
-public class RectangleHalf extends Rectangle{
+public class RectangleHalf extends Rectangle {
 
 	protected double halfWidth;
 	protected double halfHeight;
-	
+
 	public RectangleHalf(double width, double height) {
 		super(width, height);
 		this.halfHeight = height / 2;
@@ -24,7 +24,5 @@ public class RectangleHalf extends Rectangle{
 	public double getHalfHeight() {
 		return halfHeight;
 	}
-	
-	
-	
+
 }

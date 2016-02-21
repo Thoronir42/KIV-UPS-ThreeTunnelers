@@ -9,48 +9,46 @@ import javafx.scene.paint.Color;
  *
  * @author Stepan
  */
-public class Tank extends GameEntity{
+public class Tank extends GameEntity {
 
 	public static final Dimension2D SIZE = new Dimension2D(7, 7);
-    private Image iv_body_regular, iv_body_diagonal,
+	private Image iv_body_regular, iv_body_diagonal,
 			iv_cannon_regular, iv_cannon_diagonal;
-	
-	
-    public static int MAX_HITPOINTS = 20,
-						MAX_ENERGY = 120;
-    
-	
-    protected double hitPoints, energyStatus;
-	
-    public Tank(Player player, Point2D initialLocation){
-        super(Direction.North, initialLocation, player);
-        this.hitPoints = MAX_HITPOINTS;
-        this.energyStatus = MAX_ENERGY;
-    }
-    
+
+	public static int MAX_HITPOINTS = 20,
+			MAX_ENERGY = 120;
+
+	protected double hitPoints, energyStatus;
+
+	public Tank(Player player, Point2D initialLocation) {
+		super(Direction.North, initialLocation, player);
+		this.hitPoints = MAX_HITPOINTS;
+		this.energyStatus = MAX_ENERGY;
+	}
+
 	@Override
-	public Dimension2D getSize(){
+	public Dimension2D getSize() {
 		return SIZE;
 	}
-	
-    public Color getColor(){
-        return this.player.getColor();
-    }
-    
-    public void changeDirection(Direction d){
-        this.direction = d;
-    }
-    
-    @Override
-    public int update() {
-        
-        return 0;
-    }
+
+	public Color getColor() {
+		return this.player.getColor();
+	}
+
+	public void changeDirection(Direction d) {
+		this.direction = d;
+	}
+
+	@Override
+	public int update() {
+
+		return 0;
+	}
 
 	public Direction getDirection() {
 		return direction;
 	}
-	
+
 	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}

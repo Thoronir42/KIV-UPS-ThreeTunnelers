@@ -31,9 +31,6 @@ public class TunnelMap {
 		return chunkSize;
 	}
 
-	
-	
-	
 	public TunnelMap(int chunkSize, int width, int height) {
 		this.Xchunks = width;
 		this.Ychunks = height;

@@ -27,10 +27,10 @@ public class Renderer {
 
 	public Renderer(GraphicsContext g, TunnelMap map, Assets assets, Dimension2D blockSize) {
 		this.g = g;
-		
+
 		this.map = map;
 		this.assets = assets;
-		
+
 		this.blockSize = blockSize;
 	}
 
@@ -41,7 +41,7 @@ public class Renderer {
 				yMax = (int) (rendSrc.getY() + rendSrc.getHeight() - 1);
 		Bounds bounds = new Bounds(xMin, xMax, yMin, yMax);
 		int chunkSize = this.map.getChunkSize();
-		
+
 		int chTop = Math.max(0, yMin / chunkSize),
 				chLeft = Math.max(0, xMin / chunkSize),
 				chRight = (int) Math.min(map.Xchunks, Math.ceil((xMax + 1.0) / chunkSize)),
@@ -75,24 +75,32 @@ public class Renderer {
 	void drawTank(Tank t) {
 		Image iv_body = this.assets.getTankBodyImage(t.getPlayerId() - 1, t.getDirection().isDiagonal());
 		Image iv_cannon = this.assets.getTankCannonImage(t.getDirection().isDiagonal());
-		
+
 		double bw = blockSize.getWidth(), bh = blockSize.getHeight();
-		
+
 		int rotation = t.getDirection().getRotation();
-		int dx = (int)( Tank.SIZE.getWidth() / 2),
-			dy = (int)( Tank.SIZE.getHeight() / 2);
-		switch(rotation){
-			case 0: default: break;
-			case 1: g.translate(bw, 0); break;
-			case 2: g.translate(bw, bh);break;
-			case 3: g.translate(0, bh); break;
+		int dx = (int) (Tank.SIZE.getWidth() / 2),
+				dy = (int) (Tank.SIZE.getHeight() / 2);
+		switch (rotation) {
+			case 0:
+			default:
+				break;
+			case 1:
+				g.translate(bw, 0);
+				break;
+			case 2:
+				g.translate(bw, bh);
+				break;
+			case 3:
+				g.translate(0, bh);
+				break;
 		}
 		g.rotate(rotation * 90);
-		g.drawImage(iv_body, -dx*bw, -dy*bh,
-			Tank.SIZE.getWidth()*bw, Tank.SIZE.getHeight() * bh);
-		g.drawImage(iv_cannon, -dx*bw, -dy*bh,
-			Tank.SIZE.getWidth()*bw, Tank.SIZE.getHeight() * bh);
-	
+		g.drawImage(iv_body, -dx * bw, -dy * bh,
+				Tank.SIZE.getWidth() * bw, Tank.SIZE.getHeight() * bh);
+		g.drawImage(iv_cannon, -dx * bw, -dy * bh,
+				Tank.SIZE.getWidth() * bw, Tank.SIZE.getHeight() * bh);
+
 	}
 
 }

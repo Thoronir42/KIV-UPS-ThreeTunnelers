@@ -14,8 +14,8 @@ public class Bounds {
 		this.yMin = yMin;
 		this.yMax = yMax;
 	}
-	
-	public Bounds intersection(Bounds other){
+
+	public Bounds intersection(Bounds other) {
 		return new Bounds(
 				Math.max(xMin, other.xMin),
 				Math.min(xMax, other.xMax),

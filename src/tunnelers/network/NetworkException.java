@@ -6,7 +6,7 @@ import java.io.IOException;
  *
  * @author Stepan
  */
-class NetworksException extends IOException{
+class NetworksException extends IOException {
 
 	public NetworksException(String message) {
 		super(message);
@@ -19,6 +19,5 @@ class NetworksException extends IOException{
 	public NetworksException(Throwable cause) {
 		super(cause);
 	}
-	
-	
+
 }

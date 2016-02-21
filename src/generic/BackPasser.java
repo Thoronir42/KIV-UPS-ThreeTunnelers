@@ -5,22 +5,22 @@ package generic;
  * @author Stepan
  * @param <Type> type specificator
  */
-public class BackPasser<Type> implements Runnable{
+public class BackPasser<Type> implements Runnable {
 
-    private Type content;
+	private Type content;
 
-    public Type get() {
-        return content;
-    }
-    
+	public Type get() {
+		return content;
+	}
+
 	@Override
-    public void run() {
-        throw new UnsupportedOperationException("Command hasn't been passed: no uzuý");
-    }
-    
-    public void pass(Type content){
-        this.content = content;
-        this.run();
-    }
-    
+	public void run() {
+		throw new UnsupportedOperationException("Command hasn't been passed: no uzuý");
+	}
+
+	public void pass(Type content) {
+		this.content = content;
+		this.run();
+	}
+
 }

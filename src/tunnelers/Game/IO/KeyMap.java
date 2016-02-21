@@ -10,9 +10,8 @@ import javafx.scene.input.KeyCode;
 public class KeyMap {
 
 	private final HashMap<KeyCode, PlrInput> map;
-	
-	
-	public KeyMap(){
+
+	public KeyMap() {
 		map = new HashMap<>();
 	}
 
@@ -23,7 +22,7 @@ public class KeyMap {
 		set(KeyCode.RIGHT, pIndex, Input.movRight);
 		set(KeyCode.DOWN, pIndex, Input.movDown);
 		set(KeyCode.NUMPAD0, pIndex, Input.actShoot);
-		
+
 		pIndex = 2;
 		set(KeyCode.W, pIndex, Input.movUp);
 		set(KeyCode.A, pIndex, Input.movLeft);
@@ -31,11 +30,11 @@ public class KeyMap {
 		set(KeyCode.S, pIndex, Input.movDown);
 		set(KeyCode.F, pIndex, Input.actShoot);
 	}
-	
-	public void set(KeyCode code, byte pIndex, Input i){
+
+	public void set(KeyCode code, byte pIndex, Input i) {
 		PlrInput pin = new PlrInput(pIndex, i);
-		if(map.containsValue(pin)){
-			
+		if (map.containsValue(pin)) {
+
 		}
 		map.put(code, pin);
 	}
