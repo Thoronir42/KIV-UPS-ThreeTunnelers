@@ -1,5 +1,6 @@
 package tunnelers.Game.Render;
 
+import generic.RectangleHalf;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -77,7 +78,7 @@ public class RectangularCanLayout extends CanvasLayout{
         private final Dimension2D bounds;
         private final Rectangle viewWindow;
         private final Dimension2D blockSize;
-        private final Rectangle render;
+        private final RectangleHalf render;
 		private final Container container;
         
         PlayerArea(Dimension2D playerAreaBounds, Container c){
@@ -157,11 +158,11 @@ public class RectangularCanLayout extends CanvasLayout{
 			}
 		}
 		
-        private void clampRender(Rectangle render, Point2D center){
-            double halfWidth = render.getWidth() / 2,
-					halfHeight= render.getHeight()/2;
-			double mapWidth = container.getMapWidth(),
-					mapHeight = container.getMapHeight();
+        private void clampRender(RectangleHalf render, Point2D center){
+            double halfWidth = render.getHalfWidth(),
+					halfHeight= render.getHalfHeight();
+			double mapWidth = container.getMap().getWidth(),
+					mapHeight = container.getMap().getHeight();
 			
 			if(center.getX() - halfWidth < 0){
 				render.setX(0);
@@ -208,8 +209,8 @@ public class RectangularCanLayout extends CanvasLayout{
             }
             return new Dimension2D((int)width, (int)height);
         }
-        private Rectangle calcRender(){
-            return new Rectangle(
+        private RectangleHalf calcRender(){
+            return new RectangleHalf(
                     Math.floor(viewWindow.getWidth() / this.blockSize.getWidth()),
                     Math.floor(viewWindow.getHeight() / this.blockSize.getHeight())
             );
