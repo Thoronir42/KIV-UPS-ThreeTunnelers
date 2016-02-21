@@ -1,4 +1,4 @@
-package tunnelers.Game.structure;
+package tunnelers.Game.Frame;
 
 /**
  *

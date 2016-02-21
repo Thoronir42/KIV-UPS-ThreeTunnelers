@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import tunnelers.Assets;
 import tunnelers.Game.Render.CanvasLayout;
 import tunnelers.Game.Render.Renderer;
-import tunnelers.Game.structure.Container;
+import tunnelers.Game.Frame.Container;
 
 /**
  *

@@ -7,9 +7,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Affine;
 import tunnelers.Game.TunColors;
-import tunnelers.Game.structure.Container;
-import tunnelers.Game.structure.Player;
-import tunnelers.Game.structure.Tank;
+import tunnelers.Game.Frame.Container;
+import tunnelers.Game.Frame.Player;
+import tunnelers.Game.Frame.Tank;
 import tunnelers.Settings;
 
 /**

@@ -10,8 +10,8 @@ import tunnelers.Game.map.Block;
 import tunnelers.Game.map.Bounds;
 import tunnelers.Game.map.TunnelMap;
 import tunnelers.Game.map.Chunk;
-import tunnelers.Game.structure.Player;
-import tunnelers.Game.structure.Tank;
+import tunnelers.Game.Frame.Player;
+import tunnelers.Game.Frame.Tank;
 
 /**
  *

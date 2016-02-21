@@ -1,6 +1,5 @@
-package tunnelers.Game.structure;
+package tunnelers.Game.Frame;
 
-import tunnelers.Game.IO.Controls;
 import javafx.geometry.Point2D;
 import tunnelers.Settings;
 import javafx.scene.paint.Color;

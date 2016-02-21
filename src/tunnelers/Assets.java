@@ -11,7 +11,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import tunnelers.Game.TunColors;
-import tunnelers.Game.structure.Player;
+import tunnelers.Game.Frame.Player;
 
 /**
  *

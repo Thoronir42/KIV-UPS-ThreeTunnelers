@@ -2,7 +2,7 @@ package tunnelers.Game.map;
 
 import tunnelers.Settings;
 import javafx.geometry.Point2D;
-import tunnelers.Game.structure.Player;
+import tunnelers.Game.Frame.Player;
 
 /**
  *

@@ -1,8 +1,8 @@
-package tunnelers.Game.IO;
+package tunnelers.Game.Frame;
 
 import java.util.HashMap;
 import java.util.Map;
-import tunnelers.Game.structure.Direction;
+import tunnelers.Game.IO.Input;
 
 /**
  *

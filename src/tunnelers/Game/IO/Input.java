@@ -1,6 +1,6 @@
 package tunnelers.Game.IO;
 
-import tunnelers.Game.structure.Direction;
+import tunnelers.Game.Frame.Direction;
 
 public enum Input {
 

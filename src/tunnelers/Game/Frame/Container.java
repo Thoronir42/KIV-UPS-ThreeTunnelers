@@ -1,4 +1,4 @@
-package tunnelers.Game.structure;
+package tunnelers.Game.Frame;
 
 import tunnelers.Game.map.TunnelMap;
 import javafx.geometry.Point2D;
