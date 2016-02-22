@@ -123,7 +123,7 @@ public class GameStage extends ATunnelersStage {
 		if (pi == null) {
 			return;
 		}
-		int pIndex = pi.player;
+		int pIndex = pi.playerId;
 		Input inp = pi.input;
 
 		Player p = this.container.getPlayer(pIndex);

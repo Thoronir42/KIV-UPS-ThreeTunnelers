@@ -28,9 +28,9 @@ public class MenuStage extends ATunnelersStage {
 
 	@Override
 	public void update(long tick) {
-		if (tick % Settings.TICK_RATE == 0) {
+		/*if (tick % Settings.TICK_RATE == 0) {
 			System.out.printf("Update count: %d\n", tick / Settings.TICK_RATE);
-		}
+		}*/
 	}
 
 	protected void prevScene() {

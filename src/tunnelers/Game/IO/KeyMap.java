@@ -45,7 +45,11 @@ public class KeyMap {
 	}
 
 	public PlrInput set(KeyCode code, byte pIndex, Input i) {
-		PlrInput pin = new PlrInput(pIndex, i);
+		return this.set(code, new PlrInput(pIndex, i));
+		
+	}
+	
+	public PlrInput set(KeyCode code, PlrInput pin){
 		PlrInput cur = null;
 		if (map.containsValue(pin)) {
 			cur = map.get(code);

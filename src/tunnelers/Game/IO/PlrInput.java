@@ -8,18 +8,18 @@ import java.util.Objects;
  */
 public class PlrInput {
 
-	public final byte player;
+	public final byte playerId;
 	public final Input input;
 
 	public PlrInput(byte player, Input i) {
-		this.player = player;
+		this.playerId = player;
 		this.input = i;
 	}
 
 	@Override
 	public int hashCode() {
 		int hash = 7;
-		hash = 83 * hash + this.player;
+		hash = 83 * hash + this.playerId;
 		hash = 83 * hash + Objects.hashCode(this.input);
 		return hash;
 	}
@@ -33,12 +33,20 @@ public class PlrInput {
 			return false;
 		}
 		final PlrInput other = (PlrInput) obj;
-		if (this.player != other.player) {
+		if (this.playerId != other.playerId) {
 			return false;
 		}
 		return this.input == other.input;
 	}
 
-	
+	public byte getPlayerId() {
+		return playerId;
+	}
 
+	public Input getInput() {
+		return input;
+	}
+
+	
+	
 }
