@@ -10,9 +10,24 @@ import javafx.scene.input.KeyCode;
  */
 public class KeyMap {
 
-	public static final byte PLAYER_PRIMARY = 1,
-			PLAYER_SECONDARY = 2;
+	public static final byte KEYBOARD_PRIMARY = 0,
+			KEYBOARD_SECONDARY = 1;
+	protected static final byte[] KEYBOARD_LAYOUTS = {KEYBOARD_PRIMARY};
 
+	public static byte[] getKeyboardLayouts(){
+		return KEYBOARD_LAYOUTS;
+	}
+	
+	public static String codeToStr(KeyCode kc){
+		if(kc == null){
+			return "N/A";
+		}
+		switch(kc){
+			
+		}
+		return kc.getName();
+	}
+	
 	private final HashMap<KeyCode, PlrInput> map;
 
 	public KeyMap() {
@@ -20,26 +35,26 @@ public class KeyMap {
 	}
 
 	public void resetAll() {
-		for (byte pIndex = 1; pIndex <= 2; pIndex++) {
-			resetPlayer(pIndex);
+		for (byte sIndex = 1; sIndex <= 2; sIndex++) {
+			resetScheme(sIndex);
 		}
 	}
 
-	public void resetPlayer(byte pIndex) {
-		switch (pIndex) {
-			case PLAYER_PRIMARY:
-				set(KeyCode.UP, pIndex, Input.movUp);
-				set(KeyCode.LEFT, pIndex, Input.movLeft);
-				set(KeyCode.RIGHT, pIndex, Input.movRight);
-				set(KeyCode.DOWN, pIndex, Input.movDown);
-				set(KeyCode.NUMPAD0, pIndex, Input.actShoot);
+	public void resetScheme(byte sIndex) {
+		switch (sIndex) {
+			case KEYBOARD_PRIMARY:
+				set(KeyCode.UP, sIndex, Input.movUp);
+				set(KeyCode.LEFT, sIndex, Input.movLeft);
+				set(KeyCode.RIGHT, sIndex, Input.movRight);
+				set(KeyCode.DOWN, sIndex, Input.movDown);
+				set(KeyCode.NUMPAD0, sIndex, Input.actShoot);
 				break;
-			case PLAYER_SECONDARY:
-				set(KeyCode.W, pIndex, Input.movUp);
-				set(KeyCode.A, pIndex, Input.movLeft);
-				set(KeyCode.D, pIndex, Input.movRight);
-				set(KeyCode.S, pIndex, Input.movDown);
-				set(KeyCode.F, pIndex, Input.actShoot);
+			case KEYBOARD_SECONDARY:
+				set(KeyCode.W, sIndex, Input.movUp);
+				set(KeyCode.A, sIndex, Input.movLeft);
+				set(KeyCode.D, sIndex, Input.movRight);
+				set(KeyCode.S, sIndex, Input.movDown);
+				set(KeyCode.F, sIndex, Input.actShoot);
 				break;
 		}
 	}
@@ -52,7 +67,7 @@ public class KeyMap {
 	public PlrInput set(KeyCode code, PlrInput pin){
 		PlrInput cur = null;
 		if (map.containsValue(pin)) {
-			cur = map.get(code);
+			cur = map.remove(code);
 		}
 		map.put(code, pin);
 

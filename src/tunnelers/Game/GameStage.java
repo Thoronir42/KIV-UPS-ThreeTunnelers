@@ -30,6 +30,7 @@ public class GameStage extends ATunnelersStage {
 	private final Container container;
 	private AGameScene sc;
 	private final KeyMap keyMap;
+	private final ControlSchemeManager controlSchemeManager;
 
 	public GameStage(NetWorks networks) {
 		this.networks = networks;
@@ -43,6 +44,7 @@ public class GameStage extends ATunnelersStage {
 		this.container = Container.mockContainer();
 		this.gamechat = new GameChat();
 		this.keyMap = settings.getKeyMap();
+		this.controlSchemeManager = new ControlSchemeManager();
 	}
 
 	@Override
@@ -123,9 +125,11 @@ public class GameStage extends ATunnelersStage {
 		if (pi == null) {
 			return;
 		}
-		int pIndex = pi.playerId;
-		Input inp = pi.input;
+		byte controlSchemeId = pi.getControlSchemeId();
+		Input inp = pi.getInput();
 
+		byte pIndex = this.controlSchemeManager.getPlayerIdFromScheme(controlSchemeId);
+		
 		Player p = this.container.getPlayer(pIndex);
 		if (p.getControls().handleControl(inp, pressed)) {
 			NCG.NetCommand cmd = new GameCommand.ControlSet(inp.intVal(), pressed ? 1 : 0);
