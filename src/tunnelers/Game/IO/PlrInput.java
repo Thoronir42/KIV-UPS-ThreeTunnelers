@@ -8,18 +8,18 @@ import java.util.Objects;
  */
 public class PlrInput {
 
-	protected final byte controlSchemeID;
+	protected final AControlScheme controlScheme;
 	protected final Input input;
 
-	public PlrInput(byte controlSchemeID, Input i) {
-		this.controlSchemeID = controlSchemeID;
+	public PlrInput(AControlScheme controlScheme, Input i) {
+		this.controlScheme = controlScheme;
 		this.input = i;
 	}
 
 	@Override
 	public int hashCode() {
 		int hash = 7;
-		hash = 83 * hash + this.controlSchemeID;
+		hash = 83 * hash + this.controlScheme.getID();
 		hash = 83 * hash + Objects.hashCode(this.input);
 		return hash;
 	}
@@ -33,14 +33,14 @@ public class PlrInput {
 			return false;
 		}
 		final PlrInput other = (PlrInput) obj;
-		if (this.controlSchemeID != other.controlSchemeID) {
+		if (this.controlScheme != other.controlScheme) {
 			return false;
 		}
 		return this.input == other.input;
 	}
 
-	public byte getControlSchemeId() {
-		return controlSchemeID;
+	public AControlScheme getControlScheme() {
+		return controlScheme;
 	}
 
 	public Input getInput() {

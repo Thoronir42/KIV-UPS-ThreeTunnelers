@@ -13,6 +13,7 @@ import tunnelers.Game.IO.PlrInput;
 import tunnelers.network.NetWorks;
 import tunnelers.Game.Frame.Player;
 import tunnelers.Game.Frame.Tank;
+import tunnelers.Game.IO.AControlScheme;
 import tunnelers.network.ConnectionCommand;
 import tunnelers.network.GameCommand;
 import tunnelers.network.MessageCommand;
@@ -29,7 +30,6 @@ public class GameStage extends ATunnelersStage {
 	protected GameChat gamechat;
 	private final Container container;
 	private AGameScene sc;
-	private final KeyMap keyMap;
 	private final ControlSchemeManager controlSchemeManager;
 
 	public GameStage(NetWorks networks) {
@@ -41,10 +41,9 @@ public class GameStage extends ATunnelersStage {
 			}
 		});
 		this.setScene(LobbyScene.getInstance(networks));
-		this.container = Container.mockContainer();
 		this.gamechat = new GameChat();
-		this.keyMap = settings.getKeyMap();
-		this.controlSchemeManager = new ControlSchemeManager();
+		this.controlSchemeManager = settings.getControlSchemeManager();
+		this.container = Container.mockContainer(this.controlSchemeManager);
 	}
 
 	@Override
@@ -121,16 +120,15 @@ public class GameStage extends ATunnelersStage {
 	}
 
 	void handleKey(KeyCode code, boolean pressed) {
-		PlrInput pi = this.keyMap.getInput(code);
-		if (pi == null) {
+		PlrInput pi= this.controlSchemeManager.getPlayerInputByKeyPress(code);
+		if(pi == null){
 			return;
 		}
-		byte controlSchemeId = pi.getControlSchemeId();
+		AControlScheme controlSchemeId = pi.getControlScheme();
 		Input inp = pi.getInput();
-
-		byte pIndex = this.controlSchemeManager.getPlayerIdFromScheme(controlSchemeId);
 		
-		Player p = this.container.getPlayer(pIndex);
+		Player p = this.container.getPlayer(controlSchemeId.getPlayerID());
+		
 		if (p.getControls().handleControl(inp, pressed)) {
 			NCG.NetCommand cmd = new GameCommand.ControlSet(inp.intVal(), pressed ? 1 : 0);
 		}

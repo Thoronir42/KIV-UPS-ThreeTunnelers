@@ -18,6 +18,8 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import tunnelers.Game.ControlSchemeManager;
+import tunnelers.Game.IO.AControlScheme;
 import tunnelers.Game.IO.Input;
 import tunnelers.Game.IO.KeyMap;
 import tunnelers.Game.IO.PlrInput;
@@ -29,7 +31,7 @@ import tunnelers.network.NetWorks;
  * @author Stepan
  */
 public class SettingsScene extends AMenuScene {
-	
+
 	public static SettingsScene getInstance() {
 		GridPane root = new GridPane();
 		root.setStyle("-fx-background-color: #cedace");
@@ -43,7 +45,7 @@ public class SettingsScene extends AMenuScene {
 	}
 
 	private static final double GRID_SPACING = 4;
-	
+
 	protected TextField tf_adress,
 			tf_port;
 
@@ -53,8 +55,11 @@ public class SettingsScene extends AMenuScene {
 	protected Button btn_testServer;
 	protected Button[][] btnMap_input;
 
+	private final ControlSchemeManager controlSchemeManager;
+
 	public SettingsScene(Parent root, double width, double height) {
 		super(root, width, height, "Nastavení");
+		this.controlSchemeManager = settings.getControlSchemeManager();
 		selectedPinButton = null;
 	}
 
@@ -67,7 +72,7 @@ public class SettingsScene extends AMenuScene {
 		root.add(this.makeButtonRack(), 0, 2);
 
 		root.setOnKeyPressed((KeyEvent event) -> {
-			this.applyKeycodeOnSelectedAction(event.getCode());
+			this.handleKeyPressed(event.getCode());
 		});
 	}
 
@@ -100,12 +105,10 @@ public class SettingsScene extends AMenuScene {
 		root.setVgap(GRID_SPACING);
 		root.setHgap(GRID_SPACING);
 		root.setAlignment(Pos.CENTER);
-		
-		this.selectedBorder = new Border(new BorderStroke(Color.AZURE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(GRID_SPACING / 2)));
-		
-		byte[] ControlSchemes = KeyMap.getKeyboardLayouts();
 
-		KeyMap keyMap = this.settings.getKeyMap();
+		this.selectedBorder = new Border(new BorderStroke(Color.AZURE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(GRID_SPACING / 2)));
+
+		byte[] ControlSchemeIDs = ControlSchemeManager.getKeyboardLayoutIDs();
 
 		Input[] inputs = Input.values();
 		for (int v = 0; v < inputs.length; v++) {
@@ -113,12 +116,13 @@ public class SettingsScene extends AMenuScene {
 			root.add(lbl, 0, v);
 		}
 
-		this.btnMap_input = new Button[ControlSchemes.length][inputs.length];
-		
-		for (int p = 0; p < ControlSchemes.length; p++) {
-			byte cid = ControlSchemes[p];
+		this.btnMap_input = new Button[ControlSchemeIDs.length][inputs.length];
+
+		for (int p = 0; p < ControlSchemeIDs.length; p++) {
+			byte cid = ControlSchemeIDs[p];
+			AControlScheme controlScheme = this.controlSchemeManager.getKeyboardScheme(cid);
 			for (int v = 0; v < inputs.length; v++) {
-				KeyCode kc = keyMap.getKey(new PlrInput(cid, inputs[v]));
+				KeyCode kc = this.controlSchemeManager.getKeyCode(new PlrInput(controlScheme, inputs[v]));
 				Button b = new Button(KeyMap.codeToStr(kc));
 				b.setPrefWidth(120);
 
@@ -180,33 +184,37 @@ public class SettingsScene extends AMenuScene {
 		this.selectedPinButton = b;
 	}
 
-	private void applyKeycodeOnSelectedAction(KeyCode kc) {
+	@Override
+	public void handleKeyPressed(KeyCode kc) {
 		if (selectedPinButton == null) {
+			super.handleKeyPressed(kc);
+		} else if (kc.equals(KeyCode.ESCAPE)) {
+			selectedPinButton = null;
 			return;
 		}
-		KeyMap kmap = this.settings.getKeyMap();
 
-		PlrInput prevPin = kmap.getInput(kc),
-				newInput = this.getSelectedPin();
+		PlrInput newInput = this.getSelectedPin();
+		PlrInput prevPin = this.controlSchemeManager.replaceKeyInput(kc, newInput);
+		
 
 		if (prevPin != null) {
 			setButtonLabel(prevPin, null);
 		}
-		
-		kmap.set(kc, newInput);
+
 		setButtonLabel(newInput, kc);
-		
+
 		selectedPinButton = null;
 	}
 
 	private PlrInput getSelectedPin() {
-		byte[] PlayerIDs = new byte[]{KeyMap.KEYBOARD_PRIMARY, KeyMap.KEYBOARD_SECONDARY};
+		byte[] layoutIDs = ControlSchemeManager.getKeyboardLayoutIDs();
 		Input[] inputs = Input.values();
 
-		for (int p = 0; p < PlayerIDs.length; p++) {
-			for (int v = 0; v < inputs.length; v++) {
-				if (this.btnMap_input[p][v].equals(this.selectedPinButton)) {
-					return new PlrInput(PlayerIDs[p], inputs[v]);
+		for (byte sch = 0; sch < layoutIDs.length; sch++) {
+			AControlScheme controlScheme = this.controlSchemeManager.getKeyboardScheme(sch);
+			for (int inp = 0; inp < inputs.length; inp++) {
+				if (this.btnMap_input[sch][inp].equals(this.selectedPinButton)) {
+					return new PlrInput(controlScheme, inputs[inp]);
 				}
 			}
 		}
@@ -215,9 +223,9 @@ public class SettingsScene extends AMenuScene {
 
 	private void setButtonLabel(PlrInput pin, KeyCode kc) {
 		Input in = pin.getInput();
-		Byte cid = pin.getControlSchemeId();
-		
-		Button b = this.btnMap_input[cid - 1][in.intVal()];
+		AControlScheme cid = pin.getControlScheme();
+
+		Button b = this.btnMap_input[cid.getID()][in.intVal()];
 		b.setBorder(Border.EMPTY);
 		b.setText(KeyMap.codeToStr(kc));
 	}

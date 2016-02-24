@@ -19,7 +19,7 @@ public abstract class AMenuScene extends ATunnelersScene {
 		});
 	}
 
-	public final void handleKeyPressed(KeyCode code) {
+	public void handleKeyPressed(KeyCode code) {
 		switch (code) {
 			case ESCAPE:
 				this.getStage().prevScene();

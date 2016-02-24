@@ -3,6 +3,7 @@ package tunnelers.Game.IO;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import javafx.scene.input.KeyCode;
+import tunnelers.Game.ControlSchemeManager;
 
 /**
  *
@@ -10,61 +11,59 @@ import javafx.scene.input.KeyCode;
  */
 public class KeyMap {
 
-	public static final byte KEYBOARD_PRIMARY = 0,
-			KEYBOARD_SECONDARY = 1;
-	protected static final byte[] KEYBOARD_LAYOUTS = {KEYBOARD_PRIMARY};
-
-	public static byte[] getKeyboardLayouts(){
-		return KEYBOARD_LAYOUTS;
-	}
-	
-	public static String codeToStr(KeyCode kc){
-		if(kc == null){
+	public static String codeToStr(KeyCode kc) {
+		if (kc == null) {
 			return "N/A";
 		}
-		switch(kc){
-			
+		switch (kc) {
+
 		}
 		return kc.getName();
 	}
-	
-	private final HashMap<KeyCode, PlrInput> map;
 
-	public KeyMap() {
+	private final HashMap<KeyCode, PlrInput> map;
+	private final ControlSchemeManager controlSchemeManager;
+
+	public KeyMap(ControlSchemeManager controlSchemeManager) {
 		map = new HashMap<>();
+		this.controlSchemeManager = controlSchemeManager;
 	}
 
 	public void resetAll() {
-		for (byte sIndex = 1; sIndex <= 2; sIndex++) {
-			resetScheme(sIndex);
+		byte[] layouts = ControlSchemeManager.getKeyboardLayoutIDs();
+		for (byte sIndex : layouts) {
+			setSchemeDefault(sIndex);
 		}
 	}
 
-	public void resetScheme(byte sIndex) {
+	public void setSchemeDefault(byte sIndex) {
+		AControlScheme controlScheme;
 		switch (sIndex) {
-			case KEYBOARD_PRIMARY:
-				set(KeyCode.UP, sIndex, Input.movUp);
-				set(KeyCode.LEFT, sIndex, Input.movLeft);
-				set(KeyCode.RIGHT, sIndex, Input.movRight);
-				set(KeyCode.DOWN, sIndex, Input.movDown);
-				set(KeyCode.NUMPAD0, sIndex, Input.actShoot);
+			case ControlSchemeManager.KEYBOARD_PRIMARY:
+				controlScheme = this.controlSchemeManager.getKeyboardScheme(sIndex);
+				setScheme(controlScheme, KeyCode.UP, KeyCode.LEFT, KeyCode.RIGHT, KeyCode.DOWN, KeyCode.NUMPAD0);
 				break;
-			case KEYBOARD_SECONDARY:
-				set(KeyCode.W, sIndex, Input.movUp);
-				set(KeyCode.A, sIndex, Input.movLeft);
-				set(KeyCode.D, sIndex, Input.movRight);
-				set(KeyCode.S, sIndex, Input.movDown);
-				set(KeyCode.F, sIndex, Input.actShoot);
+			case ControlSchemeManager.KEYBOARD_SECONDARY:
+				controlScheme = this.controlSchemeManager.getKeyboardScheme(sIndex);
+				setScheme(controlScheme, KeyCode.W, KeyCode.A, KeyCode.D, KeyCode.S, KeyCode.F);
 				break;
 		}
 	}
 
-	public PlrInput set(KeyCode code, byte pIndex, Input i) {
-		return this.set(code, new PlrInput(pIndex, i));
-		
+	private void setScheme(AControlScheme controlScheme, KeyCode up, KeyCode left, KeyCode right, KeyCode down, KeyCode shoot) {
+		set(up, controlScheme, Input.movUp);
+		set(left, controlScheme, Input.movLeft);
+		set(right, controlScheme, Input.movRight);
+		set(down, controlScheme, Input.movDown);
+		set(shoot, controlScheme, Input.actShoot);
 	}
-	
-	public PlrInput set(KeyCode code, PlrInput pin){
+
+	private PlrInput set(KeyCode code, AControlScheme ctrlScheme, Input i) {
+		return this.set(code, new PlrInput(ctrlScheme, i));
+
+	}
+
+	public PlrInput set(KeyCode code, PlrInput pin) {
 		PlrInput cur = null;
 		if (map.containsValue(pin)) {
 			cur = map.remove(code);
@@ -86,5 +85,5 @@ public class KeyMap {
 
 		}
 		return null;
-	};
+	}
 }

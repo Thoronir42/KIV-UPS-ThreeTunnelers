@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Random;
 import javafx.scene.paint.Color;
+import tunnelers.Game.ControlSchemeManager;
 import tunnelers.Game.IO.KeyMap;
 
 /**
@@ -80,23 +81,26 @@ public class Settings {
 		return usage;
 	}
 
-	private int width = WIDTH_DEFAULT, height = HEIGHT_DEFAULT;
+	private int width, height;
 
 	public final boolean[] playerColorUsage;
 
-	private String serverAddress = "localhost";
-	private int serverPort = Settings.DEFAULT_PORT;
+	private String serverAddress;
+	private int serverPort;
 
-	private final KeyMap keyMap;
+	private final ControlSchemeManager controlSchemeManager;
 
 	private Settings() {
 		this.playerColorUsage = preparePlayerColorUsage(PLAYER_COLORS.length);
-		this.keyMap = new KeyMap();
+		this.controlSchemeManager = new ControlSchemeManager();
 		this.initDefaults();
 	}
 
 	void initDefaults() {
-		keyMap.resetAll();
+		this.width = WIDTH_DEFAULT;
+		this.height = HEIGHT_DEFAULT;
+		this.serverPort = Settings.DEFAULT_PORT;
+		this.serverAddress = "localhost";
 	}
 
 	public String getServerAddress() {
@@ -173,8 +177,8 @@ public class Settings {
 		return -1;
 	}
 
-	public KeyMap getKeyMap() {
-		return this.keyMap;
+	public ControlSchemeManager getControlSchemeManager() {
+		return this.controlSchemeManager;
 	}
 
 	void loadConfigFile(String cfgFile) {

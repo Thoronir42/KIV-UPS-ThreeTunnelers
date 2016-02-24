@@ -2,6 +2,7 @@ package tunnelers.Game.Frame;
 
 import tunnelers.Game.map.TunnelMap;
 import javafx.geometry.Point2D;
+import tunnelers.Game.ControlSchemeManager;
 
 /**
  *
@@ -11,7 +12,7 @@ public class Container {
 
 	public static final int SERVER_PLAYER_ID = -1;
 
-	public static Container mockContainer() {
+	public static Container mockContainer(ControlSchemeManager controlSchemeManager) {
 		Player[] players = new Player[]{
 			new Player("Yahoo"), new Player("Yahoo"),};
 		TunnelMap map = TunnelMap.getMockMap();
@@ -21,9 +22,16 @@ public class Container {
 			p.setTank(t);
 		}
 		Container c = new Container(players, map);
-
+		
+		byte[] controlSchemeIDs = ControlSchemeManager.getKeyboardLayoutIDs();
+		for(byte i = 0; i < controlSchemeIDs.length; i++){
+			controlSchemeManager.getKeyboardScheme(i).setPlayerID(players[i].getID());
+		}
+		
+		
 		return c;
 	}
+	
 
 	private final PlayerSrv playerSrv;
 	private final Player[] players;
