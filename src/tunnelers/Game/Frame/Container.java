@@ -1,8 +1,8 @@
 package tunnelers.Game.Frame;
 
-import tunnelers.Game.map.TunnelMap;
-import javafx.geometry.Point2D;
+import tunnelers.Game.Map.TunnelMap;
 import tunnelers.Game.ControlSchemeManager;
+import tunnelers.Game.Map.MapGenerator;
 
 /**
  *
@@ -15,12 +15,7 @@ public class Container {
 	public static Container mockContainer(ControlSchemeManager controlSchemeManager) {
 		Player[] players = new Player[]{
 			new Player("Yahoo"), new Player("Yahoo"),};
-		TunnelMap map = TunnelMap.getMockMap();
-		for (Player p : players) {
-			Point2D baseCenter = map.getFreeBaseSpot(p);
-			Tank t = new Tank(p, baseCenter);
-			p.setTank(t);
-		}
+		TunnelMap map = MapGenerator.mockMap(players);
 		Container c = new Container(players, map);
 		
 		byte[] controlSchemeIDs = ControlSchemeManager.getKeyboardLayoutIDs();

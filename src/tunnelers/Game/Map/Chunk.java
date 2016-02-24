@@ -1,4 +1,4 @@
-package tunnelers.Game.map;
+package tunnelers.Game.Map;
 
 import tunnelers.Game.Frame.Player;
 

@@ -1,5 +1,6 @@
 package tunnelers.Game;
 
+import tunnelers.Game.Chat.Chat;
 import javafx.geometry.Point2D;
 import tunnelers.ATunnelersScene;
 import tunnelers.ATunnelersStage;
@@ -27,7 +28,7 @@ import tunnelers.network.NCG.NetCommand;
 public class GameStage extends ATunnelersStage {
 
 	protected NetWorks networks;
-	protected GameChat gamechat;
+	protected Chat gamechat;
 	private final Container container;
 	private AGameScene sc;
 	private final ControlSchemeManager controlSchemeManager;
@@ -41,7 +42,7 @@ public class GameStage extends ATunnelersStage {
 			}
 		});
 		this.setScene(LobbyScene.getInstance(networks));
-		this.gamechat = new GameChat();
+		this.gamechat = new Chat();
 		this.controlSchemeManager = settings.getControlSchemeManager();
 		this.container = Container.mockContainer(this.controlSchemeManager);
 	}
@@ -98,7 +99,7 @@ public class GameStage extends ATunnelersStage {
 		return this.networks;
 	}
 
-	protected GameChat getGamechat() {
+	protected Chat getGamechat() {
 		return this.gamechat;
 	}
 

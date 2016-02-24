@@ -2,7 +2,6 @@ package tunnelers.Game.Frame;
 
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
@@ -12,8 +11,6 @@ import javafx.scene.paint.Color;
 public class Tank extends GameEntity {
 
 	public static final Dimension2D SIZE = new Dimension2D(7, 7);
-	private Image iv_body_regular, iv_body_diagonal,
-			iv_cannon_regular, iv_cannon_diagonal;
 
 	public static int MAX_HITPOINTS = 20,
 			MAX_ENERGY = 120;

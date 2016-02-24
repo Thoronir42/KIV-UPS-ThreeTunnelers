@@ -1,4 +1,4 @@
-package tunnelers.Game.map;
+package tunnelers.Game.Map;
 
 import tunnelers.Settings;
 import javafx.geometry.Point2D;
@@ -9,10 +9,6 @@ import tunnelers.Game.Frame.Player;
  * @author Stepan
  */
 public class TunnelMap {
-
-	public static TunnelMap getMockMap() {
-		return new TunnelMap(Settings.MOCK_CHUNK_SIZE, 12, 8);
-	}
 
 	private final Chunk[][] map;
 	public final int Xchunks, Ychunks;

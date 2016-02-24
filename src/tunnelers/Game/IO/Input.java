@@ -4,10 +4,10 @@ import tunnelers.Game.Frame.Direction;
 
 public enum Input {
 
-	movUp(Direction.North, 0, "Nahoru"),
-	movDown(Direction.South, 1, "Dolů"),
-	movLeft(Direction.West, 2, "Doleva"),
-	movRight(Direction.East, 3, "Doprava"),
+	movUp(0, "Nahoru", Direction.North),
+	movDown(1, "Dolů", Direction.South),
+	movLeft(2, "Doleva", Direction.West),
+	movRight(3, "Doprava", Direction.East),
 	actShoot(4, "Střílet");
 
 	private final Direction dir;
@@ -15,10 +15,10 @@ public enum Input {
 	private final String label;
 
 	private Input(int intVal, String label) {
-		this(null, intVal, label);
+		this(intVal, label, null);
 	}
 
-	private Input(Direction dir, int intVal, String label) {
+	private Input(int intVal, String label, Direction dir) {
 		this.dir = dir;
 		this.intVal = intVal;
 		this.label = label;

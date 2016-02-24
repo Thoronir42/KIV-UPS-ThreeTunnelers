@@ -1,9 +1,7 @@
 package tunnelers.Game;
 
 import javafx.scene.input.KeyCode;
-import tunnelers.Game.IO.AControlScheme;
 import tunnelers.Game.IO.ControlScheme;
-import tunnelers.Game.IO.Input;
 import tunnelers.Game.IO.KeyMap;
 import tunnelers.Game.IO.PlrInput;
 
@@ -39,17 +37,13 @@ public class ControlSchemeManager {
 		return this.keyboardSchemes[sIndex];
 	}
 
-	public byte getPlayerIdFromScheme(byte controlSchemeId) {
-		return 1;
-	}
-
 	PlrInput getPlayerInputByKeyPress(KeyCode code) {
 		PlrInput pi = this.keyMap.getInput(code);
 		return pi;
 	}
 
 	public KeyCode getKeyCode(PlrInput plrInput) {
-		return this.keyMap.getKey(plrInput);
+		return this.keyMap.findKey(plrInput);
 	}
 	
 	public PlrInput replaceKeyInput(KeyCode kc, PlrInput plrInput){

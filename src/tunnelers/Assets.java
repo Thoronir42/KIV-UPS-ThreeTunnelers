@@ -24,7 +24,6 @@ public class Assets {
 	public final static int TANK_BODY = 0, TANK_BODY_DIAG = 1,
 			TANK_CANNON = 2, TANK_CANNON_DIAG = 3,
 			PROJECTILE = 4, PROJECTILE_DIAG = 5;
-	public final static int RESOURCE_COUNT = 6;
 
 	private final static String[] RES_PATHS = {
 		"resources/tank_body.png", "resources/tank_body_diag.png",
@@ -34,27 +33,26 @@ public class Assets {
 	private static final Image[] resources;
 
 	static {
-		resources = new Image[RESOURCE_COUNT];
-		for (int i = 0; i < RESOURCE_COUNT; i++) {
-			resources[i] = loadImage(i);
+		resources = new Image[RES_PATHS.length];
+		for (int i = 0; i < RES_PATHS.length; i++) {
+			resources[i] = loadImage(i, RES_PATHS[i]);
 		}
 	}
 
-	private static Image loadImage(int type) {
+	private static Image loadImage(int type, String resourcePath) {
 		Image tmp;
 		try {
 			if (!Settings.ENABLE_IMAGES_FROM_FILES) {
-				throw new IOException("Lel");
+				throw new IOException("Image loading disabled");
 			}
-			File resFile = new File(RES_PATHS[type]);
+			File resFile = new File(resourcePath);
 			String path = resFile.getCanonicalPath();
 			tmp = new Image("file://" + path);
 		} catch (IOException e) {
 			InputStream is = decodeStdImage(type);
-			//System.out.println("Loading img from stream");
 			tmp = new Image(is);
 		}
-		return scale(tmp, Settings.IMAGE_UPSCALE_MULT, RES_PATHS[type]);
+		return scale(tmp, Settings.IMAGE_UPSCALE_MULT, resourcePath);
 	}
 
 	public static Image scale(Image src, int upscale, String fileName) {
@@ -70,7 +68,7 @@ public class Assets {
 				}
 			}
 		} catch (IndexOutOfBoundsException e) {
-			//System.err.println("Upscaling of " + fileName + " failed");
+			System.err.println("Upscaling of " + fileName + " failed");
 			return src;
 		}
 		return fin;
@@ -102,14 +100,14 @@ public class Assets {
 	}
 
 	public static Image getImage(int type) {
-		if (type < 0 || type >= RESOURCE_COUNT) {
+		if (type < 0 || type >= RES_PATHS.length) {
 			throw new IllegalArgumentException("Unrecognised resource const: " + type);
 		}
 		return resources[type];
 	}
 
 	public static Image getImage(int type, Color c) {
-		if (type < 0 || type >= RESOURCE_COUNT) {
+		if (type < 0 || type >= RES_PATHS.length) {
 			throw new IllegalArgumentException("Unrecognised resource const: " + type);
 		}
 		return recolor(resources[type], c);

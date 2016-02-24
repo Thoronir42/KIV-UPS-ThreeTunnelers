@@ -29,13 +29,6 @@ public class KeyMap {
 		this.controlSchemeManager = controlSchemeManager;
 	}
 
-	public void resetAll() {
-		byte[] layouts = ControlSchemeManager.getKeyboardLayoutIDs();
-		for (byte sIndex : layouts) {
-			setSchemeDefault(sIndex);
-		}
-	}
-
 	public void setSchemeDefault(byte sIndex) {
 		AControlScheme controlScheme;
 		switch (sIndex) {
@@ -77,7 +70,7 @@ public class KeyMap {
 		return map.get(code);
 	}
 
-	public KeyCode getKey(PlrInput pin) {
+	public KeyCode findKey(PlrInput pin) {
 		for (Entry<KeyCode, PlrInput> entry : map.entrySet()) {
 			if (pin.equals(entry.getValue())) {
 				return entry.getKey();

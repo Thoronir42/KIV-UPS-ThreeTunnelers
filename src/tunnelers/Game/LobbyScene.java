@@ -79,7 +79,7 @@ public class LobbyScene extends AGameScene {
 
 		next = new Button("Send");
 		((Button) next).setOnAction((ActionEvent event) -> {
-			scene.sendMessage(scene.tf_chatIn.getText());
+			scene.getStage().getNetworks().sendMessage(scene.tf_chatIn.getText());
 		});
 		root.add(next, 1, 1);
 
@@ -99,7 +99,7 @@ public class LobbyScene extends AGameScene {
 	public void handleKeyPressed(KeyCode code) {
 		switch (code) {
 			case ENTER:
-				this.sendMessage(this.tf_chatIn.getText());
+				this.getStage().getNetworks().sendMessage(this.tf_chatIn.getText());
 				this.tf_chatIn.setText("");
 				break;
 		}
@@ -110,4 +110,10 @@ public class LobbyScene extends AGameScene {
 		GameStage stage = this.getStage();
 		this.ta_chatBox.setText(stage.getGamechat().getLog());
 	}
+
+	@Override
+	public void drawScene() {
+		//
+	}
+	
 }

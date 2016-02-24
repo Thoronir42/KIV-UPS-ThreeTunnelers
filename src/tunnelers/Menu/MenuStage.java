@@ -1,7 +1,6 @@
 package tunnelers.Menu;
 
 import tunnelers.ATunnelersStage;
-import tunnelers.Settings;
 import tunnelers.network.NetWorks;
 
 /**
@@ -46,7 +45,7 @@ public class MenuStage extends ATunnelersStage {
     
     public void gotoLobby(NetWorks nw) {
 		try {
-			this.returnValue = ATunnelersStage.CHANGE_TO_GAME;
+			this.returnCode = ATunnelersStage.CHANGE_TO_GAME;
 			this.returnNW = nw;
 			this.close();
 		} catch (IllegalStateException e) {

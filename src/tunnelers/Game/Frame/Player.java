@@ -61,7 +61,10 @@ public class Player {
 		System.out.println(name + " new location set: " + loc.toString());
 	}
 
-	void setTank(Tank t) {
+	public void setTank(Tank t) {
+		if(this.tank != null){
+			System.err.println("Re-assigning player tank");
+		}
 		this.tank = t;
 	}
 

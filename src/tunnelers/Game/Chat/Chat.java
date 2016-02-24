@@ -1,4 +1,4 @@
-package tunnelers.Game;
+package tunnelers.Game.Chat;
 
 import generic.CyclicArray;
 import java.util.Iterator;
@@ -9,13 +9,13 @@ import tunnelers.Game.Frame.Player;
  *
  * @author Stepan
  */
-public class GameChat {
+public class Chat {
 
 	private final int MAX_MESSAGES = 12;
 
 	private final CyclicArray<ChatMessage> messages;
 
-	public GameChat() {
+	public Chat() {
 		messages = new CyclicArray<>(ChatMessage.class, MAX_MESSAGES);
 	}
 
@@ -36,25 +36,5 @@ public class GameChat {
 
 		}
 		return chatLog;
-	}
-}
-
-class ChatMessage {
-
-	private final Player player;
-	private final String text;
-
-	public ChatMessage(Player player, String message) {
-		this.player = player;
-		this.text = message;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("%s : %s", player.getName(), text);
-	}
-
-	public Color getColor() {
-		return this.player.getColor();
 	}
 }

@@ -12,7 +12,7 @@ import tunnelers.Menu.MainMenuScene;
  *
  * @author Stepan
  */
-public class Engine extends Application {
+public final class Engine extends Application {
 
 	ATunnelersStage currentStage;
 	Settings settings;
@@ -52,6 +52,7 @@ public class Engine extends Application {
 
 	private void changeStage(ATunnelersStage stage) {
 		stage.setOnCloseRequest((WindowEvent event) -> {
+			System.out.println(event.toString());
 			this.imp.stopRun();
 			stage.exit();
 		});
@@ -65,11 +66,11 @@ public class Engine extends Application {
 		this.currentStage.show();
 	}
 
-	protected void stageHidden(int stageReturn) {
+	private void stageHidden(int stageReturn) {
 		ATunnelersStage newStage;
 		switch (stageReturn) {
 			case ATunnelersStage.CLOSE:
-				Runtime.getRuntime().exit(0);
+				System.exit(0);
 				break;
 			case ATunnelersStage.CHANGE_TO_GAME:
 				MenuStage oldStage = (MenuStage) this.getStage();

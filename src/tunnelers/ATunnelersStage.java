@@ -15,7 +15,7 @@ public abstract class ATunnelersStage extends Stage {
 			CHANGE_TO_MENU = 2,
 			CHANGE_TO_GAME = 4;
 
-	protected int returnValue = 0;
+	protected int returnCode = 0;
 
 	public abstract void update(long tick);
 
@@ -28,12 +28,12 @@ public abstract class ATunnelersStage extends Stage {
 	}
 
 	public void exit(int exitValue) {
-		this.returnValue = exitValue;
+		this.returnCode = exitValue;
 		this.close();
 	}
 
 	public int getReturnCode() {
-		return returnValue;
+		return returnCode;
 	}
 
 	protected void changeScene(ATunnelersScene scene) {
@@ -54,15 +54,14 @@ public abstract class ATunnelersStage extends Stage {
 			return null;
 		}
 		if (!ATunnelersScene.class.isAssignableFrom(scene)) {
-			System.out.format("%s not assignable from %s", scene.getSimpleName(), ATunnelersScene.class.getSimpleName());
+			System.out.format("%s not assignable from %s\n", scene.getSimpleName(), ATunnelersScene.class.getSimpleName());
 			return null;
 		}
 		try {
 			return invokeInstance(scene);
 		} catch (IllegalAccessException | NoSuchMethodException |
 				IllegalArgumentException | InvocationTargetException e) {
-			System.err.println("Couldn't get instance of new scene...");
-			e.printStackTrace();
+			System.err.format("Couldn't get instance of new scene: %s=%s\n", e.getClass().getSimpleName(), e.getMessage());
 		}
 		return null;
 	}

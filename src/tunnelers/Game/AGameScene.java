@@ -19,13 +19,7 @@ public abstract class AGameScene extends ATunnelersScene {
 		return stage;
 	}
 
-	protected void sendMessage(String message) {
-		this.getStage().getNetworks().sendMessage(message);
-	}
-
 	abstract void updateChatbox();
 
-	public void drawScene() {
-
-	}
+	public abstract void drawScene();
 }

@@ -6,6 +6,7 @@ import java.util.Iterator;
 /**
  *
  * @author Stepan
+ * @param <Type>
  */
 public class CyclicArray<Type> implements Iterable<Type> {
 

@@ -5,13 +5,12 @@ import java.util.Arrays;
 import java.util.Random;
 import javafx.scene.paint.Color;
 import tunnelers.Game.ControlSchemeManager;
-import tunnelers.Game.IO.KeyMap;
 
 /**
  *
  * @author Stepan
  */
-public class Settings {
+public final class Settings {
 
 	public static final int VERSION = 00101;
 

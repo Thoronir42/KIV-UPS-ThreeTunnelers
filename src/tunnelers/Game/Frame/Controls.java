@@ -15,8 +15,8 @@ public class Controls {
 	public Controls() {
 		keys = new HashMap<>();
 		Input[] inputs = Input.values();
-		for (Input i : inputs) {
-			keys.put(i, false);
+		for (Input input : inputs) {
+			keys.put(input, false);
 		}
 	}
 
