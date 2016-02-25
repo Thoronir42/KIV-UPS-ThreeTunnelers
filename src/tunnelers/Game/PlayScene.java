@@ -51,16 +51,6 @@ public class PlayScene extends AGameScene {
 
 	}
 
-	protected TextArea ta_chatBox;
-	protected TextField tf_chatIn;
-	protected Canvas ca_drawArea;
-	protected CanvasLayout canvasLayout;
-
-	public PlayScene(Parent root, double width, double height) {
-		super(root, width, height, "Battlefield");
-
-	}
-
 	private static void addComponents(BorderPane root, PlayScene scene, Settings settings) {
 		int chatWidth = 160;
 
@@ -86,6 +76,16 @@ public class PlayScene extends AGameScene {
 		root.setOnMouseClicked((MouseEvent e) -> {
 			scene.drawScene();
 		});
+	}
+
+	protected TextArea ta_chatBox;
+	protected TextField tf_chatIn;
+	protected Canvas ca_drawArea;
+	protected CanvasLayout canvasLayout;
+
+	public PlayScene(Parent root, double width, double height) {
+		super(root, width, height, "Battlefield");
+
 	}
 
 	private void setCanvasLayout(Container container) {

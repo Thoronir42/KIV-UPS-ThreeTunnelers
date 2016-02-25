@@ -53,13 +53,6 @@ public class LobbyScene extends AGameScene {
 
 	}
 
-	protected TextArea ta_chatBox;
-	protected TextField tf_chatIn;
-
-	public LobbyScene(Parent root, double width, double height) {
-		super(root, width, height, "Join Game");
-	}
-
 	private static void addComponents(GridPane root, LobbyScene scene) {
 		Node next = scene.ta_chatBox = new TextArea();
 		scene.ta_chatBox.setWrapText(true);
@@ -95,7 +88,14 @@ public class LobbyScene extends AGameScene {
 		});
 		root.add(next, 1, 2);
 	}
+	
+	protected TextArea ta_chatBox;
+	protected TextField tf_chatIn;
 
+	public LobbyScene(Parent root, double width, double height) {
+		super(root, width, height, "Join Game");
+	}
+	
 	public void handleKeyPressed(KeyCode code) {
 		switch (code) {
 			case ENTER:

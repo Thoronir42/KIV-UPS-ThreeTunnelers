@@ -16,6 +16,14 @@ import tunnelers.network.NetWorks;
  */
 public class MainMenuScene extends AMenuScene {
 
+	private static final int BTN_TYPE_MOCK_LOBBY = -1,
+			BTN_TYPE_JOIN_GAME = 1,
+			BTN_TYPE_SETTINGS = 2,
+			BTN_TYPE_EXIT = 3;
+	
+	private static final double BTN_PREF_WIDTH = 180,
+			BTN_PREF_HEIGHT = 42;
+
 	static MainMenuScene instance;
 
 	public static MainMenuScene getInstance() {
@@ -29,27 +37,64 @@ public class MainMenuScene extends AMenuScene {
 		GridPane root = new GridPane();
 		root.setHgap(4);
 		root.setVgap(8);
+		root.setAlignment(Pos.CENTER);
 
 		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.BLUEVIOLET.hashCode()));
-		
+
 		Settings settings = Settings.getInstance();
-		
+
 		MainMenuScene scene = new MainMenuScene(root, settings.getWidth(), settings.getHeight());
 
 		Button[] buttons = new Button[]{
-			createButton(scene, "hella"),
-			createButton(scene, "joinGame"),
-			createButton(scene, "settings"),
-			createButton(scene, "exit"),};
+			createButton(scene, BTN_TYPE_MOCK_LOBBY),
+			createButton(scene, BTN_TYPE_JOIN_GAME),
+			createButton(scene, BTN_TYPE_SETTINGS),
+			createButton(scene, BTN_TYPE_EXIT),};
 
 		for (int i = 0; i < buttons.length; i++) {
-			buttons[i].setPrefHeight(42);
-			buttons[i].setPrefWidth(140);
 			root.add(buttons[i], 0, i);
 		}
-		root.setAlignment(Pos.CENTER);
 		return scene;
 
+	}
+
+	private static Button createButton(MainMenuScene scene, int type) {
+		Button btn;
+		switch (type) {
+			default:
+				return null;
+			case BTN_TYPE_MOCK_LOBBY:
+				btn = new Button("Simulovat lobby");
+				btn.setOnAction((ActionEvent event) -> {
+					try {
+						scene.getStage().gotoLobby(NetWorks.createInstance());
+					} catch (IOException ex) {
+						System.err.println(ex.getLocalizedMessage());
+					}
+				});
+				break;
+			case BTN_TYPE_JOIN_GAME:
+				btn = new Button("Seznam serverů");
+				btn.setOnAction((ActionEvent event) -> {
+					scene.getStage().changeScene(ServerListScene.class);
+				});
+				break;
+			case BTN_TYPE_SETTINGS:
+				btn = new Button("Settings");
+				btn.setOnAction((ActionEvent event) -> {
+					scene.getStage().changeScene(SettingsScene.class);
+				});
+				break;
+			case BTN_TYPE_EXIT:
+				btn = new Button("Exit");
+				btn.setOnAction((ActionEvent event) -> {
+					scene.getStage().exit();
+				});
+				break;
+		}
+
+		btn.setPrefSize(BTN_PREF_WIDTH, BTN_PREF_HEIGHT);
+		return btn;
 	}
 
 	public MainMenuScene(Parent root, double width, double height) {
@@ -59,43 +104,6 @@ public class MainMenuScene extends AMenuScene {
 	@Override
 	public Class getPrevScene() {
 		return null;
-	}
-
-	private static Button createButton(MainMenuScene scene, String name) {
-		Button btn;
-		switch (name) {
-			default:
-				return null;
-			case "hella":
-				btn = new Button("WUBA LUBA DUB DUB");
-				btn.setOnAction((ActionEvent event) -> {
-					try {
-						scene.getStage().gotoLobby(NetWorks.createInstance());
-					} catch (IOException ex) {
-						System.err.println(ex.getLocalizedMessage());
-					}
-				});
-				break;
-			case "joinGame":
-				btn = new Button("Seznam serverů");
-				btn.setOnAction((ActionEvent event) -> {
-					scene.getStage().changeScene(ServerListScene.class);
-				});
-				break;
-			case "settings":
-				btn = new Button("Settings");
-				btn.setOnAction((ActionEvent event) -> {
-					scene.getStage().changeScene(SettingsScene.class);
-				});
-				break;
-			case "exit":
-				btn = new Button("Exit");
-				btn.setOnAction((ActionEvent event) -> {
-					scene.getStage().exit();
-				});
-				break;
-		}
-		return btn;
 	}
 
 }

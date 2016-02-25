@@ -32,6 +32,10 @@ import tunnelers.network.NetWorks;
  */
 public class SettingsScene extends AMenuScene {
 
+	private static final double GRID_SPACING = 4;
+
+	private static final Border SELECTED_BORDER = new Border(new BorderStroke(Color.AZURE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(GRID_SPACING / 2)));
+	
 	public static SettingsScene getInstance() {
 		GridPane root = new GridPane();
 		root.setStyle("-fx-background-color: #cedace");
@@ -39,18 +43,103 @@ public class SettingsScene extends AMenuScene {
 		Settings settings = Settings.getInstance();
 
 		SettingsScene scene = new SettingsScene(root, settings.getWidth(), settings.getHeight());
-		scene.addComponents(root);
+		addComponents(root, scene, settings);
 
 		return scene;
 	}
 
-	private static final double GRID_SPACING = 4;
+	private static void addComponents(GridPane root, SettingsScene scene, Settings settings) {
+		root.setAlignment(Pos.CENTER);
+		root.setVgap(GRID_SPACING);
+		root.setHgap(GRID_SPACING);
+		root.add(makeServerSettingPane(scene, settings), 0, 0);
+		root.add(makeKeyConfigPane(scene), 0, 1);
+		root.add(makeButtonRack(scene), 0, 2);
+
+		root.setOnKeyPressed((KeyEvent event) -> {
+			scene.handleKeyPressed(event.getCode());
+		});
+	}
+
+	private static GridPane makeServerSettingPane(SettingsScene scene, Settings settings) {
+		GridPane root = new GridPane();
+		root.setVgap(GRID_SPACING);
+		root.setHgap(GRID_SPACING);
+		scene.btn_testServer = new Button("Test serveru");
+		scene.btn_testServer.setOnAction((ActionEvent e) -> {
+			scene.testServer();
+		});
+
+		Label lblAdr = new Label("Adresa:"),
+				lblPort = new Label("Port:");
+
+		scene.tf_adress = new TextField(settings.getServerAddress());
+		scene.tf_port = new TextField(String.valueOf(settings.getServerPort()));
+
+		root.add(lblAdr, 0, 0);
+		root.add(scene.tf_adress, 1, 0);
+		root.add(lblPort, 0, 1);
+		root.add(scene.tf_port, 1, 1);
+		root.add(scene.btn_testServer, 2, 0, 1, 2);
+
+		return root;
+	}
+
+	private static GridPane makeKeyConfigPane(SettingsScene scene) {
+		GridPane root = new GridPane();
+		root.setVgap(GRID_SPACING);
+		root.setHgap(GRID_SPACING);
+		root.setAlignment(Pos.CENTER);
+
+		
+
+		byte[] ControlSchemeIDs = ControlSchemeManager.getKeyboardLayoutIDs();
+
+		Input[] inputs = Input.values();
+		for (int v = 0; v < inputs.length; v++) {
+			Label lbl = new Label(inputs[v].getLabel());
+			root.add(lbl, 0, v);
+		}
+
+		scene.btnMap_input = new Button[ControlSchemeIDs.length][inputs.length];
+
+		for (int p = 0; p < ControlSchemeIDs.length; p++) {
+			byte cid = ControlSchemeIDs[p];
+			AControlScheme controlScheme = scene.controlSchemeManager.getKeyboardScheme(cid);
+			for (int v = 0; v < inputs.length; v++) {
+				KeyCode kc = scene.controlSchemeManager.getKeyCode(new PlrInput(controlScheme, inputs[v]));
+				Button b = new Button(KeyMap.codeToStr(kc));
+				b.setPrefWidth(120);
+
+				b.setOnAction((ActionEvent event) -> {
+					scene.selectActionForKeycode(b);
+				});
+
+				root.add(b, p + 1, v);
+				scene.btnMap_input[p][v] = b;
+			}
+		}
+		return root;
+	}
+
+	private static HBox makeButtonRack(SettingsScene scene) {
+		Button btn_back = new Button("Zpět");
+		btn_back.setOnAction((ActionEvent event) -> {
+			scene.getStage().changeScene(MainMenuScene.class);
+		});
+		Button btn_saveChanges = new Button("Uložit nastavení");
+		btn_saveChanges.setOnAction((ActionEvent e) -> {
+			scene.saveSettings();
+		});
+		HBox buttonRack = new HBox(6, btn_saveChanges, btn_back);
+		buttonRack.setAlignment(Pos.CENTER);
+		return buttonRack;
+	}
 
 	protected TextField tf_adress,
 			tf_port;
 
 	Button selectedPinButton;
-	Border selectedBorder;
 
 	protected Button btn_testServer;
 	protected Button[][] btnMap_input;
@@ -61,94 +150,6 @@ public class SettingsScene extends AMenuScene {
 		super(root, width, height, "Nastavení");
 		this.controlSchemeManager = settings.getControlSchemeManager();
 		selectedPinButton = null;
-	}
-
-	private void addComponents(GridPane root) {
-		root.setAlignment(Pos.CENTER);
-		root.setVgap(GRID_SPACING);
-		root.setHgap(GRID_SPACING);
-		root.add(this.makeServerSettingPane(), 0, 0);
-		root.add(this.makeKeyConfigPane(), 0, 1);
-		root.add(this.makeButtonRack(), 0, 2);
-
-		root.setOnKeyPressed((KeyEvent event) -> {
-			this.handleKeyPressed(event.getCode());
-		});
-	}
-
-	private GridPane makeServerSettingPane() {
-		GridPane root = new GridPane();
-		root.setVgap(GRID_SPACING);
-		root.setHgap(GRID_SPACING);
-		btn_testServer = new Button("Test serveru");
-		btn_testServer.setOnAction((ActionEvent e) -> {
-			this.testServer();
-		});
-
-		Label lblAdr = new Label("Adresa:"),
-				lblPort = new Label("Port:");
-
-		this.tf_adress = new TextField(settings.getServerAddress());
-		this.tf_port = new TextField(String.valueOf(settings.getServerPort()));
-
-		root.add(lblAdr, 0, 0);
-		root.add(tf_adress, 1, 0);
-		root.add(lblPort, 0, 1);
-		root.add(tf_port, 1, 1);
-		root.add(btn_testServer, 2, 0, 1, 2);
-
-		return root;
-	}
-
-	private GridPane makeKeyConfigPane() {
-		GridPane root = new GridPane();
-		root.setVgap(GRID_SPACING);
-		root.setHgap(GRID_SPACING);
-		root.setAlignment(Pos.CENTER);
-
-		this.selectedBorder = new Border(new BorderStroke(Color.AZURE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(GRID_SPACING / 2)));
-
-		byte[] ControlSchemeIDs = ControlSchemeManager.getKeyboardLayoutIDs();
-
-		Input[] inputs = Input.values();
-		for (int v = 0; v < inputs.length; v++) {
-			Label lbl = new Label(inputs[v].getLabel());
-			root.add(lbl, 0, v);
-		}
-
-		this.btnMap_input = new Button[ControlSchemeIDs.length][inputs.length];
-
-		for (int p = 0; p < ControlSchemeIDs.length; p++) {
-			byte cid = ControlSchemeIDs[p];
-			AControlScheme controlScheme = this.controlSchemeManager.getKeyboardScheme(cid);
-			for (int v = 0; v < inputs.length; v++) {
-				KeyCode kc = this.controlSchemeManager.getKeyCode(new PlrInput(controlScheme, inputs[v]));
-				Button b = new Button(KeyMap.codeToStr(kc));
-				b.setPrefWidth(120);
-
-				b.setOnAction((ActionEvent event) -> {
-					selectActionForKeycode(b);
-				});
-
-				root.add(b, p + 1, v);
-				btnMap_input[p][v] = b;
-			}
-		}
-		return root;
-	}
-
-	private HBox makeButtonRack() {
-		Button btn_back = new Button("Zpět");
-		btn_back.setOnAction((ActionEvent event) -> {
-			this.getStage().changeScene(MainMenuScene.class);
-		});
-		Button btn_saveChanges = new Button("Uložit nastavení");
-		btn_saveChanges.setOnAction((ActionEvent e) -> {
-			this.saveSettings();
-		});
-		HBox buttonRack = new HBox(6, btn_saveChanges, btn_back);
-		buttonRack.setAlignment(Pos.CENTER);
-		return buttonRack;
 	}
 
 	private void testServer() {
@@ -171,13 +172,13 @@ public class SettingsScene extends AMenuScene {
 			settings.setServerAddress(address);
 			settings.setServerPort(port);
 		} catch (UnknownHostException | NumberFormatException e) {
-			e.printStackTrace();
+			System.err.format("%s : %s\n", e.getClass().getSimpleName(), e.getMessage());
 			return;
 		}
 	}
 
 	private void selectActionForKeycode(Button b) {
-		b.setBorder(this.selectedBorder);
+		b.setBorder(SELECTED_BORDER);
 		if (this.selectedPinButton != null) {
 			this.selectedPinButton.setBorder(Border.EMPTY);
 		}
@@ -195,7 +196,6 @@ public class SettingsScene extends AMenuScene {
 
 		PlrInput newInput = this.getSelectedPin();
 		PlrInput prevPin = this.controlSchemeManager.replaceKeyInput(kc, newInput);
-		
 
 		if (prevPin != null) {
 			setButtonLabel(prevPin, null);

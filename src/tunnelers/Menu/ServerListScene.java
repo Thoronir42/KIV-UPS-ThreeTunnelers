@@ -29,7 +29,7 @@ public class ServerListScene extends AMenuScene {
 	public static ServerListScene getInstance() {
 		BorderPane root = new BorderPane();
 		Settings settings = Settings.getInstance();
-		
+
 		ServerListScene scene = new ServerListScene(root, settings.getWidth(), settings.getHeight());
 		scene.lobbyPasser = new BackPasser<String[]>() {
 			@Override
@@ -37,7 +37,78 @@ public class ServerListScene extends AMenuScene {
 				scene.parseAndInsertLobbies(this.get());
 			}
 		};
+
+		addComponents(root, scene, settings);
 		return scene;
+	}
+
+	private static void addComponents(BorderPane root, ServerListScene scene, Settings settings) {
+
+		scene.tf_clientName = new TextField("Faggot");
+
+		scene.serverList = new ListView<>(scene.serverListItems);
+		scene.serverList.setOnMouseClicked((MouseEvent e) -> {
+			if (e.getClickCount() == 2) {
+				scene.connectToGame(scene.serverList.getSelectionModel().getSelectedItem());
+			}
+		});
+		for (byte i = 0; i < 32; i++) {
+			scene.serverListItems.add(new GameRoom(i));
+		}
+		scene.lbl_conInfo = new Label();
+		scene.lbl_conInfo.setText("Waiting...");
+
+		scene.but_getLobbies = new Button("Výpis místností");
+		scene.but_getLobbies.setOnAction((ActionEvent event) -> {
+			scene.refreshServerList();
+		});
+
+		root.setTop(createTopBar(scene, settings));
+		root.setCenter(scene.serverList);
+		root.setBottom(createBottomBar(scene));
+	}
+
+	private static HBox createTopBar(ServerListScene scene, Settings settings) {
+		HBox top = new HBox(4);
+		top.setStyle("-fx-background-color: #A8A8A8");
+
+		top.setAlignment(Pos.CENTER);
+		
+		scene.topButtons = new HBox();
+		scene.topLabels = new HBox();
+
+		Label lblName = new Label("Přezdívka:"),
+				lblServer = new Label(String.format("%s:%d", settings.getServerAddress(), settings.getServerPort()));
+		
+		scene.topLabels.getChildren().add(lblName);
+		scene.topLabels.getChildren().add(scene.tf_clientName);
+		scene.topLabels.getChildren().add(lblServer);
+		
+
+		scene.topButtons.getChildren().add(scene.but_getLobbies);
+
+		top.getChildren().add(scene.topLabels);
+		top.getChildren().add(scene.topButtons);
+
+		return top;
+	}
+
+	private static HBox createBottomBar(ServerListScene scene) {
+		HBox bottom = new HBox();
+
+		Button but_goBack = new Button("Zpět..");
+		but_goBack.setOnAction((ActionEvent event) -> {
+			scene.getStage().prevScene();
+		});
+
+		HBox bottomLabel = new HBox();
+		bottomLabel.setAlignment(Pos.CENTER);
+		bottomLabel.getChildren().add(scene.lbl_conInfo);
+
+		bottom.getChildren().add(but_goBack);
+		bottom.getChildren().add(bottomLabel);
+
+		return bottom;
 	}
 
 	protected TextField tf_clientName;
@@ -56,66 +127,11 @@ public class ServerListScene extends AMenuScene {
 		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.BLUEVIOLET.hashCode()));
 
 		serverListItems = FXCollections.observableArrayList();
-
-		addComponents((BorderPane) root);
 	}
 
 	@Override
 	public Class getPrevScene() {
 		return MainMenuScene.class;
-	}
-
-	private void addComponents(BorderPane root) {
-		HBox top = new HBox(4);
-		this.topButtons = new HBox();
-		this.topLabels = new HBox();
-		top.setStyle("-fx-background-color: #A8A8A8");
-
-		HBox bottom = new HBox();
-		HBox bottomLabel = new HBox();
-		bottomLabel.setAlignment(Pos.CENTER);
-		this.tf_clientName = new TextField("Faggot");
-		Label lblName = new Label("Přezdívka:"),
-				lblServer = new Label(String.format("%s:%d", settings.getServerAddress(), settings.getServerPort()));
-
-		serverList = new ListView<>(serverListItems);
-		serverList.setOnMouseClicked((MouseEvent e) -> {
-			if (e.getClickCount() == 2) {
-				this.connectToGame(serverList.getSelectionModel().getSelectedItem());
-			}
-		});
-		for (byte i = 0; i < 32; i++) {
-			serverListItems.add(new GameRoom(i));
-		}
-		lbl_conInfo = new Label();
-		lbl_conInfo.setText("Waiting...");
-
-		but_getLobbies = new Button("Výpis místností");
-		but_getLobbies.setOnAction((ActionEvent event) -> {
-			this.refreshServerList();
-		});
-
-		Button but_goBack = new Button("Zpět..");
-		but_goBack.setOnAction((ActionEvent event) -> {
-			this.getStage().prevScene();
-		});
-
-		topLabels.getChildren().add(lblServer);
-		topLabels.getChildren().add(lblName);
-		topLabels.getChildren().add(tf_clientName);
-
-		top.getChildren().add(topLabels);
-		topButtons.getChildren().add(but_getLobbies);
-		top.getChildren().add(topButtons);
-
-		bottomLabel.getChildren().add(lbl_conInfo);
-
-		bottom.getChildren().add(but_goBack);
-		bottom.getChildren().add(bottomLabel);
-
-		root.setTop(top);
-		root.setCenter(serverList);
-		root.setBottom(bottom);
 	}
 
 	private void refreshServerList() {
