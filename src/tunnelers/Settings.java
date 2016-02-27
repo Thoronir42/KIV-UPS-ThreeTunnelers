@@ -19,6 +19,7 @@ public final class Settings {
 
 	public static final int TICK_RATE = 30;
 
+	public static final String DEFAULT_SERVER_ADDRESS = "localhost";
 	public static final int DEFAULT_PORT = 8047;
 
 	public static final int WIDTH_DEFAULT = 800,
@@ -34,6 +35,7 @@ public final class Settings {
 
 	public static boolean ENABLE_IMAGES_FROM_FILES = false;
 	public static int IMAGE_UPSCALE_MULT = 20;
+	
 
 	static {
 		PLAYER_COLORS = preparePlayerColors();

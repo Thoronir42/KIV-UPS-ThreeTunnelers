@@ -3,6 +3,7 @@ package tunnelers.Menu;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -17,6 +18,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import tunnelers.Game.ControlSchemeManager;
 import tunnelers.Game.IO.AControlScheme;
@@ -33,9 +35,11 @@ import tunnelers.network.NetWorks;
 public class SettingsScene extends AMenuScene {
 
 	private static final double GRID_SPACING = 4;
+	private static final double RESOLVE_BUTTON_PREF_WIDTH = 160,
+			RESOLVE_BUTTON_PREF_HEIGHT = 40;
 
 	private static final Border SELECTED_BORDER = new Border(new BorderStroke(Color.AZURE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(GRID_SPACING / 2)));
-	
+
 	public static SettingsScene getInstance() {
 		GridPane root = new GridPane();
 		root.setStyle("-fx-background-color: #cedace");
@@ -54,7 +58,7 @@ public class SettingsScene extends AMenuScene {
 		root.setHgap(GRID_SPACING);
 		root.add(makeServerSettingPane(scene, settings), 0, 0);
 		root.add(makeKeyConfigPane(scene), 0, 1);
-		root.add(makeButtonRack(scene), 0, 2);
+		root.add(makeResolveButtonRack(scene), 0, 2);
 
 		root.setOnKeyPressed((KeyEvent event) -> {
 			scene.handleKeyPressed(event.getCode());
@@ -69,7 +73,12 @@ public class SettingsScene extends AMenuScene {
 		scene.btn_testServer.setOnAction((ActionEvent e) -> {
 			scene.testServer();
 		});
-
+		
+		Button btn_serverDefaults = new Button("Reset");
+		btn_serverDefaults.setOnAction((ActionEvent e) -> {
+			scene.tf_adress.setText(Settings.DEFAULT_SERVER_ADDRESS);
+			scene.tf_port.setText("" + Settings.DEFAULT_PORT);
+		});
 		Label lblAdr = new Label("Adresa:"),
 				lblPort = new Label("Port:");
 
@@ -80,7 +89,7 @@ public class SettingsScene extends AMenuScene {
 		root.add(scene.tf_adress, 1, 0);
 		root.add(lblPort, 0, 1);
 		root.add(scene.tf_port, 1, 1);
-		root.add(scene.btn_testServer, 2, 0, 1, 2);
+		root.add(new VBox(btn_serverDefaults, scene.btn_testServer), 2, 0, 1, 2);
 
 		return root;
 	}
@@ -90,8 +99,6 @@ public class SettingsScene extends AMenuScene {
 		root.setVgap(GRID_SPACING);
 		root.setHgap(GRID_SPACING);
 		root.setAlignment(Pos.CENTER);
-
-		
 
 		byte[] ControlSchemeIDs = ControlSchemeManager.getKeyboardLayoutIDs();
 
@@ -122,7 +129,7 @@ public class SettingsScene extends AMenuScene {
 		return root;
 	}
 
-	private static HBox makeButtonRack(SettingsScene scene) {
+	private static HBox makeResolveButtonRack(SettingsScene scene) {
 		Button btn_back = new Button("Zpět");
 		btn_back.setOnAction((ActionEvent event) -> {
 			scene.getStage().changeScene(MainMenuScene.class);
@@ -131,8 +138,13 @@ public class SettingsScene extends AMenuScene {
 		btn_saveChanges.setOnAction((ActionEvent e) -> {
 			scene.saveSettings();
 		});
+
+		btn_saveChanges.setPrefSize(RESOLVE_BUTTON_PREF_WIDTH, RESOLVE_BUTTON_PREF_HEIGHT);
+		btn_back.setPrefSize(RESOLVE_BUTTON_PREF_WIDTH, RESOLVE_BUTTON_PREF_HEIGHT);
+
 		HBox buttonRack = new HBox(6, btn_saveChanges, btn_back);
 		buttonRack.setAlignment(Pos.CENTER);
+		buttonRack.setPadding(new Insets(16));
 		return buttonRack;
 	}
 
