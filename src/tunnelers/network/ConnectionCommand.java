@@ -71,20 +71,20 @@ public abstract class ConnectionCommand extends NCG {
 		}
 	}
 
-	public static class GameList extends NetCommand {
+	public static class GameRoomList extends NetCommand {
 
 		public static final short CMD_NUM = 90;
 
-		public GameList(int games, String gamesInfo) {
+		public GameRoomList(int games, String gamesInfo) {
 			super(CMD_NUM, new Object[]{games, gamesInfo});
 		}
 	}
 
-	public static class GameListEnd extends NetCommand {
+	public static class GameRoomListEnd extends NetCommand {
 
 		public static final short CMD_NUM = 91;
 
-		public GameListEnd() {
+		public GameRoomListEnd() {
 			super(CMD_NUM);
 		}
 	}
