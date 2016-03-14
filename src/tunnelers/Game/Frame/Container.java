@@ -1,8 +1,10 @@
 package tunnelers.Game.Frame;
 
+import java.util.ArrayList;
 import tunnelers.Game.Map.TunnelMap;
 import tunnelers.Game.ControlSchemeManager;
 import tunnelers.Game.Map.MapGenerator;
+import tunnelers.Settings;
 
 /**
  *
@@ -30,12 +32,19 @@ public class Container {
 
 	private final PlayerSrv playerSrv;
 	private final Player[] players;
+	private final ArrayList<Projectile> projectiles;
 	private final TunnelMap map;
 
 	public Container(Player[] players, TunnelMap map) {
 		this.playerSrv = new PlayerSrv();
 		this.players = players;
+		this.projectiles = new ArrayList<>(Settings.MAX_PLAYERS * Settings.MAX_PLAYER_PROJECTILES);
 		this.map = map;
+		
+	}
+
+	public ArrayList<Projectile> getProjectiles() {
+		return projectiles;
 	}
 
 	public int getPlayerCount() {

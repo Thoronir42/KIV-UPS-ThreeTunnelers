@@ -7,12 +7,13 @@ import tunnelers.ATunnelersStage;
 import tunnelers.Game.Frame.Container;
 import tunnelers.Game.Frame.Direction;
 import generic.BackPasser;
+import java.util.ArrayList;
 import javafx.scene.input.KeyCode;
 import tunnelers.Game.IO.Input;
-import tunnelers.Game.IO.KeyMap;
 import tunnelers.Game.IO.PlrInput;
 import tunnelers.network.NetWorks;
 import tunnelers.Game.Frame.Player;
+import tunnelers.Game.Frame.Projectile;
 import tunnelers.Game.Frame.Tank;
 import tunnelers.Game.IO.AControlScheme;
 import tunnelers.network.ConnectionCommand;
@@ -50,24 +51,32 @@ public class GameStage extends ATunnelersStage {
 	@Override
 	public final void update(long tick) {
 		if (tick % 4 == 0 && sc instanceof PlayScene) {
-			updatePlayers();
+			updatePlayers(this.container.getPlayers());
+			updateProjectiles(this.container.getProjectiles());
 			sc.drawScene();
 		}
 
 	}
-
-	private void updatePlayers() {
-		for (Player p : this.container.getPlayers()) {
-			updatePlayer(p);
+	
+	private void updateProjectiles(ArrayList<Projectile> projectiles) {
+		for(Projectile p : projectiles){
+			break;
 		}
 	}
 
-	protected void updatePlayer(Player p) {
+	private void updatePlayers(Player[] players) {
+		for (Player p : players) {
+			updatePlayer(p);
+			
+		}
+	}
+
+	protected Point2D updatePlayer(Player p) {
 		Tank tank = p.getTank();
 		Direction d = p.getControls().getDirection();
 
 		if (d == null) {
-			return;
+			return null;
 		}
 		Point2D plr_loc = tank.getLocation();
 		double newX = plr_loc.getX() + d.getX(),
@@ -80,6 +89,8 @@ public class GameStage extends ATunnelersStage {
 			tank.setLocation(new Point2D(newX, newY));
 			tank.setDirection(d);
 		}
+		
+		return p.getTank().getLocation();
 	}
 
 	@Override

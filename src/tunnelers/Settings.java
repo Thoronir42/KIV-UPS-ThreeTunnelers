@@ -35,6 +35,7 @@ public final class Settings {
 
 	public static boolean ENABLE_IMAGES_FROM_FILES = false;
 	public static int IMAGE_UPSCALE_MULT = 20;
+	public static int MAX_PLAYER_PROJECTILES = 7;
 	
 
 	static {
