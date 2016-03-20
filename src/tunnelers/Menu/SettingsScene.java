@@ -89,7 +89,7 @@ public class SettingsScene extends AMenuScene {
 		root.add(scene.tf_adress, 1, 0);
 		root.add(lblPort, 0, 1);
 		root.add(scene.tf_port, 1, 1);
-		root.add(new VBox(btn_serverDefaults, scene.btn_testServer), 2, 0, 1, 2);
+		root.add(new VBox(scene.btn_testServer, btn_serverDefaults), 2, 0, 1, 2);
 
 		return root;
 	}

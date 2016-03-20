@@ -6,7 +6,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Affine;
-import tunnelers.Game.TunColors;
 import tunnelers.Game.Frame.Container;
 import tunnelers.Game.Frame.Player;
 import tunnelers.Game.Frame.Tank;

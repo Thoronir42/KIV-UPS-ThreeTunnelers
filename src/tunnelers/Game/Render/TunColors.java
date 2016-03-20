@@ -1,4 +1,4 @@
-package tunnelers.Game;
+package tunnelers.Game.Render;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;

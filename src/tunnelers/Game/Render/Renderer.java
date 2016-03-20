@@ -5,7 +5,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import tunnelers.Assets;
-import tunnelers.Game.TunColors;
 import tunnelers.Game.Map.Block;
 import tunnelers.Game.Map.Bounds;
 import tunnelers.Game.Map.TunnelMap;

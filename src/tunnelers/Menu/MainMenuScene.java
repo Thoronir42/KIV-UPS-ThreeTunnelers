@@ -80,13 +80,13 @@ public class MainMenuScene extends AMenuScene {
 				});
 				break;
 			case BTN_TYPE_SETTINGS:
-				btn = new Button("Settings");
+				btn = new Button("Nastavení");
 				btn.setOnAction((ActionEvent event) -> {
 					scene.getStage().changeScene(SettingsScene.class);
 				});
 				break;
 			case BTN_TYPE_EXIT:
-				btn = new Button("Exit");
+				btn = new Button("Ukončit");
 				btn.setOnAction((ActionEvent event) -> {
 					scene.getStage().exit();
 				});

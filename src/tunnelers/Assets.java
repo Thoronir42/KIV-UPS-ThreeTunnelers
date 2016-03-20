@@ -10,7 +10,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import tunnelers.Game.TunColors;
+import tunnelers.Game.Render.TunColors;
 import tunnelers.Game.Frame.Player;
 
 /**
