@@ -52,8 +52,6 @@ public final class Engine extends Application {
 
 	private void changeStage(ATunnelersStage stage) {
 		stage.setOnCloseRequest((WindowEvent event) -> {
-			System.out.println(event.toString());
-			this.imp.stopRun();
 			stage.exit();
 		});
 		stage.setOnHidden((WindowEvent event) -> {
@@ -70,6 +68,7 @@ public final class Engine extends Application {
 		ATunnelersStage newStage;
 		switch (stageReturn) {
 			case ATunnelersStage.CLOSE:
+				this.imp.stopRun();
 				System.exit(0);
 				break;
 			case ATunnelersStage.CHANGE_TO_GAME:

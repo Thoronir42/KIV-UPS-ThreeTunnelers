@@ -18,8 +18,17 @@ public abstract class ControlScheme {
 
 		@Override
 		public PlrInput getInput(KeyCode kc) {
-			return this.keyMap.getInput(kc);
+			PlrInput input = this.keyMap.getInput(kc);
+			System.out.format("getInput %s - %s", kc.toString(), input.toString());
+			return input;
 		}
 
+	}
+
+	/**
+	 * possible extension
+	 */
+	public static abstract class Joystick extends AControlScheme {
+		
 	}
 }
