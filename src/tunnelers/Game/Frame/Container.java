@@ -12,11 +12,12 @@ import tunnelers.Settings;
  */
 public class Container {
 
-	public static final int SERVER_PLAYER_ID = -1;
-
 	public static Container mockContainer(ControlSchemeManager controlSchemeManager) {
 		Player[] players = new Player[]{
-			new Player("Yahoo"), new Player("Yahoo"),};
+			new PlayerLocal(47, Settings.getRandInt(Settings.PLAYER_COLORS.length), "Jouda"),
+			new PlayerLocal(53, Settings.getRandInt(Settings.PLAYER_COLORS.length)),
+			new PlayerRemote(12, Settings.getRandInt(Settings.PLAYER_COLORS.length), "Frederick"),
+		};
 		TunnelMap map = MapGenerator.mockMap(players);
 		Container c = new Container(players, map);
 		
@@ -30,13 +31,11 @@ public class Container {
 	}
 	
 
-	private final PlayerSrv playerSrv;
 	private final Player[] players;
 	private final ArrayList<Projectile> projectiles;
 	private final TunnelMap map;
 
 	public Container(Player[] players, TunnelMap map) {
-		this.playerSrv = new PlayerSrv();
 		this.players = players;
 		this.projectiles = new ArrayList<>(Settings.MAX_PLAYERS * Settings.MAX_PLAYER_PROJECTILES);
 		this.map = map;
@@ -60,10 +59,6 @@ public class Container {
 	}
 
 	public Player getPlayer(int playerId) {
-		if (playerId == SERVER_PLAYER_ID) {
-			return this.playerSrv;
-		}
-
 		for (Player p : this.players) {
 			if (p.getID() == playerId) {
 				return p;

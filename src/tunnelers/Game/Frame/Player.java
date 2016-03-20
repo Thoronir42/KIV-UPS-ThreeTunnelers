@@ -1,36 +1,38 @@
 package tunnelers.Game.Frame;
 
-import javafx.geometry.Point2D;
 import tunnelers.Settings;
 import javafx.scene.paint.Color;
+import tunnelers.Game.Chat.IChatParticipant;
 
 /**
  *
  * @author Stepan
  */
-public class Player {
-
-	private static int num_of_instances = 0;
+public abstract class Player implements IChatParticipant{
+	
+	public static final int SERVER_PLAYER_ID = 0;
+	
 	private final static Settings settings = Settings.getInstance();
 
 	private final int playerID;
-	private final String name;
-	private final Controls controlScheme;
+	private String name;
+	private final Controls controls;
 	private Color color;
 	private Tank tank;
 
-	public Player(String name) {
+	public Player(int playerID, int colorID) {
+		this(playerID, colorID, String.format("Unknown player %03d", playerID));
+	}
+	public Player(int playerID, int colorID, String name) {
 		//public Player(String name) throws PlayerException{
-		int newID = num_of_instances + 1;
-		if (newID > Settings.MAX_PLAYERS) {
-			//throw new PlayerException(newID);
-		}
-		this.playerID = num_of_instances = newID;
+		this.playerID = playerID;
 		this.name = name;
-		this.setColor(newID - 1);
-		this.controlScheme = new Controls();
+		this.setColor(colorID);
+		
+		this.controls = new Controls();
 	}
 
+	@Override
 	public Color getColor() {
 		return this.color;
 	}
@@ -39,6 +41,11 @@ public class Player {
 		this.color = settings.getColor(this.color, colorId);
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	@Override
 	public String getName() {
 		return this.name;
 	}
