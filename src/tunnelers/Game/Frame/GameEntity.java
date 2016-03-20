@@ -63,7 +63,7 @@ public abstract class GameEntity {
 		return this.getY() + (this.getHeight() - 1) / 2;
 	}
 
-	public int getPlayerId() {
-		return this.player.getID();
+	public Player getPlayer(){
+		return this.player;
 	}
 }

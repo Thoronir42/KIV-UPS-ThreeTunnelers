@@ -47,20 +47,6 @@ public class Player {
 		return this.playerID;
 	}
 
-	@Override
-	public String toString() {
-		return String.format("[%2d] %16s (%s)", this.playerID, this.name, this.color);
-	}
-
-	public Point2D getLocation() {
-		return this.tank.getLocation();
-	}
-
-	public void setLocation(Point2D loc) {
-		this.tank.setLocation(loc);
-		System.out.println(name + " new location set: " + loc.toString());
-	}
-
 	public void setTank(Tank t) {
 		if(this.tank != null){
 			System.err.println("Re-assigning player tank");
@@ -73,13 +59,12 @@ public class Player {
 	}
 
 	public Controls getControls() {
-		return this.controlScheme;
+		return controls;
 	}
-}
 
-class PlayerException extends Exception {
-
-	public PlayerException(int n) {
-		super(String.format("Tried to create %d. player, while the player limit is %d.", n, Settings.MAX_PLAYERS));
+	@Override
+	public String toString() {
+		return String.format("[%2d] %16s (%s)", this.playerID, this.name, this.color);
 	}
+	
 }

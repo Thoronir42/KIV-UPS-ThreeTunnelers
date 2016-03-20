@@ -126,7 +126,7 @@ public class RectangularCanLayout extends CanvasLayout {
 			Affine defTransform = g.getTransform();
 			g.setFill(Color.BLACK);
 			g.fillRect(0 - 2, 0 - 2, viewWindow.getWidth() + 6, viewWindow.getHeight() + 4);
-			clampRender(render, p[curPlayer].getLocation());
+			clampRender(render, p[curPlayer].getTank().getLocation());
 			try {
 				g.translate(-render.getX() * blockSize.getWidth(),
 						-render.getY() * blockSize.getHeight());

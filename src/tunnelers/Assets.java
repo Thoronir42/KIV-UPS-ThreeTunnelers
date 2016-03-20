@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
+import java.util.HashMap;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -135,21 +136,24 @@ public class Assets {
 		return fin;
 	}
 
-	final Image[][] tankBody;
+	
+	final HashMap<Integer, Image[]> tankBody;
 
 	final Image[] tankCannon;
 
 	final Image[] projectile;
 
 	public Assets(Player[] players) {
-		tankBody = new Image[players.length][2];
+		tankBody = new HashMap<>();
 		tankCannon = new Image[2];
 		projectile = new Image[2];
 
-		for (int i = 0; i < players.length; i++) {
-			Color c = players[i].getColor();
-			tankBody[i][IMG_REG] = Assets.getImage(Assets.TANK_BODY, c);
-			tankBody[i][IMG_DIAG] = Assets.getImage(Assets.TANK_BODY_DIAG, c);
+		for (Player player : players) {
+			Color c = player.getColor();
+			Image[] tankImages = new Image[2];
+			tankImages[IMG_REG] = Assets.getImage(Assets.TANK_BODY, c);
+			tankImages[IMG_DIAG] = Assets.getImage(Assets.TANK_BODY_DIAG, c);
+			tankBody.put(player.getID(), tankImages);
 		}
 
 		tankCannon[IMG_REG] = Assets.getImage(Assets.TANK_CANNON, TunColors.getCannonColor());
@@ -157,7 +161,7 @@ public class Assets {
 	}
 
 	public Image getTankBodyImage(int playerId, boolean diagonal) {
-		return imgDiagSwitch(tankBody[playerId], diagonal);
+		return imgDiagSwitch(tankBody.get(playerId), diagonal);
 	}
 
 	public Image getTankCannonImage(boolean diagonal) {

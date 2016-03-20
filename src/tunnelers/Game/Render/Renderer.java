@@ -72,7 +72,7 @@ public class Renderer {
 	}
 
 	void drawTank(Tank t) {
-		Image iv_body = this.assets.getTankBodyImage(t.getPlayerId() - 1, t.getDirection().isDiagonal());
+		Image iv_body = this.assets.getTankBodyImage(t.getPlayer().getID(), t.getDirection().isDiagonal());
 		Image iv_cannon = this.assets.getTankCannonImage(t.getDirection().isDiagonal());
 
 		double bw = blockSize.getWidth(), bh = blockSize.getHeight();
