@@ -3,6 +3,7 @@ package tunnelers.Game.Frame;
 import java.util.ArrayList;
 import tunnelers.Game.Map.TunnelMap;
 import tunnelers.Game.ControlSchemeManager;
+import tunnelers.Game.IO.ControlScheme;
 import tunnelers.Game.Map.MapGenerator;
 import tunnelers.Settings;
 
@@ -23,7 +24,9 @@ public class Container {
 		
 		byte[] controlSchemeIDs = ControlSchemeManager.getKeyboardLayoutIDs();
 		for(byte i = 0; i < controlSchemeIDs.length; i++){
-			controlSchemeManager.getKeyboardScheme(i).setPlayerID(players[i].getID());
+			ControlScheme.Keyboard keyboardScheme= controlSchemeManager.getKeyboardScheme(i);
+			keyboardScheme.setPlayerID(players[i].getID());
+			//System.out.format("sch: %s - pid: %d\n", keyboardScheme.toString(), keyboardScheme.getPlayerID());
 		}
 		
 		

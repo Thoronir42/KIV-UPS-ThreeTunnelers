@@ -42,8 +42,7 @@ public final class Engine extends Application {
 	}
 
 	public void update(long tick) {
-		ATunnelersStage s = getStage();
-		s.update(tick);
+		getStage().update(tick);
 	}
 
 	private ATunnelersStage getStage() {
