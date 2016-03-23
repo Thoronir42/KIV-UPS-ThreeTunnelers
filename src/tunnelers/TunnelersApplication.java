@@ -12,7 +12,7 @@ import tunnelers.Menu.MainMenuScene;
  *
  * @author Stepan
  */
-public final class Engine extends Application {
+public final class TunnelersApplication extends Application {
 
 	ATunnelersStage currentStage;
 	Settings settings;
@@ -22,11 +22,11 @@ public final class Engine extends Application {
 	public void start(Stage primaryStage) {
 		this.settings = Settings.getInstance();
 		Settings.getInstance().loadConfigFile("config/settings.cfg");
-		Engine e = this;
+		TunnelersApplication app = this;
 		this.imp = new Impulser(new BackPasser<Long>() {
 			@Override
 			public void run() {
-				e.update(this.get());
+				app.update(this.get());
 			}
 		});
 		this.changeStage(MenuStage.getInstance());
