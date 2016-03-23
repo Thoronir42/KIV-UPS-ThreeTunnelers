@@ -32,6 +32,10 @@ public class Controls {
 		return prevVal != newVal;
 	}
 
+	public boolean isShooting() {
+		return this.keys.get(Input.actShoot);
+	}
+
 	public Direction getDirection() {
 		int x = getDir(Input.movLeft, Input.movRight),
 				y = getDir(Input.movUp, Input.movDown);
