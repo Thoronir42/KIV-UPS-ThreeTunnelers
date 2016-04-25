@@ -50,6 +50,14 @@ public class ControlSchemeManager {
 	public ControlInput replaceKeyInput(KeyCode kc, ControlInput plrInput){
 		return this.keyMap.set(kc, plrInput);
 	}
+
+	public InputAction[] getEditableInputs() {
+		return new InputAction[]{
+			InputAction.movUp, InputAction.movDown,
+			InputAction.movLeft, InputAction.movRight,
+			InputAction.actShoot,
+		};
+	}
 	
 			
 }
