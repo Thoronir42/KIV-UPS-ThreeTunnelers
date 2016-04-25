@@ -6,12 +6,12 @@ import java.util.Objects;
  *
  * @author Stepan
  */
-public class PlrInput {
+public class ControlInput {
 
 	protected final AControlScheme controlScheme;
-	protected final Input input;
+	protected final InputAction input;
 
-	public PlrInput(AControlScheme controlScheme, Input i) {
+	public ControlInput(AControlScheme controlScheme, InputAction i) {
 		this.controlScheme = controlScheme;
 		this.input = i;
 	}
@@ -32,7 +32,7 @@ public class PlrInput {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final PlrInput other = (PlrInput) obj;
+		final ControlInput other = (ControlInput) obj;
 		if (this.controlScheme != other.controlScheme) {
 			return false;
 		}
@@ -43,7 +43,7 @@ public class PlrInput {
 		return controlScheme;
 	}
 
-	public Input getInput() {
+	public InputAction getInput() {
 		return input;
 	}
 

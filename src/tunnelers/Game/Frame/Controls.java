@@ -2,7 +2,7 @@ package tunnelers.Game.Frame;
 
 import java.util.HashMap;
 import java.util.Map;
-import tunnelers.Game.IO.Input;
+import tunnelers.Game.IO.InputAction;
 
 /**
  *
@@ -10,13 +10,13 @@ import tunnelers.Game.IO.Input;
  */
 public class Controls {
 
-	Map<Input, Boolean> keys;
+	Map<InputAction, Boolean> heldKeys;
 
 	public Controls() {
-		keys = new HashMap<>();
-		Input[] inputs = Input.values();
-		for (Input input : inputs) {
-			keys.put(input, false);
+		heldKeys = new HashMap<>();
+		InputAction[] inputs = InputAction.values();
+		for (InputAction input : inputs) {
+			heldKeys.put(input, false);
 		}
 	}
 
@@ -26,27 +26,27 @@ public class Controls {
 	 * @param newVal what value is being set under mentioned input
 	 * @return true if the state on the input changed value
 	 */
-	public boolean handleControl(Input type, boolean newVal) {
-		boolean prevVal = keys.get(type);
-		keys.put(type, newVal);
+	public boolean handleControl(InputAction type, boolean newVal) {
+		boolean prevVal = heldKeys.get(type);
+		heldKeys.put(type, newVal);
 		return prevVal != newVal;
 	}
 
 	public boolean isShooting() {
-		return this.keys.get(Input.actShoot);
+		return this.heldKeys.get(InputAction.actShoot);
 	}
 
 	public Direction getDirection() {
-		int x = getDir(Input.movLeft, Input.movRight),
-				y = getDir(Input.movUp, Input.movDown);
+		int x = getDir(InputAction.movLeft, InputAction.movRight),
+				y = getDir(InputAction.movUp, InputAction.movDown);
 		return Direction.getDirection(x, y);
 	}
 
-	private int getDir(Input sub, Input add) {
-		if (keys.get(sub) && !keys.get(add)) {
+	private int getDir(InputAction sub, InputAction add) {
+		if (heldKeys.get(sub) && !heldKeys.get(add)) {
 			return -1;
 		}
-		if (keys.get(add) && !keys.get(sub)) {
+		if (heldKeys.get(add) && !heldKeys.get(sub)) {
 			return 1;
 		}
 		return 0;
@@ -55,8 +55,8 @@ public class Controls {
 	@Override
 	public String toString() {
 		return String.format("Controls(Up=%s\t Dw=%s\t Lf=%s\t Rg=%s\t Sh=%s)",
-				keys.get(Input.movUp), keys.get(Input.movDown), keys.get(Input.movLeft),
-				keys.get(Input.movRight), keys.get(Input.actShoot));
+				heldKeys.get(InputAction.movUp), heldKeys.get(InputAction.movDown), heldKeys.get(InputAction.movLeft),
+				heldKeys.get(InputAction.movRight), heldKeys.get(InputAction.actShoot));
 	}
 
 }

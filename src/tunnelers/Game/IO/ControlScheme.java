@@ -17,8 +17,8 @@ public abstract class ControlScheme {
 		}
 
 		@Override
-		public PlrInput getInput(KeyCode kc) {
-			PlrInput input = this.keyMap.getInput(kc);
+		public ControlInput getInput(KeyCode kc) {
+			ControlInput input = this.keyMap.getInput(kc);
 			System.out.format("getInput %s - %s", kc.toString(), input.toString());
 			return input;
 		}

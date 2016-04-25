@@ -6,8 +6,8 @@ import tunnelers.ATunnelersStage;
 import tunnelers.Game.Frame.Container;
 import generic.BackPasser;
 import javafx.scene.input.KeyCode;
-import tunnelers.Game.IO.Input;
-import tunnelers.Game.IO.PlrInput;
+import tunnelers.Game.IO.InputAction;
+import tunnelers.Game.IO.ControlInput;
 import tunnelers.network.NetWorks;
 import tunnelers.Game.Frame.Player;
 import tunnelers.Game.Frame.Engine;
@@ -93,12 +93,12 @@ public class GameStage extends ATunnelersStage {
 	}
 
 	void handleKey(KeyCode code, boolean pressed) {
-		PlrInput pi= this.controlSchemeManager.getPlayerInputByKeyPress(code);
+		ControlInput pi= this.controlSchemeManager.getPlayerInputByKeyPress(code);
 		if(pi == null){
 			return;
 		}
 		AControlScheme controlSchemeId = pi.getControlScheme();
-		Input inp = pi.getInput();
+		InputAction inp = pi.getInput();
 		
 		Player p = this.engine.getPlayer(controlSchemeId.getPlayerID());
 		

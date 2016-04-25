@@ -21,7 +21,7 @@ public class KeyMap {
 		return kc.getName();
 	}
 
-	private final HashMap<KeyCode, PlrInput> map;
+	private final HashMap<KeyCode, ControlInput> map;
 	private final ControlSchemeManager controlSchemeManager;
 
 	public KeyMap(ControlSchemeManager controlSchemeManager) {
@@ -44,20 +44,20 @@ public class KeyMap {
 	}
 
 	private void setScheme(AControlScheme controlScheme, KeyCode up, KeyCode left, KeyCode right, KeyCode down, KeyCode shoot) {
-		set(up, controlScheme, Input.movUp);
-		set(left, controlScheme, Input.movLeft);
-		set(right, controlScheme, Input.movRight);
-		set(down, controlScheme, Input.movDown);
-		set(shoot, controlScheme, Input.actShoot);
+		set(up, controlScheme, InputAction.movUp);
+		set(left, controlScheme, InputAction.movLeft);
+		set(right, controlScheme, InputAction.movRight);
+		set(down, controlScheme, InputAction.movDown);
+		set(shoot, controlScheme, InputAction.actShoot);
 	}
 
-	private PlrInput set(KeyCode code, AControlScheme ctrlScheme, Input i) {
-		return this.set(code, new PlrInput(ctrlScheme, i));
+	private ControlInput set(KeyCode code, AControlScheme ctrlScheme, InputAction i) {
+		return this.set(code, new ControlInput(ctrlScheme, i));
 
 	}
 
-	public PlrInput set(KeyCode code, PlrInput pin) {
-		PlrInput cur = null;
+	public ControlInput set(KeyCode code, ControlInput pin) {
+		ControlInput cur = null;
 		if (map.containsValue(pin)) {
 			cur = map.remove(code);
 		}
@@ -66,12 +66,12 @@ public class KeyMap {
 		return cur;
 	}
 
-	public PlrInput getInput(KeyCode code) {
+	public ControlInput getInput(KeyCode code) {
 		return map.get(code);
 	}
 
-	public KeyCode findKey(PlrInput pin) {
-		for (Entry<KeyCode, PlrInput> entry : map.entrySet()) {
+	public KeyCode findKey(ControlInput pin) {
+		for (Entry<KeyCode, ControlInput> entry : map.entrySet()) {
 			if (pin.equals(entry.getValue())) {
 				return entry.getKey();
 			}

@@ -29,5 +29,5 @@ public abstract class AControlScheme {
 		this.playerID = id;
 	}
 
-	public abstract PlrInput getInput(KeyCode kc);
+	public abstract ControlInput getInput(KeyCode kc);
 }

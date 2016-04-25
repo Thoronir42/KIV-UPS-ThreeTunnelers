@@ -1,23 +1,23 @@
 package tunnelers.Menu;
 
 import javafx.scene.control.Button;
-import tunnelers.Game.IO.Input;
+import tunnelers.Game.IO.InputAction;
 
 /**
  *
  * @author Stepan
  */
 public class KeycodeButton extends Button {
-	Input input;
+	InputAction input;
 	byte playerId;
 
-	public KeycodeButton(Input input, byte playerId, String text) {
+	public KeycodeButton(InputAction input, byte playerId, String text) {
 		super(text);
 		this.input = input;
 		this.playerId = playerId;
 	}
 
-	public Input getInput() {
+	public InputAction getInput() {
 		return input;
 	}
 

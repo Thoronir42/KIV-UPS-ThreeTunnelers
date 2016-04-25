@@ -2,7 +2,7 @@ package tunnelers.Game.IO;
 
 import tunnelers.Game.Frame.Direction;
 
-public enum Input {
+public enum InputAction {
 
 	movUp(0, "Nahoru", Direction.North),
 	movDown(1, "Dolů", Direction.South),
@@ -14,11 +14,11 @@ public enum Input {
 	private final int intVal;
 	private final String label;
 
-	private Input(int intVal, String label) {
+	private InputAction(int intVal, String label) {
 		this(intVal, label, null);
 	}
 
-	private Input(int intVal, String label, Direction dir) {
+	private InputAction(int intVal, String label, Direction dir) {
 		this.dir = dir;
 		this.intVal = intVal;
 		this.label = label;
