@@ -1,5 +1,6 @@
 package tunnelers.Menu;
 
+import tunnelers.Menu.ServerList.GameRoom;
 import generic.BackPasser;
 import java.io.IOException;
 import javafx.collections.FXCollections;
@@ -13,8 +14,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import tunnelers.Menu.ServerList.GRTVItem;
+import tunnelers.Menu.ServerList.GameRoomTreeView;
 import tunnelers.Settings;
 import tunnelers.network.NetWorks;
 
@@ -46,15 +50,10 @@ public class ServerListScene extends AMenuScene {
 
 		scene.tf_clientName = new TextField("Faggot");
 
-		scene.serverList = new ListView<>(scene.serverListItems);
+		scene.serverList = GameRoomTreeView.createInstance();
 		scene.serverList.setOnMouseClicked((MouseEvent e) -> {
-			if (e.getClickCount() == 2) {
-				scene.connectToGame(scene.serverList.getSelectionModel().getSelectedItem());
-			}
+			scene.serverListClicked(e);
 		});
-		for (byte i = 0; i < 32; i++) {
-			scene.serverListItems.add(new GameRoom(i));
-		}
 		scene.lbl_conInfo = new Label();
 		scene.lbl_conInfo.setText("Waiting...");
 
@@ -63,9 +62,23 @@ public class ServerListScene extends AMenuScene {
 			scene.refreshServerList();
 		});
 
-		root.setTop(createTopBar(scene, settings));
-		root.setCenter(scene.serverList);
+		GridPane center = new GridPane();
+		center.setVgap(5);
+		center.setAlignment(Pos.CENTER);
+
+		Button but_goBack = new Button("Zpět..");
+		but_goBack.setOnAction((ActionEvent event) -> {
+			scene.getStage().prevScene();
+		});
+
+		center.add(createTopBar(scene, settings), 0, 0);
+		center.add(scene.serverList, 0, 1);
+		center.add(but_goBack, 0, 2);
+
+		root.setCenter(center);
 		root.setBottom(createBottomBar(scene));
+		
+		scene.refreshServerList();
 	}
 
 	private static HBox createTopBar(ServerListScene scene, Settings settings) {
@@ -73,17 +86,16 @@ public class ServerListScene extends AMenuScene {
 		top.setStyle("-fx-background-color: #A8A8A8");
 
 		top.setAlignment(Pos.CENTER);
-		
+
 		scene.topButtons = new HBox();
 		scene.topLabels = new HBox();
 
 		Label lblName = new Label("Přezdívka:"),
 				lblServer = new Label(String.format("%s:%d", settings.getServerAddress(), settings.getServerPort()));
-		
+
 		scene.topLabels.getChildren().add(lblName);
 		scene.topLabels.getChildren().add(scene.tf_clientName);
 		scene.topLabels.getChildren().add(lblServer);
-		
 
 		scene.topButtons.getChildren().add(scene.but_getLobbies);
 
@@ -96,16 +108,9 @@ public class ServerListScene extends AMenuScene {
 	private static HBox createBottomBar(ServerListScene scene) {
 		HBox bottom = new HBox();
 
-		Button but_goBack = new Button("Zpět..");
-		but_goBack.setOnAction((ActionEvent event) -> {
-			scene.getStage().prevScene();
-		});
-
 		HBox bottomLabel = new HBox();
 		bottomLabel.setAlignment(Pos.CENTER);
 		bottomLabel.getChildren().add(scene.lbl_conInfo);
-
-		bottom.getChildren().add(but_goBack);
 		bottom.getChildren().add(bottomLabel);
 
 		return bottom;
@@ -116,8 +121,7 @@ public class ServerListScene extends AMenuScene {
 			but_join;
 	protected Label lbl_conInfo;
 
-	protected ListView<GameRoom> serverList;
-	protected ObservableList serverListItems;
+	protected GameRoomTreeView serverList;
 
 	protected HBox topButtons,
 			topLabels;
@@ -125,8 +129,6 @@ public class ServerListScene extends AMenuScene {
 	public ServerListScene(Parent root, double width, double height) {
 		super(root, width, height, "Join Game");
 		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.BLUEVIOLET.hashCode()));
-
-		serverListItems = FXCollections.observableArrayList();
 	}
 
 	@Override
@@ -135,8 +137,8 @@ public class ServerListScene extends AMenuScene {
 	}
 
 	private void refreshServerList() {
-		serverListItems.clear();
-		int n = Settings.getRandInt(12);
+		serverList.clearItems();
+		int n = Settings.getRandInt(10) + 3;
 		String[] lobbies = new String[n];
 		for (byte i = 0; i < n; i++) {
 			int players = Settings.getRandInt(Settings.MAX_PLAYERS) + 1;
@@ -167,13 +169,18 @@ public class ServerListScene extends AMenuScene {
 			if (gr == null) {
 				continue;
 			}
-			serverListItems.add(gr);
+			serverList.add(gr);
 		}
 	}
 
 	private void connectToGame(GameRoom gr) {
 		System.out.println("Connection attempt to " + gr + " stopped.");
 		if (true) {
+			try {
+				this.getStage().gotoLobby(NetWorks.createInstance());
+			} catch (IOException ex) {
+				System.err.println(ex.getLocalizedMessage());
+			}
 			return;
 		}
 		try {
@@ -190,6 +197,17 @@ public class ServerListScene extends AMenuScene {
 			}
 		} catch (IOException | InterruptedException e) {
 			System.err.println(e.getMessage());
+		}
+	}
+
+	private void serverListClicked(MouseEvent e) {
+		GRTVItem selected = this.serverList.getSelectedItem();
+
+		if (selected == null || !(selected instanceof GameRoom)) {
+			return;
+		}
+		if (e.getClickCount() == 2) {
+			this.connectToGame((GameRoom) selected);
 		}
 	}
 }

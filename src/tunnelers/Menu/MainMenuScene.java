@@ -16,7 +16,7 @@ import tunnelers.network.NetWorks;
  */
 public class MainMenuScene extends AMenuScene {
 
-	private static final int BTN_TYPE_MOCK_LOBBY = -1,
+	private static final int 
 			BTN_TYPE_JOIN_GAME = 1,
 			BTN_TYPE_SETTINGS = 2,
 			BTN_TYPE_EXIT = 3;
@@ -46,7 +46,6 @@ public class MainMenuScene extends AMenuScene {
 		MainMenuScene scene = new MainMenuScene(root, settings.getWidth(), settings.getHeight());
 
 		Button[] buttons = new Button[]{
-			createButton(scene, BTN_TYPE_MOCK_LOBBY),
 			createButton(scene, BTN_TYPE_JOIN_GAME),
 			createButton(scene, BTN_TYPE_SETTINGS),
 			createButton(scene, BTN_TYPE_EXIT),};
@@ -63,16 +62,6 @@ public class MainMenuScene extends AMenuScene {
 		switch (type) {
 			default:
 				return null;
-			case BTN_TYPE_MOCK_LOBBY:
-				btn = new Button("Simulovat lobby");
-				btn.setOnAction((ActionEvent event) -> {
-					try {
-						scene.getStage().gotoLobby(NetWorks.createInstance());
-					} catch (IOException ex) {
-						System.err.println(ex.getLocalizedMessage());
-					}
-				});
-				break;
 			case BTN_TYPE_JOIN_GAME:
 				btn = new Button("Seznam serverů");
 				btn.setOnAction((ActionEvent event) -> {
