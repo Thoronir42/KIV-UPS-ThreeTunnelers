@@ -25,12 +25,15 @@ public final class Engine {
 	
 	
 	public void update(long tick){
-		updatePlayers(this.container.getPlayers());
+		updatePlayers(this.container.getPlayers(), tick);
 		updateProjectiles(this.container.getProjectiles());
 	}
 	
-	private void updatePlayers(Player[] players) {
+	private void updatePlayers(Player[] players, long tick) {
 		for (Player p : players) {
+			if(p instanceof PlayerRemote && tick % 15 == 0){
+				((PlayerRemote)p).mockControls();
+			}
 			Tank tank = p.getTank();
 			Controls c = p.getControls();
 			

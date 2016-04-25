@@ -34,5 +34,12 @@ class KeyTableRow{
 	KeyCode getKeyCode(int i) {
 		return this.controlSchemeManager.getKeyCode(this.inputs[i - inputColumnOffset]);
 	}
+
+	@Override
+	public String toString() {
+		return "KeyTableRow for " + inputAction;
+	}
+	
+	
 	
 }

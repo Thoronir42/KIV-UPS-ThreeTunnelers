@@ -18,6 +18,14 @@ public class ControlSchemeManager {
 	public static byte[] getKeyboardLayoutIDs() {
 		return new byte[]{KEYBOARD_PRIMARY, KEYBOARD_SECONDARY};
 	}
+
+	public static InputAction[] getEditableInputs() {
+		return new InputAction[]{
+			InputAction.movUp, InputAction.movDown,
+			InputAction.movLeft, InputAction.movRight,
+			InputAction.actShoot,
+		};
+	}
 //
 	private final KeyMap keyMap;
 
@@ -49,14 +57,6 @@ public class ControlSchemeManager {
 	
 	public ControlInput replaceKeyInput(KeyCode kc, ControlInput plrInput){
 		return this.keyMap.set(kc, plrInput);
-	}
-
-	public InputAction[] getEditableInputs() {
-		return new InputAction[]{
-			InputAction.movUp, InputAction.movDown,
-			InputAction.movLeft, InputAction.movRight,
-			InputAction.actShoot,
-		};
 	}
 	
 			

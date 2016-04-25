@@ -3,14 +3,13 @@ package tunnelers.Menu.Settings;
 import java.util.ArrayList;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.util.Callback;
 import tunnelers.Game.ControlSchemeManager;
-import tunnelers.Game.IO.AControlScheme;
 import tunnelers.Game.IO.InputAction;
-import tunnelers.Game.IO.ControlInput;
 
 /**
  *
@@ -21,16 +20,12 @@ public class KeyConfigPane extends TableView<KeyTableRow>{
 	public static KeyConfigPane create(ControlSchemeManager controlSchemeManager){
 		byte[] kbLayoutIds = ControlSchemeManager.getKeyboardLayoutIDs();
 		KeyConfigPane kcp = new KeyConfigPane(kbLayoutIds);
-		InputAction[] inputs = controlSchemeManager.getEditableInputs();
+		InputAction[] inputs = ControlSchemeManager.getEditableInputs();
 		
+		ObservableList<KeyTableRow> rows = kcp.getItems();
 		for (InputAction input : inputs) {
 			KeyTableRow row = new KeyTableRow(input, kbLayoutIds, controlSchemeManager);
-			kcp.getItems().add(row);
-		}
-		for (int p = 0; p < kbLayoutIds.length; p++) {
-			byte klid = kbLayoutIds[p];
-			AControlScheme controlScheme = controlSchemeManager.getKeyboardScheme(klid);
-			
+			rows.add(row);
 		}
 		return kcp;
 	}
@@ -40,12 +35,10 @@ public class KeyConfigPane extends TableView<KeyTableRow>{
 	private KeyConfigPane(byte[] keyboardLayoutIds) {
 		super();
 		this.keyboardLayoutIds = keyboardLayoutIds;
-		this.initRows();
-		
-		
+		this.initColumns();
 	}
 	
-	private void initRows(){
+	private void initColumns(){
 		TableColumn<KeyTableRow, String> labelColumn = new TableColumn<>("Action");
 		labelColumn.setMinWidth(96); labelColumn.setMaxWidth(96);
 		labelColumn.setEditable(false); labelColumn.setSortable(false);
@@ -60,8 +53,8 @@ public class KeyConfigPane extends TableView<KeyTableRow>{
 			byte klid = this.keyboardLayoutIds[i];
 			TableColumn<KeyTableRow, KeyCode> layoutColumn = new TableColumn<>("Keyboard " + klid);
 			layoutColumn.setMinWidth(96);
-			layoutColumn.setCellValueFactory( new KeyBindCellValueFactory(i));
-			//layoutColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+			layoutColumn.setCellValueFactory( new KeyBindCellValueFactory(i) );
+			layoutColumn.setCellFactory(cell -> new KeyBindCell());
 			layoutColumns.add(layoutColumn);
 		}
 		
