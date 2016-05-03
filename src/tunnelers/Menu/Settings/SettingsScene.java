@@ -1,4 +1,4 @@
-package tunnelers.Menu;
+package tunnelers.Menu.Settings;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -13,7 +13,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import tunnelers.Game.ControlSchemeManager;
-import tunnelers.Menu.Settings.KeyConfigPane;
+import tunnelers.Menu.AMenuScene;
+import tunnelers.Menu.MainMenuScene;
 import tunnelers.Settings;
 import tunnelers.network.NetWorks;
 

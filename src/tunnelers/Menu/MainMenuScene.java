@@ -1,5 +1,6 @@
 package tunnelers.Menu;
 
+import tunnelers.Menu.Settings.SettingsScene;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
