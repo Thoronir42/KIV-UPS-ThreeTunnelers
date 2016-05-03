@@ -9,6 +9,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.util.Callback;
 import tunnelers.Game.ControlSchemeManager;
+import tunnelers.Game.IO.AControlScheme;
 import tunnelers.Game.IO.InputAction;
 
 /**
@@ -23,6 +24,7 @@ public class KeyConfigPane extends TableView<KeyTableRow>{
 		InputAction[] inputs = ControlSchemeManager.getEditableInputs();
 		
 		ObservableList<KeyTableRow> rows = kcp.getItems();
+		KeyTableRow.setKLIDs(kbLayoutIds);
 		for (InputAction input : inputs) {
 			KeyTableRow row = new KeyTableRow(input, kbLayoutIds, controlSchemeManager);
 			rows.add(row);
@@ -35,7 +37,8 @@ public class KeyConfigPane extends TableView<KeyTableRow>{
 	private KeyConfigPane(byte[] keyboardLayoutIds) {
 		super();
 		this.keyboardLayoutIds = keyboardLayoutIds;
-		this.initColumns();
+		this.setEditable(true);
+		this.initColumns();	
 	}
 	
 	private void initColumns(){
@@ -49,10 +52,12 @@ public class KeyConfigPane extends TableView<KeyTableRow>{
 		
 		ArrayList<TableColumn<KeyTableRow, KeyCode>> layoutColumns = new ArrayList<>();
 		KeyTableRow.inputColumnOffset = 1;
+		
 		for(int i = 0; i < this.keyboardLayoutIds.length; i++){
 			byte klid = this.keyboardLayoutIds[i];
 			TableColumn<KeyTableRow, KeyCode> layoutColumn = new TableColumn<>("Keyboard " + klid);
 			layoutColumn.setMinWidth(96);
+			layoutColumn.setEditable(true);
 			layoutColumn.setCellValueFactory( new KeyBindCellValueFactory(i) );
 			layoutColumn.setCellFactory(cell -> new KeyBindCell());
 			layoutColumns.add(layoutColumn);

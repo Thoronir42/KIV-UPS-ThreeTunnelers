@@ -1,6 +1,7 @@
 package tunnelers.Game;
 
 import javafx.scene.input.KeyCode;
+import tunnelers.Game.IO.AControlScheme;
 import tunnelers.Game.IO.ControlScheme;
 import tunnelers.Game.IO.InputAction;
 import tunnelers.Game.IO.KeyMap;
@@ -40,6 +41,15 @@ public class ControlSchemeManager {
 			this.keyboardSchemes[i] = new ControlScheme.Keyboard(this.keyMap);
 			this.keyMap.setSchemeDefault(keyboardLayoutIDs[i]);
 		}
+	}
+	
+	public AControlScheme[] getAllSchemes(){
+		AControlScheme[] schemes = new AControlScheme[this.keyboardSchemes.length];
+		for(int i = 0; i < schemes.length; i++){
+			schemes[i] = this.keyboardSchemes[i];
+		}
+		
+		return schemes;
 	}
 	
 	public ControlScheme.Keyboard getKeyboardScheme(byte sIndex){

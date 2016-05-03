@@ -1,7 +1,9 @@
 package tunnelers.Menu.Settings;
 
+import javafx.scene.control.TableColumn;
 import javafx.scene.input.KeyCode;
 import tunnelers.Game.ControlSchemeManager;
+import tunnelers.Game.IO.AControlScheme;
 import tunnelers.Game.IO.InputAction;
 import tunnelers.Game.IO.ControlInput;
 
@@ -11,6 +13,12 @@ import tunnelers.Game.IO.ControlInput;
  */
 class KeyTableRow{
 	static int inputColumnOffset = 0;
+	static byte[] keyboardLayoutIds;
+
+	static void setKLIDs(byte[] kbLayoutIds) {
+		System.err.println("Keyboard layout IDs were already set");
+		keyboardLayoutIds = kbLayoutIds;
+	}
 	
 	InputAction inputAction;
 	final ControlInput[] inputs;
@@ -38,6 +46,14 @@ class KeyTableRow{
 	@Override
 	public String toString() {
 		return "KeyTableRow for " + inputAction;
+	}
+
+	void setKeyCode(KeyBindCell sender, KeyCode newValue) {
+		TableColumn<KeyTableRow, KeyCode> column = sender.getTableColumn();
+		int colId = column.getTableView().getColumns().indexOf(column) - inputColumnOffset;
+		AControlScheme scheme = controlSchemeManager.getKeyboardScheme(keyboardLayoutIds[colId]);
+		ControlInput input = new ControlInput(scheme, inputAction);
+		controlSchemeManager.replaceKeyInput(newValue, input);
 	}
 	
 	
