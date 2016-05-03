@@ -1,7 +1,6 @@
 package tunnelers.Menu.ServerList;
 
 import java.util.Collection;
-import java.util.Optional;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 

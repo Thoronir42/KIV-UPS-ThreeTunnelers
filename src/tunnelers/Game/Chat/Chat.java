@@ -2,8 +2,6 @@ package tunnelers.Game.Chat;
 
 import generic.CyclicArray;
 import java.util.Iterator;
-import javafx.scene.paint.Color;
-import tunnelers.Game.Frame.Player;
 
 /**
  *
@@ -19,7 +17,7 @@ public class Chat {
 		messages = new CyclicArray<>(ChatMessage.class, MAX_MESSAGES);
 	}
 
-	public void addMessage(Player p, String text) {
+	public void addMessage(IChatParticipant p, String text) {
 		ChatMessage message = new ChatMessage(p, text);
 		addMessage(message);
 	}
