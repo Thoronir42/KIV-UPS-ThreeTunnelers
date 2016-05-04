@@ -1,5 +1,6 @@
 package tunnelers.Menu;
 
+import tunnelers.Menu.ServerList.ServerListScene;
 import tunnelers.Menu.Settings.SettingsScene;
 import java.io.IOException;
 import javafx.event.ActionEvent;

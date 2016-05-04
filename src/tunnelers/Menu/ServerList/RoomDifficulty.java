@@ -1,10 +1,12 @@
 package tunnelers.Menu.ServerList;
 
+import tunnelers.Menu.ServerList.GameRoomView.GRTVItem;
+
 /**
  *
  * @author Stepan
  */
-public enum Difficulty implements GRTVItem{
+public enum RoomDifficulty implements GRTVItem{
 	Easy("Lehká", 1),
 	Medium("Střední", 2),
 	Hard("Těžká", 3),
@@ -13,7 +15,7 @@ public enum Difficulty implements GRTVItem{
 	private final String label;
 	private final int value;
 
-	private Difficulty(String label, int value){
+	private RoomDifficulty(String label, int value){
 		this.label = label;
 		this.value = value;	
 	}
@@ -28,9 +30,26 @@ public enum Difficulty implements GRTVItem{
 	}
 
 	@Override
-	public Difficulty getDIfficulty() {
+	public RoomDifficulty getDIfficulty() {
 		return this;
 	}
+	
+	@Override
+	public String getTitle() {
+		return this.toString();
+	}
+
+	@Override
+	public String getOccupancy() {
+		return "";
+	}
+
+	@Override
+	public String getFlags() {
+		return "";
+	}
+	
+	
 	
 	
 

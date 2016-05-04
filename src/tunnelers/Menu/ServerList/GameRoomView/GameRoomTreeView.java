@@ -1,14 +1,15 @@
-package tunnelers.Menu.ServerList;
+package tunnelers.Menu.ServerList.GameRoomView;
 
 import java.util.Collection;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import tunnelers.Menu.ServerList.RoomDifficulty;
 
 /**
  *
  * @author Stepan
  */
-public class GameRoomTreeView extends TreeView<GRTVItem>{
+public class GameRoomTreeView extends TreeView<GRTVItem> implements IGameRoomView{
 
 	public static GameRoomTreeView createInstance(){
 		return new GameRoomTreeView(new TreeItem<>(new GRTVRoot()));
@@ -22,20 +23,23 @@ public class GameRoomTreeView extends TreeView<GRTVItem>{
 		clearItems();
 	}
 	
+	@Override
 	public void clearItems() {
 		root.getChildren().clear();
-		for(Difficulty d : Difficulty.values()){
+		for(RoomDifficulty d : RoomDifficulty.values()){
 			root.getChildren().add(new TreeItem<>(d));
 		}
 		root.setExpanded(true);
 	}
 	
+	@Override
 	public void addAll(Collection<GRTVItem> items){
 		for(GRTVItem item : items){
 			add(item);
 		}
 	}
 
+	@Override
 	public void add(GRTVItem gr) {
 		TreeItem<GRTVItem> result = root.getChildren().stream().filter(child -> child.getValue().getDIfficulty() == gr.getDIfficulty()).findFirst().get();
 		if(result != null){
@@ -43,6 +47,7 @@ public class GameRoomTreeView extends TreeView<GRTVItem>{
 		}
 	}
 
+	@Override
 	public GRTVItem getSelectedItem() {
 		TreeItem<GRTVItem> selected = getSelectionModel().getSelectedItem();
 		if(selected == null){

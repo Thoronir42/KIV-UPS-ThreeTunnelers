@@ -1,24 +1,23 @@
-package tunnelers.Menu;
+package tunnelers.Menu.ServerList;
 
-import tunnelers.Menu.ServerList.GameRoom;
+import tunnelers.Menu.ServerList.GameRoomView.GRTVItem;
+import tunnelers.Menu.ServerList.GameRoomView.GameRoomTreeView;
 import generic.BackPasser;
 import java.io.IOException;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import tunnelers.Menu.ServerList.GRTVItem;
-import tunnelers.Menu.ServerList.GameRoomTreeView;
+import tunnelers.Menu.AMenuScene;
+import tunnelers.Menu.MainMenuScene;
+import tunnelers.Menu.ServerList.GameRoomView.GameRoomTreeTableView;
 import tunnelers.Settings;
 import tunnelers.network.NetWorks;
 
@@ -50,7 +49,7 @@ public class ServerListScene extends AMenuScene {
 
 		scene.tf_clientName = new TextField("Faggot");
 
-		scene.serverList = GameRoomTreeView.createInstance();
+		scene.serverList = GameRoomTreeTableView.createInstance();
 		scene.serverList.setOnMouseClicked((MouseEvent e) -> {
 			scene.serverListClicked(e);
 		});
@@ -68,7 +67,7 @@ public class ServerListScene extends AMenuScene {
 
 		Button but_goBack = new Button("Zpět..");
 		but_goBack.setOnAction((ActionEvent event) -> {
-			scene.getStage().prevScene();
+			scene.goBack();
 		});
 
 		center.add(createTopBar(scene, settings), 0, 0);
@@ -121,7 +120,7 @@ public class ServerListScene extends AMenuScene {
 			but_join;
 	protected Label lbl_conInfo;
 
-	protected GameRoomTreeView serverList;
+	protected GameRoomTreeTableView serverList;
 
 	protected HBox topButtons,
 			topLabels;
@@ -190,6 +189,7 @@ public class ServerListScene extends AMenuScene {
 			System.out.format("Connecting to: %s:%d%n", address, port);
 
 			NetWorks nw = NetWorks.connectTo(address, port, clientName);
+			nw.toString();
 			if (nw.canConnect()) {
 				this.getStage().gotoLobby(nw);
 			} else {
