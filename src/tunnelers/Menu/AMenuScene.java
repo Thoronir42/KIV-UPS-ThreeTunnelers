@@ -30,6 +30,10 @@ public abstract class AMenuScene extends ATunnelersScene {
 	protected MenuStage getStage() {
 		return (MenuStage) this.getRoot().getScene().getWindow();
 	}
+	
+	protected void goBack(){
+		this.getStage().prevScene();
+	}
 
 	public abstract Class getPrevScene();
 

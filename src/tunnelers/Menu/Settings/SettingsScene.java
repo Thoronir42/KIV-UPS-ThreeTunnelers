@@ -45,7 +45,7 @@ public class SettingsScene extends AMenuScene {
 		root.setVgap(GRID_SPACING);
 		root.setHgap(GRID_SPACING);
 		root.add(makeServerSettingPane(scene, settings), 0, 0);
-		root.add(makeKeyConfigPane(scene), 0, 1);
+		root.add(KeyConfigPane.create(scene.controlSchemeManager), 0, 1);
 		root.add(makeResolveButtonRack(scene), 0, 2);
 	}
 
@@ -78,16 +78,10 @@ public class SettingsScene extends AMenuScene {
 		return root;
 	}
 
-	private static KeyConfigPane makeKeyConfigPane(SettingsScene scene) {
-		KeyConfigPane root = KeyConfigPane.create(scene.controlSchemeManager);
-		
-		return root;
-	}
-
 	private static HBox makeResolveButtonRack(SettingsScene scene) {
 		Button btn_back = new Button("Zpět");
 		btn_back.setOnAction((ActionEvent event) -> {
-			scene.getStage().changeScene(MainMenuScene.class);
+			scene.goBack();
 		});
 		Button btn_saveChanges = new Button("Uložit nastavení");
 		btn_saveChanges.setOnAction((ActionEvent e) -> {

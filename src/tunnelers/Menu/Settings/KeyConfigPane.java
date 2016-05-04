@@ -9,7 +9,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.util.Callback;
 import tunnelers.Game.ControlSchemeManager;
-import tunnelers.Game.IO.AControlScheme;
 import tunnelers.Game.IO.InputAction;
 
 /**
