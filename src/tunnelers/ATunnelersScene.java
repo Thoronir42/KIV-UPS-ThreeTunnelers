@@ -13,14 +13,14 @@ public abstract class ATunnelersScene extends Scene {
 
 	protected Settings settings = Settings.getInstance();
 
-	protected String name;
+	protected String sceneName;
 
 	public void setName(String name) {
-		this.name = name;
+		this.sceneName = name;
 	}
 
 	public String getName() {
-		return name;
+		return sceneName;
 	}
 
 	public ATunnelersScene(Parent root, double width, double height) {
@@ -29,6 +29,6 @@ public abstract class ATunnelersScene extends Scene {
 
 	public ATunnelersScene(Parent root, double width, double height, String name) {
 		super(root, width, height);
-		this.name = name;
+		this.sceneName = name;
 	}
 }

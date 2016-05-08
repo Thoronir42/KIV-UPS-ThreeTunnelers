@@ -106,7 +106,6 @@ public class GameStage extends ATunnelersStage {
 		if (p.getControls().handleControl(inp, pressed)) {
 			NCG.NetCommand cmd = new GameCommand.ControlSet(inp.intVal(), pressed ? 1 : 0);
 		}
-		//System.out.format("%s - %s%n", p.getName(), p.getControls());
 	}
 
 	protected void beginGame() {

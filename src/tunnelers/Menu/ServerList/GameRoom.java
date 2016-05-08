@@ -30,7 +30,6 @@ public class GameRoom implements GRTVItem {
 		Random rand = new Random();
 		RoomDifficulty[] vals = RoomDifficulty.values();
 		RoomDifficulty d = vals[rand.nextInt(vals.length)];
-		System.out.println(d);
 		return d;
 
 	}

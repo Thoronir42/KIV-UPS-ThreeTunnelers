@@ -1,5 +1,6 @@
 package tunnelers;
 
+import generic.NameGenerator;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Random;
@@ -37,10 +38,13 @@ public final class Settings {
 	public static int IMAGE_UPSCALE_MULT = 20;
 	public static int MAX_PLAYER_PROJECTILES = 7;
 	
+	public static NameGenerator nameGenerator;
+	
 
 	static {
 		PLAYER_COLORS = preparePlayerColors();
 		RNG = new Random(420);
+		nameGenerator = new NameGenerator(420);
 	}
 
 	private static Settings instance;

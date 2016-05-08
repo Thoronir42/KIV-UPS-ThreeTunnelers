@@ -4,13 +4,19 @@ import tunnelers.Menu.ServerList.GameRoomView.GRTVItem;
 import generic.BackPasser;
 import java.io.IOException;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -47,7 +53,8 @@ public class ServerListScene extends AMenuScene {
 
 	private static void addComponents(BorderPane root, ServerListScene scene, Settings settings) {
 
-		scene.tf_localName = new TextField("Faggot");
+		scene.tf_localName = new TextField();
+		scene.tf_localName.setPromptText(Settings.nameGenerator.next());
 
 		scene.serverList = GameRoomTreeTableView.createInstance();
 		scene.serverList.setOnMouseClicked((MouseEvent e) -> {
@@ -64,6 +71,7 @@ public class ServerListScene extends AMenuScene {
 		GridPane center = new GridPane();
 		center.setVgap(5);
 		center.setAlignment(Pos.CENTER);
+		center.setBorder(new Border(new BorderStroke(Color.ORANGERED, BorderStrokeStyle.SOLID, new CornerRadii(14), new BorderWidths(3))));
 
 		Button but_goBack = new Button("Zpět..");
 		but_goBack.setOnAction((ActionEvent event) -> {
@@ -78,28 +86,29 @@ public class ServerListScene extends AMenuScene {
 		root.setBottom(createBottomBar(scene));
 
 		scene.refreshServerList();
+		
+		but_goBack.requestFocus();
 	}
 
 	private static HBox createTopBar(ServerListScene scene, Settings settings) {
-		HBox top = new HBox(4);
+		HBox top = new HBox(20);
+		top.setPadding(new Insets(6));
 		top.setStyle("-fx-background-color: #A8A8A8");
 
 		top.setAlignment(Pos.CENTER);
 
 		scene.topButtons = new HBox();
-		scene.topLabels = new HBox();
+		scene.topLabels = new HBox(4);
+		scene.topLabels.setAlignment(Pos.CENTER);
 
 		Label lblName = new Label("Přezdívka:"),
 				lblServer = new Label(String.format("%s:%d", settings.getServerAddress(), settings.getServerPort()));
 
-		scene.topLabels.getChildren().add(lblName);
-		scene.topLabels.getChildren().add(scene.tf_localName);
-		scene.topLabels.getChildren().add(lblServer);
+		scene.topLabels.getChildren().addAll(lblName, scene.tf_localName, lblServer);
 
 		scene.topButtons.getChildren().add(scene.but_getLobbies);
 
-		top.getChildren().add(scene.topLabels);
-		top.getChildren().add(scene.topButtons);
+		top.getChildren().addAll(scene.topLabels, scene.topButtons);
 
 		return top;
 	}
@@ -154,7 +163,7 @@ public class ServerListScene extends AMenuScene {
 			String s = String.format("%02X%02X%02X%02X", i, Settings.MAX_PLAYERS, players, flags);
 			/*String s = Integer.toHexString(i) + Integer.toHexString(Settings.MAX_PLAYERS) +
 			 Integer.toHexString(players) + Integer.toHexString(flags);*/
-			System.out.format("ID=%d, MP=%d, CP=%d, F=%d\t%s%n", i, Settings.MAX_PLAYERS, players, flags, s);
+			//System.out.format("ID=%d, MP=%d, CP=%d, F=%d\t%s%n", i, Settings.MAX_PLAYERS, players, flags, s);
 			lobbies[i] = s;
 		}
 		parseAndInsertLobbies(lobbies);
@@ -174,7 +183,11 @@ public class ServerListScene extends AMenuScene {
 
 	private void connectToGame(GameRoom gr) {
 		try {
-			GameKickstarter kickstarter = new GameKickstarter(NetWorks.createInstance(), tf_localName.getText());
+			String name = tf_localName.getText();
+			if(name.length() == 0){
+				name = tf_localName.getPromptText();
+			}
+			GameKickstarter kickstarter = new GameKickstarter(NetWorks.createInstance(), name);
 
 			this.getStage().kickstartLobby(kickstarter);
 			/*

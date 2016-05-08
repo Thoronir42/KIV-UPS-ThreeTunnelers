@@ -2,8 +2,6 @@ package tunnelers.Menu.ServerList.GameRoomView;
 
 import java.util.Collection;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.collections.ObservableList;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;

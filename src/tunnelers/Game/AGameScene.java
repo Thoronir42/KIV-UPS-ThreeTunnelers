@@ -11,7 +11,7 @@ public abstract class AGameScene extends ATunnelersScene {
 
 	public AGameScene(Parent root, double width, double height, String name) {
 		super(root, width, height);
-		this.name = name;
+		this.sceneName = name;
 	}
 
 	protected GameStage getStage() {
