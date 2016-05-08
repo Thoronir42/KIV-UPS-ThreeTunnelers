@@ -42,4 +42,17 @@ public class Chat {
 		}
 		return chatLog;
 	}
+	
+	public String getHtml(){
+		StringBuilder sb = new StringBuilder();
+		
+		Iterator<ChatMessage> it = this.messages.iterator();
+		while (it.hasNext()) {
+			ChatMessage msg = it.next();
+			String rowHtml = String.format("<span><b style=\"color:#%s;\">%s</b>: %s</span><br/>", msg.getHexColor(), msg.getName(), msg.getText());
+			sb.insert(0, rowHtml);
+		}
+		
+		return sb.toString();
+	}
 }

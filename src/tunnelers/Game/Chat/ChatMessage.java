@@ -19,8 +19,21 @@ public class ChatMessage {
 	public String toString() {
 		return String.format("%s : %s", participant.getName(), text);
 	}
+	
+	public String getName(){
+		return this.participant.getName();
+	}
+	
+	public String getText(){
+		return this.text;
+	}
 
 	public Color getColor() {
 		return this.participant.getColor();
+	}
+	
+	public String getHexColor(){
+		int clr = getColor().hashCode();
+		return Integer.toHexString(clr).substring(0, 6).toUpperCase();
 	}
 }

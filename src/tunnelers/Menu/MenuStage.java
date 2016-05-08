@@ -2,6 +2,7 @@ package tunnelers.Menu;
 
 import tunnelers.Menu.ServerList.ServerListScene;
 import tunnelers.ATunnelersStage;
+import tunnelers.GameKickstarter;
 import tunnelers.network.NetWorks;
 
 /**
@@ -12,7 +13,7 @@ public class MenuStage extends ATunnelersStage {
 
 	private static MenuStage instance;
 
-	private NetWorks returnNW;
+	private GameKickstarter kickstarter;
 
 	private MenuStage() {
 		super();
@@ -38,16 +39,16 @@ public class MenuStage extends ATunnelersStage {
 		this.changeScene(scene.getPrevScene());
 	}
 
-	public NetWorks getReturnNetworks() {
-		return this.returnNW;
+	public GameKickstarter getKickstarter() {
+		return this.kickstarter;
 	}
 
 	;
     
-    public void gotoLobby(NetWorks nw) {
+    public void kickstartLobby(GameKickstarter kickstarter) {
 		try {
 			this.returnCode = ATunnelersStage.CHANGE_TO_GAME;
-			this.returnNW = nw;
+			this.kickstarter = kickstarter;
 			this.close();
 		} catch (IllegalStateException e) {
 			System.err.println(e.getMessage());

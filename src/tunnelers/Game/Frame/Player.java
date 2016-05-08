@@ -10,9 +10,7 @@ import tunnelers.Game.Chat.IChatParticipant;
  */
 public abstract class Player implements IChatParticipant{
 	
-	public static final int SERVER_PLAYER_ID = 0;
-	
-	private final static Settings settings = Settings.getInstance();
+	private final static Settings SETTINGS = Settings.getInstance();
 
 	private final int playerID;
 	private String name;
@@ -38,7 +36,7 @@ public abstract class Player implements IChatParticipant{
 	}
 
 	public final void setColor(int colorId) {
-		this.color = settings.getColor(this.color, colorId);
+		this.color = SETTINGS.getColor(this.color, colorId);
 	}
 
 	public void setName(String name) {

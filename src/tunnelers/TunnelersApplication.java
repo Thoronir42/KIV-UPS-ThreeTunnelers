@@ -72,7 +72,7 @@ public final class TunnelersApplication extends Application {
 				break;
 			case ATunnelersStage.CHANGE_TO_GAME:
 				MenuStage oldStage = (MenuStage) this.getStage();
-				newStage = new GameStage(oldStage.getReturnNetworks());
+				newStage = new GameStage(oldStage.getKickstarter());
 				this.changeStage(newStage);
 				break;
 			case ATunnelersStage.CHANGE_TO_MENU:

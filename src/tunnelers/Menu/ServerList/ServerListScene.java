@@ -1,7 +1,6 @@
 package tunnelers.Menu.ServerList;
 
 import tunnelers.Menu.ServerList.GameRoomView.GRTVItem;
-import tunnelers.Menu.ServerList.GameRoomView.GameRoomTreeView;
 import generic.BackPasser;
 import java.io.IOException;
 import javafx.event.ActionEvent;
@@ -15,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import tunnelers.GameKickstarter;
 import tunnelers.Menu.AMenuScene;
 import tunnelers.Menu.MainMenuScene;
 import tunnelers.Menu.ServerList.GameRoomView.GameRoomTreeTableView;
@@ -47,7 +47,7 @@ public class ServerListScene extends AMenuScene {
 
 	private static void addComponents(BorderPane root, ServerListScene scene, Settings settings) {
 
-		scene.tf_clientName = new TextField("Faggot");
+		scene.tf_localName = new TextField("Faggot");
 
 		scene.serverList = GameRoomTreeTableView.createInstance();
 		scene.serverList.setOnMouseClicked((MouseEvent e) -> {
@@ -76,7 +76,7 @@ public class ServerListScene extends AMenuScene {
 
 		root.setCenter(center);
 		root.setBottom(createBottomBar(scene));
-		
+
 		scene.refreshServerList();
 	}
 
@@ -93,7 +93,7 @@ public class ServerListScene extends AMenuScene {
 				lblServer = new Label(String.format("%s:%d", settings.getServerAddress(), settings.getServerPort()));
 
 		scene.topLabels.getChildren().add(lblName);
-		scene.topLabels.getChildren().add(scene.tf_clientName);
+		scene.topLabels.getChildren().add(scene.tf_localName);
 		scene.topLabels.getChildren().add(lblServer);
 
 		scene.topButtons.getChildren().add(scene.but_getLobbies);
@@ -115,7 +115,7 @@ public class ServerListScene extends AMenuScene {
 		return bottom;
 	}
 
-	protected TextField tf_clientName;
+	protected TextField tf_localName;
 	protected Button but_getLobbies,
 			but_join;
 	protected Label lbl_conInfo;
@@ -173,30 +173,27 @@ public class ServerListScene extends AMenuScene {
 	}
 
 	private void connectToGame(GameRoom gr) {
-		System.out.println("Connection attempt to " + gr + " stopped.");
-		if (true) {
-			try {
-				this.getStage().gotoLobby(NetWorks.createInstance());
-			} catch (IOException ex) {
-				System.err.println(ex.getLocalizedMessage());
-			}
-			return;
-		}
 		try {
+			GameKickstarter kickstarter = new GameKickstarter(NetWorks.createInstance(), tf_localName.getText());
+
+			this.getStage().kickstartLobby(kickstarter);
+			/*
 			String address = settings.getServerAddress(),
-					clientName = tf_clientName.getText();
+					clientName = tf_localName.getText();
 			int port = settings.getServerPort();
 			System.out.format("Connecting to: %s:%d%n", address, port);
 
 			NetWorks nw = NetWorks.connectTo(address, port, clientName);
 			nw.toString();
 			if (nw.canConnect()) {
-				this.getStage().gotoLobby(nw);
+				this.getStage().kickstartLobby(kickstarter);
 			} else {
 				this.lbl_conInfo.setText(nw.getStatusLabel());
 			}
-		} catch (IOException | InterruptedException e) {
-			System.err.println(e.getMessage());
+			*/
+
+		} catch (IOException ex) {
+			System.err.println("Connect failed: " + ex);
 		}
 	}
 

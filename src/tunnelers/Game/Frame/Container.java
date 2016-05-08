@@ -13,10 +13,10 @@ import tunnelers.Settings;
  */
 public class Container {
 
-	public static Container mockContainer(ControlSchemeManager controlSchemeManager) {
+	public static Container mockContainer(ControlSchemeManager controlSchemeManager, String localName) {
 		Player[] players = new Player[]{
-			new PlayerLocal(47, Settings.getRandInt(Settings.PLAYER_COLORS.length), "Jouda"),
-			new PlayerLocal(53, Settings.getRandInt(Settings.PLAYER_COLORS.length)),
+			new PlayerLocal(47, Settings.getRandInt(Settings.PLAYER_COLORS.length), localName),
+			new PlayerLocal(53, Settings.getRandInt(Settings.PLAYER_COLORS.length), "Jouda"),
 			new PlayerRemote(12, Settings.getRandInt(Settings.PLAYER_COLORS.length), "Frederick"),
 		};
 		TunnelMap map = MapGenerator.mockMap(players);

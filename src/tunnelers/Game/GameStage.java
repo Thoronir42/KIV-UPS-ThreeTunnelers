@@ -12,6 +12,7 @@ import tunnelers.network.NetWorks;
 import tunnelers.Game.Frame.Player;
 import tunnelers.Game.Frame.Engine;
 import tunnelers.Game.IO.AControlScheme;
+import tunnelers.GameKickstarter;
 import tunnelers.network.GameCommand;
 import tunnelers.network.MessageCommand;
 import tunnelers.network.NCG;
@@ -30,17 +31,17 @@ public class GameStage extends ATunnelersStage {
 	private AGameScene sc;
 	private final ControlSchemeManager controlSchemeManager;
 
-	public GameStage(NetWorks networks) {
-		this.networks = networks;
+	public GameStage(GameKickstarter kickstarter) {
+		this.networks = kickstarter.getNetworks();
 		this.networks.setCommandPasser(new BackPasser<NetCommand>() {
 			@Override
 			public void run() {
 				handleNetworkCommand(this.get());
 			}
 		});
-		this.setScene(LobbyScene.getInstance(networks));
+		this.setScene(LobbyScene.getInstance(true)); // todo returning to same lobby from a game
 		this.controlSchemeManager = settings.getControlSchemeManager();
-		Container container = Container.mockContainer(this.controlSchemeManager);
+		Container container = Container.mockContainer(this.controlSchemeManager, kickstarter.getLocalName());
 		this.engine = new Engine(container);
 		this.gamechat = new Chat(container.getLocalPlayer());
 	}

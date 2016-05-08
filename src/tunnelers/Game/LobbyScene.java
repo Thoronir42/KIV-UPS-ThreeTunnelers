@@ -4,14 +4,13 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.web.WebView;
 import tunnelers.Settings;
-import tunnelers.network.NetWorks;
 
 /**
  *
@@ -20,21 +19,14 @@ import tunnelers.network.NetWorks;
 public class LobbyScene extends AGameScene {
 
 	private static LobbyScene instance;
-	private NetWorks nw;
 
-	public static LobbyScene getInstance(NetWorks nw) throws IllegalStateException {
-
-		if (instance == null) {
+	public static LobbyScene getInstance(boolean createNew) throws IllegalStateException {
+		if (createNew || instance == null) {
 			instance = createInstance();
-		}
-		if (nw != null) {
-			instance.nw = nw;
-		} else if (instance.nw == null) {
-			throw new IllegalStateException("Lobby didn't receive NetWorks container and none was previously set.");
 		}
 		return instance;
 	}
-
+	
 	private static LobbyScene createInstance() {
 		GridPane root = new GridPane();
 		root.setHgap(4);
@@ -49,20 +41,14 @@ public class LobbyScene extends AGameScene {
 		addComponents(root, scene);
 
 		return scene;
-
 	}
 
 	private static void addComponents(GridPane root, LobbyScene scene) {
-		TextArea ta_chatBox = new TextArea();
+		WebView he_chatBox = new WebView();
+		he_chatBox.setPrefSize(400, 260);
 		
-		ta_chatBox.setWrapText(true);
-		ta_chatBox.setPrefColumnCount(40);
-		ta_chatBox.setPrefRowCount(10);
-		ta_chatBox.setDisable(true);
-		
-		scene.ta_chatBox = ta_chatBox;
-		root.add(scene.ta_chatBox, 0, 0);
-
+		scene.wv_chatBox = he_chatBox;
+		root.add(scene.wv_chatBox, 0, 0);
 		
 		TextField tf_chatIn = new TextField();
 		
@@ -96,7 +82,7 @@ public class LobbyScene extends AGameScene {
 		root.add(but_back, 1, 3);
 	}
 	
-	protected TextArea ta_chatBox;
+	protected WebView wv_chatBox;
 	protected TextField tf_chatIn;
 
 	public LobbyScene(Parent root, double width, double height) {
@@ -114,7 +100,7 @@ public class LobbyScene extends AGameScene {
 	@Override
 	public void updateChatbox() {
 		GameStage stage = this.getStage();
-		this.ta_chatBox.setText(stage.getGamechat().getLog());
+		this.wv_chatBox.getEngine().loadContent(stage.getGamechat().getHtml());
 	}
 
 	@Override
