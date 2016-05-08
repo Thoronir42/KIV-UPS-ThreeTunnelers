@@ -8,16 +8,16 @@ import javafx.scene.input.KeyCode;
  */
 public abstract class AControlScheme {
 
-	private static int controlSchemesCreated = 0;
+	private static byte controlSchemesCreated = 0;
 
-	protected final int schemeID;
+	protected final byte schemeID;
 	protected int playerID;
 
 	public AControlScheme() {
 		schemeID = controlSchemesCreated++;
 	}
 
-	public int getID() {
+	public byte getID() {
 		return this.schemeID;
 	}
 

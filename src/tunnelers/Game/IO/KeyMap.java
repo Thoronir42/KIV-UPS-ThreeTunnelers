@@ -58,7 +58,8 @@ public class KeyMap {
 
 	public ControlInput set(KeyCode code, ControlInput pin) {
 		ControlInput cur = null;
-		if (map.containsValue(pin)) {
+		map.remove(findKey(pin));
+		if (map.containsKey(code)) {
 			cur = map.remove(code);
 		}
 		map.put(code, pin);

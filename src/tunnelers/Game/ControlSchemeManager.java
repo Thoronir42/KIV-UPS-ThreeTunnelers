@@ -66,7 +66,10 @@ public class ControlSchemeManager {
 	}
 	
 	public ControlInput replaceKeyInput(KeyCode kc, ControlInput plrInput){
-		return this.keyMap.set(kc, plrInput);
+		//System.out.format("Putting %s to %s.", plrInput, kc);
+		ControlInput oldOccurence = this.keyMap.set(kc, plrInput);
+		//System.out.format(" Previously there was %s.\n", oldOccurence);
+		return oldOccurence;
 	}
 	
 			

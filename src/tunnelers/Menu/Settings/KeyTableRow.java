@@ -11,7 +11,8 @@ import tunnelers.Game.IO.ControlInput;
  *
  * @author Stepan
  */
-class KeyTableRow{
+class KeyTableRow {
+
 	static int inputColumnOffset = 0;
 	static byte[] keyboardLayoutIds;
 
@@ -19,23 +20,32 @@ class KeyTableRow{
 		System.err.println("Keyboard layout IDs were already set");
 		keyboardLayoutIds = kbLayoutIds;
 	}
-	
+
+	static byte schemeIdToCol(byte id) {
+		for (int i = 0; i < keyboardLayoutIds.length; i++) {
+			if (keyboardLayoutIds[i] == id) {
+				return id;
+			}
+		}
+		return -1;
+	}
+
 	InputAction inputAction;
 	final ControlInput[] inputs;
 	ControlSchemeManager controlSchemeManager;
-	
-	public KeyTableRow(InputAction input, byte[] keyboardLayoutIds, ControlSchemeManager csm){
+
+	public KeyTableRow(InputAction input, byte[] keyboardLayoutIds, ControlSchemeManager csm) {
 		this.inputAction = input;
 		this.controlSchemeManager = csm;
-		
+
 		this.inputs = new ControlInput[keyboardLayoutIds.length];
 		for (byte i = 0; i < keyboardLayoutIds.length; i++) {
 			inputs[i] = new ControlInput(controlSchemeManager.getKeyboardScheme(i), input);
 		}
-		
+
 	}
-	
-	public ControlInput getControlInput(int i){
+
+	public ControlInput getControlInput(int i) {
 		return this.inputs[i - inputColumnOffset];
 	}
 
@@ -53,9 +63,13 @@ class KeyTableRow{
 		int colId = column.getTableView().getColumns().indexOf(column) - inputColumnOffset;
 		AControlScheme scheme = controlSchemeManager.getKeyboardScheme(keyboardLayoutIds[colId]);
 		ControlInput input = new ControlInput(scheme, inputAction);
-		controlSchemeManager.replaceKeyInput(newValue, input);
+
+		ControlInput oldOccurence = controlSchemeManager.replaceKeyInput(newValue, input);
+
+		if (oldOccurence != null) {
+			KeyConfigPane pane = (KeyConfigPane) sender.getTableView();
+			pane.refreshRowFor(oldOccurence);
+		}
 	}
-	
-	
-	
+
 }

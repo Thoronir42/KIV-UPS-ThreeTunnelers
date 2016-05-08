@@ -47,6 +47,11 @@ public class ControlInput {
 		return input;
 	}
 
+	@Override
+	public String toString() {
+		return "ControlInput{" + "controlScheme=" + controlScheme.getID() + ", input=" + input + '}';
+	}
+
 	
 	
 }
