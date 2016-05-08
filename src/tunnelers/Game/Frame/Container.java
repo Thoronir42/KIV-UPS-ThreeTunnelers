@@ -70,4 +70,11 @@ public class Container {
 		return null;
 	}
 
+	public Player getLocalPlayer() {
+		for (Player p : this.players) {
+			return p;
+		}
+		return null;
+	}
+
 }

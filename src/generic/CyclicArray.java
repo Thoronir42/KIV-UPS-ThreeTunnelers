@@ -11,11 +11,11 @@ import java.util.Iterator;
 public class CyclicArray<Type> implements Iterable<Type> {
 
 	private final Type[] array;
-	protected int top = 0;
+	protected int top;
 
 	public CyclicArray(Class<Type> c, int n) {
-		final Type[] a = (Type[]) Array.newInstance(c, n + 1);
-		this.array = a;
+		this.top = 0;
+		this.array = (Type[]) Array.newInstance(c, n + 1);
 	}
 
 	public void add(Type item) {
@@ -41,7 +41,7 @@ public class CyclicArray<Type> implements Iterable<Type> {
 		return new CyclicIterator(this);
 	}
 
-	class CyclicIterator<Type> implements Iterator {
+	public class CyclicIterator<Type> implements Iterator {
 
 		private CyclicArray<Type> array;
 		private final int startIndex;

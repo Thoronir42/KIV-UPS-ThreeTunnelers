@@ -12,7 +12,6 @@ import tunnelers.network.NetWorks;
 import tunnelers.Game.Frame.Player;
 import tunnelers.Game.Frame.Engine;
 import tunnelers.Game.IO.AControlScheme;
-import tunnelers.network.ConnectionCommand;
 import tunnelers.network.GameCommand;
 import tunnelers.network.MessageCommand;
 import tunnelers.network.NCG;
@@ -40,9 +39,10 @@ public class GameStage extends ATunnelersStage {
 			}
 		});
 		this.setScene(LobbyScene.getInstance(networks));
-		this.gamechat = new Chat();
 		this.controlSchemeManager = settings.getControlSchemeManager();
-		this.engine = new Engine(Container.mockContainer(this.controlSchemeManager));
+		Container container = Container.mockContainer(this.controlSchemeManager);
+		this.engine = new Engine(container);
+		this.gamechat = new Chat(container.getLocalPlayer());
 	}
 
 	@Override

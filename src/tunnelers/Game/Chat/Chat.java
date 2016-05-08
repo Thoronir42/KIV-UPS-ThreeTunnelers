@@ -12,9 +12,16 @@ public class Chat {
 	private final int MAX_MESSAGES = 12;
 
 	private final CyclicArray<ChatMessage> messages;
+	
+	private final IChatParticipant localParticipant;
 
-	public Chat() {
+	public Chat(IChatParticipant localParticipant) {
 		messages = new CyclicArray<>(ChatMessage.class, MAX_MESSAGES);
+		this.localParticipant = localParticipant;
+	}
+	
+	public void addMessage(String text) {
+		this.addMessage(localParticipant, text);
 	}
 
 	public void addMessage(IChatParticipant p, String text) {

@@ -22,4 +22,10 @@ public abstract class AGameScene extends ATunnelersScene {
 	abstract void updateChatbox();
 
 	public abstract void drawScene();
+	
+	protected void sendChatMessage(String message){
+		this.getStage().getNetworks().sendMessage(message);
+		this.getStage().getGamechat().addMessage(message);
+		this.updateChatbox();
+	}
 }
