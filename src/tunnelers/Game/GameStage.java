@@ -28,7 +28,7 @@ public class GameStage extends ATunnelersStage {
 	protected Chat gamechat;
 	protected final Engine engine;
 	
-	private AGameScene sc;
+	private AGameScene currentScene;
 	private final ControlSchemeManager controlSchemeManager;
 
 	public GameStage(GameKickstarter kickstarter) {
@@ -48,9 +48,9 @@ public class GameStage extends ATunnelersStage {
 
 	@Override
 	public final void update(long tick) {
-		if (tick % 4 == 0 && sc instanceof PlayScene) {
+		if (tick % 4 == 0 && currentScene instanceof PlayScene) {
 			this.engine.update(tick);
-			sc.drawScene();
+			currentScene.drawScene();
 		}
 		
 	}
@@ -63,7 +63,7 @@ public class GameStage extends ATunnelersStage {
 			this.networks.join();
 			System.out.println("NetWorks ended succesfully");
 		} catch (InterruptedException ex) {
-			System.err.println(ex.getClass().getSimpleName() + ": " + ex.getMessage());
+			System.err.println("Failed to close networks: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
 		}
 		super.exit(CHANGE_TO_MENU);
 	}
@@ -115,9 +115,9 @@ public class GameStage extends ATunnelersStage {
 
 	@Override
 	protected void changeScene(ATunnelersScene scene) {
-		super.changeScene(sc = (AGameScene) scene);
-		sc.updateChatbox();
-		sc.drawScene();
+		super.changeScene(currentScene = (AGameScene) scene);
+		currentScene.updateChatbox();
+		currentScene.drawScene();
 
 	}
 }

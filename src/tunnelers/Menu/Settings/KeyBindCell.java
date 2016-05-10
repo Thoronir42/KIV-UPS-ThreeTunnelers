@@ -1,5 +1,6 @@
 package tunnelers.Menu.Settings;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -14,6 +15,7 @@ class KeyBindCell extends TableCell<KeyTableRow, KeyCode> {
 		super();
 		lastKeyPressed = getItem();
 		setText(getKeyBindString(lastKeyPressed));
+		this.setAlignment(Pos.CENTER);
 	}
 
 	@Override

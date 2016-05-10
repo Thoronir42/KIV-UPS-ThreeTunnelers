@@ -1,12 +1,11 @@
 package tunnelers.Menu.Settings;
 
 import java.util.ArrayList;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellEditEvent;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.util.Callback;
@@ -41,10 +40,11 @@ public class KeyConfigPane extends TableView<KeyTableRow> {
 		this.keyboardLayoutIds = keyboardLayoutIds;
 		this.setEditable(true);
 		this.initColumns();
+		this.initRows();
 	}
 
 	private void initColumns() {
-		TableColumn<KeyTableRow, String> labelColumn = new TableColumn<>("Action");
+		TableColumn<KeyTableRow, String> labelColumn = new TableColumn<>("Akce");
 		labelColumn.setMinWidth(96);
 		labelColumn.setMaxWidth(96);
 		labelColumn.setEditable(false);
@@ -59,8 +59,8 @@ public class KeyConfigPane extends TableView<KeyTableRow> {
 
 		for (int i = 0; i < this.keyboardLayoutIds.length; i++) {
 			byte klid = this.keyboardLayoutIds[i];
-			TableColumn<KeyTableRow, KeyCode> layoutColumn = new TableColumn<>("Keyboard " + klid);
-			layoutColumn.setMinWidth(96);
+			TableColumn<KeyTableRow, KeyCode> layoutColumn = new TableColumn<>("Klávesnice " + (klid + 1));
+			layoutColumn.setMinWidth(104);
 			layoutColumn.setEditable(true);
 			layoutColumn.setCellValueFactory(new KeyBindCellValueFactory(i));
 			layoutColumn.setCellFactory(cell -> new KeyBindCell());
@@ -72,9 +72,16 @@ public class KeyConfigPane extends TableView<KeyTableRow> {
 		this.getColumns().addAll(layoutColumns);
 	}
 
+	private void initRows() {
+		this.setFixedCellSize(40);
+		this.prefHeightProperty().bind(this.fixedCellSizeProperty().multiply(Bindings.size(this.getItems()).add(1.25)));
+		this.minHeightProperty().bind(this.prefHeightProperty());
+		this.maxHeightProperty().bind(this.prefHeightProperty());
+	}
+
 	protected void refreshRowFor(ControlInput oldOccurence) {
 		InputAction action = oldOccurence.getInput();
-		
+
 		byte col = KeyTableRow.schemeIdToCol(oldOccurence.getControlScheme().getID());
 		ObservableList<KeyTableRow> rows = this.getItems();
 		for (int r = 0; r < rows.size(); r++) {
