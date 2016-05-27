@@ -8,18 +8,20 @@ import java.lang.reflect.Field;
  * @author Stepan
  */
 public abstract class NCG {
-
+	
 	/**
 	 *
 	 * @author Stepan
 	 */
 	public static abstract class NetCommand {
 
-		private static final Class[] RcvCmdClasses = {
-			LeadCommand.class, ConnectionCommand.class,
-			GameCommand.class, MessageCommand.class
-
-		};
+		private static Class[] RcvCmdClasses()
+		{
+			return new Class[]{
+				LeadCommand.class, ConnectionCommand.class,
+				GameCommand.class, MessageCommand.class
+			};
+		}
 		public static byte RoomNumber;
 
 		static NetCommand parse(String msg) throws NetworksException {
@@ -43,23 +45,22 @@ public abstract class NCG {
 			return null;
 		}
 
-		private static Class getCmdClass(short type) {
-			for (Class cg : RcvCmdClasses) {
+		private static Class getCmdClass(short type) throws ClassNotFoundException{
+			for (Class classGroup : RcvCmdClasses()) {
 				try {
-					Class[] classes = cg.getDeclaredClasses();
+					Class[] classes = classGroup.getDeclaredClasses();
 					for (Class c : classes) {
 
 					}
-					Field aspectField = cg.getDeclaredField("CMD_NUM");
+					Field aspectField = classGroup.getDeclaredField("CMD_NUM");
 					if (aspectField.get(null).equals(type)) {
-						return cg;
+						return classGroup;
 					}
 				} catch (NoSuchFieldException | IllegalAccessException e) {
 					System.err.println(e.getMessage());
 				}
 			}
-
-			return null;
+			throw new ClassNotFoundException("No appropriate command class was found for type " + type);
 		}
 		static byte LastMsgId = 0;
 		final byte message_id;
@@ -127,7 +128,7 @@ public abstract class NCG {
 		}
 
 		protected void setParamsFromString(String body) {
-
+			
 		}
 
 	}
