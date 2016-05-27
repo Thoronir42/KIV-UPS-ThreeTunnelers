@@ -48,7 +48,7 @@ public class LobbyScene extends AGameScene {
 		he_chatBox.setPrefSize(400, 260);
 		
 		scene.wv_chatBox = he_chatBox;
-		root.add(scene.wv_chatBox, 0, 0);
+		root.add(scene.wv_chatBox, 0, 0, 2, 1);
 		
 		TextField tf_chatIn = new TextField();
 		
@@ -110,7 +110,9 @@ public class LobbyScene extends AGameScene {
 	
 	@Override
 	protected void sendChatMessage(String message){
-		super.sendChatMessage(message);
+		if(message.length() > 0){
+			super.sendChatMessage(message);
+		}
 		this.tf_chatIn.setText("");
 	}
 
