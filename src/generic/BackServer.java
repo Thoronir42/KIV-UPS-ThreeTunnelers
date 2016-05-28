@@ -14,7 +14,7 @@ public class BackServer extends Thread {
 	@Override
 	public void run() {
 		try {
-			ds = new DatagramSocket(tunnelers.Settings.DEFAULT_PORT);
+			ds = new DatagramSocket(tunnelers.Configuration.Settings.DEFAULT_PORT);
 
 			while (true) {
 				System.out.format("Serverrr (%s:%d) ceka...%n", InetAddress.getLocalHost().getHostAddress(), ds.getLocalPort());

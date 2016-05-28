@@ -2,15 +2,17 @@ package tunnelers.Menu;
 
 import tunnelers.Menu.ServerList.ServerListScene;
 import tunnelers.Menu.Settings.SettingsScene;
-import java.io.IOException;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import tunnelers.Settings;
-import tunnelers.network.NetWorks;
+import tunnelers.Configuration.Settings;
 
 /**
  *
@@ -41,7 +43,7 @@ public class MainMenuScene extends AMenuScene {
 		root.setVgap(8);
 		root.setAlignment(Pos.CENTER);
 
-		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.BLUEVIOLET.hashCode()));
+		root.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
 
 		Settings settings = Settings.getInstance();
 
@@ -89,7 +91,7 @@ public class MainMenuScene extends AMenuScene {
 	}
 
 	public MainMenuScene(Parent root, double width, double height) {
-		super(root, width, height, "Main Menu");
+		super(root, width, height, "Hlavní menu");
 	}
 
 	@Override

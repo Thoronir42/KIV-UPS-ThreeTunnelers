@@ -3,7 +3,7 @@ package tunnelers.Game.Render;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import tunnelers.Game.Map.Block;
-import tunnelers.Settings;
+import tunnelers.Configuration.Settings;
 
 /**
  *

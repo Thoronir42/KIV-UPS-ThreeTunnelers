@@ -1,6 +1,6 @@
 package tunnelers.Game.Frame;
 
-import tunnelers.Settings;
+import tunnelers.Configuration.Settings;
 import javafx.scene.paint.Color;
 import tunnelers.Game.Chat.IChatParticipant;
 

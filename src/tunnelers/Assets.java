@@ -1,5 +1,6 @@
 package tunnelers;
 
+import tunnelers.Configuration.Settings;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;

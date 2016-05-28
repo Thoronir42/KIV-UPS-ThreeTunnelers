@@ -1,5 +1,6 @@
 package tunnelers;
 
+import tunnelers.Configuration.Settings;
 import generic.BackPasser;
 
 /**

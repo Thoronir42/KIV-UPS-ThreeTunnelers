@@ -17,7 +17,7 @@ import tunnelers.Assets;
 import tunnelers.Game.Render.CanvasLayout;
 import tunnelers.Game.Render.Renderer;
 import tunnelers.Game.Frame.Container;
-import tunnelers.Settings;
+import tunnelers.Configuration.Settings;
 
 /**
  *

@@ -1,6 +1,5 @@
-package tunnelers;
+package tunnelers.Configuration;
 
-import generic.NameGenerator;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Random;
@@ -38,20 +37,24 @@ public final class Settings {
 	public static int IMAGE_UPSCALE_MULT = 20;
 	public static int MAX_PLAYER_PROJECTILES = 7;
 	
-	public static NameGenerator nameGenerator;
+	public static NameManager nameGenerator;
 	
 
 	static {
 		PLAYER_COLORS = preparePlayerColors();
 		RNG = new Random(420);
-		nameGenerator = new NameGenerator(420);
+		nameGenerator = new NameManager(420);
 	}
 
 	private static Settings instance;
 
 	public static Settings getInstance() {
+		return getInstance("");
+	}
+	
+	public static Settings getInstance(String configFile) {
 		if (instance == null) {
-			instance = new Settings();
+			instance = new Settings(configFile);
 		}
 		return instance;
 	}
@@ -96,10 +99,11 @@ public final class Settings {
 
 	private final ControlSchemeManager controlSchemeManager;
 
-	private Settings() {
+	private Settings(String configFile) {
 		this.playerColorUsage = preparePlayerColorUsage(PLAYER_COLORS.length);
 		this.controlSchemeManager = new ControlSchemeManager();
 		this.initDefaults();
+		this.loadConfigFile(configFile);
 	}
 
 	void initDefaults() {
@@ -187,7 +191,7 @@ public final class Settings {
 		return this.controlSchemeManager;
 	}
 
-	void loadConfigFile(String cfgFile) {
+	private void loadConfigFile(String cfgFile) {
 		File f = new File(cfgFile);
 		if (!f.exists()) {
 			return;

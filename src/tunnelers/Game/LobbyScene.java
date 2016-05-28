@@ -1,16 +1,20 @@
 package tunnelers.Game;
 
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
-import tunnelers.Settings;
+import tunnelers.Configuration.Settings;
 
 /**
  *
@@ -33,7 +37,7 @@ public class LobbyScene extends AGameScene {
 		root.setVgap(20);
 		root.setAlignment(Pos.CENTER);
 
-		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.BURLYWOOD.hashCode()));
+		root.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
 		
 		Settings settings = Settings.getInstance();
 		LobbyScene scene = new LobbyScene(root, settings.getWidth(), settings.getHeight());

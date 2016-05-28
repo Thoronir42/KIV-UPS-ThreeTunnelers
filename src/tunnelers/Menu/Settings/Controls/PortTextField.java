@@ -3,7 +3,7 @@ package tunnelers.Menu.Settings.Controls;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
-import tunnelers.Settings;
+import tunnelers.Configuration.Settings;
 
 /**
  *

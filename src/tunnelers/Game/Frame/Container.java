@@ -5,7 +5,7 @@ import tunnelers.Game.Map.TunnelMap;
 import tunnelers.Game.ControlSchemeManager;
 import tunnelers.Game.IO.ControlScheme;
 import tunnelers.Game.Map.MapGenerator;
-import tunnelers.Settings;
+import tunnelers.Configuration.Settings;
 
 /**
  *

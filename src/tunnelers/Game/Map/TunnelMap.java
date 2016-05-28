@@ -1,6 +1,6 @@
 package tunnelers.Game.Map;
 
-import tunnelers.Settings;
+import tunnelers.Configuration.Settings;
 import javafx.geometry.Point2D;
 import tunnelers.Game.Frame.Player;
 

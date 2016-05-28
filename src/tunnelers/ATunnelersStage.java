@@ -1,5 +1,6 @@
 package tunnelers;
 
+import tunnelers.Configuration.Settings;
 import java.lang.reflect.InvocationTargetException;
 import javafx.stage.Stage;
 
@@ -9,7 +10,7 @@ import javafx.stage.Stage;
  */
 public abstract class ATunnelersStage extends Stage {
 
-	protected static Settings settings;
+	protected static final Settings SETTINGS = Settings.getInstance();
 
 	public static final int CLOSE = 1,
 			CHANGE_TO_MENU = 2,
@@ -20,7 +21,7 @@ public abstract class ATunnelersStage extends Stage {
 	public abstract void update(long tick);
 
 	public ATunnelersStage() {
-		settings = Settings.getInstance();
+		
 	}
 
 	public void exit() {
@@ -38,7 +39,7 @@ public abstract class ATunnelersStage extends Stage {
 
 	protected void changeScene(ATunnelersScene scene) {
 		this.setScene(scene);
-		this.setTitle(String.format("%s %s %s", settings.getGameName(), settings.getTitleSeparator(), scene.getName()));
+		this.setTitle(String.format("%s %s %s", SETTINGS.getGameName(), SETTINGS.getTitleSeparator(), scene.getName()));
 	}
 
 	public final void changeScene(Class reqScene) {

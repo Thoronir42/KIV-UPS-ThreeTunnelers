@@ -22,7 +22,7 @@ public enum RoomDifficulty implements GRTVItem{
 
 	@Override
 	public String toString(){
-		return "Obtžnost " + label;
+		return "Obtížnost " + label;
 	}
 
 	public int intValue(){

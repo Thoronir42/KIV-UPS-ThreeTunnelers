@@ -40,7 +40,7 @@ public class GameStage extends ATunnelersStage {
 			}
 		});
 		this.setScene(LobbyScene.getInstance(true)); // todo returning to same lobby from a game
-		this.controlSchemeManager = settings.getControlSchemeManager();
+		this.controlSchemeManager = SETTINGS.getControlSchemeManager();
 		Container container = Container.mockContainer(this.controlSchemeManager, kickstarter.getLocalName());
 		this.engine = new Engine(container);
 		this.gamechat = new Chat(container.getLocalPlayer());

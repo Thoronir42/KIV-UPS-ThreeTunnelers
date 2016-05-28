@@ -26,7 +26,7 @@ import tunnelers.GameKickstarter;
 import tunnelers.Menu.AMenuScene;
 import tunnelers.Menu.MainMenuScene;
 import tunnelers.Menu.ServerList.GameRoomView.GameRoomTreeTableView;
-import tunnelers.Settings;
+import tunnelers.Configuration.Settings;
 import tunnelers.network.NetWorks;
 
 /**
@@ -107,14 +107,14 @@ public class ServerListScene extends AMenuScene {
 		scene.topLabels.setAlignment(Pos.CENTER);
 		
 		scene.tf_localName = new TextField();
-		scene.tf_localName.setPromptText(Settings.nameGenerator.next());
+		scene.tf_localName.textProperty().bindBidirectional(Settings.nameGenerator.CurrentName);
 
 		Label lblName = new Label("Přezdívka:"),
 				lblServer = new Label(String.format("%s:%d", settings.getServerAddress(), settings.getServerPort()));
 
 		lblName.setCursor(Cursor.HAND);
 		lblName.setOnMouseClicked(e -> {
-			scene.tf_localName.setPromptText(Settings.nameGenerator.next());
+			scene.tf_localName.setText(Settings.nameGenerator.generateNext());
 		});
 		
 		scene.topLabels.getChildren().addAll(lblName, scene.tf_localName, lblServer);
