@@ -62,10 +62,10 @@ public class KeyConfigPane extends TableView<KeyTableRow> {
 			TableColumn<KeyTableRow, KeyCode> layoutColumn = new TableColumn<>("Klávesnice " + (klid + 1));
 			layoutColumn.setMinWidth(104);
 			layoutColumn.setEditable(true);
+			layoutColumn.setSortable(false);
 			layoutColumn.setCellValueFactory(new KeyBindCellValueFactory(i));
 			layoutColumn.setCellFactory(cell -> new KeyBindCell());
 			layoutColumns.add(layoutColumn);
-
 		}
 
 		this.getColumns().add(labelColumn);

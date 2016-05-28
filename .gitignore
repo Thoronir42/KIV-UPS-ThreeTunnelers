@@ -3,3 +3,7 @@ nbproject/
 /dist/
 nbbuild.xml
 build.xml
+
+doc/*
+!doc/*.tex
+!doc/img

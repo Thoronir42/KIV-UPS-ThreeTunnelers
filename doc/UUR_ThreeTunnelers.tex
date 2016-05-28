@@ -1,0 +1,182 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{indentfirst}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{array}
+\usepackage{csquotes}
+
+%Pravidlo pro řádkování
+\renewcommand{\baselinestretch}{1.5}
+
+%Pravidlo pro začínání kapitol na novém řádku
+\let\oldsection\section
+\renewcommand\section{\clearpage\oldsection}
+
+%Formáty písem pro nadpisy (-změněno na bezpatkové \sffamily z původního \normalfont
+\titleformat{\section}
+{\sffamily\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}
+{\sffamily\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+{\sffamily\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+%Nastavení zvýrazňování kódu v \lslisting
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\lstset{commentstyle=\color{mygreen},keywordstyle=\color{blue},numberstyle=\tiny\color{mygray}}
+
+\author{Jan Šmejkal}
+
+\begin{document}
+
+%-------------Úvodni strana---------------
+\begin{titlepage}
+
+\includegraphics[width=50mm]{img/FAV.jpg}
+\\[160 pt]
+\centerline{ \Huge \sc KIV/UUR - Úvod do Uživatelského Rozhraní}
+\centerline{ \huge \sc Semestrální práce }
+\\[12 pt]
+{\large \sc
+\centerline{Three Tunnelers - uživatelské menu}
+}
+
+
+{
+\vfill 
+\parindent=0cm
+\textbf{Jméno:} Štěpán Ševčík\\
+\textbf{Osobní číslo:} A13B0443P\\
+\textbf{E-mail:} kiwi@students.zcu.cz\\
+\textbf{Datum:} {\large \today\par} %datum
+
+}
+
+\end{titlepage}
+
+%------------------------------------------
+
+%------------------Obsah-------------------
+\newpage
+\setcounter{page}{2}
+\setcounter{tocdepth}{3}
+\tableofcontents
+%------------------------------------------
+
+%--------------Text dokumentu--------------
+
+
+\section{Zadání}
+Grafické rozhraní uživatelského menu pro hru Three Tunnelers obsahující pohledy:
+\begin{itemize}
+\item Hlavní menu
+\item Nastavení
+\item Výpis serverů
+\item Přípravná místnost
+\end{itemize}
+Umístění následujících grafických ovládacích prvků do těchto pohledů:
+\begin{itemize}
+\item TableView
+\item TreeView
+\item Vlastní komponenta
+\end{itemize}
+
+\section{Struktura aplikace}
+Aplikace je rozdělená do dvou oddělených celků: \textbf{Menu} a \textbf{Hra}. Menu obsahuje několik pohledů které uživatele, respektive hráče, připravují ke hře a / nebo mu umožňují přizpůsobit si požitek ze hry. V sekci hra potom může uživatel interagovat s ostatními hráči pomocí přípravné místnosti a pomocí herního pohledu.
+
+\subsection{Menu}
+Sekce menu obsahuje tři pohledy: Hlavní menu, Nastavení a Výpis serverů. Navigace mezi těmito pohledy je umožněna pomocí standardních uživatelských komponent - tlačítek a pro návrat, pokud je to možné, slouží klávesa Escape.
+
+\subsubsection{Význačné prvky}
+\begin{enumerate}
+\item Nastavení rozložení kláves \\
+V pohledu nastavení se vyskytuje panel pro nastavení rozložení kláves použité v herním módu. Tento prvek je realizován pomocí TableView, který vychází ze specifických struktur umožňujících přímé nastavování kláves. Jednotlivé nastavení kláves jsou potom zpracovávány a ukládány pomocí struktury obalující hashovou mapu.
+\item Výběr serveru \\
+V pohledu výběru serveru se nachází panel vycházející z komponenty TreeTableView a umožňuje hráči zvolit si server podle různých kritérií. Primárně se hry dělí do skupin podle obtížnosti a dále se u nich zobrazuje aktuální počet hráčů a různé další informace.
+\end{enumerate}
+
+\subsection{Hra}
+Tato sekce představuje konkrétní spojení s herní místností na vzdáleném serveru. V tuto chvíli server ještě není ani zdaleka připravený pro poskytování této funkcionality a proto je v rámci této aplikace tato sekce simulovaná nebo takzvaně mockovaná. Pohledy vzhledově obdobně představují jen hrubý koncept, ve kterém chybí spousta funkcionality. Prozatím je v této sekci dostupná přípravná místnost, takzvaná Lobby, ve které je předpřipravené chatovací okno, a také je zde pohled bitevního pole, ve kterém je již možné ovládat dva tanky.
+
+\section{Komplexní celky}
+\subsection{Nastavování rozložení kláves}
+Jak bylo již dříve zmíněno, nastavování kláves je realizováno na funkční vrstvě pomocí hashové mapy a na prezenční vrstvě pomocí TableView. Problém u této funkcionality vznikal při snaze o synchronizaci obsahu hashmapy se zobrazeným obsahem polí neboť je při uložení hodnoty prezenční vrstvou do funkční vrstvy také potřeba zpětně informovat prezenční vrstvu, pokud se v hashmapě již klávesa vyskytovala. Pokud tomu tak je, vzniká potřeba vyprázdnění pole tabulky. \\
+Tato funkcionalita je implementována tak, že jednotlivé řádky tabulky představují herní akce a celé sloupce představují rozložení kláves jednoho hráče. Při nalezení obsazené klávesy se podle odpovídající akce se odpovídající řádek překreslí, přičemž při překreslení se do jeho buňek načtou aktuální hodnoty.
+
+\section{Testování}
+Testování bylo zaměřeno primárně na uživatelské prvky a ovládání v části Menu, konkrétně navigace mezi pohledy, nastavování kláves pro herní akce a výběr serveru.
+\subsection{Vyjádření testerů}
+Testovacím subjektům nebyl poskytnut specifický testovací scénář a namísto toho jim byla částečně poodhalena funkcionalita, kterou by měli využít. Tímto postupem se mimo dané funkcionality také testuje, zda-li je ona funkcionalita umístěna na místech, kde by ji uživatelé čekali.
+
+Jako následek této metodiky testování je různorodost zpětné vazby testerů a forma mých reakcí bude těmto různým výstupům přizpůsobena.
+
+\newpage
+\subsubsection{Tester Anežka J.}
+\paragraph{Hodnocení testera, vyjádření autora viz poznámky pod čarou\\}
+Uživatelské rozhraní je velice přehledné. Je intuitivní a uživatel rychle dokáže nastavit vše, co potřebuje. 
+
+Velice se mi líbí generované přezdívky ve výpisu serverů. Když se ovšem vyjede z výpisů serverů a zase zpět, tak se mnou vyplňená přezdívka neuloží\footnotemark[1]. Líbí se mi stavová lišta ve spodní části. Místnosti jdou řadit v rámci svých kategorií.
+%
+\footnotetext[1]{Část aplikace starající se o jméno uživatele nebyla řádně implementována. V odevzdávané verzi se navolené jméno bude uchovávat v rámci spuštění aplikace a ve finální verzi se jméno bude ukládat do souboru spolu s dalšími nastaveními.}
+%
+
+V nastavení lze dobře měnit klávesové zkratky pouze zmáčknutím příslušné klávesy. Po odentrování změny bych spíše čekala, že focus zůstane na měněné řádce, ale v tomhle případě skočí na jméno serveru\footnotemark[2].
+%
+\footnotetext[2]{Nastavování kláves nebylo zcela odladěné a nyní se po stisku klávesy v režimu editace přímo nastaví stisknutá klávesa. Je možné, že se ve finální verzi budou klávesy nastavovat jakýmsi 'průvodcem'.}
+%
+
+Všechny popisky jsou v češtině kromě názvu okna pro "Main Menu". Lepší by byl tedy název "Hlavní menu". V seznamu serverů chybí "í" ve slově obtížnost\footnote[3]{Typografie opravena}.
+
+Líbí se mi fialové pozadí v hlavním menu a výpisů serverů, ale v nastavení a pak u chatu jsou barvy rozdílné. Chtělo by to sjednotit barvy tak, aby byly všechny barvy stejné nebo všechny rozdílné\footnote[4]{Koncept různých barev vznikl v raných verzích aplikace a z důvodu minimálního dopadu na funkcionalitu jsem jej nerozvíjel. Do odevzdávané verze jsem barvy sjednotil. Do finální verzi přemýšlím o nahrazení pozadí živým náhledem, kde by počítačem ovládané tanky demonstrovaly hru. Do toho má ale aplikace ještě dost daleko}.
+
+Mnou vytýkané problémy jsou spíše kosmetické vady, jinak celou práci hodnotím jako zdařilou.
+
+
+
+\newpage
+\subsubsection{Tester Jan V.}
+\paragraph{Nalezené výtky}
+\begin{enumerate}
+\item Tlačítko "Test serveru" nic nedělá a nebo to není nijak znázorněno.
+\item Tlačítko "Ulož nastavení" nekontroluje správnost IP adresy a portu (dají se zadat libovolná
+čísla, vyzkoušeno pro 11111111111111 jako IP a 65536, 100000 jako port). V případě zadání
+znaků se uložení nepovede, ale není o tom podána žádná informace.
+\item Seřazení her podle jména přehazuje obtížnosti.
+\item Text na spodku okna seznamu her, který říká co program právě dělá, je málo nápadný.
+\end{enumerate}
+
+\paragraph{Vyjádření autora: }
+\begin{itemize}
+\item Bodů 1. a 2. si jsem vědom a v tomto stavu jsem to prozatím nechal protože vývoj části aplikace pro síťovou komunikaci je takzvaně 'v plenkách'. V odevzdávané verzi však bude alespoň ošetřený vstup na povolené rozsahy.
+\item Bod 3. je důsledkem řádně nepromyšlené implementace a vynuceného užití TreeView, který jsem nahradil za TreeTableView pro možnost oddělování informací do oddělených buněk. V odevzdávané verzi zůstane tato (ne)funkčnost zachována a v následujících verzích bude pravděpodobně nahrazena za běžný TableView rozšířený o možnost filtrování.
+\item Bod 4. je dočasné řešení informování uživatele o aktuálním stavu. Do odevzdané verze zahrnu úpravu zdůrazňující tuto položku ale v následujícím vývoji bych tuto lištu zcela vyměnil za způsob oznamování stylem takzvaných 'bleskových zpráv'.
+\end{itemize}
+
+\newpage
+\subsubsection{Tester Daniel Š.}
+\paragraph{Popis programu\\}
+Jedná se o online hru pro více hráčů. Uživatel má možnost si hru nastavit tak jak je zvyklý(např. oblíbený nick, preferovné klávesy pro ovládání). Dále má
+možnost vybrat si obtížnost.
+\paragraph{Popis uživatelského rozhraní\\}
+Po spuštění aplikace se objeví menu se třemi buttony. První z nich nás přesune k výběru serverů pro hru, druhý nám otevře nastavení hry a třetí pak aplikaci ukončí. Seznam serverů je díky TreeView přehledný a výběr serveru probíhá dvojklikem, což je intuitivní. V nastavení si můžeme vybrat server, port a nastavit klávesy, které chceme ve hře používat pro jednotlivé akce.
+\paragraph{Dojmy, vyjádření autora viz poznámky pod čarou\\}
+Aplikace je celkově přehledná a většina komponent se chová tak, jak uživatel očekává. Na menší potíž jsem narazil v nastavení, při změně klávesy se tato musí potvrdit enterem, a tak jsem byl překvapený, že i když jsem klávesu přepsal a klikl na tlačítko pro uložení, klávesa přenastavena nebyla\footnotemark[1]. Dále bych ocenil přidání prázdných řádků v tabulce výběru kláves, která ji činí příjemnější pro oko\footnotemark[2]. V nastavení by také mohla přibýt personalizace tanku, jako například výběr jeho
+barvy\footnotemark[3].
+
+\footnotetext[1]{ Toto zvláštní chování bylo změněno v rámci úprav vyvolaných předchozími testovacími zprávami. Tlačítko uložení nastavení prozatím slouží pouze pro ukládání adresy a portu. }
+\footnotetext[2]{ Zamýšlený vzhled finálního nastavování kláves by měl ve výsledném stavu co nejméně připomínat tabulku, čehož se pokusím docílit pomocí stylů. Při ohledání tabulky nastavování kláves jsem si však všiml, že je možno řadit řádky podle nastavených kláves, což je zcela nežádané a v odevzdávané verzi se toto chování nevyskytne. }
+\footnotetext[3]{ Toto nastavení bude jednotné pro všechny hráče připojené do stejné místnosti a proto má smysl výběr barvy umístit do přípravné místnosti, která již je v jednotném kontextu pro všechny hráče. Zde se také bude dát řešit unikátnost výběru barvy. }
+
+
+%------------------------------------------
+
+\end{document}
