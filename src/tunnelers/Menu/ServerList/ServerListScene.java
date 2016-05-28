@@ -90,6 +90,7 @@ public class ServerListScene extends AMenuScene {
 		root.setBottom(createBottomBar(scene));
 
 		scene.refreshServerList();
+		scene.SceneStatus.set(Status.Waiting);
 		
 		but_goBack.requestFocus();
 	}
@@ -130,8 +131,13 @@ public class ServerListScene extends AMenuScene {
 		bottom.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
 		bottom.setAlignment(Pos.CENTER);
 		
+		bottom.setPadding(new Insets(4));
+		
 		scene.lbl_conInfo = new Label();
-		scene.SceneStatus.set(Status.Waiting);
+		
+		scene.lbl_conInfo.setFont(new Font(18));
+		
+		
 		
 		bottom.getChildren().add(scene.lbl_conInfo);
 

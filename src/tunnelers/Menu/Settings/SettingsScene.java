@@ -1,5 +1,7 @@
 package tunnelers.Menu.Settings;
 
+import tunnelers.Menu.Settings.Controls.PortTextField;
+import tunnelers.Menu.Settings.Controls.KeyConfigPane;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import javafx.event.ActionEvent;
@@ -8,13 +10,13 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import tunnelers.Game.ControlSchemeManager;
 import tunnelers.Menu.AMenuScene;
 import tunnelers.Menu.MainMenuScene;
+import tunnelers.Menu.Settings.Controls.IpTextfield;
 import tunnelers.Settings;
 import tunnelers.network.NetWorks;
 
@@ -57,6 +59,7 @@ public class SettingsScene extends AMenuScene {
 		scene.btn_testServer.setOnAction((ActionEvent e) -> {
 			scene.testServer();
 		});
+		scene.btn_testServer.setDisable(true);
 		
 		Button btn_serverDefaults = new Button("Reset");
 		btn_serverDefaults.setOnAction((ActionEvent e) -> {
@@ -66,8 +69,8 @@ public class SettingsScene extends AMenuScene {
 		Label lblAdr = new Label("Adresa:"),
 				lblPort = new Label("Port:");
 
-		scene.tf_adress = new TextField(settings.getServerAddress());
-		scene.tf_port = new TextField(String.valueOf(settings.getServerPort()));
+		scene.tf_adress = new IpTextfield(settings.getServerAddress());
+		scene.tf_port = new PortTextField(settings.getServerPort());
 
 		root.add(lblAdr, 0, 0);
 		root.add(scene.tf_adress, 1, 0);
@@ -97,8 +100,8 @@ public class SettingsScene extends AMenuScene {
 		return buttonRack;
 	}
 
-	protected TextField tf_adress,
-			tf_port;
+	protected IpTextfield tf_adress;
+	protected PortTextField tf_port;
 
 	protected Button btn_testServer;
 
@@ -111,7 +114,7 @@ public class SettingsScene extends AMenuScene {
 
 	private void testServer() {
 		String address = tf_adress.getText();
-		int port = Integer.parseInt(tf_port.getText());
+		int port = tf_port.Port.get();
 		if (NetWorks.serverPresent(address, port)) {
 
 		} else {
@@ -124,7 +127,7 @@ public class SettingsScene extends AMenuScene {
 		try {
 			String address = this.tf_adress.getText();
 			InetAddress.getAllByName(address);
-			int port = Integer.parseInt(this.tf_port.getText());
+			int port = tf_port.Port.get();
 
 			settings.setServerAddress(address);
 			settings.setServerPort(port);

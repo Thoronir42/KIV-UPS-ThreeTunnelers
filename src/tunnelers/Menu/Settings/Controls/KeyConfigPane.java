@@ -1,4 +1,4 @@
-package tunnelers.Menu.Settings;
+package tunnelers.Menu.Settings.Controls;
 
 import java.util.ArrayList;
 import javafx.beans.binding.Bindings;

@@ -1,4 +1,4 @@
-package tunnelers.Menu.Settings;
+package tunnelers.Menu.Settings.Controls;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.TableCell;
