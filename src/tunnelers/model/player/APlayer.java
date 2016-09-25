@@ -1,14 +1,15 @@
-package tunnelers.Game.Frame;
+package tunnelers.model.player;
 
-import tunnelers.Configuration.Settings;
+import tunnelers.Settings.Settings;
 import javafx.scene.paint.Color;
 import tunnelers.Game.Chat.IChatParticipant;
+import tunnelers.model.entities.Tank;
 
 /**
  *
  * @author Stepan
  */
-public abstract class Player implements IChatParticipant{
+public abstract class APlayer implements IChatParticipant{
 	
 	private final static Settings SETTINGS = Settings.getInstance();
 
@@ -18,11 +19,11 @@ public abstract class Player implements IChatParticipant{
 	private Color color;
 	private Tank tank;
 
-	public Player(int playerID, int colorID) {
+	public APlayer(int playerID, int colorID) {
 		this(playerID, colorID, String.format("Unknown player %03d", playerID));
 	}
-	public Player(int playerID, int colorID, String name) {
-		//public Player(String name) throws PlayerException{
+	public APlayer(int playerID, int colorID, String name) {
+		//public APlayer(String name) throws PlayerException{
 		this.playerID = playerID;
 		this.name = name;
 		this.setColor(colorID);

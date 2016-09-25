@@ -1,4 +1,4 @@
-package tunnelers.Game.Frame;
+package tunnelers.model.player;
 
 import java.util.Random;
 import tunnelers.Game.IO.InputAction;
@@ -7,19 +7,23 @@ import tunnelers.Game.IO.InputAction;
  *
  * @author Stepan
  */
-public class PlayerRemote extends Player {
+public class PlayerRemote extends APlayer {
 
+	private final Random rand;
+	
 	public PlayerRemote(int playerID, int colorID) {
 		super(playerID, colorID);
+		this.rand = new Random();
 	}
 
 	public PlayerRemote(int playerID, int colorID, String name) {
 		super(playerID, colorID, name);
+		this.rand = new Random();
 	}
 
-	void mockControls() {
+	public void mockControls(long seed) {
 		InputAction[] inputs = InputAction.values();
-		Random rand = new Random();
+		this.rand.setSeed(seed);
 		for(InputAction ia : inputs){
 			this.getControls().heldKeys.put(ia, rand.nextBoolean());
 		}

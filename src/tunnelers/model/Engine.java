@@ -1,6 +1,11 @@
-package tunnelers.Game.Frame;
+package tunnelers.model;
 
-import java.util.ArrayList;
+import tunnelers.model.entities.Direction;
+import tunnelers.model.entities.Tank;
+import tunnelers.model.player.Controls;
+import tunnelers.model.player.APlayer;
+import tunnelers.model.player.PlayerRemote;
+import java.util.Collection;
 import javafx.geometry.Point2D;
 
 /**
@@ -9,30 +14,33 @@ import javafx.geometry.Point2D;
  */
 public final class Engine {
 	
-	private final Container container;
+	private final GameContainer container;
 	
-	public Engine(Container container){
+	public Engine(GameContainer container){
 		this.container = container;
 	}
 
-	public Container getContainer() {
+	public GameContainer getContainer() {
 		return container;
 	}
 	
-	public Player getPlayer(int n){
+	public APlayer getPlayer(int n){
 		return this.container.getPlayer(n);
 	}
 	
 	
 	public void update(long tick){
+		Warzone warzone = this.container.getWarzone();
+		if(warzone != null){
+			warzone.update();
+		}
 		updatePlayers(this.container.getPlayers(), tick);
-		updateProjectiles(this.container.getProjectiles());
 	}
 	
-	private void updatePlayers(Player[] players, long tick) {
-		for (Player p : players) {
+	private void updatePlayers(Collection<APlayer> players, long tick) {
+		for (APlayer p : players) {
 			if(p instanceof PlayerRemote && tick % 15 == 0){
-				((PlayerRemote)p).mockControls();
+				((PlayerRemote)p).mockControls(tick);
 			}
 			Tank tank = p.getTank();
 			Controls c = p.getControls();
@@ -40,8 +48,6 @@ public final class Engine {
 			tank.update();
 			tankShoot(tank, true && c.isShooting());		// TODO: omezeni poctu strel
 			updateTank(tank, c.getDirection());	
-			
-			updateProjectiles(container.getProjectiles());
 		}
 	}
 
@@ -72,11 +78,4 @@ public final class Engine {
 		
 		return tank.getLocation();
 	}
-	
-	private void updateProjectiles(ArrayList<Projectile> projectiles) {
-		for(Projectile p : projectiles){
-			break;
-		}
-	}
-	
 }

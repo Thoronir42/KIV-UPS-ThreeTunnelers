@@ -1,5 +1,6 @@
-package tunnelers.Game.Frame;
+package tunnelers.model.entities;
 
+import tunnelers.model.player.APlayer;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 
@@ -11,9 +12,9 @@ public abstract class GameEntity {
 
 	protected Direction direction;
 	protected Point2D location;
-	protected Player player;
+	protected APlayer player;
 
-	public GameEntity(Direction direction, Point2D location, Player player) {
+	public GameEntity(Direction direction, Point2D location, APlayer player) {
 		this.direction = direction;
 		this.location = location;
 		this.player = player;
@@ -63,7 +64,7 @@ public abstract class GameEntity {
 		return this.getY() + (this.getHeight() - 1) / 2;
 	}
 
-	public Player getPlayer(){
+	public APlayer getPlayer(){
 		return this.player;
 	}
 }

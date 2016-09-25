@@ -1,4 +1,4 @@
-package tunnelers.Game.Map;
+package tunnelers.model.map;
 
 /**
  *

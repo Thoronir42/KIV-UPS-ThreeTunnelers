@@ -1,5 +1,6 @@
-package tunnelers.Game.Frame;
+package tunnelers.model.entities;
 
+import tunnelers.model.player.APlayer;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
@@ -21,7 +22,7 @@ public class Tank extends GameEntity {
 	
 	protected int cannonCooldown;
 
-	public Tank(Player player, Point2D initialLocation) {
+	public Tank(APlayer player, Point2D initialLocation) {
 		super(Direction.North, initialLocation, player);
 		this.hitPoints = MAX_HITPOINTS;
 		this.energyStatus = MAX_ENERGY;

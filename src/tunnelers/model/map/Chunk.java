@@ -1,6 +1,6 @@
-package tunnelers.Game.Map;
+package tunnelers.model.map;
 
-import tunnelers.Game.Frame.Player;
+import tunnelers.model.player.APlayer;
 
 /**
  *
@@ -8,13 +8,16 @@ import tunnelers.Game.Frame.Player;
  */
 public class Chunk {
 
+	/**
+	 * fixme: This is bad..
+	 */
 	public static final int CHUNK_SIZE_ERROR_Y = 500000,
 			CHUNK_SIZE_ERROR_X = 10000;
 
 	protected Block[][] chunkData;
 	public final Bounds bounds;
 	private final int chunkSize;
-	protected Player assignedPlayer;
+	protected APlayer assignedPlayer;
 
 	protected Chunk(int x, int y, int chunkSize) {
 		this.chunkData = new Block[chunkSize][chunkSize];
@@ -29,7 +32,7 @@ public class Chunk {
 		//System.out.format("Chunk [%d,%d] is from [%d,%d] to [%d,%d]%n",x, y, selfXmin, selfYmin, selfXmax, selfYmax);
 	}
 
-	void assignPlayer(Player p) {
+	void assignPlayer(APlayer p) {
 		this.assignedPlayer = p;
 	}
 
@@ -62,7 +65,7 @@ public class Chunk {
 		return chunkData[x][y];
 	}
 
-	public Player getAssignedPlayer() {
+	public APlayer getAssignedPlayer() {
 		return this.assignedPlayer;
 	}
 
