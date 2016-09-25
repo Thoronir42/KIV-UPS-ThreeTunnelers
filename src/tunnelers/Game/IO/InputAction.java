@@ -1,6 +1,6 @@
 package tunnelers.Game.IO;
 
-import tunnelers.Game.Frame.Direction;
+import tunnelers.model.entities.Direction;
 
 public enum InputAction {
 

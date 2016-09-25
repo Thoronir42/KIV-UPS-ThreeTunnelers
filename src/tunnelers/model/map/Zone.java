@@ -1,14 +1,14 @@
-package tunnelers.Game.Map;
+package tunnelers.model.map;
 
-import tunnelers.Configuration.Settings;
+import tunnelers.Settings.Settings;
 import javafx.geometry.Point2D;
-import tunnelers.Game.Frame.Player;
+import tunnelers.model.player.APlayer;
 
 /**
  *
  * @author Stepan
  */
-public class TunnelMap {
+public class Zone {
 
 	private final Chunk[][] map;
 	public final int Xchunks, Ychunks;
@@ -27,16 +27,16 @@ public class TunnelMap {
 		return chunkSize;
 	}
 
-	public TunnelMap(int chunkSize, int width, int height) {
+	public Zone(int chunkSize, int width, int height) {
 		this.Xchunks = width;
 		this.Ychunks = height;
 		this.chunkSize = chunkSize;
 		this.width = Xchunks * chunkSize;
 		this.height = Ychunks * chunkSize;
-		map = initChunky(width, height);
+		map = initChunks(width, height);
 	}
 
-	private Chunk[][] initChunky(int width, int height) {
+	private Chunk[][] initChunks(int width, int height) {
 		Chunk[][] tmp = new Chunk[width][height];
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
@@ -53,14 +53,14 @@ public class TunnelMap {
 		this.map[x][y].applyData(chunkData);
 	}
 
-	public Point2D getFreeBaseSpot(Player p) {
+	public Point2D getFreeBaseSpot(APlayer p) {
 		int x = Settings.getRandInt(Xchunks - 2) + 1, y = Settings.getRandInt(Ychunks - 2) + 1;
 		Chunk c = this.map[x][y];
 		c.assignedPlayer = p;
 		return new Point2D(x * chunkSize + chunkSize / 2, y * chunkSize + chunkSize / 2);
 	}
 
-	void assignPlayer(int chX, int chY, Player p) {
+	void assignPlayer(int chX, int chY, APlayer p) {
 		Chunk c = this.map[chX][chY];
 		c.assignedPlayer = p;
 	}

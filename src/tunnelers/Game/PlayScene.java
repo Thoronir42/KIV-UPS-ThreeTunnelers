@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import tunnelers.Assets;
 import tunnelers.Game.Render.CanvasLayout;
 import tunnelers.Game.Render.Renderer;
-import tunnelers.Game.Frame.Container;
+import tunnelers.model.GameContainer;
 import tunnelers.Settings.Settings;
 
 /**
@@ -25,11 +25,11 @@ import tunnelers.Settings.Settings;
  */
 public class PlayScene extends AGameScene {
 
-	public static PlayScene getInstance(Container c) {
+	public static PlayScene getInstance(GameContainer c) {
 		return createInstance(c);
 	}
 
-	private static PlayScene createInstance(Container c) {
+	private static PlayScene createInstance(GameContainer c) {
 		BorderPane root = new BorderPane();
 
 		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.DIMGRAY.hashCode()));
@@ -88,7 +88,7 @@ public class PlayScene extends AGameScene {
 
 	}
 
-	private void setCanvasLayout(Container container) {
+	private void setCanvasLayout(GameContainer container) {
 		Dimension2D availableArea = new Dimension2D(this.ca_drawArea.getWidth(), this.ca_drawArea.getHeight());
 		CanvasLayout layout = CanvasLayout.choseIdeal(container, availableArea);
 		Assets assets = new Assets(container.getPlayers());

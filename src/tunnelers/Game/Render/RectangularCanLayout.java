@@ -1,15 +1,18 @@
 package tunnelers.Game.Render;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Affine;
-import tunnelers.Game.Frame.Container;
-import tunnelers.Game.Frame.Player;
-import tunnelers.Game.Frame.Tank;
-import tunnelers.Configuration.Settings;
+import tunnelers.model.GameContainer;
+import tunnelers.model.player.APlayer;
+import tunnelers.model.entities.Tank;
+import tunnelers.Settings.Settings;
 
 /**
  *
@@ -17,7 +20,7 @@ import tunnelers.Configuration.Settings;
  */
 public class RectangularCanLayout extends CanvasLayout {
 
-	static CanvasLayout getLayoutFor(Container c, Dimension2D canvasArea) throws CanvasLayoutException {
+	static CanvasLayout getLayoutFor(GameContainer c, Dimension2D canvasArea) throws CanvasLayoutException {
 		int playerCount = c.getPlayerCount();
 		int rows = 1, cols = 2;
 		while (rows * cols < playerCount) {
@@ -34,7 +37,7 @@ public class RectangularCanLayout extends CanvasLayout {
 
 	private final PlayerArea playerArea;
 
-	public RectangularCanLayout(Container c, int rows, int cols, Dimension2D canvasArea) {
+	public RectangularCanLayout(GameContainer c, int rows, int cols, Dimension2D canvasArea) {
 		super(c);
 		this.rows = rows;
 		this.cols = cols;
@@ -56,11 +59,11 @@ public class RectangularCanLayout extends CanvasLayout {
 		Affine defTransform = g.getTransform();
 		Dimension2D playerAreaBounds = this.playerArea.getBounds();
 		int row = 0, col = 0;
-		Player[] players = this.container.getPlayers();
+		List<APlayer> players = this.container.getPlayers();
 
-		for (int i = 0; i < players.length; i++) {
+		for (int i = 0; i < players.size(); i++) {
 			g.translate(col * playerAreaBounds.getWidth(), row * playerAreaBounds.getHeight());
-			this.playerArea.draw(g, playerAreaBounds, players, i);
+			this.playerArea.draw(g, playerAreaBounds, players.get(i), players);
 
 			if (++col >= cols) {
 				col = 0;
@@ -81,9 +84,9 @@ public class RectangularCanLayout extends CanvasLayout {
 		private final Rectangle viewWindow;
 		private final Dimension2D blockSize;
 		private final RectangleHalf render;
-		private final Container container;
+		private final GameContainer container;
 
-		PlayerArea(Dimension2D playerAreaBounds, Container c) {
+		PlayerArea(Dimension2D playerAreaBounds, GameContainer c) {
 			this.bounds = playerAreaBounds;
 			this.container = c;
 			this.viewWindow = new Rectangle(bounds.getWidth() * 0.05, bounds.getHeight() * 0.05, bounds.getWidth() * 0.9, bounds.getHeight() * 0.6);
@@ -95,14 +98,14 @@ public class RectangularCanLayout extends CanvasLayout {
 			return this.bounds;
 		}
 
-		protected void draw(GraphicsContext g, Dimension2D bounds, Player[] p, int curPlayer) {
+		protected void draw(GraphicsContext g, Dimension2D bounds, APlayer currentPlayer, List<APlayer> players) {
 			Affine defTransform = g.getTransform();
 
-			g.setFill(p[curPlayer].getColor());
+			g.setFill(currentPlayer.getColor());
 			g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
 
 			g.translate(viewWindow.getX(), viewWindow.getY());
-			drawViewWindow(g, p, curPlayer);
+			drawViewWindow(g, players, currentPlayer);
 			g.setTransform(defTransform);
 
 			Rectangle inBounds = new Rectangle(bounds.getWidth() * 0.8, bounds.getHeight() * 0.1);
@@ -122,11 +125,11 @@ public class RectangularCanLayout extends CanvasLayout {
 			g.fillRect(r.getX(), r.getY(), r.getWidth(), r.getHeight());
 		}
 
-		private void drawViewWindow(GraphicsContext g, Player[] p, int curPlayer) {
+		private void drawViewWindow(GraphicsContext g, List<APlayer> p, APlayer curPlayer) {
 			Affine defTransform = g.getTransform();
 			g.setFill(Color.BLACK);
 			g.fillRect(0 - 2, 0 - 2, viewWindow.getWidth() + 6, viewWindow.getHeight() + 4);
-			clampRender(render, p[curPlayer].getTank().getLocation());
+			clampRender(render, curPlayer.getTank().getLocation());
 			try {
 				g.translate(-render.getX() * blockSize.getWidth(),
 						-render.getY() * blockSize.getHeight());
@@ -144,11 +147,11 @@ public class RectangularCanLayout extends CanvasLayout {
 
 		}
 
-		private void drawTanks(GraphicsContext g, Rectangle render, Player[] players) {
+		private void drawTanks(GraphicsContext g, Rectangle render, Collection<APlayer> players) {
 			Affine defTransform = g.getTransform();
 			double bw = blockSize.getWidth(),
 					bh = blockSize.getHeight();
-			for (Player plr : players) {
+			for (APlayer plr : players) {
 				Tank t = plr.getTank();
 				Point2D po = t.getLocation();
 				if (render.contains(po)) {

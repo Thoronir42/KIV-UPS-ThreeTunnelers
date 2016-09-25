@@ -1,11 +1,12 @@
 package tunnelers;
 
-import tunnelers.Configuration.Settings;
+import tunnelers.Settings.Settings;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.HashMap;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -13,7 +14,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import tunnelers.Game.Render.TunColors;
-import tunnelers.Game.Frame.Player;
+import tunnelers.model.player.APlayer;
 
 /**
  *
@@ -144,12 +145,12 @@ public class Assets {
 
 	final Image[] projectile;
 
-	public Assets(Player[] players) {
+	public Assets(Collection<APlayer> players) {
 		tankBody = new HashMap<>();
 		tankCannon = new Image[2];
 		projectile = new Image[2];
 
-		for (Player player : players) {
+		for (APlayer player : players) {
 			Color c = player.getColor();
 			Image[] tankImages = new Image[2];
 			tankImages[IMG_REG] = Assets.getImage(Assets.TANK_BODY, c);

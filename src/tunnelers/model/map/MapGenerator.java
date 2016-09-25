@@ -1,9 +1,9 @@
-package tunnelers.Game.Map;
+package tunnelers.model.map;
 
 import javafx.geometry.Point2D;
-import tunnelers.Game.Frame.Player;
-import tunnelers.Game.Frame.Tank;
-import tunnelers.Configuration.Settings;
+import tunnelers.model.player.APlayer;
+import tunnelers.model.entities.Tank;
+import tunnelers.Settings.Settings;
 
 /**
  *
@@ -25,10 +25,10 @@ public class MapGenerator {
 		return tmp;
 	}
 
-	public static TunnelMap mockMap(Player[] players) {
-		TunnelMap map = new TunnelMap(Settings.MOCK_CHUNK_SIZE, 12, 8);
+	public static Zone mockMap(APlayer[] players) {
+		Zone map = new Zone(Settings.MOCK_CHUNK_SIZE, 12, 8);
 		
-		for (Player p : players) {
+		for (APlayer p : players) {
 			Point2D baseCenter = map.getFreeBaseSpot(p);
 			Tank tank = new Tank(p, baseCenter);
 			p.setTank(tank);

@@ -3,14 +3,14 @@ package tunnelers.Game;
 import tunnelers.Game.Chat.Chat;
 import tunnelers.ATunnelersScene;
 import tunnelers.ATunnelersStage;
-import tunnelers.Game.Frame.Container;
+import tunnelers.model.GameContainer;
 import generic.BackPasser;
 import javafx.scene.input.KeyCode;
 import tunnelers.Game.IO.InputAction;
 import tunnelers.Game.IO.ControlInput;
 import tunnelers.network.NetWorks;
-import tunnelers.Game.Frame.Player;
-import tunnelers.Game.Frame.Engine;
+import tunnelers.model.player.APlayer;
+import tunnelers.model.Engine;
 import tunnelers.Game.IO.AControlScheme;
 import tunnelers.GameKickstarter;
 import tunnelers.network.GameCommand;
@@ -41,7 +41,7 @@ public class GameStage extends ATunnelersStage {
 		});
 		this.setScene(LobbyScene.getInstance(true)); // todo returning to same lobby from a game
 		this.controlSchemeManager = SETTINGS.getControlSchemeManager();
-		Container container = Container.mockContainer(this.controlSchemeManager, kickstarter.getLocalName());
+		GameContainer container = GameContainer.mockContainer(this.controlSchemeManager, kickstarter.getLocalName());
 		this.engine = new Engine(container);
 		this.gamechat = new Chat(container.getLocalPlayer(), SETTINGS.getChatMessageCapacity());
 	}
@@ -76,7 +76,7 @@ public class GameStage extends ATunnelersStage {
 		return this.gamechat;
 	}
 
-	protected Container getContainer() {
+	protected GameContainer getContainer() {
 		return this.engine.getContainer();
 	}
 
@@ -85,7 +85,7 @@ public class GameStage extends ATunnelersStage {
 		if (command instanceof MessageCommand.Plain) {
 			MessageCommand.Plain cmd = (MessageCommand.Plain) command;
 			String msg = cmd.getMessageText();
-			Player p = this.engine.getPlayer(cmd.getPlayerId());
+			APlayer p = this.engine.getPlayer(cmd.getPlayerId());
 			this.gamechat.addMessage(p, msg);
 			scene.updateChatbox();
 		} else {
@@ -101,7 +101,7 @@ public class GameStage extends ATunnelersStage {
 		AControlScheme controlSchemeId = pi.getControlScheme();
 		InputAction inp = pi.getInput();
 		
-		Player p = this.engine.getPlayer(controlSchemeId.getPlayerID());
+		APlayer p = this.engine.getPlayer(controlSchemeId.getPlayerID());
 		
 		if (p.getControls().handleControl(inp, pressed)) {
 			NCG.NetCommand cmd = new GameCommand.ControlSet(inp.intVal(), pressed ? 1 : 0);

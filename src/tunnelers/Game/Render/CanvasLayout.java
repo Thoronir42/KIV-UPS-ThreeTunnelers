@@ -2,7 +2,7 @@ package tunnelers.Game.Render;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
-import tunnelers.Game.Frame.Container;
+import tunnelers.model.GameContainer;
 
 /**
  *
@@ -10,7 +10,7 @@ import tunnelers.Game.Frame.Container;
  */
 public abstract class CanvasLayout {
 
-	public static CanvasLayout choseIdeal(Container container, Dimension2D d) {
+	public static CanvasLayout choseIdeal(GameContainer container, Dimension2D d) {
 		try {
 			CanvasLayout layout = RectangularCanLayout.getLayoutFor(container, d);
 			return layout;
@@ -19,10 +19,10 @@ public abstract class CanvasLayout {
 		}
 	}
 
-	protected final Container container;
+	protected final GameContainer container;
 	protected Renderer renderer;
 
-	public CanvasLayout(Container c) {
+	public CanvasLayout(GameContainer c) {
 		this.container = c;
 	}
 

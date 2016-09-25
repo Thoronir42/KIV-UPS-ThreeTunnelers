@@ -5,12 +5,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import tunnelers.Assets;
-import tunnelers.Game.Map.Block;
-import tunnelers.Game.Map.Bounds;
-import tunnelers.Game.Map.TunnelMap;
-import tunnelers.Game.Map.Chunk;
-import tunnelers.Game.Frame.Player;
-import tunnelers.Game.Frame.Tank;
+import tunnelers.model.map.Block;
+import tunnelers.model.map.Bounds;
+import tunnelers.model.map.Zone;
+import tunnelers.model.map.Chunk;
+import tunnelers.model.player.APlayer;
+import tunnelers.model.entities.Tank;
 
 /**
  *
@@ -21,10 +21,10 @@ public class Renderer {
 	protected GraphicsContext g;
 	protected Dimension2D blockSize;
 
-	protected final TunnelMap map;
+	protected final Zone map;
 	protected final Assets assets;
 
-	public Renderer(GraphicsContext g, TunnelMap map, Assets assets, Dimension2D blockSize) {
+	public Renderer(GraphicsContext g, Zone map, Assets assets, Dimension2D blockSize) {
 		this.g = g;
 
 		this.map = map;
@@ -58,7 +58,7 @@ public class Renderer {
 			for (int x = currentBounds.xMin; x <= currentBounds.xMax; x++) {
 				Block b = chunk.getBlock(x % chunkSize, y % chunkSize);
 				if (b == Block.BaseWall) {
-					Player p = chunk.getAssignedPlayer();
+					APlayer p = chunk.getAssignedPlayer();
 					g.setFill(p != null ? p.getColor() : TunColors.error);
 
 				} else {
