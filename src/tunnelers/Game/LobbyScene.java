@@ -14,7 +14,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
-import tunnelers.Configuration.Settings;
+import tunnelers.Settings.Settings;
 
 /**
  *
@@ -40,7 +40,7 @@ public class LobbyScene extends AGameScene {
 		root.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
 		
 		Settings settings = Settings.getInstance();
-		LobbyScene scene = new LobbyScene(root, settings.getWidth(), settings.getHeight());
+		LobbyScene scene = new LobbyScene(root, settings.getWindowWidth(), settings.getWindowHeight());
 
 		addComponents(root, scene);
 

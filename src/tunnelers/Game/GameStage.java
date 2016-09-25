@@ -43,7 +43,7 @@ public class GameStage extends ATunnelersStage {
 		this.controlSchemeManager = SETTINGS.getControlSchemeManager();
 		Container container = Container.mockContainer(this.controlSchemeManager, kickstarter.getLocalName());
 		this.engine = new Engine(container);
-		this.gamechat = new Chat(container.getLocalPlayer());
+		this.gamechat = new Chat(container.getLocalPlayer(), SETTINGS.getChatMessageCapacity());
 	}
 
 	@Override

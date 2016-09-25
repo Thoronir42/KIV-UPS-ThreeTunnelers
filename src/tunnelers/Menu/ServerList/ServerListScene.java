@@ -26,7 +26,7 @@ import tunnelers.GameKickstarter;
 import tunnelers.Menu.AMenuScene;
 import tunnelers.Menu.MainMenuScene;
 import tunnelers.Menu.ServerList.GameRoomView.GameRoomTreeTableView;
-import tunnelers.Configuration.Settings;
+import tunnelers.Settings.Settings;
 import tunnelers.network.NetWorks;
 
 /**
@@ -41,7 +41,7 @@ public class ServerListScene extends AMenuScene {
 		BorderPane root = new BorderPane();
 		Settings settings = Settings.getInstance();
 
-		ServerListScene scene = new ServerListScene(root, settings.getWidth(), settings.getHeight());
+		ServerListScene scene = new ServerListScene(root, settings.getWindowWidth(), settings.getWindowHeight());
 		scene.lobbyPasser = new BackPasser<String[]>() {
 			@Override
 			public void run() {

@@ -1,4 +1,4 @@
-package tunnelers.Configuration;
+package tunnelers.Settings;
 
 import java.util.Random;
 import javafx.beans.property.SimpleStringProperty;
@@ -8,7 +8,7 @@ import javafx.beans.property.StringProperty;
  *
  * Shamelessly stolen from http://www.java-gaming.org/index.php?topic=35802.0
  */
-public class NameManager {
+public final class NameManager {
 
 	private static String[] beginning = { "Kr", "Ca", "Ra", "Mrok", "Cru",
          "Ray", "Bre", "Zed", "Drak", "Mor", "Jag", "Mer", "Jar", "Mjol",

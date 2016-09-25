@@ -17,7 +17,7 @@ import tunnelers.Assets;
 import tunnelers.Game.Render.CanvasLayout;
 import tunnelers.Game.Render.Renderer;
 import tunnelers.Game.Frame.Container;
-import tunnelers.Configuration.Settings;
+import tunnelers.Settings.Settings;
 
 /**
  *
@@ -35,7 +35,7 @@ public class PlayScene extends AGameScene {
 		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.DIMGRAY.hashCode()));
 		
 		Settings settings = Settings.getInstance();
-		PlayScene scene = new PlayScene(root, settings.getWidth(), settings.getHeight());
+		PlayScene scene = new PlayScene(root, settings.getWindowWidth(), settings.getWindowHeight());
 
 		addComponents(root, scene, settings);
 
@@ -54,7 +54,7 @@ public class PlayScene extends AGameScene {
 	private static void addComponents(BorderPane root, PlayScene scene, Settings settings) {
 		int chatWidth = 160;
 
-		scene.ca_drawArea = new Canvas(settings.getWidth() - chatWidth, settings.getHeight());
+		scene.ca_drawArea = new Canvas(settings.getWindowWidth() - chatWidth, settings.getWindowHeight());
 		root.setCenter(scene.ca_drawArea);
 
 		VBox vertical = new VBox();

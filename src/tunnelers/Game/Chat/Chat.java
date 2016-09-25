@@ -9,14 +9,12 @@ import java.util.Iterator;
  */
 public class Chat {
 
-	private final int MAX_MESSAGES = 12;
-
 	private final CyclicArray<ChatMessage> messages;
 	
 	private final IChatParticipant localParticipant;
 
-	public Chat(IChatParticipant localParticipant) {
-		messages = new CyclicArray<>(ChatMessage.class, MAX_MESSAGES);
+	public Chat(IChatParticipant localParticipant, int messageCapacity) {
+		messages = new CyclicArray<>(ChatMessage.class, messageCapacity);
 		this.localParticipant = localParticipant;
 	}
 	

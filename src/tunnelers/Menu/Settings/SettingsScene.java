@@ -21,7 +21,7 @@ import tunnelers.Game.ControlSchemeManager;
 import tunnelers.Menu.AMenuScene;
 import tunnelers.Menu.MainMenuScene;
 import tunnelers.Menu.Settings.Controls.IpTextfield;
-import tunnelers.Configuration.Settings;
+import tunnelers.Settings.Settings;
 import tunnelers.network.NetWorks;
 
 /**
@@ -40,7 +40,7 @@ public class SettingsScene extends AMenuScene {
 
 		Settings settings = Settings.getInstance();
 
-		SettingsScene scene = new SettingsScene(root, settings.getWidth(), settings.getHeight());
+		SettingsScene scene = new SettingsScene(root, settings.getWindowWidth(), settings.getWindowHeight());
 		addComponents(root, scene, settings);
 
 		return scene;

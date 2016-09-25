@@ -1,6 +1,6 @@
 package tunnelers;
 
-import tunnelers.Configuration.Settings;
+import tunnelers.Settings.Settings;
 import java.lang.reflect.InvocationTargetException;
 import javafx.stage.Stage;
 

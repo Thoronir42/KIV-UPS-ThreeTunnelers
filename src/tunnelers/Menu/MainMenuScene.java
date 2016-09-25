@@ -12,7 +12,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import tunnelers.Configuration.Settings;
+import tunnelers.Settings.Settings;
 
 /**
  *
@@ -47,7 +47,7 @@ public class MainMenuScene extends AMenuScene {
 
 		Settings settings = Settings.getInstance();
 
-		MainMenuScene scene = new MainMenuScene(root, settings.getWidth(), settings.getHeight());
+		MainMenuScene scene = new MainMenuScene(root, settings.getWindowWidth(), settings.getWindowHeight());
 
 		Button[] buttons = new Button[]{
 			createButton(scene, BTN_TYPE_JOIN_GAME),

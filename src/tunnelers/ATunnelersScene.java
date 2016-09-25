@@ -1,6 +1,6 @@
 package tunnelers;
 
-import tunnelers.Configuration.Settings;
+import tunnelers.Settings.Settings;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 

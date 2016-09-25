@@ -4,7 +4,7 @@ import tunnelers.Menu.ServerList.GameRoomView.GRTVItem;
 import java.util.Random;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
-import tunnelers.Configuration.Settings;
+import tunnelers.Settings.Settings;
 
 /**
  *

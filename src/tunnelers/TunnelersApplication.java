@@ -1,7 +1,7 @@
 package tunnelers;
 
-import tunnelers.Configuration.Settings;
-import generic.BackPasser;
+import generic.Impulser.Impulser;
+import tunnelers.Settings.Settings;
 import tunnelers.Menu.MenuStage;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -21,15 +21,12 @@ public final class TunnelersApplication extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		this.settings = Settings.getInstance();
-		Settings.getInstance("config/settings.cfg");
+		this.settings = Settings.getInstance("config/settings.cfg");
 		TunnelersApplication app = this;
-		this.imp = new Impulser(new BackPasser<Long>() {
-			@Override
-			public void run() {
-				app.update(this.get());
-			}
-		});
+		this.imp = new Impulser(settings.getTickRate());
+		
+		this.imp.addHook((event) -> { app.update(event.getTick()); });
+		
 		this.changeStage(MenuStage.getInstance());
 		this.imp.start();
 

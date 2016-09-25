@@ -1,5 +1,6 @@
-package tunnelers.Configuration;
+package tunnelers.Settings;
 
+import tunnelers.Settings.Providers.DefaultSettigs;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Random;
@@ -14,16 +15,10 @@ public final class Settings {
 
 	public static final int VERSION = 00101;
 
-	public static final int MIN_PLAYERS = 2,
-			MAX_PLAYERS = 4;
-
-	public static final int TICK_RATE = 30;
+	public static final int MAX_PLAYERS = 4;
 
 	public static final String DEFAULT_SERVER_ADDRESS = "localhost";
 	public static final int DEFAULT_PORT = 8047;
-
-	public static final int WIDTH_DEFAULT = 800,
-			HEIGHT_DEFAULT = 600;
 
 	public static final String GAME_NAME = "Three Tunnelers",
 			TITLE_SEPARATOR = "|";
@@ -90,7 +85,12 @@ public final class Settings {
 		return usage;
 	}
 
-	private int width, height;
+	private int windowWidth;
+	private int windowHeight; 
+	
+	private int tickRate;
+	
+	private int chatMessageCapacity;
 
 	public final boolean[] playerColorUsage;
 
@@ -102,13 +102,12 @@ public final class Settings {
 	private Settings(String configFile) {
 		this.playerColorUsage = preparePlayerColorUsage(PLAYER_COLORS.length);
 		this.controlSchemeManager = new ControlSchemeManager();
-		this.initDefaults();
+		
+		(new DefaultSettigs()).set(this);
 		this.loadConfigFile(configFile);
 	}
 
 	void initDefaults() {
-		this.width = WIDTH_DEFAULT;
-		this.height = HEIGHT_DEFAULT;
 		this.serverPort = Settings.DEFAULT_PORT;
 		this.serverAddress = "localhost";
 	}
@@ -135,18 +134,6 @@ public final class Settings {
 
 	public String getTitleSeparator() {
 		return TITLE_SEPARATOR;
-	}
-
-	public int getWidth() {
-		return this.width;
-	}
-
-	public int getHeight() {
-		return this.height;
-	}
-
-	public int getTickrate() {
-		return TICK_RATE;
 	}
 
 	public int getDefaultPort() {
@@ -199,4 +186,41 @@ public final class Settings {
 		System.out.println("Config file found but not used.");
 	}
 
+	public void setWindowSize(int width, int height) {
+		this.setWindowWidth(windowWidth);
+		this.setWindowHeight(windowHeight);
+	}
+
+	public int getWindowWidth() {
+		return windowWidth;
+	}
+
+	public void setWindowWidth(int windowWidth) {
+		this.windowWidth = windowWidth;
+	}
+
+	public int getWindowHeight() {
+		return windowHeight;
+	}
+
+	public void setWindowHeight(int windowHeight) {
+		this.windowHeight = windowHeight;
+	}
+
+	public int getTickRate() {
+		return tickRate;
+	}
+
+	public void setTickRate(int tickRate) {
+		this.tickRate = tickRate;
+	}
+
+	public int getChatMessageCapacity() {
+		return chatMessageCapacity;
+	}
+
+	public void setChatMessageCapacity(int chatMessageCapacity) {
+		this.chatMessageCapacity = chatMessageCapacity;
+	}
+	
 }
