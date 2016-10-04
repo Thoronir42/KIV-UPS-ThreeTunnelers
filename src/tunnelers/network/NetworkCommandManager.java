@@ -1,5 +1,6 @@
 package tunnelers.network;
 
+import tunnelers.network.command.NCG;
 import java.util.HashMap;
 
 /**

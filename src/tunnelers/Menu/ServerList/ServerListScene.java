@@ -2,7 +2,6 @@ package tunnelers.Menu.ServerList;
 
 import tunnelers.Menu.ServerList.GameRoomView.GRTVItem;
 import generic.BackPasser;
-import java.io.IOException;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -22,18 +21,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import tunnelers.GameKickstarter;
-import tunnelers.Menu.AMenuScene;
-import tunnelers.Menu.MainMenuScene;
+import tunnelers.app.menu.MainMenuScene;
 import tunnelers.Menu.ServerList.GameRoomView.GameRoomTreeTableView;
 import tunnelers.Settings.Settings;
-import tunnelers.network.NetWorks;
+import tunnelers.app.ATunnelersScene;
 
 /**
  *
  * @author Stepan
  */
-public class ServerListScene extends AMenuScene {
+public class ServerListScene extends ATunnelersScene {
 
 	BackPasser<String[]> lobbyPasser;
 
@@ -190,14 +187,9 @@ public class ServerListScene extends AMenuScene {
 				flags |= GameRoom.FLAG_FULL;
 			}
 			String s = String.format("%02X%02X%02X%02X", i, Settings.MAX_PLAYERS, players, flags);
-			/*String s = Integer.toHexString(i) + Integer.toHexString(Settings.MAX_PLAYERS) +
-			 Integer.toHexString(players) + Integer.toHexString(flags);*/
-			//System.out.format("ID=%d, MP=%d, CP=%d, F=%d\t%s%n", i, Settings.MAX_PLAYERS, players, flags, s);
 			lobbies[i] = s;
 		}
 		parseAndInsertLobbies(lobbies);
-
-		NetWorks.fetchLobbies(lobbyPasser);
 	}
 
 	private void parseAndInsertLobbies(String[] lobbies) {
@@ -214,35 +206,29 @@ public class ServerListScene extends AMenuScene {
 		if(gr.Full.get()){
 			SceneStatus.set(Status.GameFull);
 			return;
-		}	
-		
-		try {
-			String name = tf_localName.getText();
-			if(name.length() == 0){
-				name = tf_localName.getPromptText();
-			}
-			SceneStatus.set(Status.Connecting);
-			
-			GameKickstarter kickstarter = new GameKickstarter(NetWorks.createInstance(), name);
-			this.getStage().kickstartLobby(kickstarter);
-			/*
-			String address = settings.getServerAddress(),
-					clientName = tf_localName.getText();
-			int port = settings.getServerPort();
-			System.out.format("Connecting to: %s:%d%n", address, port);
-
-			NetWorks nw = NetWorks.connectTo(address, port, clientName);
-			nw.toString();
-			if (nw.canConnect()) {
-				this.getStage().kickstartLobby(kickstarter);
-			} else {
-				this.lbl_conInfo.setText(nw.getStatusLabel());
-			}
-			*/
-
-		} catch (IOException ex) {
-			System.err.println("Connect failed: " + ex);
 		}
+		String name = tf_localName.getText();
+		if(name.length() == 0){
+			name = tf_localName.getPromptText();
+		}
+		SceneStatus.set(Status.Connecting);
+		
+		this.getStage().kickstartLobby(kickstarter);
+		
+		/*
+		String address = settings.getServerAddress(),
+				clientName = tf_localName.getText();
+		int port = settings.getServerPort();
+		System.out.format("Connecting to: %s:%d%n", address, port);
+
+		NetWorks nw = NetWorks.connectTo(address, port, clientName);
+		nw.toString();
+		if (nw.canConnect()) {
+			this.getStage().kickstartLobby(kickstarter);
+		} else {
+			this.lbl_conInfo.setText(nw.getStatusLabel());
+		}
+		*/
 	}
 
 	private void serverListClicked(MouseEvent e) {

@@ -1,8 +1,8 @@
 package tunnelers.Game;
 
 import tunnelers.Game.Chat.Chat;
-import tunnelers.ATunnelersScene;
-import tunnelers.ATunnelersStage;
+import tunnelers.app.ATunnelersScene;
+import tunnelers.app.TunnelersStage;
 import tunnelers.model.GameContainer;
 import generic.BackPasser;
 import javafx.scene.input.KeyCode;
@@ -12,68 +12,24 @@ import tunnelers.network.NetWorks;
 import tunnelers.model.player.APlayer;
 import tunnelers.model.Engine;
 import tunnelers.Game.IO.AControlScheme;
-import tunnelers.GameKickstarter;
-import tunnelers.network.GameCommand;
-import tunnelers.network.MessageCommand;
-import tunnelers.network.NCG;
-import tunnelers.network.NCG.NetCommand;
+import tunnelers.network.command.GameCommand;
+import tunnelers.network.command.MessageCommand;
+import tunnelers.network.command.NCG;
+import tunnelers.network.command.NCG.NetCommand;
 
 /**
  *
  * @author Stepan
  */
-public class GameStage extends ATunnelersStage {
+public class GameStage extends TunnelersStage {
 
-	protected NetWorks networks;
-	protected Chat gamechat;
-	protected final Engine engine;
-	
-	private AGameScene currentScene;
 	private final ControlSchemeManager controlSchemeManager;
 
-	public GameStage(GameKickstarter kickstarter) {
-		this.networks = kickstarter.getNetworks();
-		this.networks.setCommandPasser(new BackPasser<NetCommand>() {
-			@Override
-			public void run() {
-				handleNetworkCommand(this.get());
-			}
-		});
-		this.setScene(LobbyScene.getInstance(true)); // todo returning to same lobby from a game
+	public GameStage() {
 		this.controlSchemeManager = SETTINGS.getControlSchemeManager();
 		GameContainer container = GameContainer.mockContainer(this.controlSchemeManager, kickstarter.getLocalName());
 		this.engine = new Engine(container);
-		this.gamechat = new Chat(container.getLocalPlayer(), SETTINGS.getChatMessageCapacity());
-	}
-
-	@Override
-	public final void update(long tick) {
-		if (tick % 4 == 0 && currentScene instanceof PlayScene) {
-			this.engine.update(tick);
-			currentScene.drawScene();
-		}
-		
-	}
-
-	@Override
-	public void exit() {
-		try {
-			this.networks.disconnect();
-			this.networks.interrupt();
-			this.networks.join();
-			System.out.println("NetWorks ended succesfully");
-		} catch (InterruptedException ex) {
-			System.err.println("Failed to close networks: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
-		}
-		super.exit(CHANGE_TO_MENU);
-	}
-
-	protected NetWorks getNetworks() {
-		return this.networks;
-	}
-
-	protected Chat getGamechat() {
-		return this.gamechat;
+		this.chat = new Chat(container.getLocalPlayer(), SETTINGS.getChatMessageCapacity());
 	}
 
 	protected GameContainer getContainer() {
@@ -86,7 +42,7 @@ public class GameStage extends ATunnelersStage {
 			MessageCommand.Plain cmd = (MessageCommand.Plain) command;
 			String msg = cmd.getMessageText();
 			APlayer p = this.engine.getPlayer(cmd.getPlayerId());
-			this.gamechat.addMessage(p, msg);
+			this.chat.addMessage(p, msg);
 			scene.updateChatbox();
 		} else {
 			System.err.println("Incomming command not recognised");
@@ -94,7 +50,7 @@ public class GameStage extends ATunnelersStage {
 	}
 
 	void handleKey(KeyCode code, boolean pressed) {
-		ControlInput pi= this.controlSchemeManager.getPlayerInputByKeyPress(code);
+		ControlInput pi = this.controlSchemeManager.getPlayerInputByKeyPress(code);
 		if(pi == null){
 			return;
 		}
@@ -109,15 +65,7 @@ public class GameStage extends ATunnelersStage {
 	}
 
 	protected void beginGame() {
-		AGameScene sc = PlayScene.getInstance(engine.getContainer());
+		ATunnelersScene sc = PlayScene.getInstance(engine.getContainer());
 		this.changeScene(sc);
-	}
-
-	@Override
-	protected void changeScene(ATunnelersScene scene) {
-		super.changeScene(currentScene = (AGameScene) scene);
-		currentScene.updateChatbox();
-		currentScene.drawScene();
-
 	}
 }

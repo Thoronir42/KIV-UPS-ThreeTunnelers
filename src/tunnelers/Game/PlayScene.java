@@ -1,6 +1,7 @@
 package tunnelers.Game;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
@@ -8,22 +9,22 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import tunnelers.Assets;
+import tunnelers.app.Assets;
 import tunnelers.Game.Render.CanvasLayout;
 import tunnelers.Game.Render.Renderer;
 import tunnelers.model.GameContainer;
 import tunnelers.Settings.Settings;
+import tunnelers.app.ATunnelersScene;
 
 /**
  *
  * @author Stepan
  */
-public class PlayScene extends AGameScene {
+public class PlayScene extends ATunnelersScene {
 
 	public static PlayScene getInstance(GameContainer c) {
 		return createInstance(c);
@@ -42,9 +43,13 @@ public class PlayScene extends AGameScene {
 		scene.setOnKeyPressed((KeyEvent e) -> {
 			scene.getStage().handleKey(e.getCode(), true);
 		});
-		scene.setOnKeyReleased((KeyEvent e) -> {
-			scene.getStage().handleKey(e.getCode(), false);
+		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent e) {
+				scene.getStage().handleKey(e.getCode(), false);
+			}
 		});
+		
 		scene.setCanvasLayout(c);
 
 		return scene;
@@ -71,11 +76,6 @@ public class PlayScene extends AGameScene {
 		scene.tf_chatIn.setPrefWidth(chatWidth);
 		scene.tf_chatIn.setDisable(true);
 		vertical.getChildren().add(scene.tf_chatIn);
-
-		//root.setRight(vertical);
-		root.setOnMouseClicked((MouseEvent e) -> {
-			scene.drawScene();
-		});
 	}
 
 	protected TextArea ta_chatBox;
@@ -97,11 +97,6 @@ public class PlayScene extends AGameScene {
 		this.canvasLayout = layout;
 	}
 
-	@Override
-	public void updateChatbox() {
-		GameStage stage = this.getStage();
-		this.ta_chatBox.setText(stage.getGamechat().getLog());
-	}
 
 	@Override
 	public void drawScene() {
@@ -110,5 +105,10 @@ public class PlayScene extends AGameScene {
 			canvasLayout.drawLayout(g);
 		});
 
+	}
+
+	@Override
+	public Class getPrevScene() {
+		return null;
 	}
 }

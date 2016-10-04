@@ -15,12 +15,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import tunnelers.Settings.Settings;
+import tunnelers.app.ATunnelersScene;
+import tunnelers.app.TunnelersStage;
 
 /**
  *
  * @author Stepan
  */
-public class LobbyScene extends AGameScene {
+public class LobbyScene extends ATunnelersScene {
 
 	private static LobbyScene instance;
 
@@ -81,7 +83,7 @@ public class LobbyScene extends AGameScene {
 
 		Button but_back = new Button("Odejít do menu");
 		but_back.setOnAction((ActionEvent event) -> {
-			scene.getStage().exit();
+			scene.getStage().prevScene();
 		});
 		root.add(but_back, 1, 3);
 	}
@@ -93,6 +95,7 @@ public class LobbyScene extends AGameScene {
 		super(root, width, height, "Join Game");
 	}
 	
+	@Override
 	public void handleKeyPressed(KeyCode code) {
 		switch (code) {
 			case ENTER:
@@ -101,18 +104,15 @@ public class LobbyScene extends AGameScene {
 		}
 	}
 
-	@Override
 	public void updateChatbox() {
-		GameStage stage = this.getStage();
+		TunnelersStage stage = this.getStage();
 		this.wv_chatBox.getEngine().loadContent(stage.getGamechat().getHtml());
 	}
-
-	@Override
+	
 	public void drawScene() {
 		//
 	}
 	
-	@Override
 	protected void sendChatMessage(String message){
 		if(message.length() > 0){
 			super.sendChatMessage(message);

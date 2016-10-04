@@ -3,10 +3,10 @@ package generic;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import tunnelers.network.ConnectionCommand;
-import tunnelers.network.GameCommand;
-import tunnelers.network.LobbyCommand;
-import tunnelers.network.MessageCommand;
+import tunnelers.network.command.ConnectionCommand;
+import tunnelers.network.command.GameCommand;
+import tunnelers.network.command.LobbyCommand;
+import tunnelers.network.command.MessageCommand;
 
 /**
  *

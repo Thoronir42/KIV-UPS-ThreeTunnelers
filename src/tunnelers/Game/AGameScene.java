@@ -1,7 +1,7 @@
 package tunnelers.Game;
 
 import javafx.scene.Parent;
-import tunnelers.ATunnelersScene;
+import tunnelers.app.ATunnelersScene;
 
 /**
  *
@@ -14,18 +14,13 @@ public abstract class AGameScene extends ATunnelersScene {
 		this.sceneName = name;
 	}
 
-	protected GameStage getStage() {
-		GameStage stage = (GameStage) this.getWindow();
-		return stage;
-	}
+	
 
 	abstract void updateChatbox();
-
-	public abstract void drawScene();
 	
 	protected void sendChatMessage(String message){
-		this.getStage().getNetworks().sendMessage(message);
-		this.getStage().getGamechat().addMessage(message);
+		this.getNetworks().sendMessage(message);
+		this.getGamechat().addMessage(message);
 		this.updateChatbox();
 	}
 }

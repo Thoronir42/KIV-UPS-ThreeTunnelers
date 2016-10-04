@@ -4,7 +4,7 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
-import tunnelers.Assets;
+import tunnelers.app.Assets;
 import tunnelers.model.map.Block;
 import tunnelers.model.map.Bounds;
 import tunnelers.model.map.Zone;

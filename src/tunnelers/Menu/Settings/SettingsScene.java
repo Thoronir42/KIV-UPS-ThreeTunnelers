@@ -18,17 +18,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import tunnelers.Game.ControlSchemeManager;
-import tunnelers.Menu.AMenuScene;
-import tunnelers.Menu.MainMenuScene;
+import tunnelers.app.menu.MainMenuScene;
 import tunnelers.Menu.Settings.Controls.IpTextfield;
 import tunnelers.Settings.Settings;
+import tunnelers.app.ATunnelersScene;
 import tunnelers.network.NetWorks;
 
 /**
  *
  * @author Stepan
  */
-public class SettingsScene extends AMenuScene {
+public class SettingsScene extends ATunnelersScene {
 
 	private static final double GRID_SPACING = 4;
 	private static final double RESOLVE_BUTTON_PREF_WIDTH = 160,
@@ -116,13 +116,15 @@ public class SettingsScene extends AMenuScene {
 		this.controlSchemeManager = settings.getControlSchemeManager();
 	}
 
-	private void testServer() {
+	private boolean testServer() {
 		String address = tf_adress.getText();
 		int port = tf_port.Port.get();
-		if (NetWorks.serverPresent(address, port)) {
-
+		NetWorks nw = this.getNetworks();
+		
+		if (nw.serverPresent(address, port)) {
+			return true;
 		} else {
-
+			return false;
 		}
 
 	}

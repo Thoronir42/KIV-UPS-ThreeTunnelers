@@ -30,16 +30,6 @@ public class Chat {
 	public void addMessage(ChatMessage message) {
 		this.messages.add(message);
 	}
-
-	public String getLog() {
-		String chatLog = "";
-		Iterator it = this.messages.iterator();
-		while (it.hasNext()) {
-			chatLog = it.next().toString() + "\n" + chatLog;
-
-		}
-		return chatLog;
-	}
 	
 	public String getHtml(){
 		StringBuilder sb = new StringBuilder();
