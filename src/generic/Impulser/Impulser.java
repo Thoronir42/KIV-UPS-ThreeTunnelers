@@ -2,6 +2,7 @@ package generic.Impulser;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 
 /**
@@ -48,11 +49,12 @@ public class Impulser extends Thread {
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-			Runtime.getRuntime().exit(1);
+			Platform.exit();
 		}
 	}
 
 	public void stopRun() {
 		this.stop = true;
+		this.hooks.clear();
 	}
 }

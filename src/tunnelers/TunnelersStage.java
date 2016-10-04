@@ -2,44 +2,32 @@ package tunnelers;
 
 import tunnelers.Settings.Settings;
 import java.lang.reflect.InvocationTargetException;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
  *
  * @author Stepan
  */
-public abstract class ATunnelersStage extends Stage {
+public final class TunnelersStage extends Stage {
 
 	protected static final Settings SETTINGS = Settings.getInstance();
 
-	public static final int CLOSE = 1,
-			CHANGE_TO_MENU = 2,
-			CHANGE_TO_GAME = 4;
-
-	protected int returnCode = 0;
-
-	public abstract void update(long tick);
-
-	public ATunnelersStage() {
+	public void update(long tick){
 		
 	}
 
-	public void exit() {
-		this.exit(CLOSE);
-	}
-
-	public void exit(int exitValue) {
-		this.returnCode = exitValue;
-		this.close();
-	}
-
-	public int getReturnCode() {
-		return returnCode;
+	public TunnelersStage() {
+		
 	}
 
 	protected void changeScene(ATunnelersScene scene) {
 		this.setScene(scene);
 		this.setTitle(String.format("%s %s %s", SETTINGS.getGameName(), SETTINGS.getTitleSeparator(), scene.getName()));
+		
+		scene.setOnKeyPressed((KeyEvent event) -> {
+			scene.handleKeyPressed(event.getCode());
+		});
 	}
 
 	public final void changeScene(Class reqScene) {
@@ -49,13 +37,14 @@ public abstract class ATunnelersStage extends Stage {
 		}
 		changeScene(scene);
 	}
+	
+	protected void prevScene() {
+		ATunnelersScene scene = (ATunnelersScene) this.getScene();
+		this.changeScene(scene.getPrevScene());
+	}
 
 	protected ATunnelersScene classToInstance(Class scene) {
 		if (scene == null) {
-			return null;
-		}
-		if (!ATunnelersScene.class.isAssignableFrom(scene)) {
-			System.out.format("%s not assignable from %s\n", scene.getSimpleName(), ATunnelersScene.class.getSimpleName());
 			return null;
 		}
 		try {

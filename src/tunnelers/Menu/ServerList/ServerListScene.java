@@ -213,7 +213,7 @@ public class ServerListScene extends ATunnelersScene {
 		}
 		SceneStatus.set(Status.Connecting);
 		
-		this.getStage().kickstartLobby(kickstarter);
+		//this.getStage().kickstartLobby(kickstarter);
 		
 		/*
 		String address = settings.getServerAddress(),

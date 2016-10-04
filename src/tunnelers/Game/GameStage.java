@@ -27,7 +27,7 @@ public class GameStage extends TunnelersStage {
 
 	public GameStage() {
 		this.controlSchemeManager = SETTINGS.getControlSchemeManager();
-		GameContainer container = GameContainer.mockContainer(this.controlSchemeManager, kickstarter.getLocalName());
+		GameContainer container = GameContainer.mockContainer(this.controlSchemeManager, "KAREL");
 		this.engine = new Engine(container);
 		this.chat = new Chat(container.getLocalPlayer(), SETTINGS.getChatMessageCapacity());
 	}
@@ -37,13 +37,11 @@ public class GameStage extends TunnelersStage {
 	}
 
 	public void handleNetworkCommand(NetCommand command) {
-		AGameScene scene = (AGameScene) this.getScene();
 		if (command instanceof MessageCommand.Plain) {
 			MessageCommand.Plain cmd = (MessageCommand.Plain) command;
 			String msg = cmd.getMessageText();
 			APlayer p = this.engine.getPlayer(cmd.getPlayerId());
 			this.chat.addMessage(p, msg);
-			scene.updateChatbox();
 		} else {
 			System.err.println("Incomming command not recognised");
 		}

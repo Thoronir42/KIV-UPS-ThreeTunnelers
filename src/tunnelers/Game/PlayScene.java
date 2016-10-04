@@ -41,12 +41,12 @@ public class PlayScene extends ATunnelersScene {
 		addComponents(root, scene, settings);
 
 		scene.setOnKeyPressed((KeyEvent e) -> {
-			scene.getStage().handleKey(e.getCode(), true);
+			//scene.getStage().handleKey(e.getCode(), true);
 		});
 		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent e) {
-				scene.getStage().handleKey(e.getCode(), false);
+				//scene.getStage().handleKey(e.getCode(), false);
 			}
 		});
 		

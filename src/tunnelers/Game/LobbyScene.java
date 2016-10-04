@@ -77,7 +77,7 @@ public class LobbyScene extends ATunnelersScene {
 		
 		Button but_start = new Button("Vyzkoušet");
 		but_start.setOnAction((ActionEvent event) -> {
-			scene.getStage().beginGame();
+			//scene.getStage().beginGame();
 		});
 		root.add(but_start, 1, 2);
 
@@ -106,7 +106,7 @@ public class LobbyScene extends ATunnelersScene {
 
 	public void updateChatbox() {
 		TunnelersStage stage = this.getStage();
-		this.wv_chatBox.getEngine().loadContent(stage.getGamechat().getHtml());
+		//this.wv_chatBox.getEngine().loadContent(stage.getGamechat().getHtml());
 	}
 	
 	public void drawScene() {
@@ -115,13 +115,18 @@ public class LobbyScene extends ATunnelersScene {
 	
 	protected void sendChatMessage(String message){
 		if(message.length() > 0){
-			super.sendChatMessage(message);
+			//super.sendChatMessage(message);
 		}
 		this.tf_chatIn.setText("");
 	}
 
 	private void sendChatMessage() {
 		this.sendChatMessage(tf_chatIn.getText());
+	}
+
+	@Override
+	public Class getPrevScene() {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 	
 }

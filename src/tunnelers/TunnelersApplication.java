@@ -2,12 +2,10 @@ package tunnelers;
 
 import generic.Impulser.Impulser;
 import tunnelers.Settings.Settings;
-import tunnelers.Menu.MenuStage;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import tunnelers.Game.GameStage;
-import tunnelers.Menu.MainMenuScene;
+import tunnelers.app.menu.MainMenuScene;
 
 /**
  *
@@ -15,7 +13,7 @@ import tunnelers.Menu.MainMenuScene;
  */
 public final class TunnelersApplication extends Application {
 
-	ATunnelersStage currentStage;
+	TunnelersStage currentStage;
 	Settings settings;
 	Impulser imp;
 
@@ -27,7 +25,16 @@ public final class TunnelersApplication extends Application {
 		
 		this.imp.addHook((event) -> { app.update(event.getTick()); });
 		
-		this.changeStage(MenuStage.getInstance());
+		TunnelersStage stage = new TunnelersStage();
+		stage.setOnHidden((WindowEvent event) -> {
+			app.imp.stopRun();
+		});
+
+		stage.setResizable(false);
+		stage.setScene(MainMenuScene.getInstance());
+		this.currentStage = stage;
+		
+		this.currentStage.show();
 		this.imp.start();
 
 	}
@@ -43,42 +50,7 @@ public final class TunnelersApplication extends Application {
 		getStage().update(tick);
 	}
 
-	private ATunnelersStage getStage() {
+	private TunnelersStage getStage() {
 		return this.currentStage;
-	}
-
-	private void changeStage(ATunnelersStage stage) {
-		stage.setOnCloseRequest((WindowEvent event) -> {
-			stage.exit();
-		});
-		stage.setOnHidden((WindowEvent event) -> {
-			stageHidden(stage.getReturnCode());
-		});
-
-		stage.setResizable(false);
-
-		this.currentStage = stage;
-		this.currentStage.show();
-	}
-
-	private void stageHidden(int stageReturn) {
-		ATunnelersStage newStage;
-		switch (stageReturn) {
-			case ATunnelersStage.CLOSE:
-				this.imp.stopRun();
-				System.exit(0);
-				break;
-			case ATunnelersStage.CHANGE_TO_GAME:
-				MenuStage oldStage = (MenuStage) this.getStage();
-				newStage = new GameStage(oldStage.getKickstarter());
-				this.changeStage(newStage);
-				break;
-			case ATunnelersStage.CHANGE_TO_MENU:
-				newStage = MenuStage.getInstance();
-				newStage.changeScene(MainMenuScene.class);
-				this.changeStage(newStage);
-				break;
-
-		}
 	}
 }

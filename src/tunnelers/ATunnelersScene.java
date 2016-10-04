@@ -3,6 +3,7 @@ package tunnelers;
 import tunnelers.Settings.Settings;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 
 /**
  *
@@ -32,4 +33,23 @@ public abstract class ATunnelersScene extends Scene {
 		super(root, width, height);
 		this.sceneName = name;
 	}
+
+	public void handleKeyPressed(KeyCode code) {
+		switch (code) {
+			case ESCAPE:
+				this.goBack();
+				break;
+		}
+	}
+
+	protected TunnelersStage getStage() {
+		return (TunnelersStage) this.getWindow();
+	}
+	
+	
+	protected void goBack(){
+		this.getStage().prevScene();
+	}
+
+	public abstract Class getPrevScene();
 }

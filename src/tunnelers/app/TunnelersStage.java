@@ -12,7 +12,7 @@ import tunnelers.network.NetWorks;
  *
  * @author Stepan
  */
-public final class TunnelersStage extends Stage {
+public class TunnelersStage extends Stage {
 
 	protected static final Settings SETTINGS = Settings.getInstance();
 	

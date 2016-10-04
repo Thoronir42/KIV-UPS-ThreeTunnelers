@@ -14,12 +14,13 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import tunnelers.Settings.Settings;
+import tunnelers.app.ATunnelersScene;
 
 /**
  *
  * @author Stepan
  */
-public class MainMenuScene extends AMenuScene {
+public class MainMenuScene extends ATunnelersScene {
 
 	private static final double BTN_PREF_WIDTH = 180,
 			BTN_PREF_HEIGHT = 42;
@@ -53,7 +54,7 @@ public class MainMenuScene extends AMenuScene {
 					scene.getStage().changeScene(SettingsScene.class);
 				}),
 			createButton("Ukončit", (ActionEvent event) -> {
-					scene.getStage().exit();
+					scene.getStage().close();
 				}),
 		};
 
