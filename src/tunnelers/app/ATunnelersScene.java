@@ -52,13 +52,8 @@ public abstract class ATunnelersScene extends Scene {
 		
 	}
 	
-	protected NetWorks getNetworks() {
-		return this.getStage().networks;
-	}
-	
 	protected TunnelersStage getStage() {
-		TunnelersStage stage = (TunnelersStage) this.getWindow();
-		return stage;
+		return (TunnelersStage) this.getWindow();
 	}
 	
 	protected void goBack(){

@@ -1,9 +1,6 @@
 package tunnelers.Game.Chat;
 
-
-import javafx.scene.paint.Color;
-
-
+import tunnelers.core.chat.IChatParticipant;
 
 public class ChatMessage {
 
@@ -27,13 +24,8 @@ public class ChatMessage {
 	public String getText(){
 		return this.text;
 	}
-
-	public Color getColor() {
-		return this.participant.getColor();
-	}
 	
 	public String getHexColor(){
-		int clr = getColor().hashCode();
-		return Integer.toHexString(clr).substring(0, 6).toUpperCase();
+		return this.participant.getHexColor();
 	}
 }

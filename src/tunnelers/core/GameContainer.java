@@ -1,4 +1,4 @@
-package tunnelers.model;
+package tunnelers.core;
 
 import tunnelers.model.player.APlayer;
 import tunnelers.model.player.PlayerLocal;

@@ -1,4 +1,4 @@
-package tunnelers.model;
+package tunnelers.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +29,7 @@ public class Warzone {
 		return projectiles;
 	}
 
-	void update() {
+	public void update() {
 		this.updateProjectiles();
 	}
 	

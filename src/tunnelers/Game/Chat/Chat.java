@@ -1,5 +1,6 @@
 package tunnelers.Game.Chat;
 
+import tunnelers.core.chat.IChatParticipant;
 import generic.CyclicArray;
 import java.util.Iterator;
 
@@ -10,16 +11,9 @@ import java.util.Iterator;
 public class Chat {
 
 	private final CyclicArray<ChatMessage> messages;
-	
-	private final IChatParticipant localParticipant;
 
-	public Chat(IChatParticipant localParticipant, int messageCapacity) {
+	public Chat(int messageCapacity) {
 		messages = new CyclicArray<>(ChatMessage.class, messageCapacity);
-		this.localParticipant = localParticipant;
-	}
-	
-	public void addMessage(String text) {
-		this.addMessage(localParticipant, text);
 	}
 
 	public void addMessage(IChatParticipant p, String text) {

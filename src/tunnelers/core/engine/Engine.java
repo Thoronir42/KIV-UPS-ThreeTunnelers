@@ -1,4 +1,4 @@
-package tunnelers.model;
+package tunnelers.core.engine;
 
 import tunnelers.model.entities.Direction;
 import tunnelers.model.entities.Tank;
@@ -7,6 +7,12 @@ import tunnelers.model.player.APlayer;
 import tunnelers.model.player.PlayerRemote;
 import java.util.Collection;
 import javafx.geometry.Point2D;
+import tunnelers.Game.Chat.Chat;
+import tunnelers.core.GameContainer;
+import tunnelers.core.Warzone;
+import tunnelers.network.NetWorks;
+import tunnelers.network.command.MessageCommand;
+import tunnelers.network.command.NCG;
 
 /**
  *
@@ -15,9 +21,13 @@ import javafx.geometry.Point2D;
 public final class Engine {
 	
 	private final GameContainer container;
+	private final NetWorks networks;
+	private final Chat chat;	
 	
-	public Engine(GameContainer container){
+	public Engine(GameContainer container, NetWorks networks, Chat chat){
 		this.container = container;
+		this.networks = networks;
+		this.chat = chat;
 	}
 
 	public GameContainer getContainer() {
@@ -28,13 +38,23 @@ public final class Engine {
 		return this.container.getPlayer(n);
 	}
 	
-	
 	public void update(long tick){
 		Warzone warzone = this.container.getWarzone();
 		if(warzone != null){
 			warzone.update();
 		}
 		updatePlayers(this.container.getPlayers(), tick);
+	}
+	
+	public void handleNetworkCommand(NCG.NetCommand command) {
+		if (command instanceof MessageCommand.Plain) {
+			MessageCommand.Plain cmd = (MessageCommand.Plain) command;
+			String msg = cmd.getMessageText();
+			APlayer p = this.getPlayer(cmd.getPlayerId());
+			this.chat.addMessage(p, msg);
+		} else {
+			System.err.println("Incomming command not recognised");
+		}
 	}
 	
 	private void updatePlayers(Collection<APlayer> players, long tick) {

@@ -29,8 +29,7 @@ public class NetWorks extends Thread {
 	private Status status;
 	private String disconnectReason;
 
-	public NetWorks(String clientName) {
-		this.clientName = clientName;
+	public NetWorks() {
 		this.status = Status.Joining;
 
 		this.setCommandPasser(new BackPasser<NCG.NetCommand>() {
@@ -48,9 +47,10 @@ public class NetWorks extends Thread {
 		return false;
 	}
 	
-	public boolean connectTo(String adress, int port){
+	public boolean connectTo(String clientName, String adress, int port){
 		try{
 			this.connection = new Connection(adress, port, BUFFER_SIZE);
+			this.clientName = clientName;
 			return true;
 		} catch (NetworksException e){ 
 			return false;
@@ -185,7 +185,7 @@ public class NetWorks extends Thread {
 	}
 
 	private enum Status {
-
+		Idle,
 		Joining, JoiningCanceled(false),
 		ServerReady, ServerUnreachable(false), ServerFull(false), ServerUnrecognised(false),
 		Connected,

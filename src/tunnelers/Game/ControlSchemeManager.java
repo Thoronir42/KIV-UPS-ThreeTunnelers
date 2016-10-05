@@ -45,9 +45,7 @@ public class ControlSchemeManager {
 	
 	public AControlScheme[] getAllSchemes(){
 		AControlScheme[] schemes = new AControlScheme[this.keyboardSchemes.length];
-		for(int i = 0; i < schemes.length; i++){
-			schemes[i] = this.keyboardSchemes[i];
-		}
+		System.arraycopy(this.keyboardSchemes, 0, schemes, 0, schemes.length);
 		
 		return schemes;
 	}
@@ -66,9 +64,7 @@ public class ControlSchemeManager {
 	}
 	
 	public ControlInput replaceKeyInput(KeyCode kc, ControlInput plrInput){
-		//System.out.format("Putting %s to %s.", plrInput, kc);
 		ControlInput oldOccurence = this.keyMap.set(kc, plrInput);
-		//System.out.format(" Previously there was %s.\n", oldOccurence);
 		return oldOccurence;
 	}
 	

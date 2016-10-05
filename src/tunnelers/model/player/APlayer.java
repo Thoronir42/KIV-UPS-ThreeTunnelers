@@ -2,7 +2,7 @@ package tunnelers.model.player;
 
 import tunnelers.Settings.Settings;
 import javafx.scene.paint.Color;
-import tunnelers.Game.Chat.IChatParticipant;
+import tunnelers.core.chat.IChatParticipant;
 import tunnelers.model.entities.Tank;
 
 /**
@@ -31,10 +31,16 @@ public abstract class APlayer implements IChatParticipant{
 		this.controls = new Controls();
 	}
 
-	@Override
 	public Color getColor() {
 		return this.color;
 	}
+
+	@Override
+	public String getHexColor() {
+		return Integer.toHexString(this.color.hashCode()).substring(0, 6).toUpperCase();
+	}
+	
+	
 
 	public final void setColor(int colorId) {
 		this.color = SETTINGS.getColor(this.color, colorId);

@@ -9,7 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Affine;
-import tunnelers.model.GameContainer;
+import tunnelers.core.GameContainer;
 import tunnelers.model.player.APlayer;
 import tunnelers.model.entities.Tank;
 import tunnelers.Settings.Settings;

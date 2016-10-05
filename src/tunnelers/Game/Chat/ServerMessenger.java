@@ -1,5 +1,6 @@
 package tunnelers.Game.Chat;
 
+import tunnelers.core.chat.IChatParticipant;
 import javafx.scene.paint.Color;
 
 /**

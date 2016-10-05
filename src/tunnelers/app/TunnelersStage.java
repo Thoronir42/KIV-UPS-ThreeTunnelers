@@ -2,10 +2,12 @@ package tunnelers.app;
 
 import tunnelers.Settings.Settings;
 import java.lang.reflect.InvocationTargetException;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import tunnelers.Game.Chat.Chat;
-import tunnelers.Game.PlayScene;
-import tunnelers.model.Engine;
+import tunnelers.Game.ControlSchemeManager;
+import tunnelers.app.render.FxRenderer;
+import tunnelers.core.engine.Engine;
 import tunnelers.network.NetWorks;
 
 /**
@@ -16,28 +18,24 @@ public class TunnelersStage extends Stage {
 
 	protected static final Settings SETTINGS = Settings.getInstance();
 	
+	protected final ControlSchemeManager controlSchemeManager;
+	protected final FxRenderer renderer;
+
 	protected ATunnelersScene currentScene;
 
-	protected final NetWorks networks;
 	protected Chat chat;
 	protected Engine engine;
 	
 
 	public final void update(long tick) {
-		if (tick % 4 == 0 && currentScene instanceof PlayScene) {
-			this.engine.update(tick);
-			currentScene.drawScene();
-		}
+		this.renderer.render();
 	}
 
-	public TunnelersStage() {
+	public TunnelersStage(FxRenderer renderer) {
 		super();
 		
-		this.networks = new NetWorks("Karel"); // TODO: spojit s nestavenym jmenem
-		
-		this.setOnHidden((event) -> {
-			this.networks.close();
-		});
+		this.renderer = renderer;
+		this.controlSchemeManager = SETTINGS.getControlSchemeManager();
 	}
 	
 	public void prevScene() {
@@ -46,9 +44,12 @@ public class TunnelersStage extends Stage {
 	}
 
 	protected void changeScene(ATunnelersScene scene) {
-		currentScene = scene;
 		this.setScene(scene);
 		this.setTitle(String.format("%s %s %s", SETTINGS.getGameName(), SETTINGS.getTitleSeparator(), scene.getName()));
+		
+		scene.setOnKeyPressed((KeyEvent event) -> {
+			scene.handleKeyPressed(event.getCode());
+		});
 	}
 
 	public final void changeScene(Class reqScene) {
@@ -61,10 +62,6 @@ public class TunnelersStage extends Stage {
 
 	protected ATunnelersScene classToInstance(Class scene) {
 		if (scene == null) {
-			return null;
-		}
-		if (!ATunnelersScene.class.isAssignableFrom(scene)) {
-			System.out.format("%s not assignable from %s\n", scene.getSimpleName(), ATunnelersScene.class.getSimpleName());
 			return null;
 		}
 		try {

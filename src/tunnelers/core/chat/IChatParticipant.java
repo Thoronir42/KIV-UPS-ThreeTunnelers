@@ -1,6 +1,4 @@
-package tunnelers.Game.Chat;
-
-import javafx.scene.paint.Color;
+package tunnelers.core.chat;
 
 /**
  *
@@ -8,5 +6,5 @@ import javafx.scene.paint.Color;
  */
 public interface IChatParticipant {
 	public String getName();
-	public Color getColor();
+	public String getHexColor();
 }

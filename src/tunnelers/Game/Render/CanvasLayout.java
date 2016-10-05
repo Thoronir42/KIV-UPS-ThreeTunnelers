@@ -2,7 +2,7 @@ package tunnelers.Game.Render;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
-import tunnelers.model.GameContainer;
+import tunnelers.core.GameContainer;
 
 /**
  *
