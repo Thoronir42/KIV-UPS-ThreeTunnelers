@@ -1,6 +1,5 @@
 package tunnelers.Game;
 
-import tunnelers.Game.Chat.Chat;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.TunnelersStage;
 import tunnelers.core.GameContainer;

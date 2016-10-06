@@ -28,7 +28,6 @@ public final class Settings {
 	public static final double MIN_BLOCKS_ON_DIMENSION = 27;
 	public static final int MOCK_CHUNK_SIZE = 20;
 
-	public static boolean ENABLE_IMAGES_FROM_FILES = false;
 	public static int IMAGE_UPSCALE_MULT = 20;
 	public static int MAX_PLAYER_PROJECTILES = 7;
 	

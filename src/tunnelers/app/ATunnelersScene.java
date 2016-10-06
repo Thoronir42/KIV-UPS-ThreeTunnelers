@@ -5,7 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import tunnelers.network.NetWorks;
+import tunnelers.app.assets.Assets;
 
 /**
  *
@@ -13,6 +13,7 @@ import tunnelers.network.NetWorks;
  */
 public abstract class ATunnelersScene extends Scene {
 
+	protected static Assets ASSETS;
 	private static int sceneCount = 0;
 
 	protected Settings settings = Settings.getInstance();
