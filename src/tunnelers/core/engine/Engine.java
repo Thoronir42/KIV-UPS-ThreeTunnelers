@@ -8,9 +8,11 @@ import tunnelers.model.player.PlayerRemote;
 import java.util.Collection;
 import javafx.geometry.Point2D;
 import tunnelers.Game.Chat.Chat;
+import tunnelers.Game.IO.InputAction;
 import tunnelers.core.GameContainer;
 import tunnelers.core.Warzone;
 import tunnelers.network.NetWorks;
+import tunnelers.network.command.GameCommand;
 import tunnelers.network.command.MessageCommand;
 import tunnelers.network.command.NCG;
 
@@ -97,5 +99,17 @@ public final class Engine {
 		}
 		
 		return tank.getLocation();
+	}
+
+	public void exit() {
+		this.networks.close();
+	}
+
+	public void handleInput(InputAction inp, int playerID, boolean pressed) {
+		APlayer p = this.getPlayer(playerID);
+		
+		if (p.getControls().handleControl(inp, pressed)) {
+			NCG.NetCommand cmd = new GameCommand.ControlSet(inp.intVal(), pressed ? 1 : 0);
+		}
 	}
 }

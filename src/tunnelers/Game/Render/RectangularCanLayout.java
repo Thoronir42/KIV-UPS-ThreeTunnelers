@@ -1,6 +1,5 @@
 package tunnelers.Game.Render;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javafx.geometry.Dimension2D;
@@ -9,7 +8,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Affine;
-import tunnelers.core.GameContainer;
 import tunnelers.model.player.APlayer;
 import tunnelers.model.entities.Tank;
 import tunnelers.Settings.Settings;
@@ -20,8 +18,7 @@ import tunnelers.Settings.Settings;
  */
 public class RectangularCanLayout extends CanvasLayout {
 
-	static CanvasLayout getLayoutFor(GameContainer c, Dimension2D canvasArea) throws CanvasLayoutException {
-		int playerCount = c.getPlayerCount();
+	static CanvasLayout getLayoutFor(int playerCount, Dimension2D canvasArea) throws CanvasLayoutException {
 		int rows = 1, cols = 2;
 		while (rows * cols < playerCount) {
 			if (cols > rows) {
@@ -30,20 +27,19 @@ public class RectangularCanLayout extends CanvasLayout {
 				cols++;
 			}
 		}
-		return new RectangularCanLayout(c, rows, cols, canvasArea);
+		return new RectangularCanLayout(rows, cols, canvasArea);
 	}
 
 	private final int rows, cols;
 
 	private final PlayerArea playerArea;
 
-	public RectangularCanLayout(GameContainer c, int rows, int cols, Dimension2D canvasArea) {
-		super(c);
+	public RectangularCanLayout(int rows, int cols, Dimension2D canvasArea) {
 		this.rows = rows;
 		this.cols = cols;
 		Dimension2D playerAreaBounds = new Dimension2D(canvasArea.getWidth() / cols,
 				canvasArea.getHeight() / rows);
-		this.playerArea = new PlayerArea(playerAreaBounds, c);
+		this.playerArea = new PlayerArea(playerAreaBounds);
 	}
 
 	protected int getRowAmount() {
@@ -84,11 +80,9 @@ public class RectangularCanLayout extends CanvasLayout {
 		private final Rectangle viewWindow;
 		private final Dimension2D blockSize;
 		private final RectangleHalf render;
-		private final GameContainer container;
 
-		PlayerArea(Dimension2D playerAreaBounds, GameContainer c) {
+		PlayerArea(Dimension2D playerAreaBounds) {
 			this.bounds = playerAreaBounds;
-			this.container = c;
 			this.viewWindow = new Rectangle(bounds.getWidth() * 0.05, bounds.getHeight() * 0.05, bounds.getWidth() * 0.9, bounds.getHeight() * 0.6);
 			this.blockSize = calcBlockSize();
 			this.render = calcRender();
@@ -133,7 +127,7 @@ public class RectangularCanLayout extends CanvasLayout {
 			try {
 				g.translate(-render.getX() * blockSize.getWidth(),
 						-render.getY() * blockSize.getHeight());
-				renderer.drawMap(render);
+				mapRenderer.drawMap(render);
 				this.drawTanks(g, render, p);
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
@@ -158,7 +152,7 @@ public class RectangularCanLayout extends CanvasLayout {
 					po = new Point2D(po.getX() * bw, po.getY() * bh);
 					g.setFill(plr.getColor());
 					g.translate(po.getX(), po.getY());
-					renderer.drawTank(t);
+					assetsRenderer.drawTank(t);
 					g.setTransform(defTransform);
 				}
 			}

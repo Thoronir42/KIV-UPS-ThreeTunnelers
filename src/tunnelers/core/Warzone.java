@@ -39,7 +39,7 @@ public class Warzone {
 		}
 	}
 
-	Zone getMap() {
+	public Zone getMap() {
 		return this.zone;
 	}
 }

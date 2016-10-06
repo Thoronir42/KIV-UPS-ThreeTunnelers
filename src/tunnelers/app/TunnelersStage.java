@@ -6,9 +6,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import tunnelers.Game.Chat.Chat;
 import tunnelers.Game.ControlSchemeManager;
+import tunnelers.Game.PlayScene;
 import tunnelers.app.render.FxRenderer;
 import tunnelers.core.engine.Engine;
-import tunnelers.network.NetWorks;
 
 /**
  *
@@ -24,18 +24,26 @@ public class TunnelersStage extends Stage {
 	protected ATunnelersScene currentScene;
 
 	protected Chat chat;
-	protected Engine engine;
+	protected final Engine engine;
 	
 
 	public final void update(long tick) {
 		this.renderer.render();
 	}
 
-	public TunnelersStage(FxRenderer renderer) {
+	public TunnelersStage(Engine engine, ControlSchemeManager controlSchemeManager) {
 		super();
 		
-		this.renderer = renderer;
-		this.controlSchemeManager = SETTINGS.getControlSchemeManager();
+		this.engine = engine;
+		this.renderer = new FxRenderer(engine);
+		this.controlSchemeManager = controlSchemeManager;
+	}
+	
+	protected void beginGame() {
+		PlayScene scene = PlayScene.getInstance(engine, controlSchemeManager);
+		scene.setCanvasLayout(engine.getContainer());
+		
+		this.changeScene(scene);
 	}
 	
 	public void prevScene() {
@@ -72,6 +80,10 @@ public class TunnelersStage extends Stage {
 			System.err.format("Couldn't get instance of new scene: %s=%s\n", e.getClass().getSimpleName(), e.getMessage());
 		}
 		return null;
+	}
+
+	public ControlSchemeManager getControls() {
+		return this.controlSchemeManager;
 	}
 
 }

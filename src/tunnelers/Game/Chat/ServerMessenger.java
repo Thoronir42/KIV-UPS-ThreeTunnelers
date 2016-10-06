@@ -1,7 +1,6 @@
 package tunnelers.Game.Chat;
 
 import tunnelers.core.chat.IChatParticipant;
-import javafx.scene.paint.Color;
 
 /**
  *
@@ -9,20 +8,20 @@ import javafx.scene.paint.Color;
  */
 public class ServerMessenger implements IChatParticipant{
 
-	private static final ServerMessenger instance;
+	private static final ServerMessenger INSTANCE;
 	
 	static{
-		instance = new ServerMessenger();
+		INSTANCE = new ServerMessenger();
 	}
 
 	public static ServerMessenger getInstance(){
-		return instance;
+		return INSTANCE;
 	}
 	
 	
 	
 	public static final String NAME = "SRV";
-	public static final Color COLOR = Color.MAROON;
+	public static final String COLOR = "800000";
 
 	
 	private ServerMessenger(){
@@ -35,7 +34,7 @@ public class ServerMessenger implements IChatParticipant{
 	}
 
 	@Override
-	public Color getColor() {
+	public String getHexColor() {
 		return COLOR;
 	}
 

@@ -6,8 +6,9 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import tunnelers.Game.Chat.Chat;
-import tunnelers.app.game.EngineRenderer;
+import tunnelers.Game.ControlSchemeManager;
 import tunnelers.app.menu.MainMenuScene;
+import tunnelers.core.GameContainer;
 import tunnelers.core.engine.Engine;
 import tunnelers.network.NetWorks;
 
@@ -28,11 +29,10 @@ public final class TunnelersApplication extends Application {
 		
 		Chat chat = new Chat(settings.getChatMessageCapacity());
 		NetWorks networks = new NetWorks();
-		Engine e = new Engine(null, networks, chat);
+		ControlSchemeManager csmgr = settings.getControlSchemeManager();
+		Engine e = new Engine(GameContainer.mockContainer(csmgr, "KAREL"), networks, chat);
 		
-		EngineRenderer er = new EngineRenderer(e);
-		
-		TunnelersStage stage = new TunnelersStage(e, er);
+		TunnelersStage stage = new TunnelersStage(e, csmgr);
 		stage.setOnHidden((WindowEvent event) -> {
 			e.exit();
 			this.imp.stopRun();

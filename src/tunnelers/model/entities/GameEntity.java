@@ -9,7 +9,6 @@ import javafx.geometry.Point2D;
  * @author Stepan
  */
 public abstract class GameEntity {
-
 	protected Direction direction;
 	protected Point2D location;
 	protected APlayer player;
@@ -63,8 +62,8 @@ public abstract class GameEntity {
 	public double getBottomBorder() {
 		return this.getY() + (this.getHeight() - 1) / 2;
 	}
-
-	public APlayer getPlayer(){
-		return this.player;
+	
+	public int getPlayerId(){
+		return this.player.getID();
 	}
 }
