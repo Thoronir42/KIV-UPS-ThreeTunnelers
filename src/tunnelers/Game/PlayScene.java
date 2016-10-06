@@ -88,12 +88,16 @@ public class PlayScene extends ATunnelersScene {
 
 	}
 
-	private void setCanvasLayout(GameContainer container) {
+	public void setCanvasLayout(GameContainer container) {
 		Dimension2D availableArea = new Dimension2D(this.ca_drawArea.getWidth(), this.ca_drawArea.getHeight());
-		CanvasLayout layout = CanvasLayout.choseIdeal(container, availableArea);
-		Assets assets = new Assets(container.getPlayers());
-		Renderer renderer = new Renderer(this.ca_drawArea.getGraphicsContext2D(), container.getMap(), assets, layout.getBlockSize());
-		layout.setRenderer(renderer);
+		CanvasLayout layout = CanvasLayout.choseIdeal(container.getPlayerCount(), availableArea);
+		
+		GraphicsContext g = this.ca_drawArea.getGraphicsContext2D();
+		Dimension2D bs = layout.getBlockSize();
+		
+		layout.setZoneRenderer(new ZoneRenderer(g, bs, container.getWarzone().getMap()));
+		layout.setAssetsRenderer(new AssetsRenderer(g, bs, ASSETS, container.getPlayers()));
+		
 		this.canvasLayout = layout;
 	}
 

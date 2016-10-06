@@ -1,36 +1,26 @@
-package tunnelers.Game.Render;
+package tunnelers.app.render;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
-import tunnelers.app.assets.Assets;
+import tunnelers.Game.Render.TunColors;
 import tunnelers.model.map.Block;
 import tunnelers.model.map.Bounds;
 import tunnelers.model.map.Zone;
 import tunnelers.model.map.Chunk;
 import tunnelers.model.player.APlayer;
-import tunnelers.model.entities.Tank;
 
 /**
  *
  * @author Stepan
  */
-public class Renderer {
+public class ZoneRenderer extends ARenderer{
 
-	protected GraphicsContext g;
-	protected Dimension2D blockSize;
+	protected final Zone zone;
 
-	protected final Zone map;
-	protected final Assets assets;
-
-	public Renderer(GraphicsContext g, Zone map, Assets assets, Dimension2D blockSize) {
-		this.g = g;
-
-		this.map = map;
-		this.assets = assets;
-
-		this.blockSize = blockSize;
+	public ZoneRenderer(GraphicsContext g, Dimension2D blockSize, Zone zone) {
+		super(g, blockSize);
+		this.zone = zone;
 	}
 
 	public void drawMap(Rectangle rendSrc) {
@@ -39,15 +29,15 @@ public class Renderer {
 				xMax = (int) (rendSrc.getX() + rendSrc.getWidth()),
 				yMax = (int) (rendSrc.getY() + rendSrc.getHeight() - 1);
 		Bounds bounds = new Bounds(xMin, xMax, yMin, yMax);
-		int chunkSize = this.map.getChunkSize();
+		int chunkSize = this.zone.getChunkSize();
 
 		int chTop = Math.max(0, yMin / chunkSize),
 				chLeft = Math.max(0, xMin / chunkSize),
-				chRight = (int) Math.min(map.Xchunks, Math.ceil((xMax + 1.0) / chunkSize)),
-				chBottom = (int) Math.min(map.Ychunks - 1, Math.ceil((yMax + 1.0) / chunkSize));
+				chRight = (int) Math.min(zone.Xchunks, Math.ceil((xMax + 1.0) / chunkSize)),
+				chBottom = (int) Math.min(zone.Ychunks - 1, Math.ceil((yMax + 1.0) / chunkSize));
 		for (int Y = chTop; Y <= chBottom; Y++) {
 			for (int X = chLeft; X < chRight; X++) {
-				renderChunk(map.getChunk(X, Y), bounds, chunkSize);
+				renderChunk(zone.getChunk(X, Y), bounds, chunkSize);
 			}
 		}
 	}
@@ -70,36 +60,4 @@ public class Renderer {
 		// g.setFill(TunColors.getChunkColor(selfXmin / chunkSize, selfYmin / chunkSize));
 		// g.fillRect(xFrom*blockSize.getWidth(), yFrom*blockSize.getHeight(), (xTo - xFrom + 1)*blockSize.getWidth(), (yTo - yFrom + 1)*blockSize.getHeight());
 	}
-
-	void drawTank(Tank t) {
-		Image iv_body = this.assets.getTankBodyImage(t.getPlayer().getID(), t.getDirection().isDiagonal());
-		Image iv_cannon = this.assets.getTankCannonImage(t.getDirection().isDiagonal());
-
-		double bw = blockSize.getWidth(), bh = blockSize.getHeight();
-
-		int rotation = t.getDirection().getRotation();
-		int dx = (int) (Tank.SIZE.getWidth() / 2),
-				dy = (int) (Tank.SIZE.getHeight() / 2);
-		switch (rotation) {
-			case 0:
-			default:
-				break;
-			case 1:
-				g.translate(bw, 0);
-				break;
-			case 2:
-				g.translate(bw, bh);
-				break;
-			case 3:
-				g.translate(0, bh);
-				break;
-		}
-		g.rotate(rotation * 90);
-		g.drawImage(iv_body, -dx * bw, -dy * bh,
-				Tank.SIZE.getWidth() * bw, Tank.SIZE.getHeight() * bh);
-		g.drawImage(iv_cannon, -dx * bw, -dy * bh,
-				Tank.SIZE.getWidth() * bw, Tank.SIZE.getHeight() * bh);
-
-	}
-
 }
