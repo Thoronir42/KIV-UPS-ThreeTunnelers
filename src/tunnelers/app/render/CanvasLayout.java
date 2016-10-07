@@ -1,9 +1,10 @@
-package tunnelers.Game.Render;
+package tunnelers.app.render;
 
-import tunnelers.app.render.ZoneRenderer;
+import java.util.List;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
-import tunnelers.app.render.AssetsRenderer;
+import tunnelers.app.render.rectangleLayout.RectangularCanLayout;
+import tunnelers.model.player.APlayer;
 
 /**
  *
@@ -32,5 +33,5 @@ public abstract class CanvasLayout {
 
 	public abstract Dimension2D getBlockSize();
 
-	public abstract void drawLayout(GraphicsContext g);
+	public abstract void draw(GraphicsContext g, List<APlayer> players);
 }

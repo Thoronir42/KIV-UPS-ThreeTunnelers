@@ -1,4 +1,4 @@
-package tunnelers.Game.Render;
+package tunnelers.app.render.rectangleLayout;
 
 import javafx.scene.shape.Rectangle;
 

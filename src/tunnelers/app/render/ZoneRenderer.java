@@ -3,7 +3,6 @@ package tunnelers.app.render;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Rectangle;
-import tunnelers.Game.Render.TunColors;
 import tunnelers.model.map.Block;
 import tunnelers.model.map.Bounds;
 import tunnelers.model.map.Zone;
@@ -16,11 +15,12 @@ import tunnelers.model.player.APlayer;
  */
 public class ZoneRenderer extends ARenderer{
 
-	protected final Zone zone;
+	protected Zone zone;
+	protected Dimension2D zoneBounds;
 
 	public ZoneRenderer(GraphicsContext g, Dimension2D blockSize, Zone zone) {
 		super(g, blockSize);
-		this.zone = zone;
+		this.setZone(zone);
 	}
 
 	public void drawMap(Rectangle rendSrc) {
@@ -59,5 +59,14 @@ public class ZoneRenderer extends ARenderer{
 		}
 		// g.setFill(TunColors.getChunkColor(selfXmin / chunkSize, selfYmin / chunkSize));
 		// g.fillRect(xFrom*blockSize.getWidth(), yFrom*blockSize.getHeight(), (xTo - xFrom + 1)*blockSize.getWidth(), (yTo - yFrom + 1)*blockSize.getHeight());
+	}
+
+	private void setZone(Zone zone){
+		this.zone = zone;
+		this.zoneBounds = new Dimension2D(zone.getWidth(), zone.getHeight());
+	}
+	
+	public Dimension2D getMapBounds() {
+		return this.zoneBounds;
 	}
 }
