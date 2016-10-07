@@ -16,7 +16,7 @@ public abstract class ATunnelersScene extends Scene {
 	protected static Assets ASSETS;
 	private static int sceneCount = 0;
 
-	protected Settings settings = Settings.getInstance();
+	protected static Settings settings = Settings.getInstance();
 
 	protected String sceneName;
 

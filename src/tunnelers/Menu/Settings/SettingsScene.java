@@ -22,7 +22,6 @@ import tunnelers.app.menu.MainMenuScene;
 import tunnelers.Menu.Settings.Controls.IpTextfield;
 import tunnelers.Settings.Settings;
 import tunnelers.app.ATunnelersScene;
-import tunnelers.network.NetWorks;
 
 /**
  *
@@ -37,8 +36,6 @@ public class SettingsScene extends ATunnelersScene {
 	public static SettingsScene getInstance() {
 		GridPane root = new GridPane();
 		root.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
-
-		Settings settings = Settings.getInstance();
 
 		SettingsScene scene = new SettingsScene(root, settings.getWindowWidth(), settings.getWindowHeight());
 		addComponents(root, scene, settings);
@@ -119,14 +116,14 @@ public class SettingsScene extends ATunnelersScene {
 	private boolean testServer() {
 		String address = tf_adress.getText();
 		int port = tf_port.Port.get();
-		NetWorks nw = this.getNetworks();
-		
-		if (nw.serverPresent(address, port)) {
-			return true;
-		} else {
-			return false;
-		}
-
+//		NetWorks nw = this.getNetworks();
+//		
+//		if (nw.serverPresent(address, port)) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+		return false;
 	}
 
 	private void saveSettings() {

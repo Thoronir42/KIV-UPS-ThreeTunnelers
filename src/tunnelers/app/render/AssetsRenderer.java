@@ -6,7 +6,6 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import tunnelers.Game.Render.TunColors;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.assets.IAssetImagesProvider;
 import tunnelers.model.entities.Tank;

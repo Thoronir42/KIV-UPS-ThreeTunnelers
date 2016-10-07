@@ -2,10 +2,15 @@ package tunnelers.Settings;
 
 import tunnelers.Settings.Providers.DefaultSettigs;
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import javafx.scene.paint.Color;
 import tunnelers.Game.ControlSchemeManager;
+import tunnelers.Settings.Providers.FileSettingsProvider;
+import tunnelers.Settings.Providers.ISettingsSpecifier;
 
 /**
  *
@@ -41,14 +46,10 @@ public final class Settings {
 	}
 
 	private static Settings instance;
-
-	public static Settings getInstance() {
-		return getInstance("");
-	}
 	
-	public static Settings getInstance(String configFile) {
+	public static Settings getInstance() {
 		if (instance == null) {
-			instance = new Settings(configFile);
+			instance = new Settings();
 		}
 		return instance;
 	}
@@ -97,18 +98,39 @@ public final class Settings {
 	private int serverPort;
 
 	private final ControlSchemeManager controlSchemeManager;
-
-	private Settings(String configFile) {
+	
+	private List<ISettingsSpecifier> configurators;
+	
+	private Settings() {
 		this.playerColorUsage = preparePlayerColorUsage(PLAYER_COLORS.length);
 		this.controlSchemeManager = new ControlSchemeManager();
 		
-		(new DefaultSettigs()).set(this);
-		this.loadConfigFile(configFile);
+		this.configurators = new ArrayList<>();
+		this.configurators.add(new DefaultSettigs());
+	}
+	
+	public Settings(String configFile){
+		this();
+		this.addConfigFile(configFile);
+	}
+	
+	public void addConfigFile(String configFile) {
+		try{
+			this.configurators.add(new FileSettingsProvider(configFile));
+		} catch (IOException e) {
+			System.err.println(e);
+		}
 	}
 
-	void initDefaults() {
+	public void init() {
+		this.configurators.stream().forEach((configurator) -> {
+			configurator.set(this);
+		});
+		
 		this.serverPort = Settings.DEFAULT_PORT;
 		this.serverAddress = "localhost";
+		
+		this.configurators.clear();
 	}
 
 	public String getServerAddress() {
@@ -124,6 +146,7 @@ public final class Settings {
 	}
 
 	public void setServerPort(int serverPort) {
+		
 		this.serverPort = serverPort;
 	}
 
@@ -175,14 +198,6 @@ public final class Settings {
 
 	public ControlSchemeManager getControlSchemeManager() {
 		return this.controlSchemeManager;
-	}
-
-	private void loadConfigFile(String cfgFile) {
-		File f = new File(cfgFile);
-		if (!f.exists()) {
-			return;
-		}
-		System.out.println("Config file found but not used.");
 	}
 
 	public void setWindowSize(int width, int height) {

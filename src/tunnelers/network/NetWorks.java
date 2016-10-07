@@ -174,7 +174,9 @@ public class NetWorks extends Thread {
 	}
 
 	public void close() {
-		this.connection.close();
+		if(connection != null){
+			this.connection.close();
+		}
 		try {	
 			this.interrupt();
 			this.join();

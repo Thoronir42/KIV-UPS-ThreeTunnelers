@@ -22,6 +22,6 @@ public class FxRenderer {
 	}
 
 	public void render() {
-		System.err.println("Rendering not implemented");
+		
 	}
 }

@@ -24,8 +24,11 @@ public final class TunnelersApplication extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		this.settings = Settings.getInstance("config/settings.cfg");
-		this.imp = new Impulser(settings.getTickRate());
+		settings = Settings.getInstance();
+		settings.addConfigFile("config/settings.cfg");
+		settings.init();
+		
+		imp = new Impulser(settings.getTickRate());
 		
 		Chat chat = new Chat(settings.getChatMessageCapacity());
 		NetWorks networks = new NetWorks();

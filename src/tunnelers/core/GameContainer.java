@@ -5,7 +5,6 @@ import tunnelers.model.player.PlayerLocal;
 import tunnelers.model.player.PlayerRemote;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import tunnelers.model.map.Zone;
 import tunnelers.Game.ControlSchemeManager;

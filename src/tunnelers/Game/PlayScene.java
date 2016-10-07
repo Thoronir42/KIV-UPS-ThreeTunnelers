@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import tunnelers.Game.IO.AControlScheme;
 import tunnelers.Game.IO.ControlInput;
 import tunnelers.Game.IO.InputAction;
-import tunnelers.Game.Render.CanvasLayout;
+import tunnelers.app.render.CanvasLayout;
 import tunnelers.app.render.ZoneRenderer;
 import tunnelers.core.GameContainer;
 import tunnelers.Settings.Settings;
@@ -39,7 +39,6 @@ public class PlayScene extends ATunnelersScene {
 
 		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.DIMGRAY.hashCode()));
 		
-		Settings settings = Settings.getInstance();
 		PlayScene scene = new PlayScene(root, settings.getWindowWidth(), settings.getWindowHeight(), eng, csmgr);
 
 		addComponents(root, scene, settings);
@@ -120,7 +119,7 @@ public class PlayScene extends ATunnelersScene {
 	public void drawScene() {
 		GraphicsContext g = this.ca_drawArea.getGraphicsContext2D();
 		Platform.runLater(() -> {
-			canvasLayout.drawLayout(g);
+			canvasLayout.draw(g, this.engine.getPlayers());
 		});
 
 	}
