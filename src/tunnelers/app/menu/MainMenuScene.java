@@ -42,8 +42,6 @@ public class MainMenuScene extends ATunnelersScene {
 
 		root.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
 
-		Settings settings = Settings.getInstance();
-
 		MainMenuScene scene = new MainMenuScene(root, settings.getWindowWidth(), settings.getWindowHeight());
 
 		Button[] buttons = new Button[]{

@@ -2,7 +2,6 @@ package tunnelers.app;
 
 import tunnelers.Settings.Settings;
 import java.lang.reflect.InvocationTargetException;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import tunnelers.Game.Chat.Chat;
 import tunnelers.Game.ControlSchemeManager;
@@ -55,9 +54,8 @@ public class TunnelersStage extends Stage {
 		this.setScene(scene);
 		this.setTitle(String.format("%s %s %s", SETTINGS.getGameName(), SETTINGS.getTitleSeparator(), scene.getName()));
 		
-		scene.setOnKeyPressed((KeyEvent event) -> {
-			scene.handleKeyPressed(event.getCode());
-		});
+		this.hide();
+		this.show();
 	}
 
 	public final void changeScene(Class reqScene) {
