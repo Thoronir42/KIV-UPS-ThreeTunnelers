@@ -1,6 +1,6 @@
 package tunnelers.app;
 
-import tunnelers.Settings.Settings;
+import tunnelers.core.settings.Settings;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;

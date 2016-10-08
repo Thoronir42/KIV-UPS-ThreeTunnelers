@@ -1,9 +1,9 @@
 package tunnelers.app;
 
-import tunnelers.Settings.Settings;
+import tunnelers.core.settings.Settings;
 import java.lang.reflect.InvocationTargetException;
 import javafx.stage.Stage;
-import tunnelers.Game.Chat.Chat;
+import tunnelers.core.chat.Chat;
 import tunnelers.Game.ControlSchemeManager;
 import tunnelers.Game.PlayScene;
 import tunnelers.app.render.FxRenderer;

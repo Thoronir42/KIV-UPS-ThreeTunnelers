@@ -2,8 +2,8 @@ package tunnelers.app.render;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import tunnelers.model.map.Block;
-import tunnelers.Settings.Settings;
+import tunnelers.core.model.map.Block;
+import tunnelers.core.settings.Settings;
 
 /**
  *

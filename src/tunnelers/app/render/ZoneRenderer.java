@@ -3,11 +3,11 @@ package tunnelers.app.render;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Rectangle;
-import tunnelers.model.map.Block;
-import tunnelers.model.map.Bounds;
-import tunnelers.model.map.Zone;
-import tunnelers.model.map.Chunk;
-import tunnelers.model.player.APlayer;
+import tunnelers.core.model.map.Block;
+import tunnelers.core.model.map.Bounds;
+import tunnelers.core.model.map.Zone;
+import tunnelers.core.model.map.Chunk;
+import tunnelers.core.model.player.APlayer;
 
 /**
  *

@@ -4,11 +4,11 @@ import java.util.Collection;
 import javafx.geometry.Point2D;
 import tunnelers.core.GameContainer;
 import tunnelers.core.Warzone;
-import tunnelers.model.entities.Direction;
-import tunnelers.model.entities.Tank;
-import tunnelers.model.player.APlayer;
-import tunnelers.model.player.Controls;
-import tunnelers.model.player.PlayerRemote;
+import tunnelers.core.model.entities.Direction;
+import tunnelers.core.model.entities.Tank;
+import tunnelers.core.model.player.APlayer;
+import tunnelers.core.model.player.Controls;
+import tunnelers.core.model.player.PlayerRemote;
 
 /**
  *

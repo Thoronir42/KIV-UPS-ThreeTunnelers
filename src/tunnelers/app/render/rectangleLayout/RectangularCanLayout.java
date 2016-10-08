@@ -11,9 +11,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Affine;
 import tunnelers.app.render.TunColors;
-import tunnelers.model.player.APlayer;
-import tunnelers.model.entities.Tank;
-import tunnelers.Settings.Settings;
+import tunnelers.core.model.player.APlayer;
+import tunnelers.core.model.entities.Tank;
+import tunnelers.core.settings.Settings;
 import tunnelers.app.render.ZoneRenderer;
 
 /**

@@ -19,7 +19,7 @@ import tunnelers.Game.IO.InputAction;
 import tunnelers.app.render.CanvasLayout;
 import tunnelers.app.render.ZoneRenderer;
 import tunnelers.core.GameContainer;
-import tunnelers.Settings.Settings;
+import tunnelers.core.settings.Settings;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.render.AssetsRenderer;
 import tunnelers.core.engine.Engine;

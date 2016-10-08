@@ -1,8 +1,8 @@
 package tunnelers.core.engine;
 
-import tunnelers.model.player.APlayer;
+import tunnelers.core.model.player.APlayer;
 import java.util.List;
-import tunnelers.Game.Chat.Chat;
+import tunnelers.core.chat.Chat;
 import tunnelers.Game.IO.InputAction;
 import tunnelers.core.GameContainer;
 import tunnelers.core.engine.stage.AEngineStage;

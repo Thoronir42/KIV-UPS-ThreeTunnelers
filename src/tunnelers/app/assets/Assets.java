@@ -1,6 +1,6 @@
 package tunnelers.app.assets;
 
-import tunnelers.Settings.Settings;
+import tunnelers.core.settings.Settings;
 import java.util.Arrays;
 import java.util.Collection;
 import javafx.scene.image.Image;

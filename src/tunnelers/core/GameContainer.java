@@ -1,16 +1,16 @@
 package tunnelers.core;
 
-import tunnelers.model.player.APlayer;
-import tunnelers.model.player.PlayerLocal;
-import tunnelers.model.player.PlayerRemote;
+import tunnelers.core.model.player.APlayer;
+import tunnelers.core.model.player.PlayerLocal;
+import tunnelers.core.model.player.PlayerRemote;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import tunnelers.model.map.Zone;
+import tunnelers.core.model.map.Zone;
 import tunnelers.Game.ControlSchemeManager;
 import tunnelers.Game.IO.ControlScheme;
-import tunnelers.model.map.MapGenerator;
-import tunnelers.Settings.Settings;
+import tunnelers.core.model.map.MapGenerator;
+import tunnelers.core.settings.Settings;
 
 /**
  *

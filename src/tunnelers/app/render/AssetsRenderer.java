@@ -8,8 +8,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.assets.IAssetImagesProvider;
-import tunnelers.model.entities.Tank;
-import tunnelers.model.player.APlayer;
+import tunnelers.core.model.entities.Tank;
+import tunnelers.core.model.player.APlayer;
 
 /**
  *

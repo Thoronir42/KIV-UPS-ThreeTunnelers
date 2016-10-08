@@ -1,14 +1,13 @@
 package tunnelers.app;
 
 import generic.Impulser.Impulser;
-import tunnelers.Settings.Settings;
+import tunnelers.core.settings.Settings;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import tunnelers.Game.Chat.Chat;
+import tunnelers.core.chat.Chat;
 import tunnelers.Game.ControlSchemeManager;
-import tunnelers.Menu.Settings.SettingsScene;
-import tunnelers.app.menu.MainMenuScene;
+import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.core.GameContainer;
 import tunnelers.core.engine.Engine;
 import tunnelers.network.NetWorks;
@@ -49,7 +48,7 @@ public final class TunnelersApplication extends Application {
 		});
 
 		currentStage.setResizable(false);
-		currentStage.changeScene(SettingsScene.class);
+		currentStage.changeScene(MainMenuScene.class);
 		
 		this.currentStage.show();
 		this.imp.start();

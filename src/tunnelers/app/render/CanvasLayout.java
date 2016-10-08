@@ -4,7 +4,7 @@ import java.util.List;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import tunnelers.app.render.rectangleLayout.RectangularCanLayout;
-import tunnelers.model.player.APlayer;
+import tunnelers.core.model.player.APlayer;
 
 /**
  *

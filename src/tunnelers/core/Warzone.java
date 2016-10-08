@@ -3,9 +3,9 @@ package tunnelers.core;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import tunnelers.model.entities.Projectile;
-import tunnelers.model.map.Zone;
-import tunnelers.model.player.APlayer;
+import tunnelers.core.model.entities.Projectile;
+import tunnelers.core.model.map.Zone;
+import tunnelers.core.model.player.APlayer;
 
 /**
  *
