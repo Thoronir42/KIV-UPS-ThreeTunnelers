@@ -42,12 +42,8 @@ public class MainMenuScene extends ATunnelersScene {
 		content.setAlignment(Pos.CENTER);
 
 		content.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
-
-		Canvas canvas = new Canvas();
-		StackPane root = new StackPane(canvas, content);
 		
-		MainMenuScene scene = new MainMenuScene(root, settings.getWindowWidth(), settings.getWindowHeight());
-		scene.canvas = canvas;
+		MainMenuScene scene = new MainMenuScene(content, settings.getWindowWidth(), settings.getWindowHeight());
 
 		Button[] buttons = new Button[]{
 			createButton("Seznam serverů", (ActionEvent event) -> {

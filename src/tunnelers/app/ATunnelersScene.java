@@ -7,6 +7,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
 import tunnelers.app.assets.Assets;
 
 /**
@@ -37,13 +38,15 @@ public abstract class ATunnelersScene extends Scene {
 		this(root, width, height, "scene " + (++sceneCount));
 	}
 
-	public ATunnelersScene(Parent root, double width, double height, String name) {
-		super(root, width, height);
+	public ATunnelersScene(Parent content, double width, double height, String name) {
+		super(new StackPane(content), width, height);
 		this.sceneName = name;
 		
 		this.setOnKeyPressed((KeyEvent event) -> {
 			handleKeyPressed(event.getCode());
 		});
+		
+		((StackPane)this.getRoot()).getChildren().add(0, this.canvas = new Canvas());
 	}
 	
 	public void handleKeyPressed(KeyCode code) {

@@ -50,7 +50,7 @@ public class TunnelersStage extends Stage {
 	
 	protected void beginGame() {
 		PlayScene scene = PlayScene.getInstance(engine, controlSchemeManager, this.renderer);
-		scene.setCanvasLayout(engine.getContainer());
+		scene.initLayout(engine.getContainer().getPlayerCount());
 		
 		this.changeScene(scene);
 	}
@@ -61,14 +61,13 @@ public class TunnelersStage extends Stage {
 	}
 
 	protected void changeScene(ATunnelersScene scene) {
-		this.hide();
+		//this.hide();
 		
 		this.setScene(scene);
 		this.renderer.setGraphicsContext(scene.getGraphicsContext());
 		this.setTitle(String.format("%s %s %s", SETTINGS.getGameName(), SETTINGS.getTitleSeparator(), scene.getName()));
 		
-		
-		this.show();
+		//this.show();
 	}
 
 	public final void changeScene(Class reqScene) {

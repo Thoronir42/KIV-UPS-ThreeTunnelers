@@ -1,7 +1,6 @@
 package tunnelers.app.views.serverList;
 
 import tunnelers.app.views.serverList.GameRoomView.GRTVItem;
-import generic.BackPasser;
 import generic.RNG;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
@@ -9,7 +8,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -20,7 +18,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -35,24 +32,12 @@ import tunnelers.app.ATunnelersScene;
  */
 public class ServerListScene extends ATunnelersScene {
 
-	BackPasser<String[]> lobbyPasser;
-
 	public static ServerListScene getInstance() {
 		BorderPane content = new BorderPane();
 		
-		Canvas canvas = new Canvas();
-		StackPane root = new StackPane(canvas, content);
-
-		ServerListScene scene = new ServerListScene(root, settings.getWindowWidth(), settings.getWindowHeight());
-		scene.canvas = canvas;
-		scene.lobbyPasser = new BackPasser<String[]>() {
-			@Override
-			public void run() {
-				scene.parseAndInsertLobbies(this.get());
-			}
-		};
-
+		ServerListScene scene = new ServerListScene(content, settings.getWindowWidth(), settings.getWindowHeight());
 		addComponents(content, scene, settings);
+		
 		return scene;
 	}
 

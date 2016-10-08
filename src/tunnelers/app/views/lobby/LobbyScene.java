@@ -4,7 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -13,10 +12,8 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
-import tunnelers.core.settings.Settings;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.TunnelersStage;
 
@@ -43,12 +40,7 @@ public class LobbyScene extends ATunnelersScene {
 
 		content.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
 		
-		Canvas canvas = new Canvas();
-		StackPane root = new StackPane(canvas, content);
-		
-		LobbyScene scene = new LobbyScene(root, settings.getWindowWidth(), settings.getWindowHeight());
-		scene.canvas = canvas;
-
+		LobbyScene scene = new LobbyScene(content, settings.getWindowWidth(), settings.getWindowHeight());
 		addComponents(content, scene);
 
 		return scene;

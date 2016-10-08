@@ -3,23 +3,18 @@ package tunnelers.app.views.warzone;
 import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import tunnelers.Game.ControlSchemeManager;
 import tunnelers.Game.IO.AControlScheme;
 import tunnelers.Game.IO.ControlInput;
 import tunnelers.Game.IO.InputAction;
 import tunnelers.app.render.CanvasLayout;
-import tunnelers.core.GameContainer;
-import tunnelers.core.settings.Settings;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.render.FxRenderer;
 import tunnelers.core.engine.Engine;
@@ -30,7 +25,7 @@ import tunnelers.core.engine.Engine;
  */
 public class PlayScene extends ATunnelersScene {
 
-	private Engine engine;
+	private final Engine engine;
 	
 	public static PlayScene getInstance(Engine e, ControlSchemeManager csmgr, FxRenderer renderer) {
 		return createInstance(e, csmgr, renderer);
@@ -43,7 +38,7 @@ public class PlayScene extends ATunnelersScene {
 		
 		PlayScene scene = new PlayScene(root, settings.getWindowWidth(), settings.getWindowHeight(), eng, csmgr, renderer);
 
-		addComponents(root, scene, settings);
+		addComponents(root, scene);
 
 		scene.setOnKeyPressed((KeyEvent e) -> {
 			scene.handleKey(e.getCode(), true);
@@ -56,31 +51,12 @@ public class PlayScene extends ATunnelersScene {
 
 	}
 
-	private static void addComponents(BorderPane root, PlayScene scene, Settings settings) {
-		int chatWidth = 160;
-
-		scene.ca_drawArea = new Canvas(settings.getWindowWidth() - chatWidth, settings.getWindowHeight());
-		root.setCenter(scene.ca_drawArea);
-
-		VBox vertical = new VBox();
-
-		scene.ta_chatBox = new TextArea();
-		scene.ta_chatBox.setWrapText(true);
-		scene.ta_chatBox.setPrefWidth(chatWidth);
-		scene.ta_chatBox.setPrefRowCount(10);
-		scene.ta_chatBox.setEditable(false);
-		scene.ta_chatBox.setBackground(Background.EMPTY);
-		vertical.getChildren().add(scene.ta_chatBox);
-
-		scene.tf_chatIn = new TextField();
-		scene.tf_chatIn.setPrefWidth(chatWidth);
-		scene.tf_chatIn.setDisable(true);
-		vertical.getChildren().add(scene.tf_chatIn);
+	private static void addComponents(BorderPane root, PlayScene scene) {
+		root.setCenter(scene.canvas);
 	}
 
 	protected TextArea ta_chatBox;
 	protected TextField tf_chatIn;
-	protected Canvas ca_drawArea;
 	protected CanvasLayout canvasLayout;
 	
 	protected FxRenderer renderer;
@@ -94,11 +70,11 @@ public class PlayScene extends ATunnelersScene {
 		this.csmgr = csmgr;
 	}
 
-	public void setCanvasLayout(GameContainer container) {
-		Dimension2D availableArea = new Dimension2D(this.ca_drawArea.getWidth(), this.ca_drawArea.getHeight());
-		CanvasLayout layout = CanvasLayout.choseIdeal(container.getPlayerCount(), availableArea);
+	public void initLayout(int playerCount) {
+		Dimension2D availableArea = new Dimension2D(canvas.getWidth(), canvas.getHeight());
+		CanvasLayout layout = CanvasLayout.choseIdeal(playerCount, availableArea);
 		
-		GraphicsContext g = this.ca_drawArea.getGraphicsContext2D();
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		
 		layout.setRenderer(this.renderer);
 		
@@ -119,7 +95,7 @@ public class PlayScene extends ATunnelersScene {
 
 	@Override
 	public void drawScene() {
-		GraphicsContext g = this.ca_drawArea.getGraphicsContext2D();
+		GraphicsContext g = canvas.getGraphicsContext2D();
 		Platform.runLater(() -> {
 			canvasLayout.draw(g, this.engine.getPlayers());
 		});
@@ -130,11 +106,4 @@ public class PlayScene extends ATunnelersScene {
 	public Class getPrevScene() {
 		return null;
 	}
-
-	@Override
-	public GraphicsContext getGraphicsContext() {
-		return this.ca_drawArea.getGraphicsContext2D();
-	}
-	
-	
 }
