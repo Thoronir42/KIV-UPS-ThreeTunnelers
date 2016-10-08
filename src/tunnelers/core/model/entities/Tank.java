@@ -3,7 +3,6 @@ package tunnelers.core.model.entities;
 import tunnelers.core.model.player.APlayer;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
-import javafx.scene.paint.Color;
 
 /**
  *
@@ -35,7 +34,7 @@ public class Tank extends GameEntity {
 		return SIZE;
 	}
 
-	public Color getColor() {
+	public int getColor() {
 		return this.player.getColor();
 	}
 

@@ -1,6 +1,6 @@
-package tunnelers.app.views.ServerList.GameRoomView;
+package tunnelers.app.views.serverList.GameRoomView;
 
-import tunnelers.app.views.ServerList.RoomDifficulty;
+import tunnelers.app.views.serverList.RoomDifficulty;
 
 /**
  *

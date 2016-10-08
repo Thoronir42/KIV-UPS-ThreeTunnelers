@@ -54,7 +54,7 @@ public class ControlSchemeManager {
 		return this.keyboardSchemes[sIndex];
 	}
 
-	ControlInput getPlayerInputByKeyPress(KeyCode code) {
+	public ControlInput getPlayerInputByKeyPress(KeyCode code) {
 		ControlInput pi = this.keyMap.getInput(code);
 		return pi;
 	}

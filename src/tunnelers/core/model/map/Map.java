@@ -1,6 +1,6 @@
 package tunnelers.core.model.map;
 
-import tunnelers.core.settings.Settings;
+import generic.RNG;
 import javafx.geometry.Point2D;
 import tunnelers.core.model.player.APlayer;
 
@@ -8,7 +8,7 @@ import tunnelers.core.model.player.APlayer;
  *
  * @author Stepan
  */
-public class Zone {
+public class Map {
 
 	private final Chunk[][] map;
 	public final int Xchunks, Ychunks;
@@ -27,7 +27,7 @@ public class Zone {
 		return chunkSize;
 	}
 
-	public Zone(int chunkSize, int width, int height) {
+	public Map(int chunkSize, int width, int height) {
 		this.Xchunks = width;
 		this.Ychunks = height;
 		this.chunkSize = chunkSize;
@@ -54,7 +54,7 @@ public class Zone {
 	}
 
 	public Point2D getFreeBaseSpot(APlayer p) {
-		int x = Settings.getRandInt(Xchunks - 2) + 1, y = Settings.getRandInt(Ychunks - 2) + 1;
+		int x = RNG.getRandInt(Xchunks - 2) + 1, y = RNG.getRandInt(Ychunks - 2) + 1;
 		Chunk c = this.map[x][y];
 		c.assignedPlayer = p;
 		return new Point2D(x * chunkSize + chunkSize / 2, y * chunkSize + chunkSize / 2);

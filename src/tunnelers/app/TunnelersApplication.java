@@ -7,6 +7,10 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import tunnelers.core.chat.Chat;
 import tunnelers.Game.ControlSchemeManager;
+import tunnelers.app.assets.Assets;
+import tunnelers.app.render.colors.AColorScheme;
+import tunnelers.app.render.colors.DefaultColorScheme;
+import tunnelers.app.render.colors.PlayerColors;
 import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.core.GameContainer;
 import tunnelers.core.engine.Engine;
@@ -19,23 +23,31 @@ import tunnelers.network.NetWorks;
 public final class TunnelersApplication extends Application {
 
 	TunnelersStage currentStage;
-	Settings settings;
+	
 	Impulser imp;
 
 	@Override
 	public void start(Stage primaryStage) {
-		settings = Settings.getInstance();
+		Settings settings = Settings.getInstance();
 		settings.addConfigFile("config/settings.cfg");
 		settings.init();
+		
+		Assets assets = new Assets();
+		assets.init();
 		
 		imp = new Impulser(settings.getTickRate());
 		
 		Chat chat = new Chat(settings.getChatMessageCapacity());
 		NetWorks networks = new NetWorks();
 		ControlSchemeManager csmgr = settings.getControlSchemeManager();
-		Engine e = new Engine(GameContainer.mockContainer(csmgr, "KAREL"), networks, chat);
 		
-		currentStage = new TunnelersStage(e, csmgr);
+		PlayerColors playerColors = new PlayerColors();
+		AColorScheme colorScheme = new DefaultColorScheme(playerColors);
+		
+		Engine e = new Engine(GameContainer.mockContainer(csmgr, "KAREL", playerColors.size()), networks, chat);
+		
+		
+		currentStage = new TunnelersStage(e, csmgr, colorScheme, assets);
 		
 		currentStage.setOnHidden((WindowEvent event) -> {
 			e.exit();

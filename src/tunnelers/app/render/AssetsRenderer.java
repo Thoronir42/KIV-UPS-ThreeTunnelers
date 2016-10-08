@@ -1,9 +1,8 @@
 package tunnelers.app.render;
 
+import tunnelers.app.render.colors.AColorScheme;
 import java.util.Collection;
 import java.util.HashMap;
-import javafx.geometry.Dimension2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import tunnelers.app.assets.Assets;
@@ -15,29 +14,30 @@ import tunnelers.core.model.player.APlayer;
  *
  * @author Stepan
  */
-public class AssetsRenderer extends ARenderer{
+public class AssetsRenderer extends ARenderer {
+
 	final HashMap<Integer, Image[]> tankBody;
 
 	final Image[] tankCannon;
 
 	final Image[] projectile;
 
-	public AssetsRenderer(GraphicsContext gc, Dimension2D blockSize, Assets assets, Collection<APlayer> players) {
-		super(gc, blockSize);
+	public AssetsRenderer(AColorScheme colorScheme, Assets assets, Collection<APlayer> players) {
+		super(colorScheme);
 		tankBody = new HashMap<>();
 		tankCannon = new Image[2];
 		projectile = new Image[2];
 
 		for (APlayer player : players) {
-			Color c = player.getColor();
+			Color c = colorScheme.getPlayerColor(player);
 			Image[] tankImages = new Image[2];
 			tankImages[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.TANK_BODY, c);
 			tankImages[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.TANK_BODY_DIAG, c);
 			tankBody.put(player.getID(), tankImages);
 		}
 
-		tankCannon[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.TANK_CANNON, TunColors.getCannonColor());
-		tankCannon[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.TANK_CANNON_DIAG, TunColors.getCannonColor());
+		tankCannon[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.TANK_CANNON, this.colorScheme.getCannonColor());
+		tankCannon[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.TANK_CANNON_DIAG, this.colorScheme.getCannonColor());
 	}
 
 	public Image getTankBodyImage(int playerId, boolean diagonal) {
@@ -55,7 +55,7 @@ public class AssetsRenderer extends ARenderer{
 	private Image imgDiagSwitch(Image[] img, boolean diagonal) {
 		return diagonal ? img[IAssetImagesProvider.IMG_DIAG] : img[IAssetImagesProvider.IMG_REG];
 	}
-	
+
 	public void drawTank(Tank t) {
 		Image iv_body = this.getTankBodyImage(t.getPlayerId(), t.getDirection().isDiagonal());
 		Image iv_cannon = this.getTankCannonImage(t.getDirection().isDiagonal());

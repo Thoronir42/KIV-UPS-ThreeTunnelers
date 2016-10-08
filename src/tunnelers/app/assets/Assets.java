@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
  *
  * @author Stepan
  */
-public class Assets {
+public class Assets{
 
 	private final Image[] RESOURCES;
 
@@ -47,7 +47,7 @@ public class Assets {
 		return ImageTools.recolor(getImage(type), c);
 	}
 
-	public void initialise() {
+	public void init() {
 
 		for (int i = 0; i < IAssetImagesProvider.IMAGES_COUNT; i++) {
 			RESOURCES[i] = loadImage(i);

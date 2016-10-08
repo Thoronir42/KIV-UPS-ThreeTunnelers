@@ -3,6 +3,8 @@ package tunnelers.app;
 import tunnelers.core.settings.Settings;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import tunnelers.app.assets.Assets;
@@ -19,6 +21,9 @@ public abstract class ATunnelersScene extends Scene {
 	protected static Settings settings = Settings.getInstance();
 
 	protected String sceneName;
+	
+	protected Canvas canvas;
+	
 
 	public void setName(String name) {
 		this.sceneName = name;
@@ -62,5 +67,8 @@ public abstract class ATunnelersScene extends Scene {
 	}
 
 	public abstract Class getPrevScene();
-	
+
+	public GraphicsContext getGraphicsContext(){
+		return this.canvas.getGraphicsContext2D();
+	}
 }

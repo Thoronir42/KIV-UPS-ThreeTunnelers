@@ -5,8 +5,12 @@ import java.lang.reflect.InvocationTargetException;
 import javafx.stage.Stage;
 import tunnelers.core.chat.Chat;
 import tunnelers.Game.ControlSchemeManager;
-import tunnelers.Game.PlayScene;
+import tunnelers.app.views.warzone.PlayScene;
+import tunnelers.app.assets.Assets;
+import tunnelers.app.render.AssetsRenderer;
 import tunnelers.app.render.FxRenderer;
+import tunnelers.app.render.MapRenderer;
+import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.core.engine.Engine;
 
 /**
@@ -24,22 +28,28 @@ public class TunnelersStage extends Stage {
 
 	protected Chat chat;
 	protected final Engine engine;
+	protected final Assets assets;
 	
 
 	public final void update(long tick) {
-		this.renderer.render();
+		
 	}
 
-	public TunnelersStage(Engine engine, ControlSchemeManager controlSchemeManager) {
+	public TunnelersStage(Engine engine, ControlSchemeManager controlSchemeManager, AColorScheme colorScheme, Assets assets) {
 		super();
 		
 		this.engine = engine;
-		this.renderer = new FxRenderer(engine);
+		this.assets = assets;
+		
+		MapRenderer mapRenderer = new MapRenderer(colorScheme, engine.getContainer().getWarzone().getMap());
+		AssetsRenderer assetsRenderer = new AssetsRenderer(colorScheme, assets, engine.getPlayers());
+		
+		this.renderer = new FxRenderer(engine, colorScheme, mapRenderer, assetsRenderer);
 		this.controlSchemeManager = controlSchemeManager;
 	}
 	
 	protected void beginGame() {
-		PlayScene scene = PlayScene.getInstance(engine, controlSchemeManager);
+		PlayScene scene = PlayScene.getInstance(engine, controlSchemeManager, this.renderer);
 		scene.setCanvasLayout(engine.getContainer());
 		
 		this.changeScene(scene);
@@ -51,10 +61,13 @@ public class TunnelersStage extends Stage {
 	}
 
 	protected void changeScene(ATunnelersScene scene) {
+		this.hide();
+		
 		this.setScene(scene);
+		this.renderer.setGraphicsContext(scene.getGraphicsContext());
 		this.setTitle(String.format("%s %s %s", SETTINGS.getGameName(), SETTINGS.getTitleSeparator(), scene.getName()));
 		
-		this.hide();
+		
 		this.show();
 	}
 

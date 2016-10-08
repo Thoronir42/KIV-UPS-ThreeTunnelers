@@ -1,13 +1,15 @@
-package tunnelers.app.views.ServerList;
+package tunnelers.app.views.serverList;
 
-import tunnelers.app.views.ServerList.GameRoomView.GRTVItem;
+import tunnelers.app.views.serverList.GameRoomView.GRTVItem;
 import generic.BackPasser;
+import generic.RNG;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -18,11 +20,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import tunnelers.app.views.menu.MainMenuScene;
-import tunnelers.app.views.ServerList.GameRoomView.GameRoomTreeTableView;
+import tunnelers.app.views.serverList.GameRoomView.GameRoomTreeTableView;
 import tunnelers.core.settings.Settings;
 import tunnelers.app.ATunnelersScene;
 
@@ -35,10 +38,13 @@ public class ServerListScene extends ATunnelersScene {
 	BackPasser<String[]> lobbyPasser;
 
 	public static ServerListScene getInstance() {
-		BorderPane root = new BorderPane();
-		Settings settings = Settings.getInstance();
+		BorderPane content = new BorderPane();
+		
+		Canvas canvas = new Canvas();
+		StackPane root = new StackPane(canvas, content);
 
 		ServerListScene scene = new ServerListScene(root, settings.getWindowWidth(), settings.getWindowHeight());
+		scene.canvas = canvas;
 		scene.lobbyPasser = new BackPasser<String[]>() {
 			@Override
 			public void run() {
@@ -46,7 +52,7 @@ public class ServerListScene extends ATunnelersScene {
 			}
 		};
 
-		addComponents(root, scene, settings);
+		addComponents(content, scene, settings);
 		return scene;
 	}
 
@@ -172,10 +178,10 @@ public class ServerListScene extends ATunnelersScene {
 	private void refreshServerList() {
 		serverList.clearItems();
 		
-		int n = Settings.getRandInt(10) + 3;
+		int n = RNG.getRandInt(10) + 3;
 		String[] lobbies = new String[n];
 		for (byte i = 0; i < n; i++) {
-			int players = Settings.getRandInt(Settings.MAX_PLAYERS) + 1;
+			int players = RNG.getRandInt(Settings.MAX_PLAYERS) + 1;
 			byte flags = 0;
 			if (i % 2 == 0) {
 				flags |= GameRoom.FLAG_RUNNING;

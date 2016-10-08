@@ -1,16 +1,16 @@
 package tunnelers.core;
 
+import generic.RNG;
 import tunnelers.core.model.player.APlayer;
 import tunnelers.core.model.player.PlayerLocal;
 import tunnelers.core.model.player.PlayerRemote;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import tunnelers.core.model.map.Zone;
+import tunnelers.core.model.map.Map;
 import tunnelers.Game.ControlSchemeManager;
 import tunnelers.Game.IO.ControlScheme;
 import tunnelers.core.model.map.MapGenerator;
-import tunnelers.core.settings.Settings;
 
 /**
  *
@@ -18,16 +18,16 @@ import tunnelers.core.settings.Settings;
  */
 public class GameContainer {
 
-	public static GameContainer mockContainer(ControlSchemeManager controlSchemeManager, String localName) {
+	public static GameContainer mockContainer(ControlSchemeManager controlSchemeManager, String localName, int maxColorId) {
 		APlayer[] players = new APlayer[]{
-			new PlayerLocal(47, Settings.getRandInt(Settings.PLAYER_COLORS.length), localName),
-			new PlayerLocal(53, Settings.getRandInt(Settings.PLAYER_COLORS.length), "Jouda"),
-			new PlayerRemote(12, Settings.getRandInt(Settings.PLAYER_COLORS.length), "Frederick"),
+			new PlayerLocal(47, RNG.getRandInt(maxColorId), localName),
+			new PlayerLocal(53, RNG.getRandInt(maxColorId), "Jouda"),
+			new PlayerRemote(12, RNG.getRandInt(maxColorId), "Frederick"),
 		};
-		Zone zone = MapGenerator.mockMap(players);
+		Map map = MapGenerator.mockMap(players);
 		GameContainer c = new GameContainer(players);
 		
-		c.initWarzone(zone);
+		c.initWarzone(map);
 		
 		byte[] controlSchemeIDs = ControlSchemeManager.getKeyboardLayoutIDs();
 		for(byte i = 0; i < controlSchemeIDs.length; i++){
@@ -56,11 +56,11 @@ public class GameContainer {
 		this.players = players;
 	}
 	
-	public void initWarzone(Zone zone){
-		if(zone != null){
+	public void initWarzone(Map map){
+		if(map != null){
 			System.err.println("Warzone had already been set");
 		}
-		this.warzone = new Warzone(players, zone);
+		this.warzone = new Warzone(players, map);
 	}
 	
 	public Warzone getWarzone(){
@@ -81,7 +81,7 @@ public class GameContainer {
 	 * @return 
 	 * @deprecated use Warzone in stead
 	 */
-	public Zone getMap() {
+	public Map getMap() {
 		return this.getWarzone().getMap();
 	}
 

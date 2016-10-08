@@ -1,4 +1,4 @@
-package tunnelers.Game;
+package tunnelers.app.views.warzone;
 
 import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
@@ -13,15 +13,15 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import tunnelers.Game.ControlSchemeManager;
 import tunnelers.Game.IO.AControlScheme;
 import tunnelers.Game.IO.ControlInput;
 import tunnelers.Game.IO.InputAction;
 import tunnelers.app.render.CanvasLayout;
-import tunnelers.app.render.ZoneRenderer;
 import tunnelers.core.GameContainer;
 import tunnelers.core.settings.Settings;
 import tunnelers.app.ATunnelersScene;
-import tunnelers.app.render.AssetsRenderer;
+import tunnelers.app.render.FxRenderer;
 import tunnelers.core.engine.Engine;
 
 /**
@@ -30,16 +30,18 @@ import tunnelers.core.engine.Engine;
  */
 public class PlayScene extends ATunnelersScene {
 
-	public static PlayScene getInstance(Engine e, ControlSchemeManager csmgr) {
-		return createInstance(e, csmgr);
+	private Engine engine;
+	
+	public static PlayScene getInstance(Engine e, ControlSchemeManager csmgr, FxRenderer renderer) {
+		return createInstance(e, csmgr, renderer);
 	}
 
-	private static PlayScene createInstance(Engine eng, ControlSchemeManager csmgr) {
+	private static PlayScene createInstance(Engine eng, ControlSchemeManager csmgr, FxRenderer renderer) {
 		BorderPane root = new BorderPane();
 
 		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.DIMGRAY.hashCode()));
 		
-		PlayScene scene = new PlayScene(root, settings.getWindowWidth(), settings.getWindowHeight(), eng, csmgr);
+		PlayScene scene = new PlayScene(root, settings.getWindowWidth(), settings.getWindowHeight(), eng, csmgr, renderer);
 
 		addComponents(root, scene, settings);
 
@@ -80,12 +82,14 @@ public class PlayScene extends ATunnelersScene {
 	protected TextField tf_chatIn;
 	protected Canvas ca_drawArea;
 	protected CanvasLayout canvasLayout;
-	private final Engine engine;
+	
+	protected FxRenderer renderer;
 	
 	private final ControlSchemeManager csmgr;
 
-	public PlayScene(Parent root, double width, double height, Engine e, ControlSchemeManager csmgr) {
-		super(root, width, height, "Battlefield");
+	public PlayScene(Parent root, double width, double height, Engine e, ControlSchemeManager csmgr, FxRenderer renderer) {
+		super(root, width, height, "Bitevní zóna");
+		this.renderer = renderer;
 		this.engine = e;
 		this.csmgr = csmgr;
 	}
@@ -95,10 +99,8 @@ public class PlayScene extends ATunnelersScene {
 		CanvasLayout layout = CanvasLayout.choseIdeal(container.getPlayerCount(), availableArea);
 		
 		GraphicsContext g = this.ca_drawArea.getGraphicsContext2D();
-		Dimension2D bs = layout.getBlockSize();
 		
-		layout.setZoneRenderer(new ZoneRenderer(g, bs, container.getWarzone().getMap()));
-		layout.setAssetsRenderer(new AssetsRenderer(g, bs, ASSETS, container.getPlayers()));
+		layout.setRenderer(this.renderer);
 		
 		this.canvasLayout = layout;
 	}
@@ -128,4 +130,11 @@ public class PlayScene extends ATunnelersScene {
 	public Class getPrevScene() {
 		return null;
 	}
+
+	@Override
+	public GraphicsContext getGraphicsContext() {
+		return this.ca_drawArea.getGraphicsContext2D();
+	}
+	
+	
 }

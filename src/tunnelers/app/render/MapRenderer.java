@@ -1,11 +1,11 @@
 package tunnelers.app.render;
 
+import tunnelers.app.render.colors.AColorScheme;
 import javafx.geometry.Dimension2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Rectangle;
 import tunnelers.core.model.map.Block;
 import tunnelers.core.model.map.Bounds;
-import tunnelers.core.model.map.Zone;
+import tunnelers.core.model.map.Map;
 import tunnelers.core.model.map.Chunk;
 import tunnelers.core.model.player.APlayer;
 
@@ -13,14 +13,14 @@ import tunnelers.core.model.player.APlayer;
  *
  * @author Stepan
  */
-public class ZoneRenderer extends ARenderer{
+public class MapRenderer extends ARenderer {
 
-	protected Zone zone;
-	protected Dimension2D zoneBounds;
+	protected Map map;
+	protected Dimension2D mapBounds;
 
-	public ZoneRenderer(GraphicsContext g, Dimension2D blockSize, Zone zone) {
-		super(g, blockSize);
-		this.setZone(zone);
+	public MapRenderer(AColorScheme colorScheme, Map map) {
+		super(colorScheme);
+		this.setMap(map);
 	}
 
 	public void drawMap(Rectangle rendSrc) {
@@ -29,15 +29,15 @@ public class ZoneRenderer extends ARenderer{
 				xMax = (int) (rendSrc.getX() + rendSrc.getWidth()),
 				yMax = (int) (rendSrc.getY() + rendSrc.getHeight() - 1);
 		Bounds bounds = new Bounds(xMin, xMax, yMin, yMax);
-		int chunkSize = this.zone.getChunkSize();
+		int chunkSize = this.map.getChunkSize();
 
 		int chTop = Math.max(0, yMin / chunkSize),
 				chLeft = Math.max(0, xMin / chunkSize),
-				chRight = (int) Math.min(zone.Xchunks, Math.ceil((xMax + 1.0) / chunkSize)),
-				chBottom = (int) Math.min(zone.Ychunks - 1, Math.ceil((yMax + 1.0) / chunkSize));
+				chRight = (int) Math.min(map.Xchunks, Math.ceil((xMax + 1.0) / chunkSize)),
+				chBottom = (int) Math.min(map.Ychunks - 1, Math.ceil((yMax + 1.0) / chunkSize));
 		for (int Y = chTop; Y <= chBottom; Y++) {
 			for (int X = chLeft; X < chRight; X++) {
-				renderChunk(zone.getChunk(X, Y), bounds, chunkSize);
+				renderChunk(map.getChunk(X, Y), bounds, chunkSize);
 			}
 		}
 	}
@@ -49,24 +49,24 @@ public class ZoneRenderer extends ARenderer{
 				Block b = chunk.getBlock(x % chunkSize, y % chunkSize);
 				if (b == Block.BaseWall) {
 					APlayer p = chunk.getAssignedPlayer();
-					g.setFill(p != null ? p.getColor() : TunColors.error);
+					g.setFill(p != null ? colorScheme.getPlayerColor(p) : this.colorScheme.error);
 
 				} else {
-					g.setFill(TunColors.getBlockColor(x, y, b));
+					g.setFill(this.colorScheme.getBlockColor(x, y, b));
 				}
 				g.fillRect(x * blockSize.getWidth(), y * blockSize.getHeight(), blockSize.getWidth(), blockSize.getHeight());
 			}
 		}
-		// g.setFill(TunColors.getChunkColor(selfXmin / chunkSize, selfYmin / chunkSize));
+		// g.setFill(AColorScheme.getChunkColor(selfXmin / chunkSize, selfYmin / chunkSize));
 		// g.fillRect(xFrom*blockSize.getWidth(), yFrom*blockSize.getHeight(), (xTo - xFrom + 1)*blockSize.getWidth(), (yTo - yFrom + 1)*blockSize.getHeight());
 	}
 
-	private void setZone(Zone zone){
-		this.zone = zone;
-		this.zoneBounds = new Dimension2D(zone.getWidth(), zone.getHeight());
+	private void setMap(Map map) {
+		this.map = map;
+		this.mapBounds = new Dimension2D(map.getWidth(), map.getHeight());
 	}
-	
+
 	public Dimension2D getMapBounds() {
-		return this.zoneBounds;
+		return this.mapBounds;
 	}
 }

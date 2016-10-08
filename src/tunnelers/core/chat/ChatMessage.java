@@ -1,31 +1,32 @@
 package tunnelers.core.chat;
 
-import tunnelers.core.chat.IChatParticipant;
-
 public class ChatMessage {
 
-	private final IChatParticipant participant;
+	private final int color;
+	private final String name;
 	private final String text;
-
-	public ChatMessage(IChatParticipant participant, String message) {
-		this.participant = participant;
-		this.text = message;
+	
+	public ChatMessage(String name, int color, String text){
+		this.name = name;
+		this.color = color;
+		this.text = text;
+		
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s : %s", participant.getName(), text);
+		return String.format("%s : %s", name, text);
 	}
 	
 	public String getName(){
-		return this.participant.getName();
+		return name;
 	}
 	
 	public String getText(){
-		return this.text;
+		return text;
 	}
 	
-	public String getHexColor(){
-		return this.participant.getHexColor();
+	public int getColor(){
+		return this.color;
 	}
 }

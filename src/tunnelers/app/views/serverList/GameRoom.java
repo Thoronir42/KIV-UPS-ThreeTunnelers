@@ -1,6 +1,6 @@
-package tunnelers.app.views.ServerList;
+package tunnelers.app.views.serverList;
 
-import tunnelers.app.views.ServerList.GameRoomView.GRTVItem;
+import tunnelers.app.views.serverList.GameRoomView.GRTVItem;
 import java.util.Random;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;

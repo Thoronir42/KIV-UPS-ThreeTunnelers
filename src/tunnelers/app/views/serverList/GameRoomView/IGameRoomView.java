@@ -1,4 +1,4 @@
-package tunnelers.app.views.ServerList.GameRoomView;
+package tunnelers.app.views.serverList.GameRoomView;
 
 import java.util.Collection;
 

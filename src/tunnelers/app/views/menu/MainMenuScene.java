@@ -1,17 +1,19 @@
 package tunnelers.app.views.menu;
 
-import tunnelers.app.views.ServerList.ServerListScene;
+import tunnelers.app.views.serverList.ServerListScene;
 import tunnelers.app.views.settings.SettingsScene;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import tunnelers.app.ATunnelersScene;
 
@@ -34,14 +36,18 @@ public class MainMenuScene extends ATunnelersScene {
 	}
 
 	private static MainMenuScene createInstance() {
-		GridPane root = new GridPane();
-		root.setHgap(4);
-		root.setVgap(8);
-		root.setAlignment(Pos.CENTER);
+		GridPane content = new GridPane();
+		content.setHgap(4);
+		content.setVgap(8);
+		content.setAlignment(Pos.CENTER);
 
-		root.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
+		content.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
 
+		Canvas canvas = new Canvas();
+		StackPane root = new StackPane(canvas, content);
+		
 		MainMenuScene scene = new MainMenuScene(root, settings.getWindowWidth(), settings.getWindowHeight());
+		scene.canvas = canvas;
 
 		Button[] buttons = new Button[]{
 			createButton("Seznam serverů", (ActionEvent event) -> {
@@ -56,7 +62,7 @@ public class MainMenuScene extends ATunnelersScene {
 		};
 
 		for (int i = 0; i < buttons.length; i++) {
-			root.add(buttons[i], i, i, 5, 1);
+			content.add(buttons[i], i, i, 5, 1);
 		}
 		return scene;
 

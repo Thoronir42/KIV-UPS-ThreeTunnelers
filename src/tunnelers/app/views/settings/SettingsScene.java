@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
@@ -15,6 +16,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import tunnelers.Game.ControlSchemeManager;
@@ -34,12 +36,19 @@ public class SettingsScene extends ATunnelersScene {
 			RESOLVE_BUTTON_PREF_HEIGHT = 40;
 
 	public static SettingsScene getInstance() {
-		GridPane root = new GridPane();
-		root.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
+		
+		GridPane content = new GridPane();
+		content.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
 
+		Canvas canvas = new Canvas();
+		StackPane root = new StackPane(canvas, content);
+		
+		
 		SettingsScene scene = new SettingsScene(root, settings.getWindowWidth(), settings.getWindowHeight());
-		addComponents(root, scene, settings);
-
+		scene.canvas = canvas;
+		
+		addComponents(content, scene, settings);
+		
 		return scene;
 	}
 
@@ -143,5 +152,4 @@ public class SettingsScene extends ATunnelersScene {
 	public Class getPrevScene() {
 		return MainMenuScene.class;
 	}
-
 }

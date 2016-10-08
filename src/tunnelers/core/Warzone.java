@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import tunnelers.core.model.entities.Projectile;
-import tunnelers.core.model.map.Zone;
+import tunnelers.core.model.map.Map;
 import tunnelers.core.model.player.APlayer;
 
 /**
@@ -13,14 +13,14 @@ import tunnelers.core.model.player.APlayer;
  */
 public class Warzone {
 
-	private final Zone zone;
+	private final Map map;
 	
 	private final List<APlayer> players;
 	private final List<Projectile> projectiles;
 	
-	public Warzone(List<APlayer> players, Zone zone){
+	public Warzone(List<APlayer> players, Map map){
 		this.players = players;
-		this.zone = zone;
+		this.map = map;
 		
 		this.projectiles = new ArrayList<>();
 	}
@@ -39,7 +39,7 @@ public class Warzone {
 		}
 	}
 
-	public Zone getMap() {
-		return this.zone;
+	public Map getMap() {
+		return this.map;
 	}
 }

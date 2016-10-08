@@ -1,9 +1,10 @@
-package tunnelers.Game;
+package tunnelers.app.views.lobby;
 
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -12,6 +13,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import tunnelers.core.settings.Settings;
@@ -34,17 +36,20 @@ public class LobbyScene extends ATunnelersScene {
 	}
 	
 	private static LobbyScene createInstance() {
-		GridPane root = new GridPane();
-		root.setHgap(4);
-		root.setVgap(20);
-		root.setAlignment(Pos.CENTER);
+		GridPane content = new GridPane();
+		content.setHgap(4);
+		content.setVgap(20);
+		content.setAlignment(Pos.CENTER);
 
-		root.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
+		content.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
 		
-		Settings settings = Settings.getInstance();
+		Canvas canvas = new Canvas();
+		StackPane root = new StackPane(canvas, content);
+		
 		LobbyScene scene = new LobbyScene(root, settings.getWindowWidth(), settings.getWindowHeight());
+		scene.canvas = canvas;
 
-		addComponents(root, scene);
+		addComponents(content, scene);
 
 		return scene;
 	}
