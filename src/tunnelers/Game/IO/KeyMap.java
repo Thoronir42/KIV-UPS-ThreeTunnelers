@@ -1,5 +1,7 @@
 package tunnelers.Game.IO;
 
+import tunnelers.core.io.AControls;
+import tunnelers.core.io.InputAction;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import javafx.scene.input.KeyCode;
@@ -30,20 +32,21 @@ public class KeyMap {
 	}
 
 	public void setSchemeDefault(byte sIndex) {
-		AControlScheme controlScheme;
+		// fixme: magic constants
+		AControls controlScheme;
 		switch (sIndex) {
-			case ControlSchemeManager.KEYBOARD_PRIMARY:
+			case 0:
 				controlScheme = this.controlSchemeManager.getKeyboardScheme(sIndex);
 				setScheme(controlScheme, KeyCode.UP, KeyCode.LEFT, KeyCode.RIGHT, KeyCode.DOWN, KeyCode.NUMPAD0);
 				break;
-			case ControlSchemeManager.KEYBOARD_SECONDARY:
+			case 1:
 				controlScheme = this.controlSchemeManager.getKeyboardScheme(sIndex);
 				setScheme(controlScheme, KeyCode.W, KeyCode.A, KeyCode.D, KeyCode.S, KeyCode.F);
 				break;
 		}
 	}
 
-	private void setScheme(AControlScheme controlScheme, KeyCode up, KeyCode left, KeyCode right, KeyCode down, KeyCode shoot) {
+	private void setScheme(AControls controlScheme, KeyCode up, KeyCode left, KeyCode right, KeyCode down, KeyCode shoot) {
 		set(up, controlScheme, InputAction.movUp);
 		set(left, controlScheme, InputAction.movLeft);
 		set(right, controlScheme, InputAction.movRight);
@@ -51,7 +54,7 @@ public class KeyMap {
 		set(shoot, controlScheme, InputAction.actShoot);
 	}
 
-	private ControlInput set(KeyCode code, AControlScheme ctrlScheme, InputAction i) {
+	private ControlInput set(KeyCode code, AControls ctrlScheme, InputAction i) {
 		return this.set(code, new ControlInput(ctrlScheme, i));
 
 	}

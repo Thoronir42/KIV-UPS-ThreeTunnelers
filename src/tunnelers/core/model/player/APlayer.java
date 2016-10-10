@@ -1,6 +1,7 @@
 package tunnelers.core.model.player;
 
 import tunnelers.core.chat.IChatParticipant;
+import tunnelers.core.io.AControls;
 import tunnelers.core.model.entities.Tank;
 
 /**
@@ -11,21 +12,21 @@ public abstract class APlayer implements IChatParticipant{
 
 	private final int playerID;
 	private String name;
-	private final Controls controls;
+	private final AControls controls;
 	private int color;
 	private Tank tank;
 
-	public APlayer(int playerID, int colorID) {
-		this(playerID, colorID, String.format("Unknown player %03d", playerID));
+	public APlayer(int playerID, int colorID, AControls controls) {
+		this(playerID, colorID, controls, String.format("Unknown player %02d", playerID));
 	}
 
-	public APlayer(int playerID, int colorID, String name) {
+	public APlayer(int playerID, int colorID, AControls controls, String name) {
 		//public APlayer(String name) throws PlayerException{
 		this.playerID = playerID;
 		this.name = name;
 		this.setColor(colorID);
 
-		this.controls = new Controls();
+		this.controls = controls;
 	}
 
 	
@@ -62,7 +63,7 @@ public abstract class APlayer implements IChatParticipant{
 		return this.tank;
 	}
 
-	public Controls getControls() {
+	public AControls getControls() {
 		return controls;
 	}
 

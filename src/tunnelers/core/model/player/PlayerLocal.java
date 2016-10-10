@@ -1,17 +1,19 @@
 package tunnelers.core.model.player;
 
+import tunnelers.core.io.AControls;
+
 /**
  *
  * @author Stepan
  */
 public class PlayerLocal extends APlayer {
 
-	public PlayerLocal(int playerID, int colorID) {
-		super(playerID, colorID);
+	public PlayerLocal(int playerID, int colorID, AControls controls) {
+		super(playerID, colorID, controls);
 	}
 
-	public PlayerLocal(int playerID, int colorID, String name) {
-		super(playerID, colorID, name);
+	public PlayerLocal(int playerID, int colorID, AControls controls, String name) {
+		super(playerID, colorID, controls, name);
 	}
 
 	

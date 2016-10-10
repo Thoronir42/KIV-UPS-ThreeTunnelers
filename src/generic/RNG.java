@@ -8,13 +8,27 @@ import java.util.Random;
  */
 public class RNG {
 
-	private static final Random RNG = new Random(420);
-	
-	public static void setSeed(long seed){
-		RNG.setSeed(seed);
-	}
-	
+	private static final RNG INSTANCE = new RNG(420);
+
 	public static int getRandInt(int i) {
-		return RNG.nextInt(i);
+		return INSTANCE.getInt(i);
+	}
+
+	private final Random rand;
+
+	public RNG(long seed) {
+		rand = new Random(seed);
+	}
+
+	public int getInt(int i) {
+		return rand.nextInt(i);
+	}
+
+	public void setSeed(long seed) {
+		this.rand.setSeed(seed);
+	}
+
+	public boolean nextBoolean() {
+		return this.rand.nextBoolean();
 	}
 }

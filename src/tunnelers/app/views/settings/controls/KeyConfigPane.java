@@ -11,7 +11,7 @@ import javafx.scene.input.KeyCode;
 import javafx.util.Callback;
 import tunnelers.Game.ControlSchemeManager;
 import tunnelers.Game.IO.ControlInput;
-import tunnelers.Game.IO.InputAction;
+import tunnelers.core.io.InputAction;
 
 /**
  *
@@ -20,7 +20,7 @@ import tunnelers.Game.IO.InputAction;
 public class KeyConfigPane extends TableView<KeyTableRow> {
 
 	public static KeyConfigPane create(ControlSchemeManager controlSchemeManager) {
-		byte[] kbLayoutIds = ControlSchemeManager.getKeyboardLayoutIDs();
+		byte[] kbLayoutIds = controlSchemeManager.getKeyboardLayoutIDs();
 		KeyConfigPane kcp = new KeyConfigPane(kbLayoutIds);
 		InputAction[] inputs = ControlSchemeManager.getEditableInputs();
 

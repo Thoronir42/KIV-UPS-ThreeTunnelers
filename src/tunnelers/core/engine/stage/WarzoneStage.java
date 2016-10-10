@@ -4,10 +4,10 @@ import java.util.Collection;
 import javafx.geometry.Point2D;
 import tunnelers.core.GameContainer;
 import tunnelers.core.Warzone;
+import tunnelers.core.io.AControls;
 import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.Tank;
 import tunnelers.core.model.player.APlayer;
-import tunnelers.core.model.player.Controls;
 import tunnelers.core.model.player.PlayerRemote;
 
 /**
@@ -39,7 +39,7 @@ public class WarzoneStage extends AEngineStage{
 				((PlayerRemote) p).mockControls(tick);
 			}
 			Tank tank = p.getTank();
-			Controls c = p.getControls();
+			AControls c = p.getControls();
 
 			tank.update();
 			tankShoot(tank, true && c.isShooting());		// TODO: omezeni poctu strel

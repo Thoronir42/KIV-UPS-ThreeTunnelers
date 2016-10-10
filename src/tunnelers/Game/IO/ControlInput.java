@@ -1,5 +1,7 @@
 package tunnelers.Game.IO;
 
+import tunnelers.core.io.AControls;
+import tunnelers.core.io.InputAction;
 import java.util.Objects;
 
 /**
@@ -8,10 +10,10 @@ import java.util.Objects;
  */
 public class ControlInput {
 
-	protected final AControlScheme controlScheme;
+	protected final AControls controlScheme;
 	protected final InputAction input;
 
-	public ControlInput(AControlScheme controlScheme, InputAction i) {
+	public ControlInput(AControls controlScheme, InputAction i) {
 		this.controlScheme = controlScheme;
 		this.input = i;
 	}
@@ -39,7 +41,7 @@ public class ControlInput {
 		return this.input == other.input;
 	}
 
-	public AControlScheme getControlScheme() {
+	public AControls getControlScheme() {
 		return controlScheme;
 	}
 

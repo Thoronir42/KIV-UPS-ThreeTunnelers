@@ -11,9 +11,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import tunnelers.Game.ControlSchemeManager;
-import tunnelers.Game.IO.AControlScheme;
+import tunnelers.core.io.AControls;
 import tunnelers.Game.IO.ControlInput;
-import tunnelers.Game.IO.InputAction;
+import tunnelers.core.io.InputAction;
 import tunnelers.app.render.CanvasLayout;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.render.FxRenderer;
@@ -86,7 +86,7 @@ public class PlayScene extends ATunnelersScene {
 		if(pi == null){
 			return;
 		}
-		AControlScheme controlSchemeId = pi.getControlScheme();
+		AControls controlSchemeId = pi.getControlScheme();
 		InputAction inp = pi.getInput();
 		
 		this.engine.handleInput(inp, controlSchemeId.getPlayerID(), pressed);

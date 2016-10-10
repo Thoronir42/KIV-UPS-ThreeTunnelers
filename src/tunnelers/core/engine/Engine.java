@@ -3,7 +3,7 @@ package tunnelers.core.engine;
 import tunnelers.core.model.player.APlayer;
 import java.util.List;
 import tunnelers.core.chat.Chat;
-import tunnelers.Game.IO.InputAction;
+import tunnelers.core.io.InputAction;
 import tunnelers.core.GameContainer;
 import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;

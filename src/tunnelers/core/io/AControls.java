@@ -1,25 +1,43 @@
-package tunnelers.core.model.player;
+package tunnelers.core.io;
 
 import java.util.HashMap;
 import java.util.Map;
-import tunnelers.Game.IO.InputAction;
 import tunnelers.core.model.entities.Direction;
 
 /**
  *
  * @author Stepan
  */
-public class Controls {
+public abstract class AControls {
+
+	protected final byte schemeID;
+	protected int playerID;
 
 	Map<InputAction, Boolean> heldKeys;
-
-	public Controls() {
+	
+	public AControls(byte schemeId) {
+		this.schemeID = schemeId;
+		
 		heldKeys = new HashMap<>();
 		InputAction[] inputs = InputAction.values();
 		for (InputAction input : inputs) {
 			heldKeys.put(input, false);
 		}
 	}
+
+	public byte getID() {
+		return this.schemeID;
+	}
+
+	public int getPlayerID() {
+		return playerID;
+	}
+
+	public void setPlayerID(int id) {
+		this.playerID = id;
+	}
+	
+	
 
 	/**
 	 *
@@ -59,5 +77,4 @@ public class Controls {
 				heldKeys.get(InputAction.movUp), heldKeys.get(InputAction.movDown), heldKeys.get(InputAction.movLeft),
 				heldKeys.get(InputAction.movRight), heldKeys.get(InputAction.actShoot));
 	}
-
 }
