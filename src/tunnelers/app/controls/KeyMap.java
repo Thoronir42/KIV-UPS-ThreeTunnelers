@@ -1,11 +1,10 @@
-package tunnelers.Game.IO;
+package tunnelers.app.controls;
 
 import tunnelers.core.io.AControls;
 import tunnelers.core.io.InputAction;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import javafx.scene.input.KeyCode;
-import tunnelers.Game.ControlSchemeManager;
 
 /**
  *
@@ -24,9 +23,9 @@ public class KeyMap {
 	}
 
 	private final HashMap<KeyCode, ControlInput> map;
-	private final ControlSchemeManager controlSchemeManager;
+	private final ControlsManager controlSchemeManager;
 
-	public KeyMap(ControlSchemeManager controlSchemeManager) {
+	public KeyMap(ControlsManager controlSchemeManager) {
 		map = new HashMap<>();
 		this.controlSchemeManager = controlSchemeManager;
 	}

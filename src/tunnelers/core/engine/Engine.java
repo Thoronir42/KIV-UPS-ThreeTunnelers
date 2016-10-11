@@ -74,7 +74,7 @@ public final class Engine {
 	public void handleInput(InputAction inp, int playerID, boolean pressed) {
 		APlayer p = this.getPlayer(playerID);
 
-		if (p.getControls().handleControl(inp, pressed)) {
+		if (p.getControls().setControlState(inp, pressed)) {
 			NCG.NetCommand cmd = new GameCommand.ControlSet(inp.intVal(), pressed ? 1 : 0);
 		}
 	}

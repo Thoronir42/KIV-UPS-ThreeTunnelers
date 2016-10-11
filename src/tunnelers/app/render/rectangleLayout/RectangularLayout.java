@@ -47,8 +47,9 @@ public class RectangularLayout extends CanvasLayout {
 	}
 
 	@Override
-	public void draw(GraphicsContext g, List<APlayer> players) {
-		 Affine defTransform = g.getTransform();
+	public void draw(GraphicsContext g) {
+		List<APlayer> players = this.renderer.getPlayers();
+		Affine defTransform = g.getTransform();
 		Dimension2D playerAreaBounds = this.playerArea.getBounds();
 		int row = 0, col = 0;
 

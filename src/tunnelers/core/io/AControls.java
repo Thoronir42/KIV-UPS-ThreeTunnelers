@@ -1,7 +1,5 @@
 package tunnelers.core.io;
 
-import java.util.HashMap;
-import java.util.Map;
 import tunnelers.core.model.entities.Direction;
 
 /**
@@ -12,16 +10,16 @@ public abstract class AControls {
 
 	protected final byte schemeID;
 	protected int playerID;
-
-	Map<InputAction, Boolean> heldKeys;
+	
+	private final boolean[] heldKeys;
 	
 	public AControls(byte schemeId) {
 		this.schemeID = schemeId;
 		
-		heldKeys = new HashMap<>();
 		InputAction[] inputs = InputAction.values();
+		heldKeys = new boolean[inputs.length];
 		for (InputAction input : inputs) {
-			heldKeys.put(input, false);
+			heldKeys[input.intVal()] = false;
 		}
 	}
 
@@ -45,14 +43,12 @@ public abstract class AControls {
 	 * @param newVal what value is being set under mentioned input
 	 * @return true if the state on the input changed value
 	 */
-	public boolean handleControl(InputAction type, boolean newVal) {
-		boolean prevVal = heldKeys.get(type);
-		heldKeys.put(type, newVal);
-		return prevVal != newVal;
+	public boolean setControlState(InputAction type, boolean newVal) {
+		return this.set(type, newVal);
 	}
 
 	public boolean isShooting() {
-		return this.heldKeys.get(InputAction.actShoot);
+		return this.heldKeys[InputAction.actShoot.intVal()];
 	}
 
 	public Direction getDirection() {
@@ -62,19 +58,30 @@ public abstract class AControls {
 	}
 
 	private int getDir(InputAction sub, InputAction add) {
-		if (heldKeys.get(sub) && !heldKeys.get(add)) {
+		if (this.get(sub) && !this.get(add)) {
 			return -1;
 		}
-		if (heldKeys.get(add) && !heldKeys.get(sub)) {
+		if (this.get(add) && !this.get(sub)) {
 			return 1;
 		}
 		return 0;
+	}
+	
+	private boolean get(InputAction action){
+		return this.heldKeys[action.intVal()];
+	}
+	
+	private boolean set(InputAction action, boolean newValue){
+		boolean prevValue = heldKeys[action.intVal()];
+		heldKeys[action.intVal()] = newValue;
+		
+		return prevValue != newValue;
 	}
 
 	@Override
 	public String toString() {
 		return String.format("Controls(Up=%s\t Dw=%s\t Lf=%s\t Rg=%s\t Sh=%s)",
-				heldKeys.get(InputAction.movUp), heldKeys.get(InputAction.movDown), heldKeys.get(InputAction.movLeft),
-				heldKeys.get(InputAction.movRight), heldKeys.get(InputAction.actShoot));
+				this.get(InputAction.movUp),    this.get(InputAction.movDown), this.get(InputAction.movLeft),
+				this.get(InputAction.movRight), this.get(InputAction.actShoot));
 	}
 }

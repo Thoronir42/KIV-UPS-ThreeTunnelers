@@ -22,9 +22,9 @@ public abstract class CanvasLayout {
 		}
 	}
 	
-	protected FxRenderer renderer;
+	protected FxRenderHelper renderer;
 	
-	public void setRenderer(FxRenderer r) {
+	public void setRenderer(FxRenderHelper r) {
 		this.renderer = r;
 	}
 	
@@ -40,5 +40,5 @@ public abstract class CanvasLayout {
 		return this.renderer.getColorScheme();
 	}
 
-	public abstract void draw(GraphicsContext g, List<APlayer> players);
+	public abstract void draw(GraphicsContext g);
 }

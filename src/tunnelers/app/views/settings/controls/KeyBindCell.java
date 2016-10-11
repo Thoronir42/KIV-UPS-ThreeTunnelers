@@ -4,7 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import tunnelers.Game.IO.KeyMap;
+import tunnelers.app.controls.KeyMap;
 
 class KeyBindCell extends TableCell<KeyTableRow, KeyCode> {
 

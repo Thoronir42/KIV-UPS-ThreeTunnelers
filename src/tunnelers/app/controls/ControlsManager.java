@@ -1,17 +1,17 @@
-package tunnelers.Game;
+package tunnelers.app.controls;
 
+import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import tunnelers.core.io.AControls;
 import tunnelers.core.io.InputAction;
-import tunnelers.Game.IO.KeyMap;
-import tunnelers.Game.IO.ControlInput;
-import tunnelers.Game.IO.KeyboardControls;
 
 /**
  *
  * @author Stepan
  */
-public class ControlSchemeManager {
+public class ControlsManager {
+
+	private EventHandler<InputEvent> onInputChanged;	
 
 	public byte[] getKeyboardLayoutIDs() {
 		// TODO: optimize
@@ -33,7 +33,7 @@ public class ControlSchemeManager {
 
 	private final KeyboardControls[] keyboardSchemes;
 
-	public ControlSchemeManager() {
+	public ControlsManager() {
 		this.keyMap = new KeyMap(this);
 		this.keyboardSchemes = new KeyboardControls[2];
 		for (byte i = 0; i < 2; i++) {
@@ -53,7 +53,7 @@ public class ControlSchemeManager {
 		return this.keyboardSchemes[sIndex];
 	}
 
-	public ControlInput getPlayerInputByKeyPress(KeyCode code) {
+	public ControlInput getControlInputByKey(KeyCode code) {
 		ControlInput pi = this.keyMap.getInput(code);
 		return pi;
 	}
@@ -65,6 +65,25 @@ public class ControlSchemeManager {
 	public ControlInput replaceKeyInput(KeyCode kc, ControlInput plrInput) {
 		ControlInput oldOccurence = this.keyMap.set(kc, plrInput);
 		return oldOccurence;
+	}
+
+	public void setOnInputChanged(EventHandler<InputEvent> onInputChanged) {
+		this.onInputChanged = onInputChanged;
+	}
+	
+	
+	
+	public void keyPressSet(KeyCode kc, boolean pressed){
+		ControlInput pi = this.getControlInputByKey(kc);
+		if(pi == null){
+			return;
+		}
+		AControls controlSchemeId = pi.getControlScheme();
+		InputAction inp = pi.getInput();
+		
+		if(this.onInputChanged != null){
+			this.onInputChanged.handle(new InputEvent(controlSchemeId.getPlayerID(), inp, pressed));
+		}
 	}
 
 }

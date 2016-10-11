@@ -21,7 +21,7 @@ public class PlayerRemote extends APlayer {
 		InputAction[] inputs = InputAction.values();
 		RemoteControlScheme.RNG.setSeed(seed);
 		for(InputAction ia : inputs){
-			this.getControls().handleControl(ia, RemoteControlScheme.RNG.nextBoolean());
+			this.getControls().setControlState(ia, RemoteControlScheme.RNG.nextBoolean());
 		}
 	}
 

@@ -1,8 +1,7 @@
-package tunnelers.Game.IO;
+package tunnelers.app.controls;
 
 import tunnelers.core.io.AControls;
 import tunnelers.core.io.InputAction;
-import java.util.Objects;
 
 /**
  *
@@ -22,7 +21,7 @@ public class ControlInput {
 	public int hashCode() {
 		int hash = 7;
 		hash = 83 * hash + this.controlScheme.getID();
-		hash = 83 * hash + Objects.hashCode(this.input);
+		hash = 83 * hash + this.input.intVal();
 		return hash;
 	}
 
@@ -53,7 +52,4 @@ public class ControlInput {
 	public String toString() {
 		return "ControlInput{" + "controlScheme=" + controlScheme.getID() + ", input=" + input + '}';
 	}
-
-	
-	
 }

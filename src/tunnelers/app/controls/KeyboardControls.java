@@ -1,4 +1,4 @@
-package tunnelers.Game.IO;
+package tunnelers.app.controls;
 
 import tunnelers.core.io.AControls;
 

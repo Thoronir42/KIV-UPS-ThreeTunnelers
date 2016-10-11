@@ -8,7 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Affine;
-import tunnelers.app.render.FxRenderer;
+import tunnelers.app.render.FxRenderHelper;
 import tunnelers.core.model.entities.Tank;
 import tunnelers.core.model.player.APlayer;
 
@@ -22,9 +22,9 @@ public class PlayerAreaRenderer {
 	private final Rectangle viewWindow;
 	private final Dimension2D blockSize;
 	private final RectangleHalf render;
-	private final FxRenderer renderer;
+	private final FxRenderHelper renderer;
 
-	PlayerAreaRenderer(Dimension2D bounds, FxRenderer renderer) {
+	PlayerAreaRenderer(Dimension2D bounds, FxRenderHelper renderer) {
 		this.bounds = bounds;
 		this.viewWindow = new Rectangle(bounds.getWidth() * 0.05, bounds.getHeight() * 0.05, bounds.getWidth() * 0.9, bounds.getHeight() * 0.6);
 		this.blockSize = calcBlockSize(this.viewWindow, 37);

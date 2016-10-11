@@ -4,11 +4,11 @@ import tunnelers.core.settings.Settings;
 import java.lang.reflect.InvocationTargetException;
 import javafx.stage.Stage;
 import tunnelers.core.chat.Chat;
-import tunnelers.Game.ControlSchemeManager;
+import tunnelers.app.controls.ControlsManager;
 import tunnelers.app.views.warzone.PlayScene;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.render.AssetsRenderer;
-import tunnelers.app.render.FxRenderer;
+import tunnelers.app.render.FxRenderHelper;
 import tunnelers.app.render.MapRenderer;
 import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.core.engine.Engine;
@@ -21,8 +21,8 @@ public class TunnelersStage extends Stage {
 
 	protected static final Settings SETTINGS = Settings.getInstance();
 	
-	protected final ControlSchemeManager controlSchemeManager;
-	protected final FxRenderer renderer;
+	protected final ControlsManager controlsManager;
+	protected final FxRenderHelper renderer;
 
 	protected ATunnelersScene currentScene;
 
@@ -35,7 +35,7 @@ public class TunnelersStage extends Stage {
 		
 	}
 
-	public TunnelersStage(Engine engine, ControlSchemeManager controlSchemeManager, AColorScheme colorScheme, Assets assets) {
+	public TunnelersStage(Engine engine, ControlsManager controlsManager, AColorScheme colorScheme, Assets assets) {
 		super();
 		
 		this.engine = engine;
@@ -44,13 +44,17 @@ public class TunnelersStage extends Stage {
 		MapRenderer mapRenderer = new MapRenderer(colorScheme, engine.getContainer().getWarzone().getMap());
 		AssetsRenderer assetsRenderer = new AssetsRenderer(colorScheme, assets, engine.getPlayers());
 		
-		this.renderer = new FxRenderer(engine, colorScheme, mapRenderer, assetsRenderer);
-		this.controlSchemeManager = controlSchemeManager;
+		this.renderer = new FxRenderHelper(engine, colorScheme, mapRenderer, assetsRenderer);
+		this.controlsManager = controlsManager;
+	}
+	
+	protected void joinLobby(String clientName){
+		
 	}
 	
 	protected void beginGame() {
-		PlayScene scene = PlayScene.getInstance(engine, controlSchemeManager, this.renderer);
-		scene.initLayout(engine.getContainer().getPlayerCount());
+		PlayScene scene = PlayScene.getInstance(controlsManager);
+		scene.initLayout(engine.getContainer().getPlayerCount(), this.renderer);
 		
 		this.changeScene(scene);
 	}
@@ -92,8 +96,8 @@ public class TunnelersStage extends Stage {
 		return null;
 	}
 
-	public ControlSchemeManager getControls() {
-		return this.controlSchemeManager;
+	public ControlsManager getControls() {
+		return this.controlsManager;
 	}
 
 }

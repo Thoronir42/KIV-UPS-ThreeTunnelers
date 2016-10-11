@@ -3,7 +3,7 @@ package tunnelers.core.settings;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import tunnelers.Game.ControlSchemeManager;
+import tunnelers.app.controls.ControlsManager;
 import tunnelers.core.settings.specifier.DefaultSettigsSpecifier;
 import tunnelers.core.settings.specifier.FileSettingsSpecifier;
 import tunnelers.core.settings.specifier.ISettingsSpecifier;
@@ -55,12 +55,12 @@ public final class Settings {
 	private String serverAddress;
 	private int serverPort;
 
-	private final ControlSchemeManager controlSchemeManager;
+	private final ControlsManager controlSchemeManager;
 
 	private List<ISettingsSpecifier> configurators;
 
 	private Settings() {
-		this.controlSchemeManager = new ControlSchemeManager();
+		this.controlSchemeManager = new ControlsManager();
 
 		this.configurators = new ArrayList<>();
 		this.configurators.add(new DefaultSettigsSpecifier());
@@ -119,7 +119,7 @@ public final class Settings {
 		return DEFAULT_PORT;
 	}
 
-	public ControlSchemeManager getControlSchemeManager() {
+	public ControlsManager getControlSchemeManager() {
 		return this.controlSchemeManager;
 	}
 

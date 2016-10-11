@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import tunnelers.core.model.map.Map;
-import tunnelers.Game.ControlSchemeManager;
-import tunnelers.Game.IO.KeyboardControls;
+import tunnelers.app.controls.ControlsManager;
+import tunnelers.app.controls.KeyboardControls;
 import tunnelers.core.model.map.MapGenerator;
 
 /**
@@ -18,7 +18,7 @@ import tunnelers.core.model.map.MapGenerator;
  */
 public class GameContainer {
 
-	public static GameContainer mockContainer(ControlSchemeManager csmgr, String localName, int maxColorId) {
+	public static GameContainer mockContainer(ControlsManager csmgr, String localName, int maxColorId) {
 		APlayer[] players = new APlayer[]{
 			new PlayerLocal(47, RNG.getRandInt(maxColorId), csmgr.getKeyboardScheme((byte) 0), localName),
 			new PlayerLocal(53, RNG.getRandInt(maxColorId), csmgr.getKeyboardScheme((byte) 1), "Jouda"),

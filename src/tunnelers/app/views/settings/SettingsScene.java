@@ -17,7 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import tunnelers.Game.ControlSchemeManager;
+import tunnelers.app.controls.ControlsManager;
 import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.app.views.settings.controls.IpTextfield;
 import tunnelers.core.settings.Settings;
@@ -107,7 +107,7 @@ public class SettingsScene extends ATunnelersScene {
 
 	protected Button btn_testServer;
 
-	private final ControlSchemeManager controlSchemeManager;
+	private final ControlsManager controlSchemeManager;
 
 	public SettingsScene(Parent root, double width, double height) {
 		super(root, width, height, "Nastavení");

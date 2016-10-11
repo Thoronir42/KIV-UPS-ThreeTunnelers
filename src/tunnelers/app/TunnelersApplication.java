@@ -6,8 +6,9 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import tunnelers.core.chat.Chat;
-import tunnelers.Game.ControlSchemeManager;
+import tunnelers.app.controls.ControlsManager;
 import tunnelers.app.assets.Assets;
+import tunnelers.app.controls.InputEvent;
 import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.app.render.colors.DefaultColorScheme;
 import tunnelers.app.render.colors.PlayerColors;
@@ -39,13 +40,16 @@ public final class TunnelersApplication extends Application {
 		
 		Chat chat = new Chat(settings.getChatMessageCapacity());
 		NetWorks networks = new NetWorks();
-		ControlSchemeManager csmgr = settings.getControlSchemeManager();
+		ControlsManager csmgr = settings.getControlSchemeManager();
 		
 		PlayerColors playerColors = new PlayerColors();
 		AColorScheme colorScheme = new DefaultColorScheme(playerColors);
 		
 		Engine e = new Engine(GameContainer.mockContainer(csmgr, "KAREL", playerColors.size()), networks, chat);
 		
+		csmgr.setOnInputChanged((InputEvent event) -> {
+			e.handleInput(event.getInput(), event.getPlayerId(), event.isPressed());
+		});
 		
 		currentStage = new TunnelersStage(e, csmgr, colorScheme, assets);
 		
