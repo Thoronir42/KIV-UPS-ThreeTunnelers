@@ -15,8 +15,6 @@ public class FxRenderHelper {
 	private final Engine engine;
 	private final AColorScheme colorScheme;
 
-	private GraphicsContext gc;
-
 	protected MapRenderer mapRenderer;
 	protected AssetsRenderer assetsRenderer;
 
@@ -28,14 +26,8 @@ public class FxRenderHelper {
 	}
 
 	public void setGraphicsContext(GraphicsContext context) {
-		this.gc = context;
-		
 		mapRenderer.setGraphicsContext(context);
 		assetsRenderer.setGraphicsContext(context);
-	}
-
-	public void render(GraphicsContext gc) {
-		
 	}
 
 	public AColorScheme getColorScheme() {

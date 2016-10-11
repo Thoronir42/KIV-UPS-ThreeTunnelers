@@ -1,7 +1,7 @@
 package tunnelers.app.render.rectangleLayout;
 
-import tunnelers.app.render.CanvasLayout;
-import tunnelers.app.render.CanvasLayoutException;
+import tunnelers.app.render.RenderLayout;
+import tunnelers.app.render.RenderLayoutException;
 import java.util.List;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,9 +12,9 @@ import tunnelers.core.model.player.APlayer;
  *
  * @author Stepan
  */
-public class RectangularLayout extends CanvasLayout {
+public class RectangularLayout extends RenderLayout {
 
-	public static CanvasLayout getLayoutFor(int playerCount, Dimension2D canvasArea) throws CanvasLayoutException {
+	public static RenderLayout getLayoutFor(int playerCount, Dimension2D canvasArea) throws RenderLayoutException {
 		int rows = 1, cols = 2;
 		while (rows * cols < playerCount) {
 			if (cols > rows) {

@@ -32,7 +32,9 @@ public class TunnelersStage extends Stage {
 	
 
 	public final void update(long tick) {
-		
+		if(this.currentScene != null){
+			this.currentScene.drawScene();
+		}
 	}
 
 	public TunnelersStage(Engine engine, ControlsManager controlsManager, AColorScheme colorScheme, Assets assets) {
@@ -67,7 +69,7 @@ public class TunnelersStage extends Stage {
 	protected void changeScene(ATunnelersScene scene) {
 		this.hide();
 		
-		this.setScene(scene);
+		this.setScene(this.currentScene = scene);
 		this.renderer.setGraphicsContext(scene.getGraphicsContext());
 		this.setTitle(String.format("%s %s %s", SETTINGS.getGameName(), SETTINGS.getTitleSeparator(), scene.getName()));
 		

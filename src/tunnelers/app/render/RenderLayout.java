@@ -1,23 +1,21 @@
 package tunnelers.app.render;
 
-import java.util.List;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.app.render.rectangleLayout.RectangularLayout;
-import tunnelers.core.model.player.APlayer;
 
 /**
  *
  * @author Stepan
  */
-public abstract class CanvasLayout {
+public abstract class RenderLayout {
 
-	public static CanvasLayout choseIdeal(int playerCount, Dimension2D d) {
+	public static RenderLayout choseIdeal(int playerCount, Dimension2D d) {
 		try {
-			CanvasLayout layout = RectangularLayout.getLayoutFor(playerCount, d);
+			RenderLayout layout = RectangularLayout.getLayoutFor(playerCount, d);
 			return layout;
-		} catch (CanvasLayoutException e) {
+		} catch (RenderLayoutException e) {
 			throw new IllegalArgumentException(String.format("Could not find layout suitable for %d players.", playerCount));
 		}
 	}

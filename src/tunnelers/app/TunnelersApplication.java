@@ -30,7 +30,7 @@ public final class TunnelersApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		Settings settings = Settings.getInstance();
-		settings.addConfigFile("config/settings.cfg");
+		settings.addConfigFile(System.getProperty("user.dir") + "\\config\\settings.cfg");
 		settings.init();
 		
 		Assets assets = new Assets();

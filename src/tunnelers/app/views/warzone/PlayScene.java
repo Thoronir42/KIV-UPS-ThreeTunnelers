@@ -5,15 +5,11 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import tunnelers.app.controls.ControlsManager;
-import tunnelers.core.io.AControls;
-import tunnelers.app.controls.ControlInput;
-import tunnelers.core.io.InputAction;
-import tunnelers.app.render.CanvasLayout;
+import tunnelers.app.render.RenderLayout;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.render.FxRenderHelper;
 
@@ -53,7 +49,7 @@ public class PlayScene extends ATunnelersScene {
 
 	protected TextArea ta_chatBox;
 	protected TextField tf_chatIn;
-	protected CanvasLayout canvasLayout;
+	protected RenderLayout layout;
 	
 	private final ControlsManager csmgr;
 
@@ -64,18 +60,15 @@ public class PlayScene extends ATunnelersScene {
 
 	public void initLayout(int playerCount, FxRenderHelper renderer) {
 		Dimension2D availableArea = new Dimension2D(canvas.getWidth(), canvas.getHeight());
-		CanvasLayout layout = CanvasLayout.choseIdeal(playerCount, availableArea);
-		
+		layout = RenderLayout.choseIdeal(playerCount, availableArea);
 		layout.setRenderer(renderer);
-		
-		this.canvasLayout = layout;
 	}
 
 
 	@Override
 	public void drawScene() {
 		Platform.runLater(() -> {
-			canvasLayout.draw(canvas.getGraphicsContext2D());
+			layout.draw(canvas.getGraphicsContext2D());
 		});
 
 	}

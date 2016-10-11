@@ -4,9 +4,9 @@ package tunnelers.app.render;
  *
  * @author Stepan
  */
-public class CanvasLayoutException extends IllegalStateException {
+public class RenderLayoutException extends IllegalStateException {
 
-	public CanvasLayoutException(int playerAmount) {
+	public RenderLayoutException(int playerAmount) {
 		super("Couldn't create layout for " + playerAmount + " players");
 	}
 }

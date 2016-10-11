@@ -106,10 +106,6 @@ public class LobbyScene extends ATunnelersScene {
 		//this.wv_chatBox.getEngine().loadContent(stage.getGamechat().getHtml());
 	}
 	
-	public void drawScene() {
-		//
-	}
-	
 	protected void sendChatMessage(String message){
 		if(message.length() > 0){
 			//super.sendChatMessage(message);
