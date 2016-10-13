@@ -124,8 +124,8 @@ public final class Settings {
 	}
 
 	public void setWindowSize(int width, int height) {
-		this.setWindowWidth(windowWidth);
-		this.setWindowHeight(windowHeight);
+		this.setWindowWidth(width);
+		this.setWindowHeight(height);
 	}
 
 	public int getWindowWidth() {
