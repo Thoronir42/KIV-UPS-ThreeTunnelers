@@ -8,10 +8,8 @@ import tunnelers.core.GameContainer;
 import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;
 import tunnelers.core.engine.stage.WarzoneStage;
-import tunnelers.network.NetWorks;
-import tunnelers.network.command.GameCommand;
-import tunnelers.network.command.MessageCommand;
-import tunnelers.network.command.NCG;
+import tunnelers.network.command.Command;
+import tunnelers.network.command.CommandType;
 
 /**
  *
@@ -56,14 +54,16 @@ public final class Engine {
 		this.currentStage.update(tick);
 	}
 
-	public void handleNetworkCommand(NCG.NetCommand command) {
-		if (command instanceof MessageCommand.Plain) {
-			MessageCommand.Plain cmd = (MessageCommand.Plain) command;
-			String msg = cmd.getMessageText();
-			APlayer p = this.getPlayer(cmd.getPlayerId());
-			this.chat.addMessage(p, msg);
-		} else {
-			System.err.println("Incomming command not recognised");
+	protected void handleNetworkCommand(Command command) {
+		switch(command.getType()){
+			case MsgPlain:
+				String msg = command.toString();
+				APlayer p = this.getPlayer(0);
+				this.chat.addMessage(p, msg);
+				break;
+			default:
+				System.err.println("Incomming command not recognised");
+				break;
 		}
 	}
 
@@ -75,7 +75,8 @@ public final class Engine {
 		APlayer p = this.getPlayer(playerID);
 
 		if (p.getControls().setControlState(inp, pressed)) {
-			NCG.NetCommand cmd = new GameCommand.ControlSet(inp.intVal(), pressed ? 1 : 0);
+			Command cmd = this.networks.createCommand(CommandType.GameControlsSet);
+			
 		}
 	}
 

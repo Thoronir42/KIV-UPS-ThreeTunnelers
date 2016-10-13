@@ -1,10 +1,15 @@
-package tunnelers.network;
+package tunnelers.core.engine;
 
-import tunnelers.network.command.LeadCommand;
-import tunnelers.network.command.NCG;
 import generic.BackPasser;
 import java.io.IOException;
 import javafx.event.EventHandler;
+import tunnelers.network.CommandNotRecognisedException;
+import tunnelers.network.Connection;
+import tunnelers.network.NetworkEvent;
+import tunnelers.network.NetworksException;
+import tunnelers.network.command.Command;
+import tunnelers.network.command.CommandParser;
+import tunnelers.network.command.CommandType;
 
 /**
  *
@@ -22,28 +27,29 @@ public class NetWorks extends Thread {
 	
 	private EventHandler<NetworkEvent> onCommandReceived;
 
-	private BackPasser<NCG.NetCommand> cmdPasser;
+	private CommandParser parser;
 	
 	private int invalidResponseCounter;
 	
 	private Status status;
 	private String disconnectReason;
+	
+	private byte LastMsgId = 0;
 
 	public NetWorks() {
 		this.status = Status.Joining;
 
-		this.setCommandPasser(new BackPasser<NCG.NetCommand>() {
+		this.setCommandPasser(new BackPasser<Command>() {
 			@Override
 			public void run() {
 				nwInternalHandle(this.get());
 			}
 		});
+		
+		this.parser = new CommandParser();
 	}
 	
 	public boolean serverPresent(String address, int port) {
-		NCG.NetCommand.RoomNumber = 00;
-		LeadCommand.StillThere cmd = new LeadCommand.StillThere(0);
-
 		return false;
 	}
 	
@@ -57,8 +63,8 @@ public class NetWorks extends Thread {
 		}
 	}
 
-	public boolean issueCommand(NCG.NetCommand cmd) {
-		String code = cmd.getCommandCode();
+	public boolean issueCommand(Command cmd) {
+		String code = parser.parse(cmd);
 		System.out.println(code);
 		try{
 			this.connection.send(code);
@@ -69,19 +75,20 @@ public class NetWorks extends Thread {
 	}
 
 	public final void setCommandPasser(BackPasser r) {
-		this.cmdPasser = r;
+		System.err.println("BackPasser is deprecated in setCommandPasser");
+		//FIXME this.cmdPasser = r;
 	}
 
-	synchronized private void nwInternalHandle(NCG.NetCommand cmd) {
+	synchronized private void nwInternalHandle(Command cmd) {
 		if (cmd == null) {
 			this.status = Status.ServerUnrecognised;
 			this.disconnectReason = "Server didn't respond properly";
 			return;
 		}
 
-		if (cmd instanceof LeadCommand.Approve) {
+		if (cmd.getType() == CommandType.LeadApprove) {
 			this.status = Status.ServerReady;
-		} else if (cmd instanceof LeadCommand.Deny) {
+		} else if (cmd.getType() == CommandType.LeadDeny) {
 			switch (0) {
 				case 0:
 					this.status = Status.ServerFull;
@@ -101,7 +108,11 @@ public class NetWorks extends Thread {
 	public void run() {
 		while (this.keepRunning()) {
 			try{
-				this.connection.handleMessage();
+				String data = this.connection.receiveMessage();
+				Command cmd = this.parser.parse(data);
+				if(cmd == null){
+					throw new CommandNotRecognisedException(data);
+				}
 			} catch(CommandNotRecognisedException e){
 				if(!this.handleInvalidResponse()){
 					return;
@@ -116,11 +127,7 @@ public class NetWorks extends Thread {
 	
 	private boolean handleInvalidResponse(){
 		this.invalidResponseCounter++;
-		if(this.invalidResponseCounter > 12){ // TODO: configurability
-			return false;
-		}
-		
-		return true;
+		return this.invalidResponseCounter <= 12; // TODO: configurability
 	}
 
 	public boolean canConnect() {
@@ -184,6 +191,10 @@ public class NetWorks extends Thread {
 		} catch (InterruptedException ex) {
 			System.err.println("Failed to close networks: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
 		}
+	}
+
+	Command createCommand(CommandType commandType) {
+		return new Command(commandType, ++LastMsgId);
 	}
 
 	private enum Status {

@@ -15,7 +15,7 @@ import tunnelers.app.render.colors.PlayerColors;
 import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.core.GameContainer;
 import tunnelers.core.engine.Engine;
-import tunnelers.network.NetWorks;
+import tunnelers.core.engine.NetWorks;
 
 /**
  *

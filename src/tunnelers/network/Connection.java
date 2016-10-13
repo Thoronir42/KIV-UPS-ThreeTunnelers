@@ -9,7 +9,6 @@ import java.net.UnknownHostException;
 import java.util.concurrent.Semaphore;
 import tunnelers.network.codec.ICodec;
 import tunnelers.network.codec.NoCodec;
-import tunnelers.network.command.NCG;
 
 /**
  *
@@ -59,29 +58,17 @@ public class Connection {
 		}
 	}
 	
-	private String receiveMessage() throws IOException, InterruptedException {
+	public String receiveMessage() throws IOException, InterruptedException {
 		DatagramPacket recv = new DatagramPacket(buffer, buffer.length);
 		datagramSocket.receive(recv);
 		return (new String(buffer)).trim();
 	}
 
-	
-
-	public NCG.NetCommand handleMessage() throws IOException, CommandNotRecognisedException, InterruptedException{
-		String data = receiveMessage();
-		NCG.NetCommand cmd = NCG.NetCommand.parse(data);
-		if (cmd == null) {
-			throw new CommandNotRecognisedException(data);
-		}
-		
-		return cmd;
-	}
-
-	void close() {
+	public void close() {
 		this.datagramSocket.close();
 	}
 
-	String getHostString() {
+	public String getHostString() {
 		return this.address.getHostAddress() + ':' + this.port;
 	}
 }
