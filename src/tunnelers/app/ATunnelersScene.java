@@ -24,9 +24,8 @@ public abstract class ATunnelersScene extends Scene {
 	protected static Settings settings = Settings.getInstance();
 
 	protected String sceneName;
-	
+
 	protected Canvas canvas;
-	
 
 	public void setName(String name) {
 		this.sceneName = name;
@@ -43,18 +42,18 @@ public abstract class ATunnelersScene extends Scene {
 	public ATunnelersScene(Parent content, double width, double height, String name) {
 		super(new StackPane(), width, height);
 		this.sceneName = name;
-		
+
 		this.setOnKeyPressed((KeyEvent event) -> {
 			handleKeyPressed(event.getCode());
 		});
-		
+
 		canvas = new Canvas();
 		canvas.widthProperty().bind(this.widthProperty());
 		canvas.heightProperty().bind(this.heightProperty());
-		
-		((StackPane)this.getRoot()).getChildren().addAll(canvas, content);
+
+		((StackPane) this.getRoot()).getChildren().addAll(canvas, content);
 	}
-	
+
 	public void handleKeyPressed(KeyCode code) {
 		switch (code) {
 			case ESCAPE:
@@ -62,33 +61,36 @@ public abstract class ATunnelersScene extends Scene {
 				break;
 		}
 	}
-	
-	public void drawScene(){
-		int x1 = RNG.getRandInt((int)this.getWidth()),
+
+	public void drawScene(long tick) {
+		int x1 = RNG.getRandInt((int) this.getWidth()),
 				y1 = RNG.getRandInt((int) this.getHeight());
-		int x2 = RNG.getRandInt((int)this.getWidth()),
-				y2 = RNG.getRandInt((int) this.getHeight());
+		int x2 = RNG.getRandInt((int) this.getWidth() - x1),
+				y2 = RNG.getRandInt((int) this.getHeight() - y1);
+
+		GraphicsContext g = this.getGraphicsContext();
+		if(tick % 20 == 0){
+			g.clearRect(0, 0, this.getWidth(), this.getHeight());
+		}
 		
-		
-		
-		GraphicsContext g = this.canvas.getGraphicsContext2D();
+
 		g.setStroke(Color.BLACK);
 		g.setLineWidth(2);
 		g.strokeRect(x1, y1, x2, y2);
-		
+
 	}
-	
+
 	protected TunnelersStage getStage() {
 		return (TunnelersStage) this.getWindow();
 	}
-	
-	protected void goBack(){
+
+	protected void goBack() {
 		this.getStage().prevScene();
 	}
 
 	public abstract Class getPrevScene();
 
-	public GraphicsContext getGraphicsContext(){
+	public GraphicsContext getGraphicsContext() {
 		return this.canvas.getGraphicsContext2D();
 	}
 }

@@ -33,7 +33,7 @@ public class TunnelersStage extends Stage {
 
 	public final void update(long tick) {
 		if(this.currentScene != null){
-			this.currentScene.drawScene();
+			this.currentScene.drawScene(tick);
 		}
 	}
 

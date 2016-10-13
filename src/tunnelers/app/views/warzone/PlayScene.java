@@ -66,7 +66,7 @@ public class PlayScene extends ATunnelersScene {
 
 
 	@Override
-	public void drawScene() {
+	public void drawScene(long tick) {
 		Platform.runLater(() -> {
 			layout.draw(canvas.getGraphicsContext2D());
 		});
