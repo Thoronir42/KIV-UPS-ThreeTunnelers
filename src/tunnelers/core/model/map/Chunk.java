@@ -1,5 +1,6 @@
 package tunnelers.core.model.map;
 
+import javafx.geometry.Point2D;
 import tunnelers.core.model.player.APlayer;
 
 /**
@@ -7,12 +8,6 @@ import tunnelers.core.model.player.APlayer;
  * @author Stepan
  */
 public class Chunk {
-
-	/**
-	 * fixme: This is bad..
-	 */
-	public static final int CHUNK_SIZE_ERROR_Y = 500000,
-			CHUNK_SIZE_ERROR_X = 10000;
 
 	protected Block[][] chunkData;
 	public final Bounds bounds;
@@ -40,13 +35,11 @@ public class Chunk {
 		int errors = 0;
 		for (int row = 0; row < chunkData.length; row++) {
 			if (row > chunkSize) {
-				errors += CHUNK_SIZE_ERROR_Y;
 				break;
 			}
 			char[] chunkRow = chunkData[row];
 			for (int col = 0; col < chunkRow.length; col++) {
 				if (col > chunkSize) {
-					errors += CHUNK_SIZE_ERROR_X;
 					break;
 				}
 				Block b = Block.fromChar(chunkRow[col]);
@@ -67,6 +60,17 @@ public class Chunk {
 
 	public APlayer getAssignedPlayer() {
 		return this.assignedPlayer;
+	}
+
+	boolean isAssigned() {
+		return this.assignedPlayer != null;
+	}
+
+	Point2D getCenter() {
+		return new Point2D(
+				(this.bounds.xMax + this.bounds.xMin) / 2,
+				(this.bounds.yMax + this.bounds.yMin) / 2
+		);
 	}
 
 }

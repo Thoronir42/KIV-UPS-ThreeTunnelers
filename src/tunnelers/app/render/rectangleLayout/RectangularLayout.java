@@ -6,6 +6,7 @@ import java.util.List;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
+import tunnelers.app.render.FxRenderHelper;
 import tunnelers.core.model.player.APlayer;
 
 /**
@@ -35,7 +36,14 @@ public class RectangularLayout extends RenderLayout {
 		this.cols = cols;
 		Dimension2D playerAreaBounds = new Dimension2D(availableArea.getWidth() / cols,
 				availableArea.getHeight() / rows);
-		this.playerArea = new PlayerAreaRenderer(playerAreaBounds, renderer);
+		this.playerArea = new PlayerAreaRenderer(playerAreaBounds);
+	}
+	
+	@Override
+	public void setRenderer(FxRenderHelper renderer){
+		super.setRenderer(renderer);
+		this.playerArea.setRenderer(renderer);
+		this.renderer.setBlockSize(playerArea.getBlockSize());
 	}
 
 	protected int getRowAmount() {

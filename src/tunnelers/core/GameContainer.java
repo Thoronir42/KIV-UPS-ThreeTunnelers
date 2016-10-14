@@ -7,10 +7,11 @@ import tunnelers.core.model.player.PlayerRemote;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javafx.geometry.Point2D;
 import tunnelers.core.model.map.Map;
 import tunnelers.app.controls.ControlsManager;
 import tunnelers.app.controls.KeyboardControls;
-import tunnelers.core.model.map.MapGenerator;
+import tunnelers.core.model.entities.Tank;
 
 /**
  *
@@ -23,10 +24,7 @@ public class GameContainer {
 			new PlayerLocal(47, RNG.getRandInt(maxColorId), csmgr.getKeyboardScheme((byte) 0), localName),
 			new PlayerLocal(53, RNG.getRandInt(maxColorId), csmgr.getKeyboardScheme((byte) 1), "Jouda"),
 			new PlayerRemote(12, RNG.getRandInt(maxColorId), "Frederick"),};
-		Map map = MapGenerator.mockMap(players);
 		GameContainer c = new GameContainer(players);
-
-		c.initWarzone(map);
 
 		byte[] controlSchemeIDs = csmgr.getKeyboardLayoutIDs();
 		for (byte i = 0; i < controlSchemeIDs.length; i++) {
@@ -54,10 +52,12 @@ public class GameContainer {
 	}
 
 	public void initWarzone(Map map) {
-		if (map != null) {
-			System.err.println("Warzone had already been set");
-		}
 		this.warzone = new Warzone(players, map);
+		
+		for (APlayer p : players) {
+			Point2D baseCenter = map.assignNextBaseTo(p);
+			p.setTank(new Tank(p, baseCenter));
+		}
 	}
 
 	public Warzone getWarzone() {
@@ -85,13 +85,6 @@ public class GameContainer {
 			if (p.getID() == playerId) {
 				return p;
 			}
-		}
-		return null;
-	}
-
-	public APlayer getLocalPlayer() {
-		for (APlayer p : this.players) {
-			return p;
 		}
 		return null;
 	}

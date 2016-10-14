@@ -1,9 +1,6 @@
 package tunnelers.core.model.map;
 
 import generic.RNG;
-import javafx.geometry.Point2D;
-import tunnelers.core.model.player.APlayer;
-import tunnelers.core.model.entities.Tank;
 import tunnelers.core.settings.Settings;
 
 /**
@@ -26,15 +23,7 @@ public class MapGenerator {
 		return tmp;
 	}
 
-	public static Map mockMap(APlayer[] players) {
-		Map map = new Map(Settings.MOCK_CHUNK_SIZE, 12, 8);
-		
-		for (APlayer p : players) {
-			Point2D baseCenter = map.getFreeBaseSpot(p);
-			Tank tank = new Tank(p, baseCenter);
-			p.setTank(tank);
-		}
-		
-		return map;
+	public static Map mockMap(int playerCount) {
+		return new Map(Settings.MOCK_CHUNK_SIZE, 12, 8, playerCount);
 	}
 }

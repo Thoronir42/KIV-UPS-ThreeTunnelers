@@ -11,6 +11,8 @@ import tunnelers.app.render.AssetsRenderer;
 import tunnelers.app.render.FxRenderHelper;
 import tunnelers.app.render.MapRenderer;
 import tunnelers.app.render.colors.AColorScheme;
+import tunnelers.app.views.lobby.LobbyScene;
+import tunnelers.app.views.serverList.GameRoom;
 import tunnelers.core.engine.Engine;
 
 /**
@@ -50,11 +52,11 @@ public class TunnelersStage extends Stage {
 		this.controlsManager = controlsManager;
 	}
 	
-	protected void joinLobby(String clientName){
-		
+	public void joinLobby(String clientName, GameRoom gr){
+		this.changeScene(LobbyScene.getInstance());
 	}
 	
-	protected void beginGame() {
+	public void beginGame() {
 		PlayScene scene = PlayScene.getInstance(controlsManager);
 		scene.initLayout(engine.getContainer().getPlayerCount(), this.renderer);
 		

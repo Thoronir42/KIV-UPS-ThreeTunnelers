@@ -16,6 +16,7 @@ import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.core.GameContainer;
 import tunnelers.core.engine.Engine;
 import tunnelers.core.engine.NetWorks;
+import tunnelers.core.model.map.MapGenerator;
 
 /**
  *
@@ -45,7 +46,10 @@ public final class TunnelersApplication extends Application {
 		PlayerColors playerColors = new PlayerColors();
 		AColorScheme colorScheme = new DefaultColorScheme(playerColors);
 		
-		Engine e = new Engine(GameContainer.mockContainer(csmgr, "KAREL", playerColors.size()), networks, chat);
+		GameContainer container = GameContainer.mockContainer(csmgr, "KAREL", playerColors.size());
+		container.initWarzone(MapGenerator.mockMap(container.getPlayerCount()));
+		
+		Engine e = new Engine(container, networks, chat);
 		
 		csmgr.setOnInputChanged((InputEvent event) -> {
 			e.handleInput(event.getInput(), event.getPlayerId(), event.isPressed());
@@ -71,14 +75,14 @@ public final class TunnelersApplication extends Application {
 
 	}
 
+	public void update(long tick) {
+		this.currentStage.update(tick);
+	}
+
 	/**
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
 		launch(args);
-	}
-
-	public void update(long tick) {
-		this.currentStage.update(tick);
 	}
 }

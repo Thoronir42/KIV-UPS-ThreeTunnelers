@@ -204,22 +204,7 @@ public class ServerListScene extends ATunnelersScene {
 		}
 		SceneStatus.set(Status.Connecting);
 		
-		//this.getStage().kickstartLobby(kickstarter);
-		
-		/*
-		String address = settings.getServerAddress(),
-				clientName = tf_localName.getText();
-		int port = settings.getServerPort();
-		System.out.format("Connecting to: %s:%d%n", address, port);
-
-		NetWorks nw = NetWorks.connectTo(address, port, clientName);
-		nw.toString();
-		if (nw.canConnect()) {
-			this.getStage().kickstartLobby(kickstarter);
-		} else {
-			this.lbl_conInfo.setText(nw.getStatusLabel());
-		}
-		*/
+		this.getStage().joinLobby(name, gr);
 	}
 
 	private void serverListClicked(MouseEvent e) {
@@ -244,6 +229,5 @@ public class ServerListScene extends ATunnelersScene {
 		private Status(String label){
 			this.label = label;
 		}
-		
 	}
 }

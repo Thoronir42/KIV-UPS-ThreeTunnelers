@@ -33,7 +33,7 @@ public class GameRoom implements GRTVItem {
 		return d;
 
 	}
-	byte roomID;
+	int roomID;
 	byte maxPlayers;
 	byte curPlayers;
 	byte flags;
@@ -118,5 +118,9 @@ public class GameRoom implements GRTVItem {
 				return (flags & flag) > 0;
 			}
 		};
+	}
+
+	int getId() {
+		return this.roomID;
 	}
 }

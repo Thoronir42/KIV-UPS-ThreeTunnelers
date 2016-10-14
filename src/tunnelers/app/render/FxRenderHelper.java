@@ -1,6 +1,7 @@
 package tunnelers.app.render;
 
 import java.util.List;
+import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.core.engine.Engine;
@@ -44,5 +45,10 @@ public class FxRenderHelper {
 
 	public List<APlayer> getPlayers() {
 		return this.engine.getPlayers();
+	}
+
+	public void setBlockSize(Dimension2D blockSize) {
+		this.mapRenderer.setBlockSize(blockSize);
+		this.assetsRenderer.setBlockSize(blockSize);
 	}
 }

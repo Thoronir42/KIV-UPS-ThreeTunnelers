@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.TunnelersStage;
+import tunnelers.app.views.serverList.ServerListScene;
 
 /**
  *
@@ -25,11 +26,16 @@ public class LobbyScene extends ATunnelersScene {
 
 	private static LobbyScene instance;
 
-	public static LobbyScene getInstance(boolean createNew) throws IllegalStateException {
-		if (createNew || instance == null) {
+	public static LobbyScene getInstance() throws IllegalStateException {
+		if (instance == null) {
 			instance = createInstance();
 		}
+		
 		return instance;
+	}
+	
+	public static void clearInstance(){
+		instance = null;
 	}
 	
 	private static LobbyScene createInstance() {
@@ -57,13 +63,6 @@ public class LobbyScene extends ATunnelersScene {
 		
 		scene.tf_chatIn = tf_chatIn;
 		root.add(scene.tf_chatIn, 0, 1);
-		tf_chatIn.setOnKeyPressed((KeyEvent event) -> {
-			switch(event.getCode()){
-				case ENTER:
-					scene.sendChatMessage();
-					break;
-			}
-		});
 
 		Button but_send = new Button("Odeslat");
 		but_send.setOnAction((ActionEvent event) -> {
@@ -74,7 +73,7 @@ public class LobbyScene extends ATunnelersScene {
 		
 		Button but_start = new Button("Vyzkoušet");
 		but_start.setOnAction((ActionEvent event) -> {
-			//scene.getStage().beginGame();
+			scene.getStage().beginGame();
 		});
 		root.add(but_start, 1, 2);
 
@@ -119,7 +118,7 @@ public class LobbyScene extends ATunnelersScene {
 
 	@Override
 	public Class getPrevScene() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return ServerListScene.class;
 	}
 	
 }

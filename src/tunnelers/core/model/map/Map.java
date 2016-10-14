@@ -14,6 +14,7 @@ public class Map {
 	public final int Xchunks, Ychunks;
 	protected final int chunkSize;
 	protected final int width, height;
+	private final Chunk[] playerBaseChunks;
 
 	public int getWidth() {
 		return width;
@@ -27,13 +28,15 @@ public class Map {
 		return chunkSize;
 	}
 
-	public Map(int chunkSize, int width, int height) {
+	public Map(int chunkSize, int width, int height, int playerCount) {
 		this.Xchunks = width;
 		this.Ychunks = height;
 		this.chunkSize = chunkSize;
 		this.width = Xchunks * chunkSize;
 		this.height = Ychunks * chunkSize;
 		map = initChunks(width, height);
+
+		this.playerBaseChunks = this.initPlayerBaseChunks(playerCount);
 	}
 
 	private Chunk[][] initChunks(int width, int height) {
@@ -46,6 +49,24 @@ public class Map {
 		return tmp;
 	}
 
+	private Chunk[] initPlayerBaseChunks(int playerCount) {
+		Chunk[] chunks = new Chunk[playerCount];
+		// TODO: base distance
+		// TODO: terrain editing
+		for (int i = 0; i < playerCount; i++) {
+			Chunk currentChunk;
+			do {
+				int x = RNG.getRandInt(Xchunks - 2) + 1,
+						y = RNG.getRandInt(Ychunks - 2) + 1;
+				currentChunk = this.map[x][y];
+			} while (currentChunk.isAssigned());
+			
+			chunks[i] = currentChunk;
+		}
+		
+		return chunks;
+	}
+
 	public void updateChunk(int x, int y, char[][] chunkData) throws ChunkException {
 		if ((x < 0 || x >= this.Xchunks) || (y < 0 || y >= this.Ychunks)) {
 			throw new ChunkException(x, y, Xchunks, Ychunks);
@@ -53,11 +74,16 @@ public class Map {
 		this.map[x][y].applyData(chunkData);
 	}
 
-	public Point2D getFreeBaseSpot(APlayer p) {
-		int x = RNG.getRandInt(Xchunks - 2) + 1, y = RNG.getRandInt(Ychunks - 2) + 1;
-		Chunk c = this.map[x][y];
-		c.assignedPlayer = p;
-		return new Point2D(x * chunkSize + chunkSize / 2, y * chunkSize + chunkSize / 2);
+	public Point2D assignNextBaseTo(APlayer p) throws IllegalStateException{
+		for(Chunk c : this.playerBaseChunks){
+			if(c.isAssigned()){
+				continue;
+			}
+			c.assignPlayer(p);
+			return c.getCenter();
+		}
+		
+		throw new IllegalStateException("All player base chunks are already assigned.");
 	}
 
 	void assignPlayer(int chX, int chY, APlayer p) {
