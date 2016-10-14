@@ -1,6 +1,5 @@
 package tunnelers.core.engine;
 
-import generic.BackPasser;
 import java.io.IOException;
 import javafx.event.EventHandler;
 import tunnelers.network.CommandNotRecognisedException;
@@ -38,13 +37,6 @@ public class NetWorks extends Thread {
 
 	public NetWorks() {
 		this.status = Status.Joining;
-
-		this.setCommandPasser(new BackPasser<Command>() {
-			@Override
-			public void run() {
-				nwInternalHandle(this.get());
-			}
-		});
 		
 		this.parser = new CommandParser();
 	}
@@ -72,11 +64,6 @@ public class NetWorks extends Thread {
 		} catch (NetworksException e){
 			return false;
 		}
-	}
-
-	public final void setCommandPasser(BackPasser r) {
-		System.err.println("BackPasser is deprecated in setCommandPasser");
-		//FIXME this.cmdPasser = r;
 	}
 
 	synchronized private void nwInternalHandle(Command cmd) {

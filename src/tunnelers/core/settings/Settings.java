@@ -75,7 +75,7 @@ public final class Settings {
 		try {
 			this.configurators.add(new FileSettingsSpecifier(configFile));
 		} catch (IOException e) {
-			System.err.println(e);
+			System.err.println("Error with adding config file: " + e.getMessage());
 		}
 	}
 
