@@ -14,6 +14,7 @@ import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.app.views.lobby.LobbyScene;
 import tunnelers.app.views.serverList.GameRoom;
 import tunnelers.core.engine.Engine;
+import tunnelers.core.engine.EngineStage;
 
 /**
  *
@@ -61,6 +62,7 @@ public class TunnelersStage extends Stage {
 		scene.initLayout(engine.getContainer().getPlayerCount(), this.renderer);
 		
 		this.changeScene(scene);
+		this.engine.setStage(EngineStage.Warzone);
 	}
 	
 	public void prevScene() {

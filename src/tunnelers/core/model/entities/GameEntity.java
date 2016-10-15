@@ -62,8 +62,22 @@ public abstract class GameEntity {
 	public double getBottomBorder() {
 		return this.getY() + (this.getHeight() - 1) / 2;
 	}
+
+	public APlayer getPlayer() {
+		return this.player;
+	}
 	
 	public int getPlayerId(){
 		return this.player.getID();
 	}
+
+	public Direction getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+	
+	
 }

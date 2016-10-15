@@ -3,6 +3,8 @@ package tunnelers.core;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javafx.geometry.Point2D;
+import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.model.player.APlayer;
@@ -41,5 +43,9 @@ public class Warzone {
 
 	public Map getMap() {
 		return this.map;
+	}
+
+	public void addProjectile(Point2D location, Direction direction, APlayer player) {
+		this.projectiles.add(new Projectile(location, direction, player));
 	}
 }

@@ -11,12 +11,12 @@ import tunnelers.core.io.InputAction;
  */
 public class ControlsManager {
 
-	private EventHandler<InputEvent> onInputChanged;	
+	private EventHandler<InputEvent> onInputChanged;
 
 	public byte[] getKeyboardLayoutIDs() {
 		// TODO: optimize
 		byte[] ids = new byte[this.keyboardSchemes.length];
-		for (int i = 0; i < this.keyboardSchemes.length; i++){
+		for (int i = 0; i < this.keyboardSchemes.length; i++) {
 			ids[i] = this.keyboardSchemes[i].getID();
 		}
 		return ids;
@@ -70,18 +70,17 @@ public class ControlsManager {
 	public void setOnInputChanged(EventHandler<InputEvent> onInputChanged) {
 		this.onInputChanged = onInputChanged;
 	}
-	
-	
-	
-	public void keyPressSet(KeyCode kc, boolean pressed){
+
+	public void keyPressSet(KeyCode kc, boolean pressed) {
 		ControlInput pi = this.getControlInputByKey(kc);
-		if(pi == null){
+//		System.out.format("%s´= %s -> %s", kc, pressed, pi);
+		if (pi == null) {
 			return;
 		}
 		AControls controlSchemeId = pi.getControlScheme();
 		InputAction inp = pi.getInput();
-		
-		if(this.onInputChanged != null){
+
+		if (this.onInputChanged != null) {
 			this.onInputChanged.handle(new InputEvent(controlSchemeId.getPlayerID(), inp, pressed));
 		}
 	}
