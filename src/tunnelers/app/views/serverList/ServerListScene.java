@@ -147,7 +147,6 @@ public class ServerListScene extends ATunnelersScene {
 
 	public ServerListScene(Parent root, double width, double height) {
 		super(root, width, height, "Výpis serverů");
-		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.BLUEVIOLET.hashCode()));
 		
 		this.SceneStatus = new SimpleObjectProperty<>();
 		this.SceneStatus.addListener((listener, o, n) -> {

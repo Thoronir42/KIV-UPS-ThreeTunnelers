@@ -7,7 +7,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -44,7 +43,7 @@ public class LobbyScene extends ATunnelersScene {
 		content.setVgap(20);
 		content.setAlignment(Pos.CENTER);
 
-		content.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
+		content.setBackground(new Background(new BackgroundFill(new Color(0.11, 0.17, 0.69, 0.2), CornerRadii.EMPTY, Insets.EMPTY)));
 		
 		LobbyScene scene = new LobbyScene(content, settings.getWindowWidth(), settings.getWindowHeight());
 		addComponents(content, scene);
