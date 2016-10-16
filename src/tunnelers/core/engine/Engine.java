@@ -83,4 +83,8 @@ public final class Engine {
 	public List<APlayer> getPlayers() {
 		return this.container.getPlayers();
 	}
+
+	public Chat getChat() {
+		return chat;
+	}
 }

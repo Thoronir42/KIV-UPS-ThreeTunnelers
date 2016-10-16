@@ -15,7 +15,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.TunnelersStage;
+import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.app.views.serverList.ServerListScene;
+import tunnelers.core.chat.Chat;
 
 /**
  *
@@ -25,9 +27,9 @@ public class LobbyScene extends ATunnelersScene {
 
 	private static LobbyScene instance;
 
-	public static LobbyScene getInstance() throws IllegalStateException {
+	public static LobbyScene getInstance(Chat chat, AColorScheme colors) throws IllegalStateException {
 		if (instance == null) {
-			instance = createInstance();
+			instance = createInstance(chat, colors);
 		}
 		
 		return instance;
@@ -37,7 +39,7 @@ public class LobbyScene extends ATunnelersScene {
 		instance = null;
 	}
 	
-	private static LobbyScene createInstance() {
+	private static LobbyScene createInstance(Chat chat, AColorScheme colors) {
 		GridPane content = new GridPane();
 		content.setHgap(4);
 		content.setVgap(20);
@@ -45,7 +47,7 @@ public class LobbyScene extends ATunnelersScene {
 
 		content.setBackground(new Background(new BackgroundFill(new Color(0.11, 0.17, 0.69, 0.2), CornerRadii.EMPTY, Insets.EMPTY)));
 		
-		LobbyScene scene = new LobbyScene(content, settings.getWindowWidth(), settings.getWindowHeight());
+		LobbyScene scene = new LobbyScene(content, settings.getWindowWidth(), settings.getWindowHeight(), chat, colors);
 		addComponents(content, scene);
 
 		return scene;
@@ -85,9 +87,12 @@ public class LobbyScene extends ATunnelersScene {
 	
 	protected WebView wv_chatBox;
 	protected TextField tf_chatIn;
+	
+	protected ChatPrinter chatPrinter;
 
-	public LobbyScene(Parent root, double width, double height) {
+	public LobbyScene(Parent root, double width, double height, Chat chat, AColorScheme colors) {
 		super(root, width, height, "Join Game");
+		this.chatPrinter = new ChatPrinter(chat, colors);
 	}
 	
 	@Override
@@ -101,7 +106,7 @@ public class LobbyScene extends ATunnelersScene {
 
 	public void updateChatbox() {
 		TunnelersStage stage = this.getStage();
-		//this.wv_chatBox.getEngine().loadContent(stage.getGamechat().getHtml());
+		this.wv_chatBox.getEngine().loadContent(this.chatPrinter.getHtml());
 	}
 	
 	protected void sendChatMessage(String message){

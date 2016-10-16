@@ -54,7 +54,7 @@ public class TunnelersStage extends Stage {
 	}
 	
 	public void joinLobby(String clientName, GameRoom gr){
-		this.changeScene(LobbyScene.getInstance());
+		this.changeScene(LobbyScene.getInstance(this.engine.getChat(), this.renderer.getColorScheme()));
 	}
 	
 	public void beginGame() {
@@ -71,17 +71,17 @@ public class TunnelersStage extends Stage {
 	}
 
 	protected void changeScene(ATunnelersScene scene) {
+		if (scene == null) {
+			return;
+		}
+		
 		this.setScene(this.currentScene = scene);
 		this.renderer.setGraphicsContext(scene.getGraphicsContext());
 		this.setTitle(String.format("%s %s %s", SETTINGS.getGameName(), SETTINGS.getTitleSeparator(), scene.getName()));
 	}
 
 	public final void changeScene(Class reqScene) {
-		ATunnelersScene scene = classToInstance(reqScene);
-		if (scene == null) {
-			return;
-		}
-		changeScene(scene);
+		changeScene(classToInstance(reqScene));
 	}
 
 	protected ATunnelersScene classToInstance(Class scene) {

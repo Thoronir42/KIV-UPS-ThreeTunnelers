@@ -2,7 +2,6 @@ package tunnelers.core.chat;
 
 import generic.CyclicArray;
 import java.util.Iterator;
-import tunnelers.app.render.colors.AColorScheme;
 
 /**
  *
@@ -25,17 +24,7 @@ public class Chat {
 		this.messages.add(message);
 	}
 
-	public String getHtml(AColorScheme colorScheme) {
-		StringBuilder sb = new StringBuilder();
-
-		Iterator<ChatMessage> it = this.messages.iterator();
-		while (it.hasNext()) {
-			ChatMessage msg = it.next();
-			String rowHtml = String.format("<span><b style=\"color:#%s;\">%s</b>: %s</span><br/>", 
-					colorScheme.getPlayerColor(msg.getColor()), msg.getName(), msg.getText());
-			sb.insert(0, rowHtml);
-		}
-
-		return sb.toString();
+	public Iterator<ChatMessage> iterator() {
+		return messages.iterator();
 	}
 }
