@@ -25,6 +25,7 @@ import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.app.views.serverList.GameRoomView.GameRoomTreeTableView;
 import tunnelers.core.settings.Settings;
 import tunnelers.app.ATunnelersScene;
+import tunnelers.core.settings.NameManager;
 
 /**
  *
@@ -95,14 +96,14 @@ public class ServerListScene extends ATunnelersScene {
 		scene.topLabels.setAlignment(Pos.CENTER);
 		
 		scene.tf_localName = new TextField();
-		scene.tf_localName.textProperty().bindBidirectional(Settings.nameGenerator.CurrentName);
+		scene.tf_localName.textProperty().bindBidirectional(scene.names.CurrentName);
 
 		Label lblName = new Label("Přezdívka:"),
 				lblServer = new Label(String.format("%s:%d", settings.getServerAddress(), settings.getServerPort()));
 
 		lblName.setCursor(Cursor.HAND);
 		lblName.setOnMouseClicked(e -> {
-			scene.tf_localName.setText(Settings.nameGenerator.generateNext());
+			scene.tf_localName.setText(scene.names.generateNext());
 		});
 		
 		scene.topLabels.getChildren().addAll(lblName, scene.tf_localName, lblServer);
@@ -143,6 +144,8 @@ public class ServerListScene extends ATunnelersScene {
 	protected HBox topButtons,
 			topLabels;
 	
+	private final NameManager names;
+	
 	protected final SimpleObjectProperty<Status> SceneStatus;
 
 	public ServerListScene(Parent root, double width, double height) {
@@ -152,6 +155,8 @@ public class ServerListScene extends ATunnelersScene {
 		this.SceneStatus.addListener((listener, o, n) -> {
 			this.lbl_conInfo.setText(n.label);
 		});
+		
+		this.names = new NameManager(420);
 	}
 
 	@Override

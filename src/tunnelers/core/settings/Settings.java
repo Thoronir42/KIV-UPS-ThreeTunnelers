@@ -24,17 +24,11 @@ public final class Settings {
 	public static final String GAME_NAME = "Three Tunnelers",
 			TITLE_SEPARATOR = "|";
 
-	public static final double MIN_BLOCKS_ON_DIMENSION = 27;
+	public static final double MIN_RENDERED_BLOCKS_ON_DIMENSION = 27;
 	public static final int MOCK_CHUNK_SIZE = 20;
 
 	public static int IMAGE_UPSCALE_MULT = 20;
 	public static int MAX_PLAYER_PROJECTILES = 7;
-
-	public static NameManager nameGenerator;
-
-	static {
-		nameGenerator = new NameManager(420);
-	}
 
 	private static Settings instance;
 
