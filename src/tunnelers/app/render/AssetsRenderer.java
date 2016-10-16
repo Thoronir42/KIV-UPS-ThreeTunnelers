@@ -28,16 +28,18 @@ public class AssetsRenderer extends ARenderer {
 		tankCannon = new Image[2];
 		projectile = new Image[2];
 
-		for (APlayer player : players) {
-			Color c = colorScheme.getPlayerColor(player);
+		players.stream().forEach((player) -> {
+			Color c = colorScheme.playerColors().get(player);
 			Image[] tankImages = new Image[2];
 			tankImages[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.TANK_BODY, c);
 			tankImages[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.TANK_BODY_DIAG, c);
 			tankBody.put(player.getID(), tankImages);
-		}
+		});
 
-		tankCannon[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.TANK_CANNON, this.colorScheme.getCannonColor());
-		tankCannon[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.TANK_CANNON_DIAG, this.colorScheme.getCannonColor());
+		Color cannon = this.colorScheme.playerColors().getCannonColor();
+		
+		tankCannon[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.TANK_CANNON, cannon);
+		tankCannon[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.TANK_CANNON_DIAG, cannon);
 	}
 
 	public Image getTankBodyImage(int playerId, boolean diagonal) {

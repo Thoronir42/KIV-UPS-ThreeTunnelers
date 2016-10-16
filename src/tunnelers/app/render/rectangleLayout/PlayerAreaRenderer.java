@@ -50,7 +50,7 @@ public class PlayerAreaRenderer {
 		
 		AColorScheme colors = renderer.getColorScheme();
 		
-		g.setFill(colors.getPlayerColor(currentPlayer));
+		g.setFill(colors.playerColors().get(currentPlayer));
 		g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
 
 		g.translate(viewWindow.getX(), viewWindow.getY());
@@ -60,10 +60,10 @@ public class PlayerAreaRenderer {
 		Rectangle inBounds = new Rectangle(bounds.getWidth() * 0.8, bounds.getHeight() * 0.1);
 		inBounds.setX(bounds.getWidth() * 0.1);
 		inBounds.setY(bounds.getHeight() * 0.7);
-		fillStatusBar(g, inBounds, colors.UI_HITPOINTS);
+		fillStatusBar(g, inBounds, colors.getUiHitpoints());
 
 		inBounds.setY(bounds.getHeight() * 0.85);
-		fillStatusBar(g, inBounds, colors.UI_ENERGY);
+		fillStatusBar(g, inBounds, colors.getUiEnergy());
 	}
 
 	private void fillStatusBar(GraphicsContext g, Rectangle r, Color c) {
@@ -94,7 +94,8 @@ public class PlayerAreaRenderer {
 			g.setTransform(defTransform);
 		}
 
-		this.renderStatic(g, render, curPlayer.getTank().getEnergyStatus());
+		//this.renderStatic(g, render, curPlayer.getTank().getEnergyPct());
+		this.renderStatic(g, render, 0.95);
 
 	}
 
@@ -102,17 +103,17 @@ public class PlayerAreaRenderer {
 		Affine defTransform = g.getTransform();
 		double bw = blockSize.getWidth(),
 				bh = blockSize.getHeight();
-		for (APlayer plr : players) {
+		players.stream().forEach((plr) -> {
 			Tank t = plr.getTank();
 			Point2D po = t.getLocation();
 			if (render.contains(po)) {
 				po = new Point2D(po.getX() * bw, po.getY() * bh);
-				g.setFill(renderer.getColorScheme().getPlayerColor(plr));
+				g.setFill(renderer.getColorScheme().playerColors().get(plr));
 				g.translate(po.getX(), po.getY());
 				renderer.getAssetsRenderer().drawTank(t);
 				g.setTransform(defTransform);
 			}
-		}
+		});
 	}
 
 	private void clampRender(RectangleHalf render, Point2D center, Dimension2D mapSize) {

@@ -25,9 +25,9 @@ import tunnelers.core.model.map.MapGenerator;
 public final class TunnelersApplication extends Application {
 
 	public static final int VERSION = 00101;
-	
+
 	TunnelersStage currentStage;
-	
+
 	Impulser imp;
 
 	@Override
@@ -35,44 +35,47 @@ public final class TunnelersApplication extends Application {
 		Settings settings = Settings.getInstance();
 		settings.addConfigFile(System.getProperty("user.dir") + "\\config\\settings.cfg");
 		settings.init();
-		
+
 		Assets assets = new Assets();
 		assets.init();
-		
+
 		imp = new Impulser(settings.getTickRate());
-		
+
 		Chat chat = new Chat(settings.getChatMessageCapacity());
 		NetWorks networks = new NetWorks();
 		ControlsManager csmgr = new ControlsManager();
-		
+
 		PlayerColors playerColors = new PlayerColors();
-		AColorScheme colorScheme = new DefaultColorScheme(playerColors);
-		
+		DefaultColorScheme colorScheme = new DefaultColorScheme(playerColors);
+		colorScheme.setRandomizer((int x, int y) -> {
+			return ((int) Math.abs(Math.sin((x + 2) * 7) * 6 + Math.cos(y * 21) * 6));
+		});
+
 		GameContainer container = GameContainer.mockContainer(csmgr, "KAREL", playerColors.size());
 		container.initWarzone(MapGenerator.mockMap(24, container.getPlayerCount()));
-		
+
 		Engine e = new Engine(VERSION, networks, chat);
 		e.setContainer(container);
-		
+
 		csmgr.setOnInputChanged((InputEvent event) -> {
 			e.handleInput(event.getInput(), event.getPlayerId(), event.isPressed());
 		});
-		
+
 		currentStage = new TunnelersStage(e, csmgr, colorScheme, assets);
-		
+
 		currentStage.setOnHidden((WindowEvent event) -> {
 			e.exit();
 			this.imp.stopRun();
 		});
-		
+
 		this.imp.addHook((event) -> {
-			e.update(event.getTick()); 
+			e.update(event.getTick());
 			currentStage.update(event.getTick());
 		});
 
 		currentStage.setResizable(false);
 		currentStage.changeScene(MainMenuScene.class);
-		
+
 		this.currentStage.show();
 		this.imp.start();
 

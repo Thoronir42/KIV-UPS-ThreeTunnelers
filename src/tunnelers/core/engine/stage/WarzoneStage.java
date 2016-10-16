@@ -33,7 +33,7 @@ public class WarzoneStage extends AEngineStage {
 		if (warzone != null) {
 			warzone.update();
 		}
-		if (tick % 4 == 0) {
+		if (tick % 3 == 0) {
 			updatePlayers(this.container.getPlayers(), tick);
 		}
 		

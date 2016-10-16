@@ -27,7 +27,7 @@ public class ChatPrinter {
 		while (it.hasNext()) {
 			ChatMessage msg = it.next();
 			String rowHtml = String.format("<span><b style=\"color:#%s;\">%s</b>: %s</span><br/>", 
-					colors.getPlayerColor(msg.getColor()), msg.getName(), msg.getText());
+					colors.playerColors().get(msg.getColor()), msg.getName(), msg.getText());
 			sb.insert(0, rowHtml);
 		}
 
