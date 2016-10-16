@@ -3,7 +3,6 @@ package tunnelers.core.settings;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import tunnelers.app.controls.ControlsManager;
 import tunnelers.core.settings.specifier.DefaultSettigsSpecifier;
 import tunnelers.core.settings.specifier.FileSettingsSpecifier;
 import tunnelers.core.settings.specifier.ISettingsSpecifier;
@@ -14,21 +13,7 @@ import tunnelers.core.settings.specifier.ISettingsSpecifier;
  */
 public final class Settings {
 
-	public static final int VERSION = 00101;
-
 	public static final int MAX_PLAYERS = 4;
-
-	public static final String DEFAULT_SERVER_ADDRESS = "localhost";
-	public static final int DEFAULT_PORT = 8047;
-
-	public static final String GAME_NAME = "Three Tunnelers",
-			TITLE_SEPARATOR = "|";
-
-	public static final double MIN_RENDERED_BLOCKS_ON_DIMENSION = 27;
-	public static final int MOCK_CHUNK_SIZE = 20;
-
-	public static int IMAGE_UPSCALE_MULT = 20;
-	public static int MAX_PLAYER_PROJECTILES = 7;
 
 	private static Settings instance;
 
@@ -49,13 +34,9 @@ public final class Settings {
 	private String serverAddress;
 	private int serverPort;
 
-	private final ControlsManager controlSchemeManager;
-
 	private List<ISettingsSpecifier> configurators;
 
 	private Settings() {
-		this.controlSchemeManager = new ControlsManager();
-
 		this.configurators = new ArrayList<>();
 		this.configurators.add(new DefaultSettigsSpecifier());
 	}
@@ -78,9 +59,6 @@ public final class Settings {
 			configurator.set(this);
 		});
 
-		this.serverPort = Settings.DEFAULT_PORT;
-		this.serverAddress = "localhost";
-
 		this.configurators.clear();
 	}
 
@@ -99,22 +77,6 @@ public final class Settings {
 	public void setServerPort(int serverPort) {
 
 		this.serverPort = serverPort;
-	}
-
-	public String getGameName() {
-		return GAME_NAME;
-	}
-
-	public String getTitleSeparator() {
-		return TITLE_SEPARATOR;
-	}
-
-	public int getDefaultPort() {
-		return DEFAULT_PORT;
-	}
-
-	public ControlsManager getControlSchemeManager() {
-		return this.controlSchemeManager;
 	}
 
 	public void setWindowSize(int width, int height) {

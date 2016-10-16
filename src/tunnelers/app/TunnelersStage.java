@@ -13,6 +13,7 @@ import tunnelers.app.render.MapRenderer;
 import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.app.views.lobby.LobbyScene;
 import tunnelers.app.views.serverList.GameRoom;
+import tunnelers.app.views.settings.SettingsScene;
 import tunnelers.core.engine.Engine;
 import tunnelers.core.engine.EngineStage;
 
@@ -22,6 +23,9 @@ import tunnelers.core.engine.EngineStage;
  */
 public class TunnelersStage extends Stage {
 
+	public static final String GAME_NAME = "Three Tunnelers",
+			TITLE_SEPARATOR = "|";
+	
 	protected static final Settings SETTINGS = Settings.getInstance();
 	
 	protected final ControlsManager controlsManager;
@@ -77,16 +81,19 @@ public class TunnelersStage extends Stage {
 		
 		this.setScene(this.currentScene = scene);
 		this.renderer.setGraphicsContext(scene.getGraphicsContext());
-		this.setTitle(String.format("%s %s %s", SETTINGS.getGameName(), SETTINGS.getTitleSeparator(), scene.getName()));
+		this.setTitle(String.format("%s %s %s", GAME_NAME, TITLE_SEPARATOR, scene.getName()));
 	}
 
 	public final void changeScene(Class reqScene) {
 		changeScene(classToInstance(reqScene));
 	}
 
-	protected ATunnelersScene classToInstance(Class scene) {
+	private ATunnelersScene classToInstance(Class scene) {
 		if (scene == null) {
 			return null;
+		}
+		if(scene == SettingsScene.class){
+			return SettingsScene.getInstance(controlsManager);
 		}
 		try {
 			return (ATunnelersScene) scene.getDeclaredMethod("getInstance").invoke(null);

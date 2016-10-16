@@ -33,12 +33,12 @@ public class SettingsScene extends ATunnelersScene {
 	private static final double RESOLVE_BUTTON_PREF_WIDTH = 160,
 			RESOLVE_BUTTON_PREF_HEIGHT = 40;
 
-	public static SettingsScene getInstance() {
+	public static SettingsScene getInstance(ControlsManager controls) {
 		
 		GridPane content = new GridPane();
 		content.setBackground(new Background(new BackgroundFill(new Color(0.42, 0.87, 0.93, 0.25), CornerRadii.EMPTY, Insets.EMPTY)));
 
-		SettingsScene scene = new SettingsScene(content, settings.getWindowWidth(), settings.getWindowHeight());
+		SettingsScene scene = new SettingsScene(content, settings.getWindowWidth(), settings.getWindowHeight(), controls);
 		addComponents(content, scene, settings);
 		
 		return scene;
@@ -65,8 +65,8 @@ public class SettingsScene extends ATunnelersScene {
 		
 		Button btn_serverDefaults = new Button("Reset");
 		btn_serverDefaults.setOnAction((ActionEvent e) -> {
-			scene.tf_adress.setText(Settings.DEFAULT_SERVER_ADDRESS);
-			scene.tf_port.setText("" + Settings.DEFAULT_PORT);
+			scene.tf_adress.setText(settings.getServerAddress());
+			scene.tf_port.setText("" + settings.getServerPort());
 		});
 		Label lblAdr = new Label("Adresa:"),
 				lblPort = new Label("Port:");
@@ -109,9 +109,9 @@ public class SettingsScene extends ATunnelersScene {
 
 	private final ControlsManager controlSchemeManager;
 
-	public SettingsScene(Parent root, double width, double height) {
+	public SettingsScene(Parent root, double width, double height, ControlsManager controls) {
 		super(root, width, height, "Nastavení");
-		this.controlSchemeManager = settings.getControlSchemeManager();
+		this.controlSchemeManager = controls;
 	}
 
 	private boolean testServer() {

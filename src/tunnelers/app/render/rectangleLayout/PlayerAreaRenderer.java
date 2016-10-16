@@ -20,6 +20,8 @@ import tunnelers.core.model.player.APlayer;
  */
 public class PlayerAreaRenderer {
 
+	public static final int MIN_RENDERED_BLOCKS_ON_DIMENSION = 27;
+	
 	private final Dimension2D bounds;
 	private final Rectangle viewWindow;
 	private final Dimension2D blockSize;
@@ -30,7 +32,7 @@ public class PlayerAreaRenderer {
 	PlayerAreaRenderer(Dimension2D bounds) {
 		this.bounds = bounds;
 		this.viewWindow = new Rectangle(bounds.getWidth() * 0.05, bounds.getHeight() * 0.05, bounds.getWidth() * 0.9, bounds.getHeight() * 0.6);
-		this.blockSize = calcBlockSize(this.viewWindow, 37);
+		this.blockSize = calcBlockSize(this.viewWindow, MIN_RENDERED_BLOCKS_ON_DIMENSION);
 		this.render = calcRender(this.viewWindow, this.blockSize);
 	}
 

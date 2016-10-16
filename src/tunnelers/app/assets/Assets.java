@@ -1,6 +1,5 @@
 package tunnelers.app.assets;
 
-import tunnelers.core.settings.Settings;
 import java.util.Arrays;
 import java.util.Collection;
 import javafx.scene.image.Image;
@@ -12,6 +11,8 @@ import javafx.scene.paint.Color;
  */
 public class Assets{
 
+	public static int IMAGE_UPSCALE_MULT = 10;
+	
 	private final Image[] RESOURCES;
 
 	private final Collection<IAssetImagesProvider> imageProviders;
@@ -70,7 +71,7 @@ public class Assets{
 		}
 
 		try {
-			return ImageTools.scale(tmp, Settings.IMAGE_UPSCALE_MULT);
+			return ImageTools.scale(tmp, IMAGE_UPSCALE_MULT);
 		} catch (IndexOutOfBoundsException e) {
 			System.err.println("Upscaling of " + type + " failed");
 			return tmp;

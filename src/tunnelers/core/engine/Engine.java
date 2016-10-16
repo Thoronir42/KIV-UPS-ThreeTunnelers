@@ -17,18 +17,24 @@ import tunnelers.network.command.CommandType;
  */
 public final class Engine {
 
-	private final GameContainer container;
+	private final int version;
+	
+	private GameContainer container;
 	private final NetWorks networks;
 	private final Chat chat;
 
 	private AEngineStage currentStage;
 
-	public Engine(GameContainer container, NetWorks networks, Chat chat) {
-		this.container = container;
+	public Engine(int version, NetWorks networks, Chat chat) {
+		this.version = version;
 		this.networks = networks;
 		this.chat = chat;
 		
 		this.setStage(EngineStage.Menu);
+	}
+	
+	public void setContainer(GameContainer container){
+		this.container = container;
 	}
 	
 	public void setStage(EngineStage stage){

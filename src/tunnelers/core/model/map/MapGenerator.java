@@ -1,7 +1,6 @@
 package tunnelers.core.model.map;
 
 import generic.RNG;
-import tunnelers.core.settings.Settings;
 
 /**
  *
@@ -23,7 +22,7 @@ public class MapGenerator {
 		return tmp;
 	}
 
-	public static Map mockMap(int playerCount) {
-		return new Map(Settings.MOCK_CHUNK_SIZE, 12, 8, playerCount);
+	public static Map mockMap(int chunkSize, int playerCount) {
+		return new Map(chunkSize, 12, 8, playerCount);
 	}
 }

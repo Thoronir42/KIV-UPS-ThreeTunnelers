@@ -24,6 +24,8 @@ import tunnelers.core.model.map.MapGenerator;
  */
 public final class TunnelersApplication extends Application {
 
+	public static final int VERSION = 00101;
+	
 	TunnelersStage currentStage;
 	
 	Impulser imp;
@@ -41,15 +43,16 @@ public final class TunnelersApplication extends Application {
 		
 		Chat chat = new Chat(settings.getChatMessageCapacity());
 		NetWorks networks = new NetWorks();
-		ControlsManager csmgr = settings.getControlSchemeManager();
+		ControlsManager csmgr = new ControlsManager();
 		
 		PlayerColors playerColors = new PlayerColors();
 		AColorScheme colorScheme = new DefaultColorScheme(playerColors);
 		
 		GameContainer container = GameContainer.mockContainer(csmgr, "KAREL", playerColors.size());
-		container.initWarzone(MapGenerator.mockMap(container.getPlayerCount()));
+		container.initWarzone(MapGenerator.mockMap(24, container.getPlayerCount()));
 		
-		Engine e = new Engine(container, networks, chat);
+		Engine e = new Engine(VERSION, networks, chat);
+		e.setContainer(container);
 		
 		csmgr.setOnInputChanged((InputEvent event) -> {
 			e.handleInput(event.getInput(), event.getPlayerId(), event.isPressed());
