@@ -6,6 +6,7 @@ import java.util.List;
 import javafx.geometry.Point2D;
 import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.Projectile;
+import tunnelers.core.model.entities.Tank;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.model.player.APlayer;
 
@@ -16,29 +17,19 @@ import tunnelers.core.model.player.APlayer;
 public class Warzone {
 
 	private final Map map;
-	
-	private final List<APlayer> players;
+
+	private final List<Tank> tanks;
 	private final List<Projectile> projectiles;
-	
-	public Warzone(List<APlayer> players, Map map){
-		this.players = players;
+
+	public Warzone(List<Tank> tanks, Map map) {
+		this.tanks = tanks;
 		this.map = map;
-		
+
 		this.projectiles = new ArrayList<>();
 	}
-	
+
 	public Collection<Projectile> getProjectiles() {
 		return projectiles;
-	}
-
-	public void update() {
-		this.updateProjectiles();
-	}
-	
-	private void updateProjectiles() {
-		for(Projectile p : this.projectiles){
-			break;
-		}
 	}
 
 	public Map getMap() {

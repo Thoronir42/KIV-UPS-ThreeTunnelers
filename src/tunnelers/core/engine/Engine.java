@@ -1,10 +1,10 @@
 package tunnelers.core.engine;
 
 import tunnelers.core.model.player.APlayer;
-import java.util.List;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.io.InputAction;
 import tunnelers.core.GameContainer;
+import tunnelers.core.Warzone;
 import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;
 import tunnelers.core.engine.stage.WarzoneStage;
@@ -52,10 +52,6 @@ public final class Engine {
 		return container;
 	}
 
-	public APlayer getPlayer(int n) {
-		return this.container.getPlayer(n);
-	}
-
 	public void update(long tick) {
 		this.currentStage.update(tick);
 	}
@@ -64,7 +60,7 @@ public final class Engine {
 		switch(command.getType()){
 			case MsgPlain:
 				String msg = command.toString();
-				APlayer p = this.getPlayer(0);
+				APlayer p = this.container.getPlayer(0);
 				this.chat.addMessage(p, msg);
 				break;
 			default:
@@ -78,7 +74,7 @@ public final class Engine {
 	}
 
 	public void handleInput(InputAction inp, int playerID, boolean pressed) {
-		APlayer p = this.getPlayer(playerID);
+		APlayer p = this.container.getPlayer(playerID);
 
 		if (p.getControls().setControlState(inp, pressed)) {
 			Command cmd = this.networks.createCommand(CommandType.GameControlsSet);
@@ -86,11 +82,11 @@ public final class Engine {
 		}
 	}
 
-	public List<APlayer> getPlayers() {
-		return this.container.getPlayers();
-	}
-
 	public Chat getChat() {
 		return chat;
+	}
+
+	public Warzone getWarzone() {
+		return this.container.getWarzone();
 	}
 }

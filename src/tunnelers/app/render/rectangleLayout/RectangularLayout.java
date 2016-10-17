@@ -63,7 +63,7 @@ public class RectangularLayout extends RenderLayout {
 
 		for (int i = 0; i < players.size(); i++) {
 			g.translate(col * playerAreaBounds.getWidth(), row * playerAreaBounds.getHeight());
-			this.playerArea.draw(g, playerAreaBounds, players.get(i), players);
+			this.playerArea.draw(g, playerAreaBounds, players.get(i).getTank());
 
 			if (++col >= cols) {
 				col = 0;

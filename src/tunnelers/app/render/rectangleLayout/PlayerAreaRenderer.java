@@ -1,7 +1,6 @@
 package tunnelers.app.render.rectangleLayout;
 
 import java.util.Collection;
-import java.util.List;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -11,8 +10,8 @@ import javafx.scene.transform.Affine;
 import tunnelers.app.render.FxRenderHelper;
 import tunnelers.app.render.MapRenderer;
 import tunnelers.app.render.colors.AColorScheme;
+import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
-import tunnelers.core.model.player.APlayer;
 
 /**
  *
@@ -21,12 +20,12 @@ import tunnelers.core.model.player.APlayer;
 public class PlayerAreaRenderer {
 
 	public static final int MIN_RENDERED_BLOCKS_ON_DIMENSION = 27;
-	
+
 	private final Dimension2D bounds;
 	private final Rectangle viewWindow;
 	private final Dimension2D blockSize;
 	private final RectangleHalf render;
-	
+
 	private FxRenderHelper renderer;
 
 	PlayerAreaRenderer(Dimension2D bounds) {
@@ -40,21 +39,24 @@ public class PlayerAreaRenderer {
 		return this.bounds;
 	}
 
-	protected void draw(GraphicsContext g, Dimension2D bounds, APlayer currentPlayer, List<APlayer> players) {
+	protected void draw(GraphicsContext g, Dimension2D bounds, Tank currentTank) {
+		Collection<Tank> players = renderer.getTanks();
+		Collection<Projectile> projectiles = renderer.getProjectiles();
+
 		Affine defTransform = g.getTransform();
-		
-		if(this.renderer == null){
+
+		if (this.renderer == null) {
 			System.err.println("Renderer was not previously set");
 			return;
 		}
 		
 		AColorScheme colors = renderer.getColorScheme();
-		
-		g.setFill(colors.playerColors().get(currentPlayer));
+
+		g.setFill(colors.playerColors().get(currentTank));
 		g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
 
 		g.translate(viewWindow.getX(), viewWindow.getY());
-		drawViewWindow(g, players, currentPlayer);
+		drawViewWindow(g, currentTank.getLocation(), players, projectiles);
 		g.setTransform(defTransform);
 
 		Rectangle inBounds = new Rectangle(bounds.getWidth() * 0.8, bounds.getHeight() * 0.1);
@@ -74,24 +76,26 @@ public class PlayerAreaRenderer {
 		g.fillRect(r.getX(), r.getY(), r.getWidth(), r.getHeight());
 	}
 
-	private void drawViewWindow(GraphicsContext g, List<APlayer> p, APlayer curPlayer) {
+	private void drawViewWindow(GraphicsContext g, Point2D center, Collection<Tank> tanks, Collection<Projectile> projectiles) {
 		Affine defTransform = g.getTransform();
-		
 		MapRenderer mr = renderer.getMapRenderer();
-		
+
 		g.setFill(Color.BLACK);
 		g.fillRect(0 - 2, 0 - 2, viewWindow.getWidth() + 6, viewWindow.getHeight() + 4);
-		clampRender(render, curPlayer.getTank().getLocation(), mr.getMapBounds());
+		clampRender(render, center, mr.getMapBounds());
 		try {
-			g.translate(-render.getX() * blockSize.getWidth(),
-					-render.getY() * blockSize.getHeight());
+			
+			this.renderer.offsetBlocks(-render.getX(), -render.getY());
 			mr.drawMap(render);
-			this.drawTanks(g, render, p);
+			int rendered = this.drawProjectiles(g, viewWindow, projectiles);
+			System.out.format("%03.0fx%03.0f - Rendering %d projectiles\n", center.getX(), center.getY(), rendered);
+			this.drawTanks(g, render, tanks);
+			
+			g.setTransform(defTransform);
 		} catch (Exception e) {
 			System.err.println("Error with drawViewWindow: " + e.getMessage());
-			throw e;
-		} finally {
 			g.setTransform(defTransform);
+			throw e;
 		}
 
 		//this.renderStatic(g, render, curPlayer.getTank().getEnergyPct());
@@ -99,20 +103,29 @@ public class PlayerAreaRenderer {
 
 	}
 
-	private void drawTanks(GraphicsContext g, Rectangle render, Collection<APlayer> players) {
+	private int drawProjectiles(GraphicsContext g, Rectangle render, Collection<Projectile> projectiles) {
 		Affine defTransform = g.getTransform();
-		double bw = blockSize.getWidth(),
-				bh = blockSize.getHeight();
-		players.stream().forEach((plr) -> {
-			Tank t = plr.getTank();
-			Point2D po = t.getLocation();
-			if (render.contains(po)) {
-				po = new Point2D(po.getX() * bw, po.getY() * bh);
-				g.setFill(renderer.getColorScheme().playerColors().get(plr));
-				g.translate(po.getX(), po.getY());
-				renderer.getAssetsRenderer().drawTank(t);
-				g.setTransform(defTransform);
-			}
+		
+		return (int)projectiles.stream().filter(
+				(projectile) -> (render.contains(projectile.getLocation()))
+		).peek((proj) -> {
+			renderer.offsetBlocks(proj.getLocation());
+			renderer.getAssetsRenderer().drawProjectile(proj);
+			
+			g.setTransform(defTransform);
+		}).count();
+	}
+
+	private void drawTanks(GraphicsContext g, Rectangle render, Collection<Tank> tanks) {
+		Affine defTransform = g.getTransform();
+		
+		tanks.stream().filter(
+				(tank) -> (render.contains(tank.getLocation()))
+		).forEach((t) -> {
+			renderer.offsetBlocks(t.getLocation());
+			renderer.getAssetsRenderer().drawTank(t);
+			
+			g.setTransform(defTransform);
 		});
 	}
 

@@ -52,32 +52,20 @@ public class GameContainer {
 	}
 
 	public void initWarzone(Map map) {
-		this.warzone = new Warzone(players, map);
+		ArrayList<Tank> tanks = new ArrayList<>(players.size());
 		
 		for (APlayer p : players) {
 			Point2D baseCenter = map.assignNextBaseTo(p);
-			p.setTank(new Tank(p, baseCenter));
+			Tank tank = new Tank(p, baseCenter);
+			p.setTank(tank);
+			tanks.add(tank);
 		}
-	}
-
-	public Warzone getWarzone() {
-		return this.warzone;
+		
+		this.warzone = new Warzone(tanks, map);
 	}
 
 	public int getPlayerCount() {
 		return players.size();
-	}
-
-	public List<APlayer> getPlayers() {
-		return this.players;
-	}
-
-	/**
-	 *
-	 * @return @deprecated use Warzone in stead
-	 */
-	public Map getMap() {
-		return this.getWarzone().getMap();
 	}
 
 	public APlayer getPlayer(int playerId) {
@@ -88,5 +76,12 @@ public class GameContainer {
 		}
 		return null;
 	}
-
+	
+	public Warzone getWarzone() {
+		return this.warzone;
+	}
+	
+	public List<APlayer> getPlayers() {
+		return this.players;
+	}
 }
