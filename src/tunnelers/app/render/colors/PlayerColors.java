@@ -3,7 +3,6 @@ package tunnelers.app.render.colors;
 import generic.RNG;
 import java.util.Arrays;
 import javafx.scene.paint.Color;
-import tunnelers.core.model.player.APlayer;
 
 /**
  *
@@ -13,6 +12,7 @@ public class PlayerColors {
 
 	protected static final Color SYSTEM_COLOR = Color.web("800000");
 	private final Color cannonColor = Color.GOLD;
+	private final Color projectileColor = Color.YELLOW;
 	
 	protected final Color[] colors;
 	protected final boolean[] usage;
@@ -82,8 +82,8 @@ public class PlayerColors {
 		return this.colors[i];
 	}
 	
-	public Color get(APlayer player) {
-		return this.get(player.getColor());
+	public Color get(Colorable c) {
+		return this.get(c.getColor());
 	}
 	
 	public Color getRandom() {
@@ -97,5 +97,9 @@ public class PlayerColors {
 	
 	public Color getCannonColor(){
 		return cannonColor;
+	}
+
+	public Color getProjectileColor() {
+		return projectileColor;
 	}
 }

@@ -3,12 +3,13 @@ package tunnelers.core.model.entities;
 import tunnelers.core.model.player.APlayer;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
+import tunnelers.app.render.colors.Colorable;
 
 /**
  *
  * @author Stepan
  */
-public abstract class GameEntity {
+public abstract class GameEntity  implements Colorable{
 	protected Direction direction;
 	protected Point2D location;
 	protected APlayer player;
@@ -65,6 +66,11 @@ public abstract class GameEntity {
 
 	public APlayer getPlayer() {
 		return this.player;
+	}
+
+	@Override
+	public int getColor() {
+		return this.player.getColor();
 	}
 	
 	public int getPlayerId(){

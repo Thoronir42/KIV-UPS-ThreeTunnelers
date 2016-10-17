@@ -33,10 +33,6 @@ public class Tank extends GameEntity {
 		return SIZE;
 	}
 
-	public int getColor() {
-		return this.player.getColor();
-	}
-
 	public void changeDirection(Direction d) {
 		this.direction = d;
 	}
@@ -56,8 +52,8 @@ public class Tank extends GameEntity {
 		}
 		return null;
 	}
-	
-	public double getHitpointsPct(){
+
+	public double getHitpointsPct() {
 		return 1.0 * this.hitpoints / MAX_HITPOINTS;
 	}
 

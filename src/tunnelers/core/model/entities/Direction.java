@@ -44,7 +44,7 @@ public enum Direction {
 		return this.rotation;
 	}
 
-	public Point2D getDirection() {
+	public Point2D asPoint() {
 		return this.direction;
 	}
 

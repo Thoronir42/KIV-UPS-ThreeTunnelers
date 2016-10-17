@@ -25,9 +25,9 @@ public class TunnelersStage extends Stage {
 
 	public static final String GAME_NAME = "Three Tunnelers",
 			TITLE_SEPARATOR = "|";
-	
+
 	protected static final Settings SETTINGS = Settings.getInstance();
-	
+
 	protected final ControlsManager controlsManager;
 	protected final FxRenderHelper renderer;
 
@@ -36,39 +36,38 @@ public class TunnelersStage extends Stage {
 	protected Chat chat;
 	protected final Engine engine;
 	protected final Assets assets;
-	
 
 	public final void update(long tick) {
-		if(this.currentScene != null){
+		if (this.currentScene != null) {
 			this.currentScene.drawScene(tick);
 		}
 	}
 
 	public TunnelersStage(Engine engine, ControlsManager controlsManager, AColorScheme colorScheme, Assets assets) {
 		super();
-		
+
 		this.engine = engine;
 		this.assets = assets;
-		
+
 		MapRenderer mapRenderer = new MapRenderer(colorScheme, engine.getContainer().getWarzone().getMap());
-		AssetsRenderer assetsRenderer = new AssetsRenderer(colorScheme, assets, engine.getPlayers());
-		
+		AssetsRenderer assetsRenderer = new AssetsRenderer(colorScheme, assets, engine.getContainer().getPlayers());
+
 		this.renderer = new FxRenderHelper(engine, colorScheme, mapRenderer, assetsRenderer);
 		this.controlsManager = controlsManager;
 	}
-	
-	public void joinLobby(String clientName, GameRoom gr){
+
+	public void joinLobby(String clientName, GameRoom gr) {
 		this.changeScene(LobbyScene.getInstance(this.engine.getChat(), this.renderer.getColorScheme()));
 	}
-	
+
 	public void beginGame() {
 		PlayScene scene = PlayScene.getInstance(controlsManager);
 		scene.initLayout(engine.getContainer().getPlayerCount(), this.renderer);
-		
+
 		this.changeScene(scene);
 		this.engine.setStage(EngineStage.Warzone);
 	}
-	
+
 	public void prevScene() {
 		ATunnelersScene scene = (ATunnelersScene) this.getScene();
 		this.changeScene(scene.getPrevScene());
@@ -78,7 +77,7 @@ public class TunnelersStage extends Stage {
 		if (scene == null) {
 			return;
 		}
-		
+
 		this.setScene(this.currentScene = scene);
 		this.renderer.setGraphicsContext(scene.getGraphicsContext());
 		this.setTitle(String.format("%s %s %s", GAME_NAME, TITLE_SEPARATOR, scene.getName()));
@@ -92,7 +91,7 @@ public class TunnelersStage extends Stage {
 		if (scene == null) {
 			return null;
 		}
-		if(scene == SettingsScene.class){
+		if (scene == SettingsScene.class) {
 			return SettingsScene.getInstance(controlsManager);
 		}
 		try {

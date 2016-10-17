@@ -26,7 +26,7 @@ public class MapRenderer extends ARenderer {
 	public void drawMap(Rectangle rendSrc) {
 		int yMin = (int) (rendSrc.getY()),
 				xMin = (int) (rendSrc.getX()),
-				xMax = (int) (rendSrc.getX() + rendSrc.getWidth()),
+				xMax = (int) (rendSrc.getX() + rendSrc.getWidth() - 1),
 				yMax = (int) (rendSrc.getY() + rendSrc.getHeight() - 1);
 		Bounds bounds = new Bounds(xMin, xMax, yMin, yMax);
 		int chunkSize = this.map.getChunkSize();

@@ -1,5 +1,6 @@
 package tunnelers.core.model.player;
 
+import tunnelers.app.render.colors.Colorable;
 import tunnelers.core.chat.IChatParticipant;
 import tunnelers.core.io.AControls;
 import tunnelers.core.model.entities.Tank;
@@ -8,7 +9,7 @@ import tunnelers.core.model.entities.Tank;
  *
  * @author Stepan
  */
-public abstract class APlayer implements IChatParticipant{
+public abstract class APlayer implements IChatParticipant, Colorable{
 
 	private final int playerID;
 	private String name;
