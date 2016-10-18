@@ -22,17 +22,17 @@ public class PlayerAreaRenderer {
 	public static final int MIN_RENDERED_BLOCKS_ON_DIMENSION = 27;
 
 	private final Dimension2D bounds;
-	private final Rectangle viewWindow;
+	private final Rectangle renderWindow;
 	private final Dimension2D blockSize;
-	private final RectangleHalf render;
+	private final RectangleHalf sourceWindow;
 
 	private FxRenderHelper renderer;
 
 	PlayerAreaRenderer(Dimension2D bounds) {
 		this.bounds = bounds;
-		this.viewWindow = new Rectangle(bounds.getWidth() * 0.05, bounds.getHeight() * 0.05, bounds.getWidth() * 0.9, bounds.getHeight() * 0.6);
-		this.blockSize = calcBlockSize(this.viewWindow, MIN_RENDERED_BLOCKS_ON_DIMENSION);
-		this.render = calcRender(this.viewWindow, this.blockSize);
+		this.renderWindow = new Rectangle(bounds.getWidth() * 0.05, bounds.getHeight() * 0.05, bounds.getWidth() * 0.9, bounds.getHeight() * 0.6);
+		this.blockSize = calcBlockSize(this.renderWindow, MIN_RENDERED_BLOCKS_ON_DIMENSION);
+		this.sourceWindow = calcSource(this.renderWindow, this.blockSize);
 	}
 
 	public Dimension2D getBounds() {
@@ -55,7 +55,7 @@ public class PlayerAreaRenderer {
 		g.setFill(colors.playerColors().get(currentTank));
 		g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
 
-		g.translate(viewWindow.getX(), viewWindow.getY());
+		g.translate(renderWindow.getX(), renderWindow.getY());
 		drawViewWindow(g, currentTank.getLocation(), players, projectiles);
 		g.setTransform(defTransform);
 
@@ -81,15 +81,15 @@ public class PlayerAreaRenderer {
 		MapRenderer mr = renderer.getMapRenderer();
 
 		g.setFill(Color.BLACK);
-		g.fillRect(0 - 2, 0 - 2, viewWindow.getWidth() + 6, viewWindow.getHeight() + 4);
-		clampRender(render, center, mr.getMapBounds());
+		g.fillRect(0 - 2, 0 - 2, renderWindow.getWidth() + 6, renderWindow.getHeight() + 4);
+		alignSourceWindow(sourceWindow, center, mr.getMapBounds());
 		try {
 			
-			this.renderer.offsetBlocks(-render.getX(), -render.getY());
-			mr.drawMap(render);
-			int rendered = this.drawProjectiles(g, viewWindow, projectiles);
+			this.renderer.offsetBlocks(-sourceWindow.getX(), -sourceWindow.getY());
+			mr.drawMap(sourceWindow);
+			int rendered = this.drawProjectiles(g, sourceWindow, projectiles);
 			System.out.format("%03.0fx%03.0f - Rendering %d projectiles\n", center.getX(), center.getY(), rendered);
-			this.drawTanks(g, render, tanks);
+			this.drawTanks(g, sourceWindow, tanks);
 			
 			g.setTransform(defTransform);
 		} catch (Exception e) {
@@ -99,7 +99,7 @@ public class PlayerAreaRenderer {
 		}
 
 		//this.renderStatic(g, render, curPlayer.getTank().getEnergyPct());
-		this.renderStatic(g, render, 0.95);
+		this.renderStatic(g, sourceWindow, 0.95);
 
 	}
 
@@ -129,26 +129,26 @@ public class PlayerAreaRenderer {
 		});
 	}
 
-	private void clampRender(RectangleHalf render, Point2D center, Dimension2D mapSize) {
-		double halfWidth = render.getHalfWidth(),
-				halfHeight = render.getHalfHeight();
+	private void alignSourceWindow(RectangleHalf source, Point2D center, Dimension2D mapSize) {
+		double halfWidth = source.getHalfWidth(),
+				halfHeight = source.getHalfHeight();
 		double mapWidth = mapSize.getWidth(),
 				mapHeight = mapSize.getHeight();
 
 		if (center.getX() - halfWidth < 0) {
-			render.setX(0);
+			source.setX(0);
 		} else if (center.getX() + halfWidth > mapWidth) {
-			render.setX(mapWidth - 2 * halfWidth);
+			source.setX(mapWidth - source.getWidth());
 		} else {
-			render.setX(center.getX() - (int) halfWidth);
+			source.setX(center.getX() - (int) halfWidth);
 		}
 
 		if (center.getY() - halfHeight < 0) {
-			render.setY(0);
+			source.setY(0);
 		} else if (center.getY() + halfHeight > mapHeight) {
-			render.setY(mapHeight - 2 * halfHeight);
+			source.setY(mapHeight - source.getHeight());
 		} else {
-			render.setY(center.getY() - (int) halfHeight);
+			source.setY(center.getY() - (int) halfHeight);
 		}
 	}
 
@@ -184,7 +184,7 @@ public class PlayerAreaRenderer {
 		return new Dimension2D((int) width, (int) height);
 	}
 
-	private RectangleHalf calcRender(Rectangle viewWindow, Dimension2D blockSize) {
+	private RectangleHalf calcSource(Rectangle viewWindow, Dimension2D blockSize) {
 		return new RectangleHalf(
 				Math.floor(viewWindow.getWidth() / blockSize.getWidth()),
 				Math.floor(viewWindow.getHeight() / blockSize.getHeight())
