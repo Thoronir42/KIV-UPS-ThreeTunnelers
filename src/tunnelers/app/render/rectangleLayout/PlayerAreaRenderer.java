@@ -87,8 +87,7 @@ public class PlayerAreaRenderer {
 			
 			this.renderer.offsetBlocks(-sourceWindow.getX(), -sourceWindow.getY());
 			mr.drawMap(sourceWindow);
-			int rendered = this.drawProjectiles(g, sourceWindow, projectiles);
-			System.out.format("%03.0fx%03.0f - Rendering %d projectiles\n", center.getX(), center.getY(), rendered);
+			this.drawProjectiles(g, sourceWindow, projectiles);
 			this.drawTanks(g, sourceWindow, tanks);
 			
 			g.setTransform(defTransform);

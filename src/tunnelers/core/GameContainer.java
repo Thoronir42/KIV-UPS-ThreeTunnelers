@@ -23,7 +23,10 @@ public class GameContainer {
 		APlayer[] players = new APlayer[]{
 			new PlayerLocal(47, RNG.getRandInt(maxColorId), csmgr.getKeyboardScheme((byte) 0), localName),
 			new PlayerLocal(53, RNG.getRandInt(maxColorId), csmgr.getKeyboardScheme((byte) 1), "Jouda"),
-			new PlayerRemote(12, RNG.getRandInt(maxColorId), "Frederick"),};
+			new PlayerRemote(13, RNG.getRandInt(maxColorId), "Frederick"),
+			new PlayerRemote(12, RNG.getRandInt(maxColorId), "Frederick"),
+			new PlayerRemote(17, RNG.getRandInt(maxColorId), "Frederick"),
+		};
 		GameContainer c = new GameContainer(players);
 
 		byte[] controlSchemeIDs = csmgr.getKeyboardLayoutIDs();
@@ -54,8 +57,9 @@ public class GameContainer {
 	public void initWarzone(Map map) {
 		ArrayList<Tank> tanks = new ArrayList<>(players.size());
 		
+		int i = 0;
 		for (APlayer p : players) {
-			Point2D baseCenter = map.assignNextBaseTo(p);
+			Point2D baseCenter = map.assignBase(i++, p);
 			Tank tank = new Tank(p, baseCenter);
 			p.setTank(tank);
 			tanks.add(tank);

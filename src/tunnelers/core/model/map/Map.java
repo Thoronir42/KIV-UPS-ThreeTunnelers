@@ -55,15 +55,17 @@ public class Map {
 		// TODO: terrain editing
 		for (int i = 0; i < playerCount; i++) {
 			Chunk currentChunk;
+			
 			do {
 				int x = RNG.getRandInt(Xchunks - 2) + 1,
 						y = RNG.getRandInt(Ychunks - 2) + 1;
 				currentChunk = this.map[x][y];
-			} while (currentChunk.isAssigned());
+			} while (currentChunk.isBase());
 			
+			currentChunk.setType(ChunkType.Base);
 			chunks[i] = currentChunk;
 		}
-		
+
 		return chunks;
 	}
 
@@ -74,16 +76,17 @@ public class Map {
 		this.map[x][y].applyData(chunkData);
 	}
 
-	public Point2D assignNextBaseTo(APlayer p) throws IllegalStateException{
-		for(Chunk c : this.playerBaseChunks){
-			if(c.isAssigned()){
-				continue;
-			}
-			c.assignPlayer(p);
-			return c.getCenter();
+	public Point2D assignBase(int i, APlayer p) throws IllegalStateException, IndexOutOfBoundsException {
+		Chunk c = this.playerBaseChunks[i];
+
+		if (c.isAssigned()) {
+			throw new IllegalStateException("Player base " + i + " chunk is already assigned.");
 		}
-		
-		throw new IllegalStateException("All player base chunks are already assigned.");
+
+		System.out.println(" Assigning base " + c.getCenter() + " to " + p.getID());
+		c.assignPlayer(p);
+		return c.getCenter();
+
 	}
 
 	void assignPlayer(int chX, int chY, APlayer p) {

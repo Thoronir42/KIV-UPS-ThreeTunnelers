@@ -13,10 +13,16 @@ public class Chunk {
 	public final Bounds bounds;
 	private final int chunkSize;
 	protected APlayer assignedPlayer;
+	protected ChunkType type;
+	
+	protected int x, y;
 
 	protected Chunk(int x, int y, int chunkSize) {
 		this.chunkData = new Block[chunkSize][chunkSize];
 		this.chunkSize = chunkSize;
+		this.x = x;
+		this.y = y;
+		this.type = ChunkType.Standard;
 
 		int xMin = x * chunkSize,
 				xMax = ((x + 1) * chunkSize) - 1,
@@ -25,6 +31,10 @@ public class Chunk {
 		this.bounds = new Bounds(xMin, xMax, yMin, yMax);
 
 		//System.out.format("Chunk [%d,%d] is from [%d,%d] to [%d,%d]%n",x, y, selfXmin, selfYmin, selfXmax, selfYmax);
+	}
+	
+	public void setType(ChunkType type){
+		this.type = type;
 	}
 
 	void assignPlayer(APlayer p) {
@@ -65,12 +75,21 @@ public class Chunk {
 	boolean isAssigned() {
 		return this.assignedPlayer != null;
 	}
+	
+	boolean isBase(){
+		return this.type == ChunkType.Base;
+	}
 
 	Point2D getCenter() {
 		return new Point2D(
 				(this.bounds.xMax + this.bounds.xMin) / 2,
 				(this.bounds.yMax + this.bounds.yMin) / 2
 		);
+	}
+	
+	@Override
+	public String toString(){
+		return String.format("Chunk %8s at %02d:%02d", Integer.toHexString(System.identityHashCode(this)), this.x, this.y);
 	}
 
 }
