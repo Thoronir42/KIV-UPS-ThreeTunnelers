@@ -10,11 +10,13 @@ public class Command {
 	protected short length;
 	protected final CommandType type;
 	protected final byte messageId;
+	String data;
 	
 	public Command(CommandType type, byte messageId){
 		this.type = type;
 		this.messageId = messageId;
 		this.length = 0;
+		this.data = "";
 	}
 	
 	public CommandType getType() {
@@ -32,6 +34,14 @@ public class Command {
 
 	protected String append(int n) {
 		return String.format("%08X", n);
+	}
+	
+	public String getDataString(){
+		return this.data;
+	}
+	
+	public void setDataString(String data){
+		this.data = data;
 	}
 
 }

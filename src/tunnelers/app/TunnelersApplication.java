@@ -9,13 +9,12 @@ import tunnelers.core.chat.Chat;
 import tunnelers.app.controls.ControlsManager;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.controls.InputEvent;
-import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.app.render.colors.DefaultColorScheme;
 import tunnelers.app.render.colors.PlayerColors;
 import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.core.GameContainer;
 import tunnelers.core.engine.Engine;
-import tunnelers.core.engine.NetWorks;
+import tunnelers.network.NetWorks;
 import tunnelers.core.model.map.MapGenerator;
 
 /**
@@ -62,6 +61,7 @@ public final class TunnelersApplication extends Application {
 		});
 
 		currentStage = new TunnelersStage(e, csmgr, colorScheme, assets);
+		e.setView(currentStage);
 
 		currentStage.setOnHidden((WindowEvent event) -> {
 			e.exit();
@@ -78,6 +78,7 @@ public final class TunnelersApplication extends Application {
 
 		this.currentStage.show();
 		this.imp.start();
+		networks.start();
 
 	}
 

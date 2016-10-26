@@ -105,13 +105,12 @@ public class LobbyScene extends ATunnelersScene {
 	}
 
 	public void updateChatbox() {
-		TunnelersStage stage = this.getStage();
 		this.wv_chatBox.getEngine().loadContent(this.chatPrinter.getHtml());
 	}
 	
 	protected void sendChatMessage(String message){
 		if(message.length() > 0){
-			//super.sendChatMessage(message);
+			this.getEngine().sendPlainText(message);
 		}
 		this.tf_chatIn.setText("");
 	}

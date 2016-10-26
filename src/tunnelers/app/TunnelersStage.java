@@ -3,7 +3,6 @@ package tunnelers.app;
 import tunnelers.core.settings.Settings;
 import java.lang.reflect.InvocationTargetException;
 import javafx.stage.Stage;
-import tunnelers.core.chat.Chat;
 import tunnelers.app.controls.ControlsManager;
 import tunnelers.app.views.warzone.PlayScene;
 import tunnelers.app.assets.Assets;
@@ -33,7 +32,6 @@ public class TunnelersStage extends Stage {
 
 	protected ATunnelersScene currentScene;
 
-	protected Chat chat;
 	protected final Engine engine;
 	protected final Assets assets;
 
@@ -48,12 +46,13 @@ public class TunnelersStage extends Stage {
 
 		this.engine = engine;
 		this.assets = assets;
-
+		
 		MapRenderer mapRenderer = new MapRenderer(colorScheme, engine.getContainer().getWarzone().getMap());
 		AssetsRenderer assetsRenderer = new AssetsRenderer(colorScheme, assets, engine.getContainer().getPlayers());
 
 		this.renderer = new FxRenderHelper(engine, colorScheme, mapRenderer, assetsRenderer);
 		this.controlsManager = controlsManager;
+		
 	}
 
 	public void joinLobby(String clientName, GameRoom gr) {
@@ -106,6 +105,22 @@ public class TunnelersStage extends Stage {
 
 	public ControlsManager getControls() {
 		return this.controlsManager;
+	}
+
+	public boolean connect(String name, String addr, int port) {
+		if (this.engine.connect(name, addr, port)) {
+			this.joinLobby("", null);
+			return true;
+		}
+		else System.out.println("Nepripojeno");
+		return false;
+	}
+
+	public void updateChat() {
+		if(this.currentScene instanceof LobbyScene){
+			LobbyScene l = (LobbyScene)this.currentScene;
+			l.updateChatbox();
+		}
 	}
 
 }

@@ -11,6 +11,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import tunnelers.app.assets.Assets;
+import tunnelers.core.engine.Engine;
 
 /**
  *
@@ -82,6 +83,10 @@ public abstract class ATunnelersScene extends Scene {
 
 	protected TunnelersStage getStage() {
 		return (TunnelersStage) this.getWindow();
+	}
+	
+	protected Engine getEngine(){
+		return this.getStage().engine;
 	}
 
 	protected void goBack() {
