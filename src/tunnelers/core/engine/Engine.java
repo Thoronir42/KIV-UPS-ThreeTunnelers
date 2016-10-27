@@ -105,7 +105,7 @@ public final class Engine implements INetCommandHandler {
 	public void handle(Command cmd) {
 		switch (cmd.getType()) {
 			case MsgPlain:
-				chat.addMessage(ServerMessenger.getInstance(), cmd.getDataString());
+				chat.addMessage(ServerMessenger.getInstance(), cmd.getData());
 				view.updateChat();
 				break;
 			default:

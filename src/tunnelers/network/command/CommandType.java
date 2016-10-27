@@ -1,30 +1,25 @@
 package tunnelers.network.command;
 
-/**
- *
- * @author Stepan
- */
 public enum CommandType {
 	Undefined(0),
-	
+	//    LEAD
 	LeadApprove(1),
 	LeadDeny(2),
 	LeadStillThere(3),
 	LeadWrongRoom(4),
-	
+	//    CONNECTION
 	ConFetchLobbies(10),
 	ConCreateGame(11),
 	ConJoinGame(12),
 	ConDisconnect(49),
-	
 	ConIncorrectPhase(80),
 	ConGamesList(90),
 	ConGamesListEnd(91),
 	ConPlayerDisconnected(99),
-	
+	//    MESSAGE
 	MsgPlain(100),
 	MsgRcon(105),
-	
+	//    LOBBY CONTROLS
 	LobbyIntroduce(112),
 	LobbySetColor(113),
 	LobbySetLeader(120),
@@ -34,18 +29,25 @@ public enum CommandType {
 	GameKickPlayer(149),
 	GamePlayerJoined(150),
 	GamePlayerLeft(199),
-	
+	//    GAME CONTROLS
 	GameControlsSet(201),
 	GameRequestChunk(210),
 	GameRequestPlayersInfo(220),
 	GameChunkData(310),
 	GamePlayerInfo(320),
-	
 	;
+
+	private final short value;
+
+	private CommandType(int v) {
+		this((short) v);
+	}
+
+	private CommandType(short v) {
+		this.value = v;
+	}
 	
-	private final int intVal;
-	
-	private CommandType(int v){
-		this.intVal = v;
+	public short value(){
+		return value;
 	}
 }

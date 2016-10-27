@@ -97,7 +97,6 @@ public class TunnelersStage extends Stage {
 			return (ATunnelersScene) scene.getDeclaredMethod("getInstance").invoke(null);
 		} catch (IllegalAccessException | NoSuchMethodException |
 				IllegalArgumentException | InvocationTargetException e) {
-			e.printStackTrace();
 			System.err.format("Couldn't get instance of new scene: %s=%s\n", e.getClass().getSimpleName(), e.getMessage());
 		}
 		return null;

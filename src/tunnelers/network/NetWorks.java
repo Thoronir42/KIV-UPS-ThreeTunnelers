@@ -83,7 +83,7 @@ public class NetWorks extends Thread {
 				String data = this.connection.receive();
 				
 				Command cmd = new Command(CommandType.MsgPlain, (byte)0);
-				cmd.setDataString(data);
+				cmd.setData(data);
 				
 				this.handler.handle(cmd);
 				if(true)

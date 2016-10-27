@@ -6,42 +6,56 @@ package tunnelers.network.command;
  */
 public class Command {
 
-	
-	protected short length;
+	/**
+	 * @unused
+	 */
+	protected final byte id;
 	protected final CommandType type;
-	protected final byte messageId;
-	String data;
-	
-	public Command(CommandType type, byte messageId){
+	protected String data;
+
+	public Command(CommandType type, byte id) {
+		this(type, id, "");
+	}
+
+	public Command(CommandType type, byte id, String data) {
+		this.id = id;
 		this.type = type;
-		this.messageId = messageId;
-		this.length = 0;
-		this.data = "";
-	}
-	
-	public CommandType getType() {
-		return CommandType.LeadApprove;
-	}
-	
-	
-	protected String append(byte n) {
-		return String.format("%02X", n);
-	}
-
-	protected String append(short n) {
-		return String.format("%04X", n);
-	}
-
-	protected String append(int n) {
-		return String.format("%08X", n);
-	}
-	
-	public String getDataString(){
-		return this.data;
-	}
-	
-	public void setDataString(String data){
 		this.data = data;
 	}
 
+	public CommandType getType() {
+		return CommandType.LeadApprove;
+	}
+
+	public byte getId() {
+		return id;
+	}
+
+	/**
+	 * Returns length of current data
+	 * @return 
+	 */
+	public short getLength() {
+		return (short) data.length();
+	}
+
+	protected void append(byte n) {
+		this.data += String.format("%02X", n);
+	}
+
+	protected void append(short n) {
+		this.data += String.format("%04X", n);
+	}
+
+	protected void append(int n) {
+		this.data += String.format("%08X", n);
+	}
+
+	public String getData() {
+		return this.data;
+	}
+
+	public void setData(String data) {
+		this.data = data;
+	}
 }

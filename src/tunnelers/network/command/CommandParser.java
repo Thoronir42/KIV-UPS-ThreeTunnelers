@@ -1,6 +1,9 @@
 package tunnelers.network.command;
 
+import generic.SimpleScanner;
+import java.util.HashMap;
 import tunnelers.network.CommandNotRecognisedException;
+import tunnelers.network.NetworksException;
 
 /**
  *
@@ -8,29 +11,38 @@ import tunnelers.network.CommandNotRecognisedException;
  */
 public class CommandParser {
 
-	public String parse(Command cmd) {
-		return "";
+	private static final int PARSE_RADIX = 16;
+
+	private final SimpleScanner sc = new SimpleScanner(PARSE_RADIX);
+	private static final HashMap<Short, CommandType> typeMap;
+	
+	static {
+		typeMap = new HashMap<>();
+		for (CommandType type : CommandType.values()) {
+			typeMap.put(type.value(), type);
+		}
 	}
 
-	public Command parse(String str) throws CommandNotRecognisedException{
-		int room = Integer.parseInt(str.substring(0, 2), 16),
-				mid = Integer.parseInt(str.substring(2, 4), 16),
-				type = Integer.parseInt(str.substring(4, 8), 16);
-		String data = str.substring(8);
-		/*
-			 if(cmdClass != null){
-			 try {
-			 NetCommand nc = (NetCommand)cmdClass.newInstance();
-			 nc.setParams(params);
-			 return nc;
+	public String parse(Command cmd) {
+		String str = String.format("%04X%04X%s\n", cmd.getType().value(), cmd.getLength(), cmd.getData());
+		return str;
+	}
 
-			 } catch (InstantiationException | IllegalAccessException ex) {
-			 throw new NetworksException(ex.getMessage());
-			 }
-			 }
-		 */
+	public Command parse(String str) throws NetworksException, NumberFormatException {
+		sc.setSourceString(str);
 
-		System.out.format("MSG: %d, %d, %d, %s%n", room, mid, type, data);
-		throw new CommandNotRecognisedException(str);
+		byte id = sc.nextByte();
+		short type = sc.nextShort();
+		int length = sc.nextInt();
+		String data = sc.readToEnd();
+		
+		System.out.format("MSG: %d, %d[%d] %s%n", id, type, length, data);
+
+		CommandType cmdType = typeMap.getOrDefault(type, CommandType.Undefined);
+		if (cmdType == CommandType.Undefined) {
+			throw new CommandNotRecognisedException(str);
+		}
+
+		return new Command(cmdType, id, data);
 	}
 }
