@@ -5,6 +5,7 @@ import tunnelers.core.settings.Settings;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import temp.Mock;
 import tunnelers.core.chat.Chat;
 import tunnelers.app.controls.ControlsManager;
 import tunnelers.app.assets.Assets;
@@ -15,7 +16,7 @@ import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.core.GameContainer;
 import tunnelers.core.engine.Engine;
 import tunnelers.network.NetWorks;
-import tunnelers.core.model.map.MapGenerator;
+import temp.MapGenerator;
 
 /**
  *
@@ -51,7 +52,7 @@ public final class TunnelersApplication extends Application {
 		});
 
 		GameContainer container = GameContainer.mockContainer(csmgr, "KAREL", playerColors.size());
-		container.initWarzone(MapGenerator.mockMap(24, container.getPlayerCount()));
+		container.initWarzone(MapGenerator.mockMap(20, 12, 8, container.getPlayerCount()));
 
 		Engine e = new Engine(VERSION, networks, chat);
 		e.setContainer(container);
@@ -80,10 +81,6 @@ public final class TunnelersApplication extends Application {
 		this.imp.start();
 		networks.start();
 
-	}
-
-	public void update(long tick) {
-		this.currentStage.update(tick);
 	}
 
 	/**

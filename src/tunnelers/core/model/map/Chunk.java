@@ -17,7 +17,7 @@ public class Chunk {
 	
 	protected int x, y;
 
-	protected Chunk(int x, int y, int chunkSize) {
+	public Chunk(int x, int y, int chunkSize) {
 		this.chunkData = new Block[chunkSize][chunkSize];
 		this.chunkSize = chunkSize;
 		this.x = x;
@@ -67,16 +67,20 @@ public class Chunk {
 	public Block getBlock(int x, int y) {
 		return chunkData[x][y];
 	}
+	
+	public void setBlock(int x, int y, Block block){
+		this.chunkData[x][y] = block;
+	}
 
 	public APlayer getAssignedPlayer() {
 		return this.assignedPlayer;
 	}
 
-	boolean isAssigned() {
+	public boolean isAssigned() {
 		return this.assignedPlayer != null;
 	}
 	
-	boolean isBase(){
+	public boolean isBase(){
 		return this.type == ChunkType.Base;
 	}
 
