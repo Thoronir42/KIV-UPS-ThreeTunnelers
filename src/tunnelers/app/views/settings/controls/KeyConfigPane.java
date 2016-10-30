@@ -11,7 +11,7 @@ import javafx.scene.input.KeyCode;
 import javafx.util.Callback;
 import tunnelers.app.controls.ControlsManager;
 import tunnelers.app.controls.ControlInput;
-import tunnelers.core.io.InputAction;
+import tunnelers.core.player.InputAction;
 
 /**
  *

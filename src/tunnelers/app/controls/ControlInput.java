@@ -1,7 +1,7 @@
 package tunnelers.app.controls;
 
-import tunnelers.core.io.AControls;
-import tunnelers.core.io.InputAction;
+import tunnelers.core.player.Controls;
+import tunnelers.core.player.InputAction;
 
 /**
  *
@@ -9,10 +9,10 @@ import tunnelers.core.io.InputAction;
  */
 public class ControlInput {
 
-	protected final AControls controlScheme;
+	protected final Controls controlScheme;
 	protected final InputAction input;
 
-	public ControlInput(AControls controlScheme, InputAction i) {
+	public ControlInput(Controls controlScheme, InputAction i) {
 		this.controlScheme = controlScheme;
 		this.input = i;
 	}
@@ -40,7 +40,7 @@ public class ControlInput {
 		return this.input == other.input;
 	}
 
-	public AControls getControlScheme() {
+	public Controls getControlScheme() {
 		return controlScheme;
 	}
 

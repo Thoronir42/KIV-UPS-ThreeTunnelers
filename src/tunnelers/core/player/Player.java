@@ -1,33 +1,33 @@
-package tunnelers.core.model.player;
+package tunnelers.core.player;
 
 import tunnelers.app.render.colors.Colorable;
 import tunnelers.core.chat.IChatParticipant;
-import tunnelers.core.io.AControls;
 import tunnelers.core.model.entities.Tank;
 
 /**
  *
  * @author Stepan
  */
-public abstract class APlayer implements IChatParticipant, Colorable{
+public final class Player implements IChatParticipant, Colorable{
 
-	private final int playerID;
+	private final int id;
 	private String name;
-	private final AControls controls;
+	private final Controls controls;
 	private int color;
 	private Tank tank;
 
-	public APlayer(int playerID, int colorID, AControls controls) {
+	public Player(int playerID, int colorID, Controls controls) {
 		this(playerID, colorID, controls, String.format("Unknown player %02d", playerID));
 	}
 
-	public APlayer(int playerID, int colorID, AControls controls, String name) {
-		//public APlayer(String name) throws PlayerException{
-		this.playerID = playerID;
+	public Player(int playerID, int colorID, Controls controls, String name) {
+		//public Player(String name) throws PlayerException{
+		this.id = playerID;
 		this.name = name;
 		this.setColor(colorID);
 
 		this.controls = controls;
+		this.controls.setPlayerID(this.id);
 	}
 
 	
@@ -50,7 +50,7 @@ public abstract class APlayer implements IChatParticipant, Colorable{
 	}
 
 	public int getID() {
-		return this.playerID;
+		return this.id;
 	}
 
 	public void setTank(Tank t) {
@@ -64,13 +64,13 @@ public abstract class APlayer implements IChatParticipant, Colorable{
 		return this.tank;
 	}
 
-	public AControls getControls() {
+	public Controls getControls() {
 		return controls;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("[%2d] %16s (%s)", this.playerID, this.name, this.color);
+		return String.format("[%2d] %16s (%s)", this.id, this.name, this.color);
 	}
 
 }

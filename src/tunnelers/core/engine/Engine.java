@@ -1,12 +1,12 @@
 package tunnelers.core.engine;
 
 import tunnelers.app.TunnelersStage;
-import tunnelers.network.NetWorks;
-import tunnelers.core.model.player.APlayer;
+import tunnelers.network.NetAdapter;
+import tunnelers.core.player.Player;
 import tunnelers.core.chat.Chat;
-import tunnelers.core.io.InputAction;
-import tunnelers.core.GameContainer;
-import tunnelers.core.Warzone;
+import tunnelers.core.player.InputAction;
+import tunnelers.core.gameRoom.GameContainer;
+import tunnelers.core.gameRoom.Warzone;
 import tunnelers.core.chat.IChatParticipant;
 import tunnelers.core.chat.ServerMessenger;
 import tunnelers.core.engine.stage.AEngineStage;
@@ -25,14 +25,14 @@ public final class Engine implements INetCommandHandler {
 	private final int version;
 
 	private GameContainer container;
-	private final NetWorks networks;
+	private final NetAdapter networks;
 	private final Chat chat;
 
 	private AEngineStage currentStage;
 
 	private TunnelersStage view;
 
-	public Engine(int version, NetWorks networks, Chat chat) {
+	public Engine(int version, NetAdapter networks, Chat chat) {
 		this.version = version;
 		this.networks = networks;
 		networks.setHandler(this);
@@ -73,7 +73,7 @@ public final class Engine implements INetCommandHandler {
 	}
 
 	public void handleInput(InputAction inp, int playerID, boolean pressed) {
-		APlayer p = this.container.getPlayer(playerID);
+		Player p = this.container.getPlayer(playerID);
 
 		if (p.getControls().setControlState(inp, pressed)) {
 			Command cmd = this.networks.createCommand(CommandType.GameControlsSet);

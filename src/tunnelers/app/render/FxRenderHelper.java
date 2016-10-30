@@ -10,7 +10,7 @@ import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.core.engine.Engine;
 import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
-import tunnelers.core.model.player.APlayer;
+import tunnelers.core.player.Player;
 
 /**
  *
@@ -58,7 +58,7 @@ public class FxRenderHelper {
 		return this.assetsRenderer;
 	}
 
-	public List<APlayer> getPlayers() {
+	public List<Player> getPlayers() {
 		return this.engine.getContainer().getPlayers();
 	}
 
@@ -72,7 +72,7 @@ public class FxRenderHelper {
 	 * @return
 	 */
 	public Collection<Tank> getTanks() {
-		Collection<APlayer> players = this.getPlayers();
+		Collection<Player> players = this.getPlayers();
 		Collection<Tank> tanks = new ArrayList<>(players.size());
 		players.forEach((p) -> {
 			tanks.add(p.getTank());

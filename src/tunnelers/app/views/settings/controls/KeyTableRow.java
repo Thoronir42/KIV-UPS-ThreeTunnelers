@@ -3,8 +3,8 @@ package tunnelers.app.views.settings.controls;
 import javafx.scene.control.TableColumn;
 import javafx.scene.input.KeyCode;
 import tunnelers.app.controls.ControlsManager;
-import tunnelers.core.io.AControls;
-import tunnelers.core.io.InputAction;
+import tunnelers.core.player.Controls;
+import tunnelers.core.player.InputAction;
 import tunnelers.app.controls.ControlInput;
 
 /**
@@ -60,7 +60,7 @@ class KeyTableRow {
 	void setKeyCode(KeyBindCell sender, KeyCode newValue) {
 		TableColumn<KeyTableRow, KeyCode> column = sender.getTableColumn();
 		int colId = column.getTableView().getColumns().indexOf(column) - inputColumnOffset;
-		AControls scheme = controlSchemeManager.getKeyboardScheme(keyboardLayoutIds[colId]);
+		Controls scheme = controlSchemeManager.getKeyboardScheme(keyboardLayoutIds[colId]);
 		ControlInput input = new ControlInput(scheme, inputAction);
 
 		ControlInput oldOccurence = controlSchemeManager.replaceKeyInput(newValue, input);

@@ -1,7 +1,7 @@
 package tunnelers.app.controls;
 
-import tunnelers.core.io.AControls;
-import tunnelers.core.io.InputAction;
+import tunnelers.core.player.Controls;
+import tunnelers.core.player.InputAction;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import javafx.scene.input.KeyCode;
@@ -32,7 +32,7 @@ public class KeyMap {
 
 	public void setSchemeDefault(byte sIndex) {
 		// fixme: magic constants
-		AControls controlScheme;
+		Controls controlScheme;
 		switch (sIndex) {
 			case 0:
 				controlScheme = this.controlSchemeManager.getKeyboardScheme(sIndex);
@@ -45,7 +45,7 @@ public class KeyMap {
 		}
 	}
 
-	private void setScheme(AControls controlScheme, KeyCode up, KeyCode left, KeyCode right, KeyCode down, KeyCode shoot) {
+	private void setScheme(Controls controlScheme, KeyCode up, KeyCode left, KeyCode right, KeyCode down, KeyCode shoot) {
 		set(up, controlScheme, InputAction.movUp);
 		set(left, controlScheme, InputAction.movLeft);
 		set(right, controlScheme, InputAction.movRight);
@@ -53,7 +53,7 @@ public class KeyMap {
 		set(shoot, controlScheme, InputAction.actShoot);
 	}
 
-	private ControlInput set(KeyCode code, AControls ctrlScheme, InputAction i) {
+	private ControlInput set(KeyCode code, Controls ctrlScheme, InputAction i) {
 		return this.set(code, new ControlInput(ctrlScheme, i));
 
 	}

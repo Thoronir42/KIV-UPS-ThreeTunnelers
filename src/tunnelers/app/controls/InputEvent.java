@@ -2,7 +2,7 @@ package tunnelers.app.controls;
 
 import javafx.event.Event;
 import javafx.event.EventType;
-import tunnelers.core.io.InputAction;
+import tunnelers.core.player.InputAction;
 
 /**
  *

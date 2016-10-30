@@ -7,7 +7,7 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
 import tunnelers.app.render.FxRenderHelper;
-import tunnelers.core.model.player.APlayer;
+import tunnelers.core.player.Player;
 
 /**
  *
@@ -56,7 +56,7 @@ public class RectangularLayout extends RenderLayout {
 
 	@Override
 	public void draw(GraphicsContext g) {
-		List<APlayer> players = this.renderer.getPlayers();
+		List<Player> players = this.renderer.getPlayers();
 		Affine defTransform = g.getTransform();
 		Dimension2D playerAreaBounds = this.playerArea.getBounds();
 		int row = 0, col = 0;

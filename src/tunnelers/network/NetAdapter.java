@@ -9,7 +9,7 @@ import tunnelers.network.command.CommandType;
  *
  * @author Stepan
  */
-public class NetWorks extends Thread {
+public class NetAdapter extends Thread {
 
 	private static final int BUFFER_SIZE = 512;
 
@@ -26,7 +26,7 @@ public class NetWorks extends Thread {
 
 	INetCommandHandler handler;
 
-	public NetWorks() {
+	public NetAdapter() {
 		this.parser = new CommandParser();
 	}
 	

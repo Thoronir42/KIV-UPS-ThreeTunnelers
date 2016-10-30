@@ -3,14 +3,14 @@ package tunnelers.core.engine.stage;
 import java.util.Collection;
 import java.util.Iterator;
 import javafx.geometry.Point2D;
-import tunnelers.core.GameContainer;
-import tunnelers.core.Warzone;
-import tunnelers.core.io.AControls;
+import temp.Mock;
+import tunnelers.core.gameRoom.GameContainer;
+import tunnelers.core.gameRoom.Warzone;
+import tunnelers.core.player.Controls;
 import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
 import tunnelers.core.model.map.Map;
-import tunnelers.core.model.player.PlayerRemote;
 
 /**
  *
@@ -30,19 +30,20 @@ public class WarzoneStage extends AEngineStage {
 	@Override
 	public void update(long tick) {
 		if (tick % 3 == 0) {
+			
 			this.container.getPlayers().forEach((p) -> {
-				if (p instanceof PlayerRemote && tick % 15 == 0) {
-					((PlayerRemote) p).mockControls(tick);
-				}
 				this.updateTank(p.getTank(), p.getControls());
 			});
 
+		}
+		if(tick % 15 == 0){
+			Mock.controls(tick);
 		}
 
 		this.updateProjectiles(this.warzone.getProjectiles(), tick);
 	}
 
-	private void updateTank(Tank tank, AControls c) {
+	private void updateTank(Tank tank, Controls c) {
 		tank.update();
 		if (true && c.isShooting()) { // TODO: omezeni poctu strel
 			Point2D location = tank.tryShoot();

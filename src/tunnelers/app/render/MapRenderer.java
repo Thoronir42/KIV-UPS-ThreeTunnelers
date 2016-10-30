@@ -7,7 +7,7 @@ import tunnelers.core.model.map.Block;
 import tunnelers.core.model.map.Bounds;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.model.map.Chunk;
-import tunnelers.core.model.player.APlayer;
+import tunnelers.core.player.Player;
 
 /**
  *
@@ -48,7 +48,7 @@ public class MapRenderer extends ARenderer {
 			for (int x = currentBounds.xMin; x <= currentBounds.xMax; x++) {
 				Block b = chunk.getBlock(x % chunkSize, y % chunkSize);
 				if (b == Block.BaseWall) {
-					APlayer p = chunk.getAssignedPlayer();
+					Player p = chunk.getAssignedPlayer();
 					g.setFill(p != null ? colorScheme.playerColors().get(p) : this.colorScheme.getError());
 
 				} else {

@@ -2,8 +2,8 @@ package tunnelers.app.controls;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
-import tunnelers.core.io.AControls;
-import tunnelers.core.io.InputAction;
+import tunnelers.core.player.Controls;
+import tunnelers.core.player.InputAction;
 
 /**
  *
@@ -31,25 +31,25 @@ public class ControlsManager {
 //
 	private final KeyMap keyMap;
 
-	private final KeyboardControls[] keyboardSchemes;
+	private final Controls[] keyboardSchemes;
 
 	public ControlsManager() {
 		this.keyMap = new KeyMap(this);
-		this.keyboardSchemes = new KeyboardControls[2];
+		this.keyboardSchemes = new Controls[2];
 		for (byte i = 0; i < 2; i++) {
-			this.keyboardSchemes[i] = new KeyboardControls(i);
+			this.keyboardSchemes[i] = new Controls(i);
 			this.keyMap.setSchemeDefault(i);
 		}
 	}
 
-	public AControls[] getAllSchemes() {
-		AControls[] schemes = new AControls[this.keyboardSchemes.length];
+	public Controls[] getAllSchemes() {
+		Controls[] schemes = new Controls[this.keyboardSchemes.length];
 		System.arraycopy(this.keyboardSchemes, 0, schemes, 0, schemes.length);
 
 		return schemes;
 	}
 
-	public KeyboardControls getKeyboardScheme(byte sIndex) {
+	public Controls getKeyboardScheme(byte sIndex) {
 		return this.keyboardSchemes[sIndex];
 	}
 
@@ -77,7 +77,7 @@ public class ControlsManager {
 		if (pi == null) {
 			return;
 		}
-		AControls controlSchemeId = pi.getControlScheme();
+		Controls controlSchemeId = pi.getControlScheme();
 		InputAction inp = pi.getInput();
 
 		if (this.onInputChanged != null) {

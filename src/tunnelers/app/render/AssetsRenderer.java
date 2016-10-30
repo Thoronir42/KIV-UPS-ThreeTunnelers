@@ -11,7 +11,7 @@ import tunnelers.app.assets.Assets;
 import tunnelers.app.assets.IAssetImagesProvider;
 import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
-import tunnelers.core.model.player.APlayer;
+import tunnelers.core.player.Player;
 
 /**
  *
@@ -31,7 +31,7 @@ public class AssetsRenderer extends ARenderer {
 
 	final Image[] projectile;
 
-	public AssetsRenderer(AColorScheme colorScheme, Assets assets, Collection<APlayer> players) {
+	public AssetsRenderer(AColorScheme colorScheme, Assets assets, Collection<Player> players) {
 		super(colorScheme);
 		tankBody = new HashMap<>();
 		tankCannon = new Image[2];

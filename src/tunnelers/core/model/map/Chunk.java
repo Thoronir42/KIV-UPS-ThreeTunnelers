@@ -1,7 +1,7 @@
 package tunnelers.core.model.map;
 
 import javafx.geometry.Point2D;
-import tunnelers.core.model.player.APlayer;
+import tunnelers.core.player.Player;
 
 /**
  *
@@ -12,7 +12,7 @@ public class Chunk {
 	protected Block[][] chunkData;
 	public final Bounds bounds;
 	private final int chunkSize;
-	protected APlayer assignedPlayer;
+	protected Player assignedPlayer;
 	protected ChunkType type;
 	
 	protected int x, y;
@@ -37,7 +37,7 @@ public class Chunk {
 		this.type = type;
 	}
 
-	void assignPlayer(APlayer p) {
+	void assignPlayer(Player p) {
 		this.assignedPlayer = p;
 	}
 
@@ -72,7 +72,7 @@ public class Chunk {
 		this.chunkData[x][y] = block;
 	}
 
-	public APlayer getAssignedPlayer() {
+	public Player getAssignedPlayer() {
 		return this.assignedPlayer;
 	}
 

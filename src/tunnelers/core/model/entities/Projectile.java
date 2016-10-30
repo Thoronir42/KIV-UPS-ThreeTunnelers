@@ -1,6 +1,6 @@
 package tunnelers.core.model.entities;
 
-import tunnelers.core.model.player.APlayer;
+import tunnelers.core.player.Player;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 
@@ -13,7 +13,7 @@ public class Projectile extends GameEntity {
 	private static final Dimension2D SHOT_HORIZONTAL = new Dimension2D(3, 1),
 			SHOT_DIAGONAL = new Dimension2D(3, 3);
 
-	public Projectile(Point2D location, Direction direction, APlayer player) {
+	public Projectile(Point2D location, Direction direction, Player player) {
 		super(direction, location, player);
 	}
 

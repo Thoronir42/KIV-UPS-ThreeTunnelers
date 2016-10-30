@@ -1,6 +1,6 @@
 package tunnelers.core.model.entities;
 
-import tunnelers.core.model.player.APlayer;
+import tunnelers.core.player.Player;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import tunnelers.app.render.colors.Colorable;
@@ -12,9 +12,9 @@ import tunnelers.app.render.colors.Colorable;
 public abstract class GameEntity  implements Colorable{
 	protected Direction direction;
 	protected Point2D location;
-	protected APlayer player;
+	protected Player player;
 
-	public GameEntity(Direction direction, Point2D location, APlayer player) {
+	public GameEntity(Direction direction, Point2D location, Player player) {
 		this.direction = direction;
 		this.location = location;
 		this.player = player;
@@ -64,7 +64,7 @@ public abstract class GameEntity  implements Colorable{
 		return this.getY() + (this.getHeight() - 1) / 2;
 	}
 
-	public APlayer getPlayer() {
+	public Player getPlayer() {
 		return this.player;
 	}
 

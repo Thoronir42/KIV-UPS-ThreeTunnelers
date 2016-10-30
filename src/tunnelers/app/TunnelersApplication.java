@@ -13,9 +13,9 @@ import tunnelers.app.controls.InputEvent;
 import tunnelers.app.render.colors.DefaultColorScheme;
 import tunnelers.app.render.colors.PlayerColors;
 import tunnelers.app.views.menu.MainMenuScene;
-import tunnelers.core.GameContainer;
+import tunnelers.core.gameRoom.GameContainer;
 import tunnelers.core.engine.Engine;
-import tunnelers.network.NetWorks;
+import tunnelers.network.NetAdapter;
 import temp.MapGenerator;
 
 /**
@@ -42,16 +42,15 @@ public final class TunnelersApplication extends Application {
 		imp = new Impulser(settings.getTickRate());
 
 		Chat chat = new Chat(settings.getChatMessageCapacity());
-		NetWorks networks = new NetWorks();
+		NetAdapter networks = new NetAdapter();
 		ControlsManager csmgr = new ControlsManager();
 
-		PlayerColors playerColors = new PlayerColors();
-		DefaultColorScheme colorScheme = new DefaultColorScheme(playerColors);
+		DefaultColorScheme colorScheme = new DefaultColorScheme(new PlayerColors());
 		colorScheme.setRandomizer((int x, int y) -> {
 			return ((int) Math.abs(Math.sin((x + 2) * 7) * 6 + Math.cos(y * 21) * 6));
 		});
 
-		GameContainer container = GameContainer.mockContainer(csmgr, "KAREL", playerColors.size());
+		GameContainer container = Mock.gameContainer(csmgr, "KAREL", colorScheme.playerColors().size());
 		container.initWarzone(MapGenerator.mockMap(20, 12, 8, container.getPlayerCount()));
 
 		Engine e = new Engine(VERSION, networks, chat);

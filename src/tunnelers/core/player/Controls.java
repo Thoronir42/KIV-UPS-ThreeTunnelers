@@ -1,4 +1,4 @@
-package tunnelers.core.io;
+package tunnelers.core.player;
 
 import tunnelers.core.model.entities.Direction;
 
@@ -6,14 +6,18 @@ import tunnelers.core.model.entities.Direction;
  *
  * @author Stepan
  */
-public abstract class AControls {
+public final class Controls {
 
 	protected final byte schemeID;
 	protected int playerID;
 	
 	private final boolean[] heldKeys;
 	
-	public AControls(byte schemeId) {
+	public Controls(int byteId){
+		this((byte) byteId);
+	}
+	
+	public Controls(byte schemeId) {
 		this.schemeID = schemeId;
 		
 		InputAction[] inputs = InputAction.values();
