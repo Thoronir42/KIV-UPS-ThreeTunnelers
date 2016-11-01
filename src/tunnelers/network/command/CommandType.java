@@ -6,36 +6,38 @@ public enum CommandType {
 	LeadApprove(1),
 	LeadDeny(2),
 	LeadStillThere(3),
-	LeadWrongRoom(4),
+	LeadBadFormat(4),
 	//    CONNECTION
-	ConFetchLobbies(10),
+	ConFetchGameList(10),
 	ConCreateGame(11),
 	ConJoinGame(12),
-	ConDisconnect(49),
-	ConIncorrectPhase(80),
-	ConGamesList(90),
-	ConGamesListEnd(91),
-	ConPlayerDisconnected(99),
+	ConReconnect(13),
+	ConDisconnect(20),
+	ConGamesList(25),
+	ConGamesListEnd(26),
 	//    MESSAGE
-	MsgPlain(100),
-	MsgRcon(105),
-	//    LOBBY CONTROLS
-	LobbyIntroduce(112),
-	LobbySetColor(113),
-	LobbySetLeader(120),
-	LobbyGameStarts(130),
-	GameVerifyChunk(131),
-	LobbyGameStarted(132),
-	GameKickPlayer(149),
-	GamePlayerJoined(150),
-	GamePlayerLeft(199),
-	//    GAME CONTROLS
+	MsgPlain(40),
+	MsgRcon(45),
+	//    ROOM CONTROLS
+	RoomWrongPhase(110),
+	RoomPlayerWhoIs(111),
+	RoomPlayerIntroduce(112),
+	RoomSetColor(113),
+	RoomKickPlayer(118),
+	RoomPlayerLeft(119),
+	RoomSetLeader(120),
+	RoomStartGame(125),
+	RoomGameStarted(126),
+	// GAME-MAP CONTROLS
+	GameChunkRequest(140),
+	GameChunkData(141),
+	GameVerifyChunk(142),
+	//    GAME-ENTITY CONTROLS
 	GameControlsSet(201),
-	GameRequestChunk(210),
-	GameRequestPlayersInfo(220),
-	GameChunkData(310),
-	GamePlayerInfo(320),
-	;
+	GameTankRequest(210),
+	GameTankInfo(211),
+	GameProjAdd(220),
+	GameProjRem(221),;
 
 	private final short value;
 
@@ -46,8 +48,8 @@ public enum CommandType {
 	private CommandType(short v) {
 		this.value = v;
 	}
-	
-	public short value(){
+
+	public short value() {
 		return value;
 	}
 }
