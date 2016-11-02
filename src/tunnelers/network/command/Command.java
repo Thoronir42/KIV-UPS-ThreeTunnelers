@@ -9,25 +9,29 @@ public class Command {
 	/**
 	 * @unused
 	 */
-	protected final byte id;
+	protected final short id;
 	protected final CommandType type;
 	protected String data;
 
-	public Command(CommandType type, byte id) {
+	public Command(CommandType type, int byteId){
+		this(type, (byte)byteId);
+	}
+	
+	public Command(CommandType type, short id) {
 		this(type, id, "");
 	}
 
-	public Command(CommandType type, byte id, String data) {
+	public Command(CommandType type, short id, String data) {
 		this.id = id;
 		this.type = type;
 		this.data = data;
 	}
 
 	public CommandType getType() {
-		return CommandType.LeadApprove;
+		return this.type;
 	}
 
-	public byte getId() {
+	public short getId() {
 		return id;
 	}
 
@@ -57,5 +61,10 @@ public class Command {
 
 	public void setData(String data) {
 		this.data = data;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Cmd[%03d]: %05d %05d: %s ", this.id, this.type.value(), this.getLength(), this.data);
 	}
 }

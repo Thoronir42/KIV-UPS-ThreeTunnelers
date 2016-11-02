@@ -60,8 +60,8 @@ public class MainMenuScene extends ATunnelersScene {
 			content.add(buttons[i], 0, i);
 		}
 		
-		scene.tf_addr = new TextField("localhost");
-		scene.tf_port = new TextField();
+		scene.tf_addr = new TextField(settings.getServerAddress());
+		scene.tf_port = new TextField("" + settings.getServerPort());
 		scene.tf_name = new TextField("Karel");
 		
 		content.add(scene.tf_addr, 1, 0);
@@ -88,12 +88,8 @@ public class MainMenuScene extends ATunnelersScene {
 	}
 	
 	private void tryConnect(){
-		try{
-			int port = Integer.parseInt(tf_port.getText());
-			this.getStage().connect(tf_name.getText(), tf_addr.getText(), port);
-		} catch (Exception e){
-			System.err.println("Connect error " + e.getMessage());
-		}
+		int port = Integer.parseInt(tf_port.getText());
+		this.getStage().connect(tf_name.getText(), tf_addr.getText(), port);
 		
 	}
 

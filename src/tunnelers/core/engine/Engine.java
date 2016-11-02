@@ -1,5 +1,6 @@
 package tunnelers.core.engine;
 
+import generic.BackPasser;
 import tunnelers.app.TunnelersStage;
 import tunnelers.network.NetAdapter;
 import tunnelers.core.player.Player;
@@ -7,7 +8,6 @@ import tunnelers.core.chat.Chat;
 import tunnelers.core.player.InputAction;
 import tunnelers.core.gameRoom.GameContainer;
 import tunnelers.core.gameRoom.Warzone;
-import tunnelers.core.chat.IChatParticipant;
 import tunnelers.core.chat.ServerMessenger;
 import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;
@@ -77,7 +77,6 @@ public final class Engine implements INetCommandHandler {
 
 		if (p.getControls().setControlState(inp, pressed)) {
 			Command cmd = this.networks.createCommand(CommandType.GameControlsSet);
-
 		}
 	}
 
@@ -89,29 +88,32 @@ public final class Engine implements INetCommandHandler {
 		return this.container.getWarzone();
 	}
 
-	public boolean connect(String name, String addr, int port) {
-		return this.networks.connectTo(name, addr, port);
+	public void connect(String name, String addr, int port) {
+		this.networks.connectTo(name, addr, port);
 	}
-	
-	public void disconnect(){
+
+	public void disconnect() {
 		this.networks.disconnect("Disconnecting");
 	}
-	
-	public void sendPlainText(String text){
+
+	public void sendPlainText(String text) {
 		this.networks.tmpSendText(text);
 	}
 
 	@Override
 	public void handle(Command cmd) {
+		System.out.println("Engine processing command: " + cmd.toString());
 		switch (cmd.getType()) {
+			case LeadApprove:
+				System.out.println("Ano");
+				break;
 			case MsgPlain:
 				chat.addMessage(ServerMessenger.getInstance(), cmd.getData());
 				view.updateChat();
 				break;
 			default:
-				System.err.println("Incomming command not recognised");
+				this.view.handle(cmd);
 				break;
-
 		}
 	}
 }

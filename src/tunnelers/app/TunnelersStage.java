@@ -2,6 +2,7 @@ package tunnelers.app;
 
 import tunnelers.core.settings.Settings;
 import java.lang.reflect.InvocationTargetException;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import tunnelers.app.controls.ControlsManager;
 import tunnelers.app.views.warzone.PlayScene;
@@ -11,16 +12,19 @@ import tunnelers.app.render.FxRenderHelper;
 import tunnelers.app.render.MapRenderer;
 import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.app.views.lobby.LobbyScene;
+import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.app.views.serverList.GameRoom;
 import tunnelers.app.views.settings.SettingsScene;
 import tunnelers.core.engine.Engine;
 import tunnelers.core.engine.EngineStage;
+import tunnelers.network.INetCommandHandler;
+import tunnelers.network.command.Command;
 
 /**
  *
  * @author Stepan
  */
-public class TunnelersStage extends Stage {
+public class TunnelersStage extends Stage implements INetCommandHandler{
 
 	public static final String GAME_NAME = "Three Tunnelers",
 			TITLE_SEPARATOR = "|";
@@ -106,19 +110,36 @@ public class TunnelersStage extends Stage {
 		return this.controlsManager;
 	}
 
-	public boolean connect(String name, String addr, int port) {
-		if (this.engine.connect(name, addr, port)) {
-			this.joinLobby("", null);
-			return true;
-		}
-		else System.out.println("Nepripojeno");
-		return false;
+	public void connect(String name, String addr, int port) {
+		this.engine.connect(name, addr, port);
 	}
 
 	public void updateChat() {
 		if(this.currentScene instanceof LobbyScene){
 			LobbyScene l = (LobbyScene)this.currentScene;
 			l.updateChatbox();
+		}
+	}
+
+	@Override
+	public void handle(Command cmd) {
+		switch(cmd.getType()){
+			case VirtConnectionEstabilished:
+				Platform.runLater(() -> {
+					this.joinLobby("", null);
+				});
+				break;
+			case VirtConnectingError:
+			case VirtConnectingTimedOut:
+				System.err.println("Nepripojeno: " + cmd.getData());
+				break;
+			case VirtConnectionTerminated:
+				Platform.runLater(() -> {
+					this.changeScene(MainMenuScene.getInstance());
+				});
+			default: 
+				System.err.println("Incomming command not recognised");
+				break;
 		}
 	}
 

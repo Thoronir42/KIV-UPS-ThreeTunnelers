@@ -24,14 +24,14 @@ public class CommandParser {
 	}
 
 	public String parse(Command cmd) {
-		String str = String.format("%04X%04X%s\n", cmd.getType().value(), cmd.getLength(), cmd.getData());
+		String str = String.format("%02X%04X%04X%s\n", cmd.getId(), cmd.getType().value(), cmd.getLength(), cmd.getData());
 		return str;
 	}
 
 	public Command parse(String str) throws NetworksException, NumberFormatException {
 		sc.setSourceString(str);
 
-		byte id = sc.nextByte();
+		short id = sc.nextByte();
 		short type = sc.nextShort();
 		int length = sc.nextInt();
 		String data = sc.readToEnd();

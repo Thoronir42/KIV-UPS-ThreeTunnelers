@@ -39,8 +39,8 @@ public class SimpleScanner {
 		return source.length() - pointer;
 	}
 
-	public byte nextByte() {
-		return Byte.parseByte(read(2), parse_radix);
+	public short nextByte() {
+		return Short.parseShort(read(2), parse_radix);
 	}
 
 	public short nextShort() {

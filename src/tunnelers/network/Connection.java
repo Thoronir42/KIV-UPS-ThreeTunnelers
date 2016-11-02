@@ -1,6 +1,7 @@
 package tunnelers.network;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -16,12 +17,12 @@ import tunnelers.network.codec.NoCodec;
 public class Connection {
 
 	private final ICodec codec;
-	private final Socket socket;
+	private Socket socket;
 	protected InetAddress address;
 	protected int port;
 
 	protected BufferedReader reader;
-	protected OutputStreamWriter writer;
+	protected BufferedWriter writer;
 
 	public Connection(String adress, int port, int receiveBufferSize) throws NetworksException {
 		this(adress, port, receiveBufferSize, new NoCodec());
@@ -32,13 +33,19 @@ public class Connection {
 			this.codec = codec;
 			this.address = InetAddress.getByName(adress);
 			this.port = port;
-			this.socket = new Socket(address, port);
-
-			this.writer = new OutputStreamWriter(socket.getOutputStream());
-			this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		} catch (IOException e) {
 			throw new NetworksException(e);
 		}
+	}
+
+	public void open(String clientName) throws IOException {
+		if(this.isOpen()){
+			throw new IOException("Connection is already open");
+		}
+		this.socket = new Socket(address, port);
+
+		this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	}
 
 	synchronized public void send(String message) throws NetworksException {
@@ -49,12 +56,18 @@ public class Connection {
 		try {
 			this.writer.write(message);
 			this.writer.flush();
+			
+			System.out.println("Connection sent: " + message);
 		} catch (IOException e) {
 			throw new NetworksException(e);
 		}
 	}
 
 	public String receive() throws IOException, InterruptedException {
+		if (reader == null) {
+			throw new IOException("Receiver not open yet");
+		}
+		
 		String rcv = reader.readLine();
 		System.out.println("Connection received: " + rcv);
 		return rcv;
@@ -70,5 +83,9 @@ public class Connection {
 
 	public String getHostString() {
 		return this.address.getHostAddress() + ':' + this.port;
+	}
+
+	boolean isOpen() {
+		return this.socket != null;
 	}
 }
