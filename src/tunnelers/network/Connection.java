@@ -17,10 +17,10 @@ import tunnelers.network.codec.NoCodec;
 public class Connection {
 
 	private final ICodec codec;
-	private Socket socket;
 	protected InetAddress address;
 	protected int port;
 
+	private Socket socket;
 	protected BufferedReader reader;
 	protected BufferedWriter writer;
 
@@ -38,14 +38,29 @@ public class Connection {
 		}
 	}
 
-	public void open(String clientName) throws IOException {
-		if(this.isOpen()){
+	public boolean isOpen() {
+		return this.socket != null;
+	}
+
+	public void open() throws IOException {
+		if (this.isOpen()) {
 			throw new IOException("Connection is already open");
 		}
 		this.socket = new Socket(address, port);
 
 		this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 		this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	}
+
+	public void close() throws NetworksException {
+		if (!isOpen()) {
+			return;
+		}
+		try {
+			this.socket.close();
+		} catch (IOException e) {
+			throw new NetworksException(e);
+		}
 	}
 
 	synchronized public void send(String message) throws NetworksException {
@@ -56,7 +71,7 @@ public class Connection {
 		try {
 			this.writer.write(message);
 			this.writer.flush();
-			
+
 			System.out.println("Connection sent: " + message);
 		} catch (IOException e) {
 			throw new NetworksException(e);
@@ -67,25 +82,13 @@ public class Connection {
 		if (reader == null) {
 			throw new IOException("Receiver not open yet");
 		}
-		
+
 		String rcv = reader.readLine();
 		System.out.println("Connection received: " + rcv);
 		return rcv;
 	}
 
-	public void close() throws NetworksException {
-		try {
-			this.socket.close();
-		} catch (IOException e) {
-			throw new NetworksException(e);
-		}
-	}
-
 	public String getHostString() {
 		return this.address.getHostAddress() + ':' + this.port;
-	}
-
-	boolean isOpen() {
-		return this.socket != null;
 	}
 }

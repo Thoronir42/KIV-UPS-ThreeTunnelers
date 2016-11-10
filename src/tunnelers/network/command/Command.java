@@ -9,20 +9,15 @@ public class Command {
 	/**
 	 * @unused
 	 */
-	protected final short id;
+	protected short id;
 	protected final CommandType type;
 	protected String data;
 
-	public Command(CommandType type, int byteId){
-		this(type, (byte)byteId);
-	}
-	
-	public Command(CommandType type, short id) {
-		this(type, id, "");
+	public Command(CommandType type) {
+		this(type, "");
 	}
 
-	public Command(CommandType type, short id, String data) {
-		this.id = id;
+	public Command(CommandType type, String data) {
 		this.type = type;
 		this.data = data;
 	}
@@ -37,7 +32,8 @@ public class Command {
 
 	/**
 	 * Returns length of current data
-	 * @return 
+	 *
+	 * @return
 	 */
 	public short getLength() {
 		return (short) data.length();

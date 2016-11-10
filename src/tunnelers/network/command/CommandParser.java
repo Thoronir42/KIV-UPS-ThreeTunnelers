@@ -3,7 +3,6 @@ package tunnelers.network.command;
 import generic.SimpleScanner;
 import java.util.HashMap;
 import tunnelers.network.CommandNotRecognisedException;
-import tunnelers.network.NetworksException;
 
 /**
  *
@@ -14,35 +13,42 @@ public class CommandParser {
 	private static final int PARSE_RADIX = 16;
 
 	private final SimpleScanner sc = new SimpleScanner(PARSE_RADIX);
-	private static final HashMap<Short, CommandType> typeMap;
-	
+	private static final HashMap<Short, CommandType> TYPE_MAP;
+
 	static {
-		typeMap = new HashMap<>();
+		TYPE_MAP = new HashMap<>();
 		for (CommandType type : CommandType.values()) {
-			typeMap.put(type.value(), type);
+			TYPE_MAP.put(type.value(), type);
 		}
 	}
 
 	public String parse(Command cmd) {
-		String str = String.format("%02X%04X%04X%s\n", cmd.getId(), cmd.getType().value(), cmd.getLength(), cmd.getData());
-		return str;
+		//String str = String.format("%02X%04X%04X%s\n", cmd.getId(), cmd.getType().value(), cmd.getLength(), cmd.getData());
+		return String.format("%04X%s\n", cmd.getType().value(), cmd.getData());
 	}
 
-	public Command parse(String str) throws NetworksException, NumberFormatException {
+	public Command parse(String str) throws CommandNotRecognisedException {
+		//short id;
+		short type;
+		//short length;
+		String data;
+
 		sc.setSourceString(str);
 
-		short id = sc.nextByte();
-		short type = sc.nextShort();
-		int length = sc.nextInt();
-		String data = sc.readToEnd();
-		
-		System.out.format("MSG: %d, %d[%d] %s%n", id, type, length, data);
+		try {
+			//id = sc.nextByte();
+			type = sc.nextShort();
+			//length = sc.nextInt();
+			data = sc.readToEnd();
+		} catch (NumberFormatException ex) {
+			throw new CommandNotRecognisedException(str);
+		}
 
-		CommandType cmdType = typeMap.getOrDefault(type, CommandType.Undefined);
+		CommandType cmdType = TYPE_MAP.getOrDefault(type, CommandType.Undefined);
 		if (cmdType == CommandType.Undefined) {
 			throw new CommandNotRecognisedException(str);
 		}
 
-		return new Command(cmdType, id, data);
+		return new Command(cmdType, data);
 	}
 }

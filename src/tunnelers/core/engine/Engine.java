@@ -1,6 +1,5 @@
 package tunnelers.core.engine;
 
-import generic.BackPasser;
 import tunnelers.app.TunnelersStage;
 import tunnelers.network.NetAdapter;
 import tunnelers.core.player.Player;
@@ -69,7 +68,7 @@ public final class Engine implements INetCommandHandler {
 	}
 
 	public void exit() {
-		this.networks.close();
+		this.networks.shutdown();
 	}
 
 	public void handleInput(InputAction inp, int playerID, boolean pressed) {

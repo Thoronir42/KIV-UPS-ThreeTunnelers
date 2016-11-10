@@ -13,22 +13,20 @@ public class NetAdapter extends Thread {
 
 	private static final int BUFFER_SIZE = 512;
 
-	String clientName;
 	private Connection connection;
-
-	private final CommandParser parser;
-
+	private short LastMsgId = 0;
+	private NetClient localClient;
 	private int invalidResponseCounter;
-
 	private String disconnectReason;
 
-	private byte LastMsgId = 0;
-
-	INetCommandHandler handler;
+	private final CommandParser parser;
+	private INetCommandHandler handler;
+	private boolean keepRunning;
 
 	public NetAdapter() {
 		super(NetAdapter.class.getSimpleName());
 		this.parser = new CommandParser();
+		this.keepRunning = true;
 	}
 
 	public void setHandler(INetCommandHandler handler) {
@@ -42,9 +40,9 @@ public class NetAdapter extends Thread {
 	public void connectTo(String clientName, String adress, int port) {
 		try {
 			this.connection = new Connection(adress, port, BUFFER_SIZE);
-			this.clientName = clientName;
+			this.localClient = new NetClient(clientName);
 		} catch (NetworksException e) {
-			Command err = new Command(CommandType.VirtConnectingError, 0);
+			Command err = new Command(CommandType.VirtConnectingError);
 			err.setData(e.getMessage());
 			this.handler.handle(err);
 		}
@@ -74,55 +72,68 @@ public class NetAdapter extends Thread {
 	public void run() {
 		System.out.println("Networks: starting");
 
-		while (true) {
+		while (this.keepRunning) {
 			try {
-				if (connection == null) {
-					sleep(200);
+				if (!isValidConnection(connection)) {
 					continue;
-				}
-				if (!connection.isOpen()) {
-					try {
-						connection.open(this.clientName);
-						handler.handle(new Command(CommandType.VirtConnectionEstabilished, 0));
-
-						Command introduction = new Command(CommandType.RoomPlayerIntroduce, 1);
-						introduction.setData(clientName);
-						this.issueCommand(introduction);
-					} catch (IOException e) {
-						Command err = new Command(CommandType.VirtConnectingTimedOut, 0);
-						err.setData(e.getMessage());
-						handler.handle(err);
-						this.connection = null;
-						continue;
-					}
 				}
 
 				// and now we wait...
-				String data = this.connection.receive();
-				if (data == null) {
-					Command err = new Command(CommandType.VirtConnectionTerminated, 0);
-					handler.handle(err);
+				String message = this.connection.receive();
+
+				if (message == null) {
+					Command err = new Command(CommandType.VirtConnectionTerminated);
+					this.handler.handle(err);
 					connection = null;
-				} else {
-					try {
-						Command cmd = this.parser.parse(data);
-						this.handler.handle(cmd);
-					} catch (NumberFormatException | StringIndexOutOfBoundsException ex) {
-						Command err = new Command(CommandType.VirtCommandParseError, 0);
-						err.setData("For data: " + data);
-						this.handler.handle(err);
+					continue;
+				}
+
+				try {
+					Command cmd = this.parser.parse(message);
+					this.handler.handle(cmd);
+				} catch (CommandNotRecognisedException e) {
+					if (!this.handleInvalidResponse()) {
+						return;
 					}
 				}
-			} catch (CommandNotRecognisedException e) {
-				if (!this.handleInvalidResponse()) {
-					return;
-				}
 			} catch (InterruptedException e) {
+				System.err.println("Network: waiting interrupted");
 				break;
 			} catch (IOException e) {
 				System.err.println("Network run error: " + e.getClass() + ": " + e.getMessage());
+				connection = null;
 			}
 		}
+	}
+
+	private boolean isValidConnection(Connection connection) {
+		if (connection == null) {
+			try {
+				sleep(200);
+			} catch (InterruptedException ex) {
+				// 
+			}
+			return false;
+		}
+
+		if (!connection.isOpen()) {
+			try {
+				connection.open();
+				handler.handle(new Command(CommandType.VirtConnectionEstabilished));
+
+				Command introduction = this.createCommand(CommandType.RoomPlayerIntroduce);
+				introduction.setData(localClient.getName());
+				this.issueCommand(introduction);
+			} catch (IOException e) {
+				Command err = new Command(CommandType.VirtConnectingTimedOut);
+				err.setData(e.getMessage());
+				handler.handle(err);
+				this.connection = null;
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	private boolean handleInvalidResponse() {
@@ -138,7 +149,7 @@ public class NetAdapter extends Thread {
 		this.disconnectReason = reason;
 		try {
 			if (this.connection == null) {
-				System.out.println("DIsconnect error: not connected");
+				System.out.println("Disconnect error: not connected");
 				return;
 			}
 			this.connection.close();
@@ -153,10 +164,10 @@ public class NetAdapter extends Thread {
 		return this.disconnectReason;
 	}
 
-	public void close() {
+	public void shutdown() {
 		try {
 			this.disconnect("Shutting down");
-			super.interrupt();
+			this.keepRunning = false;
 			super.join();
 			System.out.println("NetWorks ended succesfully");
 		} catch (InterruptedException ex) {
@@ -165,6 +176,7 @@ public class NetAdapter extends Thread {
 	}
 
 	public Command createCommand(CommandType commandType) {
-		return new Command(commandType, ++LastMsgId);
+		LastMsgId++;
+		return new Command(commandType);
 	}
 }

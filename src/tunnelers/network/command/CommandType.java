@@ -1,7 +1,6 @@
 package tunnelers.network.command;
 
 public enum CommandType {
-	VirtCommandParseError(-5),
 	VirtConnectionTerminated(-4),
 	VirtConnectingError(-3),
 	VirtConnectingTimedOut(-2),
