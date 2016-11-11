@@ -13,10 +13,9 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
-import tunnelers.app.ATunnelersScene;
-import tunnelers.app.TunnelersStage;
+import tunnelers.app.views.ATunnelersScene;
 import tunnelers.app.render.colors.AColorScheme;
-import tunnelers.app.views.serverList.ServerListScene;
+import tunnelers.app.views.IView;
 import tunnelers.core.chat.Chat;
 
 /**
@@ -74,7 +73,7 @@ public class LobbyScene extends ATunnelersScene {
 		
 		Button but_start = new Button("Vyzkoušet");
 		but_start.setOnAction((ActionEvent event) -> {
-			scene.getStage().beginGame();
+			scene.getEngine().beginGame();
 		});
 		root.add(but_start, 1, 2);
 
@@ -118,10 +117,4 @@ public class LobbyScene extends ATunnelersScene {
 	private void sendChatMessage() {
 		this.sendChatMessage(tf_chatIn.getText());
 	}
-
-	@Override
-	public Class getPrevScene() {
-		return ServerListScene.class;
-	}
-	
 }

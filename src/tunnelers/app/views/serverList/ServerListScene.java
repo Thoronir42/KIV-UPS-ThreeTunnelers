@@ -2,7 +2,6 @@ package tunnelers.app.views.serverList;
 
 import tunnelers.app.views.serverList.GameRoomView.GRTVItem;
 import generic.RNG;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,10 +20,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.app.views.serverList.GameRoomView.GameRoomTreeTableView;
 import tunnelers.core.settings.Settings;
-import tunnelers.app.ATunnelersScene;
+import tunnelers.app.views.ATunnelersScene;
 import tunnelers.core.settings.NameManager;
 
 /**
@@ -35,10 +33,10 @@ public class ServerListScene extends ATunnelersScene {
 
 	public static ServerListScene getInstance() {
 		BorderPane content = new BorderPane();
-		
+
 		ServerListScene scene = new ServerListScene(content, settings.getWindowWidth(), settings.getWindowHeight());
 		addComponents(content, scene, settings);
-		
+
 		return scene;
 	}
 
@@ -58,19 +56,19 @@ public class ServerListScene extends ATunnelersScene {
 
 		Button but_goBack = new Button("Zpět..");
 		but_goBack.setOnAction((ActionEvent event) -> {
-			scene.goBack();
+			scene.getStage().prevScene();
 		});
 
 		Label hugeWarning = new Label("Pozor, následující pohledy nejsou součástí demonstrace");
 		hugeWarning.setTextFill(Color.WHITE);
 		hugeWarning.setFont(new Font(28));
 		hugeWarning.setTextAlignment(TextAlignment.CENTER);
-		
+
 		HBox top = new HBox(hugeWarning);
 		top.setAlignment(Pos.CENTER);
-		
+
 		root.setTop(top);
-		
+
 		center.add(createTopBar(scene, settings), 0, 0);
 		center.add(scene.serverList, 0, 1);
 		center.add(but_goBack, 0, 2);
@@ -79,8 +77,8 @@ public class ServerListScene extends ATunnelersScene {
 		root.setBottom(createBottomBar(scene));
 
 		scene.refreshServerList();
-		scene.SceneStatus.set(Status.Waiting);
-		
+		scene.alert("Čekání na akci");
+
 		but_goBack.requestFocus();
 	}
 
@@ -94,7 +92,7 @@ public class ServerListScene extends ATunnelersScene {
 		scene.topButtons = new HBox();
 		scene.topLabels = new HBox(4);
 		scene.topLabels.setAlignment(Pos.CENTER);
-		
+
 		scene.tf_localName = new TextField();
 		scene.tf_localName.textProperty().bindBidirectional(scene.names.CurrentName);
 
@@ -105,7 +103,7 @@ public class ServerListScene extends ATunnelersScene {
 		lblName.setOnMouseClicked(e -> {
 			scene.tf_localName.setText(scene.names.generateNext());
 		});
-		
+
 		scene.topLabels.getChildren().addAll(lblName, scene.tf_localName, lblServer);
 
 		scene.topButtons.getChildren().add(scene.but_getLobbies);
@@ -119,15 +117,13 @@ public class ServerListScene extends ATunnelersScene {
 		HBox bottom = new HBox();
 		bottom.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
 		bottom.setAlignment(Pos.CENTER);
-		
+
 		bottom.setPadding(new Insets(4));
-		
+
 		scene.lbl_conInfo = new Label();
-		
+
 		scene.lbl_conInfo.setFont(new Font(18));
-		
-		
-		
+
 		bottom.getChildren().add(scene.lbl_conInfo);
 
 		return bottom;
@@ -136,37 +132,25 @@ public class ServerListScene extends ATunnelersScene {
 	protected TextField tf_localName;
 	protected Button but_getLobbies,
 			but_join;
-	
+
 	protected Label lbl_conInfo;
 
 	protected GameRoomTreeTableView serverList;
 
 	protected HBox topButtons,
 			topLabels;
-	
+
 	private final NameManager names;
-	
-	protected final SimpleObjectProperty<Status> SceneStatus;
 
 	public ServerListScene(Parent root, double width, double height) {
 		super(root, width, height, "Výpis serverů");
-		
-		this.SceneStatus = new SimpleObjectProperty<>();
-		this.SceneStatus.addListener((listener, o, n) -> {
-			this.lbl_conInfo.setText(n.label);
-		});
-		
-		this.names = new NameManager(420);
-	}
 
-	@Override
-	public Class getPrevScene() {
-		return MainMenuScene.class;
+		this.names = new NameManager(420);
 	}
 
 	private void refreshServerList() {
 		serverList.clearItems();
-		
+
 		int n = RNG.getRandInt(10) + 3;
 		String[] lobbies = new String[n];
 		for (byte i = 0; i < n; i++) {
@@ -197,20 +181,6 @@ public class ServerListScene extends ATunnelersScene {
 		}
 	}
 
-	private void connectToGame(GameRoom gr) {
-		if(gr.Full.get()){
-			SceneStatus.set(Status.GameFull);
-			return;
-		}
-		String name = tf_localName.getText();
-		if(name.length() == 0){
-			name = tf_localName.getPromptText();
-		}
-		SceneStatus.set(Status.Connecting);
-		
-		this.getStage().joinLobby(name, gr);
-	}
-
 	private void serverListClicked(MouseEvent e) {
 		GRTVItem selected = this.serverList.getSelectedItem();
 
@@ -218,20 +188,15 @@ public class ServerListScene extends ATunnelersScene {
 			return;
 		}
 		if (e.getClickCount() == 2) {
-			this.connectToGame((GameRoom) selected);
+			String name = tf_localName.getText();
+			if (name.length() == 0) {
+				name = tf_localName.getPromptText();
+			}
+			this.getEngine().joinGame((GameRoom) selected);
 		}
 	}
-	
-	protected enum Status{
-		Waiting("Čekání na akci"),
-		Connecting("Probíhá připojování"),
-		GameFull("Hra je již plná");
-		
-		
-		private final String label;
-		
-		private Status(String label){
-			this.label = label;
-		}
+
+	public void alert(String message) {
+		this.lbl_conInfo.setText(message);
 	}
 }

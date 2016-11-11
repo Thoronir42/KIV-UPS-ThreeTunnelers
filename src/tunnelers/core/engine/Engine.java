@@ -1,6 +1,7 @@
 package tunnelers.core.engine;
 
-import tunnelers.app.TunnelersStage;
+import tunnelers.app.views.IView;
+import tunnelers.app.views.serverList.GameRoom;
 import tunnelers.network.NetAdapter;
 import tunnelers.core.player.Player;
 import tunnelers.core.chat.Chat;
@@ -29,7 +30,7 @@ public final class Engine implements INetCommandHandler {
 
 	private AEngineStage currentStage;
 
-	private TunnelersStage view;
+	private IView view;
 
 	public Engine(int version, NetAdapter networks, Chat chat) {
 		this.version = version;
@@ -37,10 +38,10 @@ public final class Engine implements INetCommandHandler {
 		networks.setHandler(this);
 		this.chat = chat;
 
-		this.setStage(EngineStage.Menu);
+		this.setStage(Stage.Menu);
 	}
 
-	public void setView(TunnelersStage view) {
+	public void setView(IView view) {
 		this.view = view;
 	}
 
@@ -48,7 +49,7 @@ public final class Engine implements INetCommandHandler {
 		this.container = container;
 	}
 
-	public void setStage(EngineStage stage) {
+	public void setStage(Stage stage) {
 		switch (stage) {
 			case Menu:
 				this.currentStage = new MenuStage();
@@ -100,19 +101,49 @@ public final class Engine implements INetCommandHandler {
 	}
 
 	@Override
-	public void handle(Command cmd) {
+	public boolean handle(Command cmd) {
 		System.out.println("Engine processing command: " + cmd.toString());
 		switch (cmd.getType()) {
 			case LeadApprove:
 				System.out.println("Ano");
-				break;
+				return true;
 			case MsgPlain:
 				chat.addMessage(ServerMessenger.getInstance(), cmd.getData());
 				view.updateChat();
-				break;
+				return true;
+
+			case VirtConnectingError:
+			case VirtConnectingTimedOut:
+				System.err.println("Nepripojeno: " + cmd.getData());
+				return true;
 			default:
-				this.view.handle(cmd);
-				break;
+				System.err.println("Command was not handled: " + cmd.toString());
+				return false;
 		}
+	}
+
+	public void beginGame() {
+		this.setStage(Engine.Stage.Warzone);
+		this.view.showScene(IView.Scene.Game);
+	}
+
+	public void viewServerList() {
+		// fixme: perform real server listing
+		this.view.showScene(IView.Scene.ServerList);
+	}
+
+	public void joinGame(GameRoom gameRoom) {
+		if (gameRoom.Full.get()) {
+			this.view.alert("Hra je již plná");
+			return;
+		}
+		this.view.alert("Probíhá připojování");
+
+		this.view.showScene(IView.Scene.Lobby);
+	}
+
+	public static enum Stage {
+		Menu,
+		Warzone,
 	}
 }

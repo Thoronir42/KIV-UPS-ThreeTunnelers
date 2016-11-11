@@ -1,5 +1,6 @@
 package tunnelers.app;
 
+import tunnelers.app.views.TunnelersStage;
 import generic.Impulser.Impulser;
 import tunnelers.core.settings.Settings;
 import javafx.application.Application;
@@ -12,11 +13,11 @@ import tunnelers.app.assets.Assets;
 import tunnelers.app.controls.InputEvent;
 import tunnelers.app.render.colors.DefaultColorScheme;
 import tunnelers.app.render.colors.PlayerColors;
-import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.core.gameRoom.GameContainer;
 import tunnelers.core.engine.Engine;
 import tunnelers.network.NetAdapter;
 import temp.MapGenerator;
+import tunnelers.app.views.IView;
 
 /**
  *
@@ -74,7 +75,7 @@ public final class TunnelersApplication extends Application {
 		});
 
 		currentStage.setResizable(false);
-		currentStage.changeScene(MainMenuScene.class);
+		currentStage.showScene(IView.Scene.MainMenu);
 
 		this.currentStage.show();
 		this.imp.start();

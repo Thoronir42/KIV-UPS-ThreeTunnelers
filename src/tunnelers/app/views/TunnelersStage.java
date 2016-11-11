@@ -1,7 +1,7 @@
-package tunnelers.app;
+package tunnelers.app.views;
 
+import java.util.HashMap;
 import tunnelers.core.settings.Settings;
-import java.lang.reflect.InvocationTargetException;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import tunnelers.app.controls.ControlsManager;
@@ -13,19 +13,18 @@ import tunnelers.app.render.MapRenderer;
 import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.app.views.lobby.LobbyScene;
 import tunnelers.app.views.menu.MainMenuScene;
-import tunnelers.app.views.serverList.GameRoom;
+import tunnelers.app.views.serverList.ServerListScene;
 import tunnelers.app.views.settings.SettingsScene;
 import tunnelers.core.engine.Engine;
-import tunnelers.core.engine.EngineStage;
-import tunnelers.network.INetCommandHandler;
-import tunnelers.network.command.Command;
 
 /**
  *
  * @author Stepan
  */
-public class TunnelersStage extends Stage implements INetCommandHandler{
+public class TunnelersStage extends Stage implements IView {
 
+	private final HashMap<Class, IView.Scene> ROUTER;
+	
 	public static final String GAME_NAME = "Three Tunnelers",
 			TITLE_SEPARATOR = "|";
 
@@ -50,30 +49,30 @@ public class TunnelersStage extends Stage implements INetCommandHandler{
 
 		this.engine = engine;
 		this.assets = assets;
-		
+
 		MapRenderer mapRenderer = new MapRenderer(colorScheme, engine.getContainer().getWarzone().getMap());
 		AssetsRenderer assetsRenderer = new AssetsRenderer(colorScheme, assets, engine.getContainer().getPlayers());
 
 		this.renderer = new FxRenderHelper(engine, colorScheme, mapRenderer, assetsRenderer);
 		this.controlsManager = controlsManager;
+
+		this.ROUTER = this.getRouter();
+	}
+	
+	private HashMap<Class, IView.Scene> getRouter(){
+		HashMap<Class, IView.Scene> r = new HashMap<>();
 		
-	}
-
-	public void joinLobby(String clientName, GameRoom gr) {
-		this.changeScene(LobbyScene.getInstance(this.engine.getChat(), this.renderer.getColorScheme()));
-	}
-
-	public void beginGame() {
-		PlayScene scene = PlayScene.getInstance(controlsManager);
-		scene.initLayout(engine.getContainer().getPlayerCount(), this.renderer);
-
-		this.changeScene(scene);
-		this.engine.setStage(EngineStage.Warzone);
+		r.put(SettingsScene.class, IView.Scene.MainMenu);
+		r.put(ServerListScene.class, IView.Scene.MainMenu);
+		r.put(LobbyScene.class, IView.Scene.ServerList);
+		
+		
+		return r;
 	}
 
 	public void prevScene() {
-		ATunnelersScene scene = (ATunnelersScene) this.getScene();
-		this.changeScene(scene.getPrevScene());
+		Scene scene = this.ROUTER.getOrDefault(this.getScene().getClass(), null);
+		this.showScene(scene);
 	}
 
 	protected void changeScene(ATunnelersScene scene) {
@@ -86,61 +85,45 @@ public class TunnelersStage extends Stage implements INetCommandHandler{
 		this.setTitle(String.format("%s %s %s", GAME_NAME, TITLE_SEPARATOR, scene.getName()));
 	}
 
-	public final void changeScene(Class reqScene) {
-		changeScene(classToInstance(reqScene));
-	}
-
-	private ATunnelersScene classToInstance(Class scene) {
-		if (scene == null) {
-			return null;
-		}
-		if (scene == SettingsScene.class) {
-			return SettingsScene.getInstance(controlsManager);
-		}
-		try {
-			return (ATunnelersScene) scene.getDeclaredMethod("getInstance").invoke(null);
-		} catch (IllegalAccessException | NoSuchMethodException |
-				IllegalArgumentException | InvocationTargetException e) {
-			System.err.format("Couldn't get instance of new scene: %s=%s\n", e.getClass().getSimpleName(), e.getMessage());
-		}
-		return null;
-	}
-
 	public ControlsManager getControls() {
 		return this.controlsManager;
 	}
 
-	public void connect(String name, String addr, int port) {
-		this.engine.connect(name, addr, port);
-	}
-
+	@Override
 	public void updateChat() {
-		if(this.currentScene instanceof LobbyScene){
-			LobbyScene l = (LobbyScene)this.currentScene;
+		if (this.currentScene instanceof LobbyScene) {
+			LobbyScene l = (LobbyScene) this.currentScene;
 			l.updateChatbox();
 		}
 	}
 
 	@Override
-	public void handle(Command cmd) {
-		switch(cmd.getType()){
-			case VirtConnectionEstabilished:
-				Platform.runLater(() -> {
-					this.joinLobby("", null);
-				});
-				break;
-			case VirtConnectingError:
-			case VirtConnectingTimedOut:
-				System.err.println("Nepripojeno: " + cmd.getData());
-				break;
-			case VirtConnectionTerminated:
-				Platform.runLater(() -> {
+	public void showScene(Scene scene) {
+		Platform.runLater(() -> {
+			switch (scene) {
+				case MainMenu:
 					this.changeScene(MainMenuScene.getInstance());
-				});
-			default: 
-				System.err.println("Incomming command not recognised");
-				break;
-		}
+					break;
+				case Settings:
+					this.changeScene(SettingsScene.getInstance(controlsManager));
+					break;
+				case ServerList:
+					this.changeScene(ServerListScene.getInstance());
+					break;
+				case Lobby:
+					this.changeScene(LobbyScene.getInstance(this.engine.getChat(), this.renderer.getColorScheme()));
+					break;
+				case Game:
+					PlayScene sc = PlayScene.getInstance(controlsManager);
+					sc.initLayout(engine.getContainer().getPlayerCount(), this.renderer);
+					this.changeScene(sc);
+					break;
+			}
+		});
 	}
 
+	@Override
+	public void alert(String message) {
+		System.out.println("Stage alert: " + message);
+	}
 }

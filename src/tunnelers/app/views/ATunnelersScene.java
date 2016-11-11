@@ -1,4 +1,4 @@
-package tunnelers.app;
+package tunnelers.app.views;
 
 import generic.RNG;
 import tunnelers.core.settings.Settings;
@@ -58,7 +58,7 @@ public abstract class ATunnelersScene extends Scene {
 	public void handleKeyPressed(KeyCode code) {
 		switch (code) {
 			case ESCAPE:
-				this.goBack();
+				this.getStage().prevScene();
 				break;
 		}
 	}
@@ -88,12 +88,6 @@ public abstract class ATunnelersScene extends Scene {
 	protected Engine getEngine(){
 		return this.getStage().engine;
 	}
-
-	protected void goBack() {
-		this.getStage().prevScene();
-	}
-
-	public abstract Class getPrevScene();
 
 	public GraphicsContext getGraphicsContext() {
 		return this.canvas.getGraphicsContext2D();

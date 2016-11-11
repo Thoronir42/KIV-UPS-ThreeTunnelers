@@ -1,7 +1,5 @@
 package tunnelers.app.views.menu;
 
-import tunnelers.app.views.serverList.ServerListScene;
-import tunnelers.app.views.settings.SettingsScene;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -14,7 +12,8 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import tunnelers.app.ATunnelersScene;
+import tunnelers.app.views.ATunnelersScene;
+import tunnelers.app.views.IView;
 
 /**
  *
@@ -41,34 +40,34 @@ public class MainMenuScene extends ATunnelersScene {
 		content.setAlignment(Pos.CENTER);
 
 		content.setBackground(new Background(new BackgroundFill(new Color(0.23, 0.74, .23, 0.21), CornerRadii.EMPTY, Insets.EMPTY)));
-		
+
 		MainMenuScene scene = new MainMenuScene(content, settings.getWindowWidth(), settings.getWindowHeight());
 
 		Button[] buttons = new Button[]{
 			createButton("Seznam serverů", (ActionEvent event) -> {
-					scene.getStage().changeScene(ServerListScene.class);
-				}),
+				scene.getEngine().viewServerList();
+			}),
 			createButton("Nastavení", (ActionEvent event) -> {
-					scene.getStage().changeScene(SettingsScene.class);
-				}),
+				scene.getStage().showScene(IView.Scene.Settings);
+			}),
 			createButton("Ukončit", (ActionEvent event) -> {
-					scene.getStage().close();
-				}),
-		};
+				scene.getStage().close();
+			}),};
 
 		for (int i = 0; i < buttons.length; i++) {
 			content.add(buttons[i], 0, i);
 		}
-		
+
 		scene.tf_addr = new TextField(settings.getServerAddress());
 		scene.tf_port = new TextField("" + settings.getServerPort());
 		scene.tf_name = new TextField("Karel");
-		
+
 		content.add(scene.tf_addr, 1, 0);
 		content.add(scene.tf_port, 2, 0);
 		content.add(scene.tf_name, 1, 1, 2, 1);
 		content.add(createButton("TMP: Připoj", (e) -> {
-			scene.tryConnect();
+			int port = Integer.parseInt(scene.tf_port.getText());
+			scene.getEngine().connect(scene.tf_name.getText(), scene.tf_addr.getText(), port);
 		}), 1, 2, 2, 1);
 		return scene;
 
@@ -80,22 +79,10 @@ public class MainMenuScene extends ATunnelersScene {
 		btn.setPrefSize(BTN_PREF_WIDTH, BTN_PREF_HEIGHT);
 		return btn;
 	}
-	
+
 	private TextField tf_addr, tf_port, tf_name;
 
 	public MainMenuScene(Parent root, double width, double height) {
 		super(root, width, height, "Hlavní menu");
 	}
-	
-	private void tryConnect(){
-		int port = Integer.parseInt(tf_port.getText());
-		this.getStage().connect(tf_name.getText(), tf_addr.getText(), port);
-		
-	}
-
-	@Override
-	public Class getPrevScene() {
-		return null;
-	}
-
 }

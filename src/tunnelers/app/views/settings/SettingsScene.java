@@ -18,10 +18,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import tunnelers.app.controls.ControlsManager;
-import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.app.views.settings.controls.IpTextfield;
 import tunnelers.core.settings.Settings;
-import tunnelers.app.ATunnelersScene;
+import tunnelers.app.views.ATunnelersScene;
+import tunnelers.app.views.IView;
 
 /**
  *
@@ -86,7 +86,7 @@ public class SettingsScene extends ATunnelersScene {
 	private static HBox makeResolveButtonRack(SettingsScene scene) {
 		Button btn_back = new Button("Zpět");
 		btn_back.setOnAction((ActionEvent event) -> {
-			scene.goBack();
+			scene.getStage().showScene(IView.Scene.MainMenu);
 		});
 		Button btn_saveChanges = new Button("Uložit nastavení");
 		btn_saveChanges.setOnAction((ActionEvent e) -> {
@@ -138,10 +138,5 @@ public class SettingsScene extends ATunnelersScene {
 		} catch (UnknownHostException | NumberFormatException e) {
 			System.err.format("%s : %s\n", e.getClass().getSimpleName(), e.getMessage());
 		}
-	}
-
-	@Override
-	public Class getPrevScene() {
-		return MainMenuScene.class;
 	}
 }
