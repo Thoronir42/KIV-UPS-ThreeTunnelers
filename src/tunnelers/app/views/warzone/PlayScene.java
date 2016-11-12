@@ -10,7 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import tunnelers.app.controls.ControlsManager;
 import tunnelers.app.render.RenderLayout;
-import tunnelers.app.views.ATunnelersScene;
+import tunnelers.app.ATunnelersScene;
 import tunnelers.app.render.FxRenderHelper;
 
 /**

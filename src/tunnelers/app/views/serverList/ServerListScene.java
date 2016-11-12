@@ -22,7 +22,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import tunnelers.app.views.serverList.GameRoomView.GameRoomTreeTableView;
 import tunnelers.core.settings.Settings;
-import tunnelers.app.views.ATunnelersScene;
+import tunnelers.app.ATunnelersScene;
 import tunnelers.core.settings.NameManager;
 
 /**

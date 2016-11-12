@@ -13,9 +13,8 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
-import tunnelers.app.views.ATunnelersScene;
+import tunnelers.app.ATunnelersScene;
 import tunnelers.app.render.colors.AColorScheme;
-import tunnelers.app.views.IView;
 import tunnelers.core.chat.Chat;
 
 /**

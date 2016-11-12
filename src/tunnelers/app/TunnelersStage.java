@@ -1,5 +1,6 @@
-package tunnelers.app.views;
+package tunnelers.app;
 
+import tunnelers.core.engine.IView;
 import java.util.HashMap;
 import tunnelers.core.settings.Settings;
 import javafx.application.Platform;
@@ -91,6 +92,7 @@ public class TunnelersStage extends Stage implements IView {
 
 	@Override
 	public void updateChat() {
+		System.out.println("Updating chat on" + this.currentScene);
 		if (this.currentScene instanceof LobbyScene) {
 			LobbyScene l = (LobbyScene) this.currentScene;
 			l.updateChatbox();

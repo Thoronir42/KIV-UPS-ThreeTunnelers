@@ -16,7 +16,7 @@ public class NetAdapter extends Thread {
 	private Connection connection;
 	private short LastMsgId = 0;
 	private NetClient localClient;
-	private int invalidResponseCounter;
+	private int invalidResponseCounter = 0;
 	private String disconnectReason;
 
 	private final CommandParser parser;
@@ -49,23 +49,14 @@ public class NetAdapter extends Thread {
 	}
 
 	public boolean issueCommand(Command cmd) {
-		String code = parser.parse(cmd);
-		System.out.println(code);
+		String message = parser.parse(cmd);
 		try {
-			this.connection.send(code);
+			this.connection.send(message);
+			System.out.println("Connection sent: " + message);
 			return true;
-		} catch (NetworksException e) {
+		} catch (IOException e) {
 			return false;
 		}
-	}
-
-	public void tmpSendText(String Text) {
-		try {
-			this.connection.send(Text);
-		} catch (Exception e) {
-			System.err.println("Send text error: " + e.getMessage());
-		}
-
 	}
 
 	@Override
@@ -80,8 +71,10 @@ public class NetAdapter extends Thread {
 
 				// and now we wait...
 				String message = this.connection.receive();
+				System.out.println("Connection received: " + message);
 
-				if (message == null) {
+				if (message == null || message.length() == 0) {
+					System.out.println("Something is wronk");
 					Command err = new Command(CommandType.VirtConnectionTerminated);
 					this.handler.handle(err);
 					connection = null;
@@ -90,9 +83,13 @@ public class NetAdapter extends Thread {
 
 				try {
 					Command cmd = this.parser.parse(message);
+					System.out.println("Handling cmd: " + cmd.toString());
 					this.handler.handle(cmd);
+					this.invalidResponseCounter = 0;
 				} catch (CommandNotRecognisedException e) {
-					if (!this.handleInvalidResponse()) {
+					System.err.println(e.toString());
+					this.invalidResponseCounter++;
+					if (this.invalidResponseCounter > 4) {// TODO: configurability
 						return;
 					}
 				}
@@ -136,11 +133,6 @@ public class NetAdapter extends Thread {
 		return true;
 	}
 
-	private boolean handleInvalidResponse() {
-		this.invalidResponseCounter++;
-		return this.invalidResponseCounter <= 4; // TODO: configurability
-	}
-
 	public void disconnect() {
 		this.disconnect("");
 	}
@@ -153,8 +145,8 @@ public class NetAdapter extends Thread {
 				return;
 			}
 			this.connection.close();
-		} catch (NetworksException e) {
-			System.out.println("Disconnect error: " + e.getMessage());
+		} catch (IOException e) {
+			System.err.println("Disconnect error: " + e.getMessage());
 		} finally {
 			this.connection = null;
 		}

@@ -1,6 +1,6 @@
 package tunnelers.app;
 
-import tunnelers.app.views.TunnelersStage;
+import tunnelers.core.engine.IView;
 import generic.Impulser.Impulser;
 import tunnelers.core.settings.Settings;
 import javafx.application.Application;
@@ -17,7 +17,6 @@ import tunnelers.core.gameRoom.GameContainer;
 import tunnelers.core.engine.Engine;
 import tunnelers.network.NetAdapter;
 import temp.MapGenerator;
-import tunnelers.app.views.IView;
 
 /**
  *

@@ -20,8 +20,8 @@ import javafx.scene.paint.Color;
 import tunnelers.app.controls.ControlsManager;
 import tunnelers.app.views.settings.controls.IpTextfield;
 import tunnelers.core.settings.Settings;
-import tunnelers.app.views.ATunnelersScene;
-import tunnelers.app.views.IView;
+import tunnelers.app.ATunnelersScene;
+import tunnelers.core.engine.IView;
 
 /**
  *

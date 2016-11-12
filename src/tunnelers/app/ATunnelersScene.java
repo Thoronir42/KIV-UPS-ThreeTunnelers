@@ -1,4 +1,4 @@
-package tunnelers.app.views;
+package tunnelers.app;
 
 import generic.RNG;
 import tunnelers.core.settings.Settings;

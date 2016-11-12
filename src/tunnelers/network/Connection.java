@@ -52,40 +52,36 @@ public class Connection {
 		this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	}
 
-	public void close() throws NetworksException {
+	public void close() throws IOException {
 		if (!isOpen()) {
 			return;
 		}
-		try {
-			this.socket.close();
-		} catch (IOException e) {
-			throw new NetworksException(e);
-		}
+		this.socket.close();
+		this.socket = null;
+		this.writer = null;
+		this.reader = null;
 	}
 
-	synchronized public void send(String message) throws NetworksException {
+	synchronized public void send(String message) throws IOException {
+		if (writer == null) {
+			throw new IOException("Failed to send message: Connection is not open");
+		}
+
+		message = this.codec.encode(message);
 		if (message.charAt(message.length() - 1) != '\n') {
 			message += '\n';
 		}
 
-		try {
-			this.writer.write(message);
-			this.writer.flush();
-
-			System.out.println("Connection sent: " + message);
-		} catch (IOException e) {
-			throw new NetworksException(e);
-		}
+		this.writer.write(message);
+		this.writer.flush();
 	}
 
 	public String receive() throws IOException, InterruptedException {
 		if (reader == null) {
-			throw new IOException("Receiver not open yet");
+			throw new IOException("Failed to receive message: Connection is not open");
 		}
 
-		String rcv = reader.readLine();
-		System.out.println("Connection received: " + rcv);
-		return rcv;
+		return this.codec.decode(reader.readLine());
 	}
 
 	public String getHostString() {
