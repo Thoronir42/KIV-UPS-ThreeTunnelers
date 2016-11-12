@@ -1,6 +1,5 @@
 package tunnelers.core.engine;
 
-import tunnelers.app.views.IView;
 import tunnelers.app.views.serverList.GameRoom;
 import tunnelers.network.NetAdapter;
 import tunnelers.core.player.Player;
@@ -97,7 +96,9 @@ public final class Engine implements INetCommandHandler {
 	}
 
 	public void sendPlainText(String text) {
-		this.networks.tmpSendText(text);
+		Command cmd = this.networks.createCommand(CommandType.MsgPlain);
+		cmd.setData(text);
+		this.networks.issueCommand(cmd);
 	}
 
 	@Override
@@ -107,11 +108,13 @@ public final class Engine implements INetCommandHandler {
 			case LeadApprove:
 				System.out.println("Ano");
 				return true;
+			case MsgRcon:
 			case MsgPlain:
 				chat.addMessage(ServerMessenger.getInstance(), cmd.getData());
 				view.updateChat();
 				return true;
-
+			case VirtConnectionEstabilished:
+				view.showScene(IView.Scene.Lobby);
 			case VirtConnectingError:
 			case VirtConnectingTimedOut:
 				System.err.println("Nepripojeno: " + cmd.getData());

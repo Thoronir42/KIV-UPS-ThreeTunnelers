@@ -81,7 +81,7 @@ public class Connection {
 			throw new IOException("Failed to receive message: Connection is not open");
 		}
 
-		return this.codec.decode(reader.readLine());
+		return this.codec.decode(reader.readLine().trim());
 	}
 
 	public String getHostString() {

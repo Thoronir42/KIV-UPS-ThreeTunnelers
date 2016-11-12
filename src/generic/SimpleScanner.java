@@ -56,7 +56,7 @@ public class SimpleScanner {
 			throw new StringIndexOutOfBoundsException(String.format("Attemoted to read %d chars from processed data", n));
 		}
 
-		String data = source.substring(pointer, n);
+		String data = source.substring(pointer, pointer + n);
 		pointer += n;
 		return data;
 	}

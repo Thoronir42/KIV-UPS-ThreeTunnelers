@@ -31,7 +31,7 @@ public class CommandParser {
 		//short id;
 		short type;
 		//short length;
-		String data;
+		String body;
 
 		sc.setSourceString(str);
 
@@ -39,9 +39,12 @@ public class CommandParser {
 			//id = sc.nextByte();
 			type = sc.nextShort();
 			//length = sc.nextInt();
-			data = sc.readToEnd();
+			body = sc.readToEnd();
 		} catch (NumberFormatException ex) {
-			throw new CommandNotRecognisedException(str);
+			throw new CommandNotRecognisedException(str, ex.getMessage());
+		} catch (StringIndexOutOfBoundsException ex){
+			throw new CommandNotRecognisedException(str, ex.getMessage());
+			// asdf
 		}
 
 		CommandType cmdType = TYPE_MAP.getOrDefault(type, CommandType.Undefined);
@@ -49,6 +52,6 @@ public class CommandParser {
 			throw new CommandNotRecognisedException(str);
 		}
 
-		return new Command(cmdType, data);
+		return new Command(cmdType, body);
 	}
 }
