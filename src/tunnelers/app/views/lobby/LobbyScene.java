@@ -1,5 +1,6 @@
 package tunnelers.app.views.lobby;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -103,8 +104,10 @@ public class LobbyScene extends ATunnelersScene {
 	}
 
 	public void updateChatbox() {
-		this.wv_chatBox.getEngine().loadContent(this.chatPrinter.getHtml());
-		System.out.println("Chat updated");
+		Platform.runLater(() -> {
+			this.wv_chatBox.getEngine().loadContent(this.chatPrinter.getHtml());
+			System.out.println("Chat updated");
+		});
 	}
 	
 	protected void sendChatMessage(String message){

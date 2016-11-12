@@ -79,6 +79,9 @@ public class PlayerColors {
 	}
 
 	public Color get(int i) {
+		if(i == -1){
+			return SYSTEM_COLOR;
+		}
 		return this.colors[i];
 	}
 	
