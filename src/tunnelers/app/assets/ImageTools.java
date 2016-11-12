@@ -14,9 +14,9 @@ public class ImageTools {
 
 	/**
 	 *
-	 * @param src
-	 * @param c
-	 * @return
+	 * @param src original image
+	 * @param c color to be applied over original image
+	 * @return Original image with applied color
 	 */
 	public static Image recolor(Image src, Color c) {
 		int width = (int) src.getWidth(),

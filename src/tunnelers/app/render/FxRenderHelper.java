@@ -69,7 +69,7 @@ public class FxRenderHelper {
 	/**
 	 * FIXME: add own references directly to the tanks
 	 *
-	 * @return
+	 * @return Collection of tanks to be rendered
 	 */
 	public Collection<Tank> getTanks() {
 		Collection<Player> players = this.getPlayers();

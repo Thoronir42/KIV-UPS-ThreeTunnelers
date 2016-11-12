@@ -6,7 +6,7 @@ import java.util.Iterator;
 /**
  *
  * @author Stepan
- * @param <Type>
+ * @param <Type> Specifies the generic type
  */
 public class CyclicArray<Type> implements Iterable<Type> {
 

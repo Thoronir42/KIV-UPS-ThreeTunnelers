@@ -105,6 +105,7 @@ public class LobbyScene extends ATunnelersScene {
 
 	public void updateChatbox() {
 		this.wv_chatBox.getEngine().loadContent(this.chatPrinter.getHtml());
+		System.out.println("Chat updated");
 	}
 	
 	protected void sendChatMessage(String message){

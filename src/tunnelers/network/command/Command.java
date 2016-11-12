@@ -7,7 +7,7 @@ package tunnelers.network.command;
 public class Command {
 
 	/**
-	 * @unused
+	 * fixme: unused
 	 */
 	protected short id;
 	protected final CommandType type;
@@ -33,7 +33,7 @@ public class Command {
 	/**
 	 * Returns length of current data
 	 *
-	 * @return
+	 * @return length of data
 	 */
 	public short getLength() {
 		return (short) data.length();
