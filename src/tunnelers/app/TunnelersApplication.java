@@ -72,6 +72,11 @@ public final class TunnelersApplication extends Application {
 			e.update(event.getTick());
 			currentStage.update(event.getTick());
 		});
+		this.imp.addHook((event) -> {
+			if (event.getTick() % (settings.getTickRate() / 2) == 0) {
+				networks.update(event.getTick());
+			}
+		});
 
 		currentStage.setResizable(false);
 		currentStage.showScene(IView.Scene.MainMenu);

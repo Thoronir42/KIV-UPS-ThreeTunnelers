@@ -23,6 +23,7 @@ public class Connection {
 	private Socket socket;
 	protected BufferedReader reader;
 	protected BufferedWriter writer;
+	protected long lastActive;
 
 	public Connection(String adress, int port, int receiveBufferSize) throws NetworksException {
 		this(adress, port, receiveBufferSize, new NoCodec());
@@ -33,6 +34,7 @@ public class Connection {
 			this.codec = codec;
 			this.address = InetAddress.getByName(adress);
 			this.port = port;
+			this.lastActive = System.currentTimeMillis();
 		} catch (IOException e) {
 			throw new NetworksException(e);
 		}
@@ -80,8 +82,15 @@ public class Connection {
 		if (reader == null) {
 			throw new IOException("Failed to receive message: Connection is not open");
 		}
+		String message = reader.readLine();
+		if(message == null){
+			return null;
+		}
+		this.lastActive = System.currentTimeMillis();
+		
+		
 
-		return this.codec.decode(reader.readLine().trim());
+		return this.codec.decode(message.trim());
 	}
 
 	public String getHostString() {

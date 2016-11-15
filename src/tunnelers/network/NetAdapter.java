@@ -1,6 +1,8 @@
 package tunnelers.network;
 
 import java.io.IOException;
+import java.time.Clock;
+import tunnelers.app.IUpdatable;
 import tunnelers.network.command.Command;
 import tunnelers.network.command.CommandParser;
 import tunnelers.network.command.CommandType;
@@ -9,7 +11,7 @@ import tunnelers.network.command.CommandType;
  *
  * @author Stepan
  */
-public class NetAdapter extends Thread {
+public class NetAdapter extends Thread implements IUpdatable {
 
 	private static final int BUFFER_SIZE = 512;
 
@@ -41,10 +43,25 @@ public class NetAdapter extends Thread {
 		try {
 			this.connection = new Connection(adress, port, BUFFER_SIZE);
 			this.localClient = new NetClient(clientName);
+			this.invalidResponseCounter = 0;
 		} catch (NetworksException e) {
 			Command err = new Command(CommandType.VirtConnectingError);
 			err.setData(e.getMessage());
 			this.handler.handle(err);
+		}
+	}
+
+	@Override
+	public void update(long tick) {
+		if (this.connection == null) {
+			return;
+		}
+
+		long now = System.currentTimeMillis();
+		long d = now - this.connection.lastActive;
+		System.out.println(d);
+		if (d > 15000) {
+			this.disconnect("Server was irresponsive.");
 		}
 	}
 
@@ -149,6 +166,7 @@ public class NetAdapter extends Thread {
 			System.err.println("Disconnect error: " + e.getMessage());
 		} finally {
 			this.connection = null;
+			this.handler.handle(new Command(CommandType.VirtConnectionTerminated));
 		}
 	}
 

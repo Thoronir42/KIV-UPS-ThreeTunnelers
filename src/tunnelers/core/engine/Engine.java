@@ -119,6 +119,9 @@ public final class Engine implements INetCommandHandler {
 			case VirtConnectingTimedOut:
 				System.err.println("Nepripojeno: " + cmd.getData());
 				return true;
+			case VirtConnectionTerminated:
+				view.showScene(IView.Scene.MainMenu);
+				return true;
 			default:
 				System.err.println("Command was not handled: " + cmd.toString());
 				return false;
