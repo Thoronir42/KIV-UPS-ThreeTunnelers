@@ -1,7 +1,8 @@
 package tunnelers.app.controls;
 
-import tunnelers.core.player.Controls;
-import tunnelers.core.player.InputAction;
+import tunnelers.core.player.controls.ControlInput;
+import tunnelers.core.player.controls.Controls;
+import tunnelers.core.player.controls.InputAction;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import javafx.scene.input.KeyCode;
@@ -10,7 +11,7 @@ import javafx.scene.input.KeyCode;
  *
  * @author Stepan
  */
-public class KeyMap {
+public class FxKeyMap {
 
 	public static String codeToStr(KeyCode kc) {
 		if (kc == null) {
@@ -23,9 +24,9 @@ public class KeyMap {
 	}
 
 	private final HashMap<KeyCode, ControlInput> map;
-	private final ControlsManager controlSchemeManager;
+	private final FxControlsManager controlSchemeManager;
 
-	public KeyMap(ControlsManager controlSchemeManager) {
+	public FxKeyMap(FxControlsManager controlSchemeManager) {
 		map = new HashMap<>();
 		this.controlSchemeManager = controlSchemeManager;
 	}

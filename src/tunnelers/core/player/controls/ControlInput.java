@@ -1,7 +1,4 @@
-package tunnelers.app.controls;
-
-import tunnelers.core.player.Controls;
-import tunnelers.core.player.InputAction;
+package tunnelers.core.player.controls;
 
 /**
  *

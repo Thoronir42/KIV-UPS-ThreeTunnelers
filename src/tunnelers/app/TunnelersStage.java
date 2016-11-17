@@ -5,7 +5,7 @@ import java.util.HashMap;
 import tunnelers.core.settings.Settings;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import tunnelers.app.controls.ControlsManager;
+import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.views.warzone.PlayScene;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.render.AssetsRenderer;
@@ -31,7 +31,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 
 	protected static final Settings SETTINGS = Settings.getInstance();
 
-	protected final ControlsManager controlsManager;
+	protected final FxControlsManager controlsManager;
 	protected final FxRenderHelper renderer;
 
 	protected ATunnelersScene currentScene;

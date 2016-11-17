@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import temp.Mock;
 import tunnelers.core.chat.Chat;
-import tunnelers.app.controls.ControlsManager;
+import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.controls.InputEvent;
 import tunnelers.app.render.colors.DefaultColorScheme;
@@ -43,7 +43,7 @@ public final class TunnelersApplication extends Application {
 
 		Chat chat = new Chat(settings.getChatMessageCapacity());
 		NetAdapter networks = new NetAdapter();
-		ControlsManager csmgr = new ControlsManager();
+		FxControlsManager csmgr = new FxControlsManager();
 
 		DefaultColorScheme colorScheme = new DefaultColorScheme(new PlayerColors());
 		colorScheme.setRandomizer((int x, int y) -> {

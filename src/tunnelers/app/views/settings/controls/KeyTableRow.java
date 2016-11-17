@@ -2,10 +2,10 @@ package tunnelers.app.views.settings.controls;
 
 import javafx.scene.control.TableColumn;
 import javafx.scene.input.KeyCode;
-import tunnelers.app.controls.ControlsManager;
-import tunnelers.core.player.Controls;
-import tunnelers.core.player.InputAction;
-import tunnelers.app.controls.ControlInput;
+import tunnelers.app.controls.FxControlsManager;
+import tunnelers.core.player.controls.Controls;
+import tunnelers.core.player.controls.InputAction;
+import tunnelers.core.player.controls.ControlInput;
 
 /**
  *
@@ -31,9 +31,9 @@ class KeyTableRow {
 
 	InputAction inputAction;
 	final ControlInput[] inputs;
-	ControlsManager controlSchemeManager;
+	FxControlsManager controlSchemeManager;
 
-	public KeyTableRow(InputAction input, byte[] keyboardLayoutIds, ControlsManager csm) {
+	public KeyTableRow(InputAction input, byte[] keyboardLayoutIds, FxControlsManager csm) {
 		this.inputAction = input;
 		this.controlSchemeManager = csm;
 

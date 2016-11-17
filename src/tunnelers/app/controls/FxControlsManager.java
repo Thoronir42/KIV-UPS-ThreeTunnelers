@@ -1,15 +1,17 @@
 package tunnelers.app.controls;
 
+import tunnelers.core.player.controls.ControlInput;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
-import tunnelers.core.player.Controls;
-import tunnelers.core.player.InputAction;
+import tunnelers.core.player.controls.AControlsManager;
+import tunnelers.core.player.controls.Controls;
+import tunnelers.core.player.controls.InputAction;
 
 /**
  *
  * @author Stepan
  */
-public class ControlsManager {
+public class FxControlsManager extends AControlsManager{
 
 	private EventHandler<InputEvent> onInputChanged;
 
@@ -21,36 +23,16 @@ public class ControlsManager {
 		}
 		return ids;
 	}
-
-	public static InputAction[] getEditableInputs() {
-		return new InputAction[]{
-			InputAction.movUp, InputAction.movDown,
-			InputAction.movLeft, InputAction.movRight,
-			InputAction.actShoot,};
-	}
 //
-	private final KeyMap keyMap;
+	private final FxKeyMap keyMap;
 
-	private final Controls[] keyboardSchemes;
-
-	public ControlsManager() {
-		this.keyMap = new KeyMap(this);
-		this.keyboardSchemes = new Controls[2];
+	public FxControlsManager() {
+		super();
+		this.keyMap = new FxKeyMap(this);
 		for (byte i = 0; i < 2; i++) {
 			this.keyboardSchemes[i] = new Controls(i);
 			this.keyMap.setSchemeDefault(i);
 		}
-	}
-
-	public Controls[] getAllSchemes() {
-		Controls[] schemes = new Controls[this.keyboardSchemes.length];
-		System.arraycopy(this.keyboardSchemes, 0, schemes, 0, schemes.length);
-
-		return schemes;
-	}
-
-	public Controls getKeyboardScheme(byte sIndex) {
-		return this.keyboardSchemes[sIndex];
 	}
 
 	public ControlInput getControlInputByKey(KeyCode code) {

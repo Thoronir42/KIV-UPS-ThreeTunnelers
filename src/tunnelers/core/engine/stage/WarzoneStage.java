@@ -6,7 +6,7 @@ import javafx.geometry.Point2D;
 import temp.Mock;
 import tunnelers.core.gameRoom.GameContainer;
 import tunnelers.core.gameRoom.Warzone;
-import tunnelers.core.player.Controls;
+import tunnelers.core.player.controls.Controls;
 import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;

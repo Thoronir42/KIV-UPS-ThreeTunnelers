@@ -17,7 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import tunnelers.app.controls.ControlsManager;
+import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.views.settings.controls.IpTextfield;
 import tunnelers.core.settings.Settings;
 import tunnelers.app.ATunnelersScene;
@@ -33,7 +33,7 @@ public class SettingsScene extends ATunnelersScene {
 	private static final double RESOLVE_BUTTON_PREF_WIDTH = 160,
 			RESOLVE_BUTTON_PREF_HEIGHT = 40;
 
-	public static SettingsScene getInstance(ControlsManager controls) {
+	public static SettingsScene getInstance(FxControlsManager controls) {
 		
 		GridPane content = new GridPane();
 		content.setBackground(new Background(new BackgroundFill(new Color(0.42, 0.87, 0.93, 0.25), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -107,9 +107,9 @@ public class SettingsScene extends ATunnelersScene {
 
 	protected Button btn_testServer;
 
-	private final ControlsManager controlSchemeManager;
+	private final FxControlsManager controlSchemeManager;
 
-	public SettingsScene(Parent root, double width, double height, ControlsManager controls) {
+	public SettingsScene(Parent root, double width, double height, FxControlsManager controls) {
 		super(root, width, height, "Nastavení");
 		this.controlSchemeManager = controls;
 	}

@@ -9,9 +9,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.util.Callback;
-import tunnelers.app.controls.ControlsManager;
-import tunnelers.app.controls.ControlInput;
-import tunnelers.core.player.InputAction;
+import tunnelers.app.controls.FxControlsManager;
+import tunnelers.core.player.controls.ControlInput;
+import tunnelers.core.player.controls.InputAction;
 
 /**
  *
@@ -19,10 +19,10 @@ import tunnelers.core.player.InputAction;
  */
 public class KeyConfigPane extends TableView<KeyTableRow> {
 
-	public static KeyConfigPane create(ControlsManager controlSchemeManager) {
+	public static KeyConfigPane create(FxControlsManager controlSchemeManager) {
 		byte[] kbLayoutIds = controlSchemeManager.getKeyboardLayoutIDs();
 		KeyConfigPane kcp = new KeyConfigPane(kbLayoutIds);
-		InputAction[] inputs = ControlsManager.getEditableInputs();
+		InputAction[] inputs = FxControlsManager.getEditableInputs();
 
 		ObservableList<KeyTableRow> rows = kcp.getItems();
 		KeyTableRow.setKLIDs(kbLayoutIds);

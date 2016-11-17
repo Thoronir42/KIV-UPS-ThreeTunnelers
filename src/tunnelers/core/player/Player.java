@@ -1,5 +1,6 @@
 package tunnelers.core.player;
 
+import tunnelers.core.player.controls.Controls;
 import tunnelers.app.render.colors.Colorable;
 import tunnelers.core.chat.IChatParticipant;
 import tunnelers.core.model.entities.Tank;

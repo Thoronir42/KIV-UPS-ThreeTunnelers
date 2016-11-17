@@ -1,4 +1,4 @@
-package tunnelers.core.player;
+package tunnelers.core.player.controls;
 
 import tunnelers.core.model.entities.Direction;
 

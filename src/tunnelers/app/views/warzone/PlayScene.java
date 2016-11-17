@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import tunnelers.app.controls.ControlsManager;
+import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.render.RenderLayout;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.render.FxRenderHelper;
@@ -19,11 +19,11 @@ import tunnelers.app.render.FxRenderHelper;
  */
 public class PlayScene extends ATunnelersScene {
 
-	public static PlayScene getInstance(ControlsManager csmgr) {
+	public static PlayScene getInstance(FxControlsManager csmgr) {
 		return createInstance(csmgr);
 	}
 
-	private static PlayScene createInstance(ControlsManager csmgr) {
+	private static PlayScene createInstance(FxControlsManager csmgr) {
 		BorderPane root = new BorderPane();
 
 		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.DIMGRAY.hashCode()));
@@ -51,9 +51,9 @@ public class PlayScene extends ATunnelersScene {
 	protected TextField tf_chatIn;
 	protected RenderLayout layout;
 	
-	private final ControlsManager csmgr;
+	private final FxControlsManager csmgr;
 
-	public PlayScene(Parent root, double width, double height, ControlsManager csmgr) {
+	public PlayScene(Parent root, double width, double height, FxControlsManager csmgr) {
 		super(root, width, height, "Bitevní zóna");
 		this.csmgr = csmgr;
 	}

@@ -1,11 +1,11 @@
 package temp;
 
 import generic.RNG;
-import tunnelers.app.controls.ControlsManager;
 import tunnelers.core.gameRoom.GameContainer;
-import tunnelers.core.player.Controls;
-import tunnelers.core.player.InputAction;
+import tunnelers.core.player.controls.Controls;
+import tunnelers.core.player.controls.InputAction;
 import tunnelers.core.player.Player;
+import tunnelers.core.player.controls.AControlsManager;
 import tunnelers.network.NetClient;
 
 /**
@@ -18,13 +18,13 @@ public class Mock {
 
 	private static Controls[] MOCKED_CONTROLS;
 
-	public static GameContainer gameContainer(ControlsManager csmgr, String localName, int maxColorId) {
+	public static GameContainer gameContainer(AControlsManager csmgr, int maxColorId) {
 		MOCKED_CONTROLS = new Controls[]{
 			new Controls(2),
 			new Controls(4),};
 
 		NetClient[] clients = {
-			new NetClient(localName),
+			new NetClient("Karel"),
 			new NetClient("Frederick"),
 			new NetClient("Obama"),};
 
