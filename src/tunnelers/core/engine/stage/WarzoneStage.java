@@ -44,7 +44,7 @@ public class WarzoneStage extends AEngineStage {
 	}
 
 	private void updateTank(Tank tank, Controls c) {
-		tank.update();
+		tank.cooldown();
 		if (true && c.isShooting()) { // TODO: omezeni poctu strel
 			Point2D location = tank.tryShoot();
 			if (location != null) {

@@ -20,8 +20,6 @@ public abstract class GameEntity  implements Colorable{
 		this.player = player;
 	}
 
-	public abstract int update();
-
 	public abstract Dimension2D getSize();
 
 	public Point2D getLocation() {

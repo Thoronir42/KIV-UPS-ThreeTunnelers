@@ -18,11 +18,6 @@ public class Projectile extends GameEntity {
 	}
 
 	@Override
-	public int update() {
-		return 0;
-	}
-
-	@Override
 	public Dimension2D getSize() {
 		return this.direction.isDiagonal() ? SHOT_DIAGONAL : SHOT_HORIZONTAL;
 	}

@@ -1,5 +1,6 @@
 package tunnelers.core.engine;
 
+import tunnelers.app.IUpdatable;
 import tunnelers.app.views.serverList.GameRoom;
 import tunnelers.network.NetAdapter;
 import tunnelers.core.player.Player;
@@ -19,7 +20,7 @@ import tunnelers.network.command.CommandType;
  *
  * @author Stepan
  */
-public final class Engine implements INetCommandHandler {
+public final class Engine implements INetCommandHandler, IUpdatable {
 
 	private final int version;
 
@@ -63,6 +64,7 @@ public final class Engine implements INetCommandHandler {
 		return container;
 	}
 
+	@Override
 	public void update(long tick) {
 		this.currentStage.update(tick);
 	}

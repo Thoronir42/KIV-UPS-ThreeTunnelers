@@ -22,7 +22,7 @@ import tunnelers.core.engine.Engine;
  *
  * @author Stepan
  */
-public class TunnelersStage extends Stage implements IView {
+public class TunnelersStage extends Stage implements IView, IUpdatable {
 
 	private final HashMap<Class, IView.Scene> ROUTER;
 	
@@ -39,6 +39,7 @@ public class TunnelersStage extends Stage implements IView {
 	protected final Engine engine;
 	protected final Assets assets;
 
+	@Override
 	public final void update(long tick) {
 		if (this.currentScene != null) {
 			this.currentScene.drawScene(tick);
