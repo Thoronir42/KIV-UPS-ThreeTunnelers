@@ -1,6 +1,6 @@
 package tunnelers.core.engine.stage;
 
-import tunnelers.app.IUpdatable;
+import tunnelers.common.IUpdatable;
 
 /**
  *

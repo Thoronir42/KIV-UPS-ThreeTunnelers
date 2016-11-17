@@ -1,4 +1,4 @@
-package tunnelers.app;
+package tunnelers.common;
 
 /**
  *

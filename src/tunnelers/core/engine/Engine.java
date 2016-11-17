@@ -3,7 +3,7 @@ package tunnelers.core.engine;
 import tunnelers.core.view.IView;
 import temp.MapGenerator;
 import temp.Mock;
-import tunnelers.app.IUpdatable;
+import tunnelers.common.IUpdatable;
 import tunnelers.app.views.serverList.GameRoom;
 import tunnelers.network.NetAdapter;
 import tunnelers.core.player.Player;

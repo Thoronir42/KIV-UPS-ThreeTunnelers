@@ -1,7 +1,7 @@
 package tunnelers.network;
 
 import java.io.IOException;
-import tunnelers.app.IUpdatable;
+import tunnelers.common.IUpdatable;
 import tunnelers.network.command.Command;
 import tunnelers.network.command.CommandParser;
 import tunnelers.network.command.CommandType;

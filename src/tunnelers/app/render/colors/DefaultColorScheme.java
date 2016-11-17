@@ -19,11 +19,6 @@ public class DefaultColorScheme extends AColorScheme {
 
 	protected ILocationRandomizer randomizer;
 
-	public DefaultColorScheme() {
-		super();
-		this.randomizer = (int x, int y) -> 0;
-	}
-
 	public DefaultColorScheme(PlayerColors colors) {
 		super(colors);
 		this.randomizer = (int x, int y) -> 0;

@@ -1,5 +1,6 @@
 package tunnelers.app;
 
+import tunnelers.common.IUpdatable;
 import java.util.Arrays;
 import tunnelers.core.view.IView;
 import java.util.HashMap;

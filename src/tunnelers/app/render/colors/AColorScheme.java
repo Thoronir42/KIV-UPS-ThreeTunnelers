@@ -12,10 +12,6 @@ public abstract class AColorScheme implements IColorScheme {
 
 	protected final PlayerColors playerColors;
 
-	public AColorScheme() {
-		this(new PlayerColors());
-	}
-
 	public AColorScheme(PlayerColors colors) {
 		this.playerColors = colors;
 	}

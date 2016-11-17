@@ -3,6 +3,7 @@ package tunnelers.app.render.colors;
 import generic.RNG;
 import java.util.Arrays;
 import javafx.scene.paint.Color;
+import tunnelers.core.chat.IChatParticipant;
 
 /**
  *
@@ -79,7 +80,7 @@ public class PlayerColors {
 	}
 
 	public Color get(int i) {
-		if(i == -1){
+		if(i == IChatParticipant.SYSTEM_ID){
 			return SYSTEM_COLOR;
 		}
 		return this.colors[i];
