@@ -3,6 +3,7 @@ package tunnelers.core.player;
 import tunnelers.app.render.colors.Colorable;
 import tunnelers.core.chat.IChatParticipant;
 import tunnelers.core.model.entities.Tank;
+import tunnelers.network.NetClient;
 
 /**
  *
@@ -11,20 +12,16 @@ import tunnelers.core.model.entities.Tank;
 public final class Player implements IChatParticipant, Colorable{
 
 	private final int id;
-	private String name;
+	
+	private final NetClient client;
 	private final Controls controls;
 	private int color;
 	private Tank tank;
 
-	public Player(int playerID, int colorID, Controls controls) {
-		this(playerID, colorID, controls, String.format("Unknown player %02d", playerID));
-	}
-
-	public Player(int playerID, int colorID, Controls controls, String name) {
-		//public Player(String name) throws PlayerException{
+	public Player(int playerID, int colorID, NetClient client, Controls controls) {
 		this.id = playerID;
-		this.name = name;
-		this.setColor(colorID);
+		this.color = colorID;
+		this.client = client;
 
 		this.controls = controls;
 		this.controls.setPlayerID(this.id);
@@ -36,17 +33,13 @@ public final class Player implements IChatParticipant, Colorable{
 		return this.color;
 	}
 
-	public final void setColor(int colorId) {
+	public void setColor(int colorId) {
 		this.color = colorId;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	@Override
 	public String getName() {
-		return this.name;
+		return this.client.getName(this);
 	}
 
 	public int getID() {
@@ -70,7 +63,7 @@ public final class Player implements IChatParticipant, Colorable{
 
 	@Override
 	public String toString() {
-		return String.format("[%2d] %16s (%s)", this.id, this.name, this.color);
+		return String.format("[%2d] %16s (%s)", this.id, this.getName(), this.color);
 	}
 
 }
