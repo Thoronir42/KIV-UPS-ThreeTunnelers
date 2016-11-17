@@ -7,6 +7,7 @@ import java.util.List;
 import javafx.geometry.Point2D;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.model.entities.Tank;
+import tunnelers.network.NetClient;
 
 /**
  *
@@ -15,22 +16,14 @@ import tunnelers.core.model.entities.Tank;
 public class GameContainer {
 
 	private Warzone warzone;
-	private List<Player> players;
+	private final Player[] players;
 
-	public GameContainer(Player[] players) {
-		this(Arrays.asList(players));
-	}
-
-	public GameContainer(int expectedPlayerCount) {
-		this(new ArrayList<>(expectedPlayerCount));
-	}
-
-	public GameContainer(List<Player> players) {
-		this.players = players;
+	public GameContainer(int capacity) {
+		this.players = new Player[capacity];
 	}
 
 	public void initWarzone(Map map) {
-		ArrayList<Tank> tanks = new ArrayList<>(players.size());
+		ArrayList<Tank> tanks = new ArrayList<>(players.length);
 		
 		int i = 0;
 		for (Player p : players) {
@@ -43,17 +36,24 @@ public class GameContainer {
 		this.warzone = new Warzone(tanks, map);
 	}
 
+	public int getCapacity(){
+		return this.players.length;
+	}
+	
 	public int getPlayerCount() {
-		return players.size();
+		int count = 0;
+		for(Player p : this.players){
+			count++;
+		}
+		return count;
 	}
 
 	public Player getPlayer(int playerId) {
-		for (Player p : this.players) {
-			if (p.getID() == playerId) {
-				return p;
-			}
-		}
-		return null;
+		return this.players[playerId];
+	}
+	
+	public void setPlayer(int playerId, Player player){
+		this.players[playerId] = player;
 	}
 	
 	public Warzone getWarzone() {
@@ -61,6 +61,6 @@ public class GameContainer {
 	}
 	
 	public List<Player> getPlayers() {
-		return this.players;
+		return Arrays.asList(this.players);
 	}
 }
