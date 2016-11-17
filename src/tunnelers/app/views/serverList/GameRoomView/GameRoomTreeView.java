@@ -9,7 +9,7 @@ import tunnelers.app.views.serverList.RoomDifficulty;
  *
  * @author Stepan
  */
-public class GameRoomTreeView extends TreeView<GRTVItem> implements IGameRoomView{
+public class GameRoomTreeView extends TreeView<GRTVItem>{
 
 	public static GameRoomTreeView createInstance(){
 		return new GameRoomTreeView(new TreeItem<>(new GRTVRoot()));
@@ -23,7 +23,6 @@ public class GameRoomTreeView extends TreeView<GRTVItem> implements IGameRoomVie
 		clearItems();
 	}
 	
-	@Override
 	public void clearItems() {
 		root.getChildren().clear();
 		for(RoomDifficulty d : RoomDifficulty.values()){
@@ -32,14 +31,12 @@ public class GameRoomTreeView extends TreeView<GRTVItem> implements IGameRoomVie
 		root.setExpanded(true);
 	}
 	
-	@Override
 	public void addAll(Collection<GRTVItem> items){
 		for(GRTVItem item : items){
 			add(item);
 		}
 	}
 
-	@Override
 	public void add(GRTVItem gr) {
 		TreeItem<GRTVItem> result = root.getChildren().stream().filter(child -> child.getValue().getDIfficulty() == gr.getDIfficulty()).findFirst().get();
 		if(result != null){
@@ -47,7 +44,6 @@ public class GameRoomTreeView extends TreeView<GRTVItem> implements IGameRoomVie
 		}
 	}
 
-	@Override
 	public GRTVItem getSelectedItem() {
 		TreeItem<GRTVItem> selected = getSelectionModel().getSelectedItem();
 		if(selected == null){
@@ -55,5 +51,4 @@ public class GameRoomTreeView extends TreeView<GRTVItem> implements IGameRoomVie
 		}
 		return selected.getValue();
 	}
-	
 }
