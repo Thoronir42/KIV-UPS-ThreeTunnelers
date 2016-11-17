@@ -56,14 +56,14 @@ public class RectangularLayout extends RenderLayout {
 
 	@Override
 	public void draw(GraphicsContext g) {
-		List<Player> players = this.renderer.getPlayers();
+		Player[] players = this.renderer.getPlayers();
 		Affine defTransform = g.getTransform();
 		Dimension2D playerAreaBounds = this.playerArea.getBounds();
 		int row = 0, col = 0;
 
-		for (int i = 0; i < players.size(); i++) {
+		for (int i = 0; i < players.length; i++) {
 			g.translate(col * playerAreaBounds.getWidth(), row * playerAreaBounds.getHeight());
-			this.playerArea.draw(g, playerAreaBounds, players.get(i).getTank());
+			this.playerArea.draw(g, playerAreaBounds, players[i].getTank());
 
 			if (++col >= cols) {
 				col = 0;

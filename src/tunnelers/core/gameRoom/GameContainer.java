@@ -3,11 +3,9 @@ package tunnelers.core.gameRoom;
 import tunnelers.core.player.Player;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import javafx.geometry.Point2D;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.model.entities.Tank;
-import tunnelers.network.NetClient;
 
 /**
  *
@@ -60,7 +58,7 @@ public class GameContainer {
 		return this.warzone;
 	}
 	
-	public List<Player> getPlayers() {
-		return Arrays.asList(this.players);
+	public Player[] getPlayers() {
+		return Arrays.copyOf(this.players, this.players.length);
 	}
 }

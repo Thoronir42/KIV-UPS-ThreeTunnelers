@@ -1,22 +1,17 @@
 package tunnelers.app;
 
-import tunnelers.core.engine.IView;
+import tunnelers.core.view.IView;
 import generic.Impulser.Impulser;
 import tunnelers.core.settings.Settings;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import temp.Mock;
-import tunnelers.core.chat.Chat;
 import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.controls.InputEvent;
 import tunnelers.app.render.colors.DefaultColorScheme;
 import tunnelers.app.render.colors.PlayerColors;
-import tunnelers.core.gameRoom.GameContainer;
 import tunnelers.core.engine.Engine;
-import tunnelers.network.NetAdapter;
-import temp.MapGenerator;
 
 /**
  *
@@ -39,22 +34,16 @@ public final class TunnelersApplication extends Application {
 		Assets assets = new Assets();
 		assets.init();
 
-		imp = new Impulser(settings.getTickRate());
+		this.imp = new Impulser(settings.getTickRate());
 
-		Chat chat = new Chat(settings.getChatMessageCapacity());
-		NetAdapter networks = new NetAdapter();
 		FxControlsManager csmgr = new FxControlsManager();
 
 		DefaultColorScheme colorScheme = new DefaultColorScheme(new PlayerColors());
 		colorScheme.setRandomizer((int x, int y) -> {
 			return ((int) Math.abs(Math.sin((x + 2) * 7) * 6 + Math.cos(y * 21) * 6));
 		});
-
-		GameContainer container = Mock.gameContainer(csmgr, "KAREL", colorScheme.playerColors().size());
-		container.initWarzone(MapGenerator.mockMap(20, 12, 8, container.getPlayerCount()));
-
-		Engine e = new Engine(VERSION, networks, chat);
-		e.setContainer(container);
+		
+		Engine e = new Engine(VERSION, csmgr, settings.getTickRate());
 
 		csmgr.setOnInputChanged((InputEvent event) -> {
 			e.handleInput(event.getInput(), event.getPlayerId(), event.isPressed());
@@ -72,19 +61,15 @@ public final class TunnelersApplication extends Application {
 			e.update(event.getTick());
 			currentStage.update(event.getTick());
 		});
-		this.imp.addHook((event) -> {
-			if (event.getTick() % (settings.getTickRate() / 2) == 0) {
-				networks.update(event.getTick());
-			}
-		});
 
 		currentStage.setResizable(false);
 		currentStage.showScene(IView.Scene.MainMenu);
 
-		this.currentStage.show();
 		this.imp.start();
-		networks.start();
-
+		e.start();
+		this.currentStage.show();
+		
+		
 	}
 
 	/**

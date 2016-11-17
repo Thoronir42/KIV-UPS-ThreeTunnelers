@@ -21,7 +21,7 @@ import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.views.settings.controls.IpTextfield;
 import tunnelers.core.settings.Settings;
 import tunnelers.app.ATunnelersScene;
-import tunnelers.core.engine.IView;
+import tunnelers.core.view.IView;
 
 /**
  *

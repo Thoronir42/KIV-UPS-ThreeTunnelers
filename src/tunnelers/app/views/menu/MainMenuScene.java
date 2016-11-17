@@ -13,7 +13,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import tunnelers.app.ATunnelersScene;
-import tunnelers.core.engine.IView;
+import tunnelers.core.view.IView;
 
 /**
  *

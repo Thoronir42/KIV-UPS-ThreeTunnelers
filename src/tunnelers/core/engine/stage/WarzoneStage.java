@@ -11,6 +11,7 @@ import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
 import tunnelers.core.model.map.Map;
+import tunnelers.core.player.Player;
 
 /**
  *
@@ -30,10 +31,10 @@ public class WarzoneStage extends AEngineStage {
 	@Override
 	public void update(long tick) {
 		if (tick % 3 == 0) {
-			
-			this.container.getPlayers().forEach((p) -> {
+			Player[] players = this.container.getPlayers();
+			for(Player p : players){
 				this.updateTank(p.getTank(), p.getControls());
-			});
+			};
 
 		}
 		if(tick % 15 == 0){

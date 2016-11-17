@@ -1,17 +1,21 @@
 package tunnelers.core.engine;
 
+import tunnelers.core.view.IView;
+import temp.MapGenerator;
+import temp.Mock;
 import tunnelers.app.IUpdatable;
 import tunnelers.app.views.serverList.GameRoom;
 import tunnelers.network.NetAdapter;
 import tunnelers.core.player.Player;
 import tunnelers.core.chat.Chat;
-import tunnelers.core.player.InputAction;
+import tunnelers.core.player.controls.InputAction;
 import tunnelers.core.gameRoom.GameContainer;
 import tunnelers.core.gameRoom.Warzone;
 import tunnelers.core.chat.ServerMessenger;
 import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;
 import tunnelers.core.engine.stage.WarzoneStage;
+import tunnelers.core.player.controls.AControlsManager;
 import tunnelers.network.INetCommandHandler;
 import tunnelers.network.command.Command;
 import tunnelers.network.command.CommandType;
@@ -25,20 +29,30 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	private final int version;
 
 	private GameContainer container;
-	private final NetAdapter networks;
+	private final NetAdapter netadapter;
 	private final Chat chat;
 
 	private AEngineStage currentStage;
 
 	private IView view;
+	private final AControlsManager controls;
+	private final int tickRate;
 
-	public Engine(int version, NetAdapter networks, Chat chat) {
+	public Engine(int version, AControlsManager controls, int tickRate) {
 		this.version = version;
-		this.networks = networks;
-		networks.setHandler(this);
-		this.chat = chat;
+		this.netadapter = new NetAdapter();
+		this.controls = controls;
+
+		this.chat = new Chat(24); // TODO: configurability
+
+		netadapter.setHandler(this);
 
 		this.setStage(Stage.Menu);
+		this.tickRate = tickRate;
+	}
+
+	public void start() {
+		this.netadapter.start();
 	}
 
 	public void setView(IView view) {
@@ -67,17 +81,20 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	@Override
 	public void update(long tick) {
 		this.currentStage.update(tick);
+		if (tick % (tickRate / 2) == 0) {
+			netadapter.update(tick);
+		}
 	}
 
 	public void exit() {
-		this.networks.shutdown();
+		this.netadapter.shutdown();
 	}
 
 	public void handleInput(InputAction inp, int playerID, boolean pressed) {
 		Player p = this.container.getPlayer(playerID);
 
 		if (p.getControls().setControlState(inp, pressed)) {
-			Command cmd = this.networks.createCommand(CommandType.GameControlsSet);
+			Command cmd = this.netadapter.createCommand(CommandType.GameControlsSet);
 		}
 	}
 
@@ -90,17 +107,17 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	}
 
 	public void connect(String name, String addr, int port) {
-		this.networks.connectTo(name, addr, port);
+		this.netadapter.connectTo(name, addr, port);
 	}
 
 	public void disconnect() {
-		this.networks.disconnect("Disconnecting");
+		this.netadapter.disconnect("Disconnecting");
 	}
 
 	public void sendPlainText(String text) {
-		Command cmd = this.networks.createCommand(CommandType.MsgPlain);
+		Command cmd = this.netadapter.createCommand(CommandType.MsgPlain);
 		cmd.setData(text);
-		this.networks.issueCommand(cmd);
+		this.netadapter.issueCommand(cmd);
 	}
 
 	@Override
@@ -141,6 +158,12 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	}
 
 	public void joinGame(GameRoom gameRoom) {
+		// TODO: link this through network events
+		container = Mock.gameContainer(controls, view.getColorScheme().getAvailablePlayerColors());
+		container.initWarzone(MapGenerator.mockMap(20, 12, 8, container.getPlayerCount()));
+		
+		this.view.prepareGame(container.getWarzone().getMap(), container.getPlayers());
+		
 		if (gameRoom.Full.get()) {
 			this.view.alert("Hra je již plná");
 			return;
