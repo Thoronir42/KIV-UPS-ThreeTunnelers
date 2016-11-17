@@ -24,6 +24,10 @@ public class Connection {
 	protected BufferedReader reader;
 	protected BufferedWriter writer;
 	protected long lastActive;
+	
+	private short lastMsgId;
+	private int invalidMessageCounter;
+	
 
 	public Connection(String adress, int port, int receiveBufferSize) throws NetworksException {
 		this(adress, port, receiveBufferSize, new NoCodec());
@@ -31,13 +35,22 @@ public class Connection {
 
 	public Connection(String adress, int port, int receiveBufferSize, ICodec codec) throws NetworksException {
 		try {
-			this.codec = codec;
 			this.address = InetAddress.getByName(adress);
 			this.port = port;
 			this.lastActive = System.currentTimeMillis();
+			this.codec = codec;
+			this.lastMsgId = 0;
+			this.invalidMessageCounter = 0;
 		} catch (IOException e) {
 			throw new NetworksException(e);
 		}
+	}
+	
+	public int invalidCounterIncrease(){
+		return  ++this.invalidMessageCounter;
+	}
+	public void invalidCounterReset(){
+		this.invalidMessageCounter = 0;
 	}
 
 	public boolean isOpen() {

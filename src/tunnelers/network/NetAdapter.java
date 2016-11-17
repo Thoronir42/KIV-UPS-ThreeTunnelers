@@ -1,7 +1,6 @@
 package tunnelers.network;
 
 import java.io.IOException;
-import java.time.Clock;
 import tunnelers.app.IUpdatable;
 import tunnelers.network.command.Command;
 import tunnelers.network.command.CommandParser;
@@ -16,9 +15,7 @@ public class NetAdapter extends Thread implements IUpdatable {
 	private static final int BUFFER_SIZE = 512;
 
 	private Connection connection;
-	private short LastMsgId = 0;
 	private NetClient localClient;
-	private int invalidResponseCounter = 0;
 	private String disconnectReason;
 
 	private final CommandParser parser;
@@ -43,7 +40,6 @@ public class NetAdapter extends Thread implements IUpdatable {
 		try {
 			this.connection = new Connection(adress, port, BUFFER_SIZE);
 			this.localClient = new NetClient(clientName);
-			this.invalidResponseCounter = 0;
 		} catch (NetworksException e) {
 			Command err = new Command(CommandType.VirtConnectingError);
 			err.setData(e.getMessage());
@@ -60,7 +56,7 @@ public class NetAdapter extends Thread implements IUpdatable {
 		long now = System.currentTimeMillis();
 		long d = now - this.connection.lastActive;
 		System.out.println(d);
-		if (d > 15000) {
+		if (d > 5000) {
 			this.disconnect("Server was irresponsive.");
 		}
 	}
@@ -102,11 +98,10 @@ public class NetAdapter extends Thread implements IUpdatable {
 					Command cmd = this.parser.parse(message);
 					System.out.println("Handling cmd: " + cmd.toString());
 					this.handler.handle(cmd);
-					this.invalidResponseCounter = 0;
+					this.connection.invalidCounterReset();
 				} catch (CommandNotRecognisedException e) {
 					System.err.println(e.toString());
-					this.invalidResponseCounter++;
-					if (this.invalidResponseCounter > 4) {// TODO: configurability
+					if (this.connection.invalidCounterIncrease() > 4) {// TODO: configurability
 						return;
 					}
 				}
@@ -186,7 +181,6 @@ public class NetAdapter extends Thread implements IUpdatable {
 	}
 
 	public Command createCommand(CommandType commandType) {
-		LastMsgId++;
 		return new Command(commandType);
 	}
 }
