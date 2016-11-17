@@ -19,24 +19,49 @@ import tunnelers.core.player.Player;
  */
 public class AssetsRenderer extends ARenderer {
 
-	private static final Point2D
+	// Center block offset
+	private static final Point2D 
 			CBO_NONE = new Point2D(0, 0),
 			CBO_1 = new Point2D(1, 0),
 			CBO_2 = new Point2D(1, 1),
 			CBO_3 = new Point2D(0, 1);
-	
+	private final Assets assets;
+
 	final HashMap<Integer, Image[]> tankBody;
 
-	final Image[] tankCannon;
+	final Image[] assetCannon;
 
-	final Image[] projectile;
+	final Image[] assetProjectile;
 
-	public AssetsRenderer(AColorScheme colorScheme, Assets assets, Collection<Player> players) {
+	public AssetsRenderer(AColorScheme colorScheme, Assets assets) {
 		super(colorScheme);
 		tankBody = new HashMap<>();
-		tankCannon = new Image[2];
-		projectile = new Image[2];
 
+		this.assets = assets;
+
+		this.assetCannon = this.initCannonAssets(colorScheme.playerColors().getCannonColor());
+		this.assetProjectile = this.initProjectileAssets(colorScheme.playerColors().getProjectileColor());
+	}
+
+	private Image[] initCannonAssets(Color c) {
+		Image[] cannon = new Image[2];
+
+		cannon[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.TANK_CANNON, c);
+		cannon[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.TANK_CANNON_DIAG, c);
+
+		return cannon;
+	}
+
+	private Image[] initProjectileAssets(Color c) {
+		Image[] projectile = new Image[2];
+
+		projectile[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.PROJECTILE, c);
+		projectile[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.PROJECTILE_DIAG, c);
+
+		return projectile;
+	}
+
+	public void initAssets(Collection<Player> players) {
 		players.stream().forEach((player) -> {
 			Color c = colorScheme.playerColors().get(player);
 			Image[] tankImages = new Image[2];
@@ -44,14 +69,6 @@ public class AssetsRenderer extends ARenderer {
 			tankImages[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.TANK_BODY_DIAG, c);
 			tankBody.put(player.getID(), tankImages);
 		});
-
-		Color cannon = this.colorScheme.playerColors().getCannonColor();
-		Color cProj = this.colorScheme.playerColors().getProjectileColor();
-
-		tankCannon[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.TANK_CANNON, cannon);
-		tankCannon[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.TANK_CANNON_DIAG, cannon);
-		projectile[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.PROJECTILE, cProj);
-		projectile[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.PROJECTILE_DIAG, cProj);
 	}
 
 	public Image getTankBodyImage(int playerId, boolean diagonal) {
@@ -59,11 +76,11 @@ public class AssetsRenderer extends ARenderer {
 	}
 
 	public Image getTankCannonImage(boolean diagonal) {
-		return imgDiagSwitch(tankCannon, diagonal);
+		return imgDiagSwitch(assetCannon, diagonal);
 	}
 
 	public Image getProjectileImage(boolean diagonal) {
-		return imgDiagSwitch(projectile, diagonal);
+		return imgDiagSwitch(assetProjectile, diagonal);
 	}
 
 	private Image imgDiagSwitch(Image[] img, boolean diagonal) {
@@ -79,12 +96,12 @@ public class AssetsRenderer extends ARenderer {
 
 		int rotation = t.getDirection().getRotation();
 		Point2D cbo = this.getCenterBlockOffset(rotation);
-		
+
 		int dx = (int) (size.getWidth() / 2),
 				dy = (int) (size.getHeight() / 2);
-		
+
 		g.translate(cbo.getX() * bw, cbo.getY() * bh);
-		
+
 		g.rotate(rotation * 90);
 		g.drawImage(iv_body, -dx * bw, -dy * bh,
 				size.getWidth() * bw, size.getHeight() * bh);
@@ -95,7 +112,7 @@ public class AssetsRenderer extends ARenderer {
 
 	public void drawProjectile(Projectile p) {
 		Image imageProjectile = this.getProjectileImage(p.getDirection().isDiagonal());
-		
+
 		double bw = blockSize.getWidth(), bh = blockSize.getHeight();
 
 		int rotation = p.getDirection().getRotation();
@@ -103,11 +120,11 @@ public class AssetsRenderer extends ARenderer {
 		Dimension2D size = p.getSize();
 		int dx = (int) (size.getWidth() / 2),
 				dy = (int) (size.getHeight() / 2);
-		
+
 		g.translate(cbo.getX() * bw, cbo.getY() * bh);
-		
+
 		g.rotate(rotation * 90);
-		
+
 		g.drawImage(imageProjectile, -dx * bw, -dy * bh,
 				size.getWidth() * bw, size.getHeight() * bh);
 

@@ -18,9 +18,8 @@ public class MapRenderer extends ARenderer {
 	protected Map map;
 	protected Dimension2D mapBounds;
 
-	public MapRenderer(AColorScheme colorScheme, Map map) {
+	public MapRenderer(AColorScheme colorScheme) {
 		super(colorScheme);
-		this.setMap(map);
 	}
 
 	public void drawMap(Rectangle rendSrc) {
@@ -61,7 +60,8 @@ public class MapRenderer extends ARenderer {
 		// g.fillRect(xFrom*blockSize.getWidth(), yFrom*blockSize.getHeight(), (xTo - xFrom + 1)*blockSize.getWidth(), (yTo - yFrom + 1)*blockSize.getHeight());
 	}
 
-	private void setMap(Map map) {
+	public void setMap(Map map) {
+		System.out.println("Setting map");
 		this.map = map;
 		this.mapBounds = new Dimension2D(map.getWidth(), map.getHeight());
 	}

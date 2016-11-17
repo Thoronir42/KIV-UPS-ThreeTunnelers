@@ -1,4 +1,7 @@
-package tunnelers.core.engine;
+package tunnelers.core.view;
+
+import tunnelers.core.model.map.Map;
+import tunnelers.core.player.Player;
 
 /**
  *
@@ -14,4 +17,8 @@ public interface IView {
 	public void alert(String message);
 	
 	public void updateChat();
+	
+	public IColorScheme getColorScheme();
+	
+	public void prepareGame(Map map, Player[] players);
 }

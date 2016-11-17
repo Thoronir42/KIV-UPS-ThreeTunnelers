@@ -1,6 +1,7 @@
 package tunnelers.app;
 
-import tunnelers.core.engine.IView;
+import java.util.Arrays;
+import tunnelers.core.view.IView;
 import java.util.HashMap;
 import tunnelers.core.settings.Settings;
 import javafx.application.Platform;
@@ -8,15 +9,15 @@ import javafx.stage.Stage;
 import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.views.warzone.PlayScene;
 import tunnelers.app.assets.Assets;
-import tunnelers.app.render.AssetsRenderer;
 import tunnelers.app.render.FxRenderHelper;
-import tunnelers.app.render.MapRenderer;
 import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.app.views.lobby.LobbyScene;
 import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.app.views.serverList.ServerListScene;
 import tunnelers.app.views.settings.SettingsScene;
 import tunnelers.core.engine.Engine;
+import tunnelers.core.model.map.Map;
+import tunnelers.core.player.Player;
 
 /**
  *
@@ -25,7 +26,7 @@ import tunnelers.core.engine.Engine;
 public class TunnelersStage extends Stage implements IView, IUpdatable {
 
 	private final HashMap<Class, IView.Scene> ROUTER;
-	
+
 	public static final String GAME_NAME = "Three Tunnelers",
 			TITLE_SEPARATOR = "|";
 
@@ -35,6 +36,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	protected final FxRenderHelper renderer;
 
 	protected ATunnelersScene currentScene;
+	protected final AColorScheme colorScheme;
 
 	protected final Engine engine;
 	protected final Assets assets;
@@ -46,29 +48,26 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 		}
 	}
 
-	public TunnelersStage(Engine engine, ControlsManager controlsManager, AColorScheme colorScheme, Assets assets) {
+	public TunnelersStage(Engine engine, FxControlsManager controlsManager, AColorScheme colorScheme, Assets assets) {
 		super();
 
 		this.engine = engine;
 		this.assets = assets;
 
-		MapRenderer mapRenderer = new MapRenderer(colorScheme, engine.getContainer().getWarzone().getMap());
-		AssetsRenderer assetsRenderer = new AssetsRenderer(colorScheme, assets, engine.getContainer().getPlayers());
-
-		this.renderer = new FxRenderHelper(engine, colorScheme, mapRenderer, assetsRenderer);
+		this.renderer = new FxRenderHelper(engine, colorScheme, assets);
+		this.colorScheme = colorScheme;
 		this.controlsManager = controlsManager;
 
 		this.ROUTER = this.getRouter();
 	}
-	
-	private HashMap<Class, IView.Scene> getRouter(){
+
+	private HashMap<Class, IView.Scene> getRouter() {
 		HashMap<Class, IView.Scene> r = new HashMap<>();
-		
+
 		r.put(SettingsScene.class, IView.Scene.MainMenu);
 		r.put(ServerListScene.class, IView.Scene.MainMenu);
 		r.put(LobbyScene.class, IView.Scene.ServerList);
-		
-		
+
 		return r;
 	}
 
@@ -87,7 +86,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 		this.setTitle(String.format("%s %s %s", GAME_NAME, TITLE_SEPARATOR, scene.getName()));
 	}
 
-	public ControlsManager getControls() {
+	public FxControlsManager getControls() {
 		return this.controlsManager;
 	}
 
@@ -98,6 +97,12 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 			LobbyScene l = (LobbyScene) this.currentScene;
 			l.updateChatbox();
 		}
+	}
+
+	@Override
+	public void prepareGame(Map map, Player[] players) {
+		this.renderer.getMapRenderer().setMap(map);
+		this.renderer.getAssetsRenderer().initAssets(Arrays.asList(players));
 	}
 
 	@Override
@@ -128,5 +133,10 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	@Override
 	public void alert(String message) {
 		System.out.println("Stage alert: " + message);
+	}
+
+	@Override
+	public AColorScheme getColorScheme() {
+		return colorScheme;
 	}
 }
