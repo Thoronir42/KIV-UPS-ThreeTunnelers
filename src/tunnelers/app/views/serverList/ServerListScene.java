@@ -19,7 +19,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import tunnelers.app.views.serverList.GameRoomView.GameRoomTreeTableView;
 import tunnelers.core.settings.Settings;
 import tunnelers.app.ATunnelersScene;
@@ -59,15 +58,13 @@ public class ServerListScene extends ATunnelersScene {
 			scene.getStage().prevScene();
 		});
 
-		Label hugeWarning = new Label("Pozor, následující pohledy nejsou součástí demonstrace");
-		hugeWarning.setTextFill(Color.WHITE);
-		hugeWarning.setFont(new Font(28));
-		hugeWarning.setTextAlignment(TextAlignment.CENTER);
-
-		HBox top = new HBox(hugeWarning);
-		top.setAlignment(Pos.CENTER);
-
-		root.setTop(top);
+//		Label hugeWarning = new Label("Pozor, následující pohledy nejsou součástí demonstrace");
+//		hugeWarning.setTextFill(Color.WHITE);
+//		hugeWarning.setFont(new Font(28));
+//		hugeWarning.setTextAlignment(TextAlignment.CENTER);
+//
+//		HBox top = new HBox(hugeWarning);
+//		top.setAlignment(Pos.CENTER);
 
 		center.add(createTopBar(scene, settings), 0, 0);
 		center.add(scene.serverList, 0, 1);

@@ -8,16 +8,19 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import tunnelers.app.assets.Assets;
+import tunnelers.app.views.components.flash.FlashArea;
+import tunnelers.common.IUpdatable;
 import tunnelers.core.engine.Engine;
 
 /**
  *
  * @author Stepan
  */
-public abstract class ATunnelersScene extends Scene implements IUpdatable {
+public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlasher {
 
 	protected static Assets ASSETS;
 	private static int sceneCount = 0;
@@ -27,6 +30,8 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable {
 	protected String sceneName;
 
 	protected Canvas canvas;
+
+	protected FlashArea flash;
 
 	public void setName(String name) {
 		this.sceneName = name;
@@ -52,7 +57,16 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable {
 		canvas.widthProperty().bind(this.widthProperty());
 		canvas.heightProperty().bind(this.heightProperty());
 
-		((StackPane) this.getRoot()).getChildren().addAll(canvas, content);
+		flash = new FlashArea();
+
+		AnchorPane anchor = new AnchorPane(flash);
+
+		StackPane root = ((StackPane) this.getRoot());
+		root.getChildren().addAll(canvas, anchor, content);
+
+		flash.widthProperty().addListener((l, o, n) -> {
+			reanchorFlash();
+		});
 	}
 
 	public void handleKeyPressed(KeyCode code) {
@@ -65,6 +79,10 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable {
 
 	@Override
 	public void update(long tick) {
+		if (this.flash.updateVisibility()) {
+			this.reanchorFlash();
+		}
+
 		int x1 = RNG.getRandInt((int) this.getWidth()),
 				y1 = RNG.getRandInt((int) this.getHeight());
 		int x2 = RNG.getRandInt((int) this.getWidth() - x1),
@@ -81,6 +99,17 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable {
 
 	}
 
+	private void reanchorFlash() {
+		float visibility = this.flash.getVisibility();
+		AnchorPane.setTopAnchor(flash, (visibility - 1) * flash.getHeight());
+
+		double diff = this.getWidth() - flash.getWidth();
+		System.out.format("%.1f - %.1f = %.1f\n", this.widthProperty().get(), flash.getWidth(), diff);
+		System.out.format("%.1f / 2.0 = %.1f\n", diff, diff / 2.0);
+
+		AnchorPane.setLeftAnchor(flash, diff / 2);
+	}
+
 	protected TunnelersStage getStage() {
 		return (TunnelersStage) this.getWindow();
 	}
@@ -91,5 +120,15 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable {
 
 	public GraphicsContext getGraphicsContext() {
 		return this.canvas.getGraphicsContext2D();
+	}
+
+	@Override
+	public void flashDisplay(String message) {
+		this.flash.display(message);
+	}
+
+	@Override
+	public void flashClear() {
+		this.flash.clear();
 	}
 }

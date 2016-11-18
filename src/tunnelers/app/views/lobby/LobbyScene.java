@@ -55,15 +55,17 @@ public class LobbyScene extends ATunnelersScene {
 		chat.box().setPrefSize(400, 260);
 
 		chat.setOnMessageSend(event -> {
+			scene.flashDisplay(event.getMessage());
 			scene.getEngine().sendPlainText(event.getMessage());
 		});
 
 		root.add(chat.box(), 0, 0, 2, 1);
 		root.add(chat.input(), 0, 1);
 
-		Button but_send = new Button("Odeslat");
+		Button but_send = new Button("Smazat flash");
 		but_send.setOnAction((ActionEvent event) -> {
-			scene.chatView.sendMessage();
+			scene.flashClear();
+			//scene.chatView.sendMessage();
 		});
 		root.add(but_send, 1, 1);
 

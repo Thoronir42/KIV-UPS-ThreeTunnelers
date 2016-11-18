@@ -133,7 +133,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 
 	@Override
 	public void alert(String message) {
-		System.out.println("Stage alert: " + message);
+		this.currentScene.flash.display(message);
 	}
 
 	@Override
