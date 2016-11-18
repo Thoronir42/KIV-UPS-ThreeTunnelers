@@ -2,7 +2,7 @@ package tunnelers.app.views.lobby;
 
 import java.util.Iterator;
 import tunnelers.app.render.colors.AColorScheme;
-import tunnelers.app.render.colors.PlayerColors;
+import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.chat.ChatMessage;
 
@@ -23,7 +23,7 @@ public class ChatPrinter {
 	
 	public String getHtml() {
 		StringBuilder sb = new StringBuilder();
-		PlayerColors pc = colors.playerColors();
+		PlayerColorManager pc = colors.playerColors();
 
 		Iterator<ChatMessage> it = chat.iterator();
 		while (it.hasNext()) {

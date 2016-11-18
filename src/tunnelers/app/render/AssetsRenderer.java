@@ -39,8 +39,8 @@ public class AssetsRenderer extends ARenderer {
 
 		this.assets = assets;
 
-		this.assetCannon = this.initCannonAssets(colorScheme.playerColors().getCannonColor());
-		this.assetProjectile = this.initProjectileAssets(colorScheme.playerColors().getProjectileColor());
+		this.assetCannon = this.initCannonAssets(colorScheme.getCannonColor());
+		this.assetProjectile = this.initProjectileAssets(colorScheme.getProjectileColor());
 	}
 
 	private Image[] initCannonAssets(Color c) {
@@ -63,7 +63,7 @@ public class AssetsRenderer extends ARenderer {
 
 	public void initAssets(Collection<Player> players) {
 		players.stream().forEach((player) -> {
-			Color c = colorScheme.playerColors().get(player);
+			Color c = colorScheme.playerColors().get(player).color();
 			Image[] tankImages = new Image[2];
 			tankImages[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.TANK_BODY, c);
 			tankImages[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.TANK_BODY_DIAG, c);

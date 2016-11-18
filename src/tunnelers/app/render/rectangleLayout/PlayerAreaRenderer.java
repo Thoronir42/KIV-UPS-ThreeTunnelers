@@ -52,7 +52,7 @@ public class PlayerAreaRenderer {
 		
 		AColorScheme colors = renderer.getColorScheme();
 
-		g.setFill(colors.playerColors().get(currentTank));
+		g.setFill(colors.playerColors().get(currentTank).color());
 		g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
 
 		g.translate(renderWindow.getX(), renderWindow.getY());

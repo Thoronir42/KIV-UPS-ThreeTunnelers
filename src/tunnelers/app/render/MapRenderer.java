@@ -48,8 +48,11 @@ public class MapRenderer extends ARenderer {
 				Block b = chunk.getBlock(x % chunkSize, y % chunkSize);
 				if (b == Block.BaseWall) {
 					Player p = chunk.getAssignedPlayer();
-					g.setFill(p != null ? colorScheme.playerColors().get(p) : this.colorScheme.getError());
-
+					if (p == null) {
+						g.setFill(this.colorScheme.getError());
+					} else {
+						g.setFill(colorScheme.playerColors().get(p).color());
+					}
 				} else {
 					g.setFill(this.colorScheme.getBlockColor(x, y, b));
 				}

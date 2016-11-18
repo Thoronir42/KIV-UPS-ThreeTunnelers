@@ -3,7 +3,7 @@ package tunnelers.core.model.entities;
 import tunnelers.core.player.Player;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
-import tunnelers.app.render.colors.Colorable;
+import tunnelers.core.colors.Colorable;
 
 /**
  *

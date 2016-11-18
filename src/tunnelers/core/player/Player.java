@@ -1,7 +1,7 @@
 package tunnelers.core.player;
 
+import tunnelers.core.colors.Colorable;
 import tunnelers.core.player.controls.Controls;
-import tunnelers.app.render.colors.Colorable;
 import tunnelers.core.chat.IChatParticipant;
 import tunnelers.core.model.entities.Tank;
 import tunnelers.network.NetClient;

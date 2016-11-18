@@ -10,9 +10,12 @@ import tunnelers.core.view.IColorScheme;
  */
 public abstract class AColorScheme implements IColorScheme {
 
-	protected final PlayerColors playerColors;
+	protected final FxPlayerColorManager playerColors;
 
-	public AColorScheme(PlayerColors colors) {
+	private final Color cannonColor = Color.GOLD;
+	private final Color projectileColor = Color.YELLOW;
+
+	public AColorScheme(FxPlayerColorManager colors) {
 		this.playerColors = colors;
 	}
 
@@ -20,7 +23,7 @@ public abstract class AColorScheme implements IColorScheme {
 
 	public abstract Color getBlockColor(int x, int y, Block block);
 
-	public PlayerColors playerColors() {
+	public FxPlayerColorManager playerColors() {
 		return this.playerColors;
 	}
 
@@ -29,12 +32,12 @@ public abstract class AColorScheme implements IColorScheme {
 	}
 
 	public Color getRandColor() {
-		return this.playerColors.getRandom();
+		return this.playerColors.getRandom().color();
 	}
 
 	public Color getRandStatic(int col, int row, double pct) {
 
-		return opacify(this.playerColors.getRandom(), pct);
+		return opacify(this.playerColors.getRandom().color(), pct);
 	}
 
 	public abstract Color getUiHitpoints();
@@ -44,5 +47,13 @@ public abstract class AColorScheme implements IColorScheme {
 	@Override
 	public int getAvailablePlayerColors() {
 		return this.playerColors.size();
+	}
+	
+	public Color getCannonColor(){
+		return cannonColor;
+	}
+
+	public Color getProjectileColor() {
+		return projectileColor;
 	}
 }

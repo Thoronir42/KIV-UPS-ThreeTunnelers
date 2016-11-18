@@ -19,8 +19,8 @@ public class DefaultColorScheme extends AColorScheme {
 
 	protected ILocationRandomizer randomizer;
 
-	public DefaultColorScheme(PlayerColors colors) {
-		super(colors);
+	public DefaultColorScheme(FxPlayerColorManager playerColors) {
+		super(playerColors);
 		this.randomizer = (int x, int y) -> 0;
 	}
 

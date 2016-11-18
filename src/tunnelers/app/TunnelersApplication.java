@@ -10,7 +10,7 @@ import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.controls.InputEvent;
 import tunnelers.app.render.colors.DefaultColorScheme;
-import tunnelers.app.render.colors.PlayerColors;
+import tunnelers.app.render.colors.FxPlayerColorManager;
 import tunnelers.core.engine.Engine;
 
 /**
@@ -38,7 +38,7 @@ public final class TunnelersApplication extends Application {
 
 		FxControlsManager csmgr = new FxControlsManager();
 
-		DefaultColorScheme colorScheme = new DefaultColorScheme(new PlayerColors());
+		DefaultColorScheme colorScheme = new DefaultColorScheme(new FxPlayerColorManager());
 		colorScheme.setRandomizer((int x, int y) -> {
 			return ((int) Math.abs(Math.sin((x + 2) * 7) * 6 + Math.cos(y * 21) * 6));
 		});

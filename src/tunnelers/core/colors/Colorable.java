@@ -1,4 +1,4 @@
-package tunnelers.app.render.colors;
+package tunnelers.core.colors;
 
 /**
  *
