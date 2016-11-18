@@ -1,8 +1,11 @@
 package tunnelers.app.views.components.chat;
 
+import java.util.Iterator;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebView;
+import tunnelers.app.render.colors.FxPlayerColorManager;
+import tunnelers.core.chat.ChatMessage;
 
 /**
  *
@@ -12,12 +15,14 @@ public class SimpleChat {
 
 	protected WebView chatBox;
 	protected TextField chatIn;
+	protected ChatPrinter printer;
 
 	protected EventHandler<ChatEvent> onMessageSend;
 
-	public SimpleChat() {
+	public SimpleChat(FxPlayerColorManager colors) {
 		this.chatBox = new WebView();
 		this.chatIn = new TextField();
+		this.printer = new ChatPrinter(colors);
 
 		chatIn.setOnAction(event -> {
 			this.sendMessage();
@@ -37,8 +42,8 @@ public class SimpleChat {
 		this.onMessageSend = onMessageSend;
 	}
 
-	public void setContent(String html) {
-		this.chatBox.getEngine().loadContent(html);
+	public void setContent(Iterator<ChatMessage> it) {
+		this.chatBox.getEngine().loadContent(this.printer.getHtml(it));
 	}
 
 	public void sendMessage() {

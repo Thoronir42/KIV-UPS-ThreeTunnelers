@@ -44,14 +44,14 @@ public class LobbyScene extends ATunnelersScene {
 
 		content.setBackground(new Background(new BackgroundFill(new Color(0.11, 0.17, 0.69, 0.2), CornerRadii.EMPTY, Insets.EMPTY)));
 
-		LobbyScene scene = new LobbyScene(content, settings.getWindowWidth(), settings.getWindowHeight(), chat, colors);
-		addComponents(content, scene);
+		LobbyScene scene = new LobbyScene(content, settings.getWindowWidth(), settings.getWindowHeight(), chat);
+		addComponents(content, scene, colors);
 
 		return scene;
 	}
 
-	private static void addComponents(GridPane root, LobbyScene scene) {
-		SimpleChat chat = scene.chat = new SimpleChat();
+	private static void addComponents(GridPane root, LobbyScene scene, AColorScheme colors) {
+		SimpleChat chat = scene.chatView = new SimpleChat(colors.playerColors());
 		chat.box().setPrefSize(400, 260);
 
 		chat.setOnMessageSend(event -> {
@@ -63,7 +63,7 @@ public class LobbyScene extends ATunnelersScene {
 
 		Button but_send = new Button("Odeslat");
 		but_send.setOnAction((ActionEvent event) -> {
-			scene.chat.sendMessage();
+			scene.chatView.sendMessage();
 		});
 		root.add(but_send, 1, 1);
 
@@ -80,18 +80,17 @@ public class LobbyScene extends ATunnelersScene {
 		root.add(but_back, 1, 3);
 	}
 
-	protected SimpleChat chat;
+	protected SimpleChat chatView;
+	private final Chat chat;
 
-	protected ChatPrinter chatPrinter;
-
-	public LobbyScene(Parent root, double width, double height, Chat chat, AColorScheme colors) {
+	public LobbyScene(Parent root, double width, double height, Chat chat) {
 		super(root, width, height, "Join Game");
-		this.chatPrinter = new ChatPrinter(chat, colors);
+		this.chat = chat;
 	}
 
 	public void updateChatbox() {
 		Platform.runLater(() -> {
-			this.chat.setContent(this.chatPrinter.getHtml());
+			this.chatView.setContent(chat.iterator());
 			System.out.println("Chat updated");
 		});
 	}
