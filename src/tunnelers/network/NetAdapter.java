@@ -64,6 +64,10 @@ public class NetAdapter extends Thread implements IUpdatable {
 	public boolean issueCommand(Command cmd) {
 		String message = parser.parse(cmd);
 		try {
+			if(this.connection == null){
+				System.err.println("Attempted to send a command while connection was null.");
+				return false;
+			}
 			this.connection.send(message);
 			System.out.println("Connection sent: " + message);
 			return true;
