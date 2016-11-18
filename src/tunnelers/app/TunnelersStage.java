@@ -120,7 +120,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 					this.changeScene(ServerListScene.getInstance());
 					break;
 				case Lobby:
-					this.changeScene(LobbyScene.getInstance(this.engine.getChat(), this.renderer.getColorScheme()));
+					this.changeScene(LobbyScene.getInstance(this.engine.getChat(), this.renderer.getColorScheme(), engine.getContainer().getCapacity()));
 					break;
 				case Game:
 					PlayScene sc = PlayScene.getInstance(controlsManager);

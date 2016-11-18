@@ -104,8 +104,8 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 		AnchorPane.setTopAnchor(flash, (visibility - 1) * flash.getHeight());
 
 		double diff = this.getWidth() - flash.getWidth();
-		System.out.format("%.1f - %.1f = %.1f\n", this.widthProperty().get(), flash.getWidth(), diff);
-		System.out.format("%.1f / 2.0 = %.1f\n", diff, diff / 2.0);
+//		System.out.format("%.1f - %.1f = %.1f\n", this.widthProperty().get(), flash.getWidth(), diff);
+//		System.out.format("%.1f / 2.0 = %.1f\n", diff, diff / 2.0);
 
 		AnchorPane.setLeftAnchor(flash, diff / 2);
 	}
