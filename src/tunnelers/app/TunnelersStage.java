@@ -45,7 +45,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	@Override
 	public final void update(long tick) {
 		if (this.currentScene != null) {
-			this.currentScene.drawScene(tick);
+			this.currentScene.update(tick);
 		}
 	}
 

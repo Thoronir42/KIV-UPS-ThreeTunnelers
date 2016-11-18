@@ -17,7 +17,7 @@ import tunnelers.core.engine.Engine;
  *
  * @author Stepan
  */
-public abstract class ATunnelersScene extends Scene {
+public abstract class ATunnelersScene extends Scene implements IUpdatable {
 
 	protected static Assets ASSETS;
 	private static int sceneCount = 0;
@@ -63,17 +63,17 @@ public abstract class ATunnelersScene extends Scene {
 		}
 	}
 
-	public void drawScene(long tick) {
+	@Override
+	public void update(long tick) {
 		int x1 = RNG.getRandInt((int) this.getWidth()),
 				y1 = RNG.getRandInt((int) this.getHeight());
 		int x2 = RNG.getRandInt((int) this.getWidth() - x1),
 				y2 = RNG.getRandInt((int) this.getHeight() - y1);
 
 		GraphicsContext g = this.getGraphicsContext();
-		if(tick % 20 == 0){
+		if (tick % 20 == 0) {
 			g.clearRect(0, 0, this.getWidth(), this.getHeight());
 		}
-		
 
 		g.setStroke(Color.BLACK);
 		g.setLineWidth(2);
@@ -84,8 +84,8 @@ public abstract class ATunnelersScene extends Scene {
 	protected TunnelersStage getStage() {
 		return (TunnelersStage) this.getWindow();
 	}
-	
-	protected Engine getEngine(){
+
+	protected Engine getEngine() {
 		return this.getStage().engine;
 	}
 

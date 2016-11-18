@@ -40,7 +40,6 @@ public class PlayScene extends ATunnelersScene {
 		});
 
 		return scene;
-
 	}
 
 	private static void addComponents(BorderPane root, PlayScene scene) {
@@ -64,11 +63,12 @@ public class PlayScene extends ATunnelersScene {
 		layout.setRenderer(renderer);
 	}
 
-
 	@Override
-	public void drawScene(long tick) {
+	public void update(long tick) {
 		Platform.runLater(() -> {
 			layout.draw(canvas.getGraphicsContext2D());
 		});
 	}
+	
+	
 }
