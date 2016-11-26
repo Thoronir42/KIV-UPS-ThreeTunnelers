@@ -43,7 +43,7 @@ public final class TunnelersApplication extends Application {
 			return ((int) Math.abs(Math.sin((x + 2) * 7) * 6 + Math.cos(y * 21) * 6));
 		});
 		
-		Engine e = new Engine(VERSION, csmgr, settings.getTickRate());
+		Engine e = new Engine(VERSION, csmgr, settings);
 
 		csmgr.setOnInputChanged((InputEvent event) -> {
 			e.handleInput(event.getInput(), event.getPlayerId(), event.isPressed());

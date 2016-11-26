@@ -6,7 +6,7 @@ import tunnelers.core.settings.Settings;
  *
  * @author Stepan
  */
-public class DefaultSettigsSpecifier implements ISettingsSpecifier{
+public class DefaultSettigsSpecifier implements ISettingsSpecifier {
 
 	@Override
 	public void set(Settings s) {
@@ -15,6 +15,7 @@ public class DefaultSettigsSpecifier implements ISettingsSpecifier{
 		s.setChatMessageCapacity(32);
 		s.setServerPort(4200);
 		s.setServerAddress("192.168.99.2");
+		s.setConnectionLogRelativePath("files/connection.txt");
 	}
-	
+
 }

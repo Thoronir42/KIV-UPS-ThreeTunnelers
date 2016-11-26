@@ -16,6 +16,7 @@ import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;
 import tunnelers.core.engine.stage.WarzoneStage;
 import tunnelers.core.player.controls.AControlsManager;
+import tunnelers.core.settings.Settings;
 import tunnelers.network.INetCommandHandler;
 import tunnelers.network.command.Command;
 import tunnelers.network.command.CommandType;
@@ -37,8 +38,10 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	private IView view;
 	private final AControlsManager controls;
 	private final int tickRate;
+	
+	private final PersistentString connectionSecret;
 
-	public Engine(int version, AControlsManager controls, int tickRate) {
+	public Engine(int version, AControlsManager controls, Settings settings) {
 		this.version = version;
 		this.netadapter = new NetAdapter();
 		this.controls = controls;
@@ -48,7 +51,8 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 		netadapter.setHandler(this);
 
 		this.setStage(Stage.Menu);
-		this.tickRate = tickRate;
+		this.tickRate = settings.getTickRate();
+		this.connectionSecret = new PersistentString(settings.getConnectionLogRelativePath());
 	}
 
 	public void start() {

@@ -12,6 +12,8 @@ public enum CommandType {
 	LeadDeny(2),
 	LeadStillThere(3),
 	LeadBadFormat(4),
+	LeadIntroduce(5),
+	LeadReintroduce(6),
 	//    CONNECTION
 	ConFetchGameList(10),
 	ConCreateGame(11),

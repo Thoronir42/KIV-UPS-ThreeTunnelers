@@ -30,6 +30,8 @@ public final class Settings {
 	private int tickRate;
 
 	private int chatMessageCapacity;
+	
+	private String connectionLogRelativePath;
 
 	private String serverAddress;
 	private int serverPort;
@@ -116,4 +118,11 @@ public final class Settings {
 		this.chatMessageCapacity = chatMessageCapacity;
 	}
 
+	public String getConnectionLogRelativePath() {
+		return connectionLogRelativePath;
+	}
+
+	public void setConnectionLogRelativePath(String connectionLogRelativePath) {
+		this.connectionLogRelativePath = connectionLogRelativePath;
+	}
 }
