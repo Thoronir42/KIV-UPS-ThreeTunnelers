@@ -1,0 +1,144 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{indentfirst}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{array}
+\usepackage{csquotes}
+
+%Pravidlo pro řádkování
+\renewcommand{\baselinestretch}{1.5}
+
+%Pravidlo pro začínání kapitol na novém řádku
+\let\oldsection\section
+\renewcommand\section{\clearpage\oldsection}
+
+%Formáty písem pro nadpisy (-změněno na bezpatkové \sffamily z původního \normalfont
+\titleformat{\section}
+{\sffamily\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}
+{\sffamily\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+{\sffamily\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+%Nastavení zvýrazňování kódu v \lslisting
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\lstset{commentstyle=\color{mygreen},keywordstyle=\color{blue},numberstyle=\tiny\color{mygray}}
+
+\author{Jan Šmejkal}
+
+\begin{document}
+
+%-------------Úvodni strana---------------
+\begin{titlepage}
+
+\includegraphics[width=50mm]{img/FAV.jpg}
+\\[160 pt]
+\centerline{ \Huge \sc KIV/UPS - Úvod do Počítačových sítí}
+\centerline{ \LARGE \sc Semestrální práce }
+\\[12 pt]
+{\Huge \sc
+\centerline{Three Tunnelers}
+}
+
+
+{
+\vfill 
+\parindent=0cm
+\textbf{Jméno:} Štěpán Ševčík\\
+\textbf{Osobní číslo:} A13B0443P\\
+\textbf{E-mail:} kiwi@students.zcu.cz\\
+\textbf{Datum:} {\large \today\par} %datum
+
+}
+
+\end{titlepage}
+
+%------------------------------------------
+
+%------------------Obsah-------------------
+\newpage
+\setcounter{page}{2}
+\setcounter{tocdepth}{3}
+\tableofcontents
+%------------------------------------------
+
+%--------------Text dokumentu--------------
+
+
+\section{Zadání}
+\noindent
+Počítačová hra Three Tunnelers založená na původní DOSové hře Tunnelers sestávající z:
+\begin{itemize}
+\setlength\itemsep{-1em}
+\item Herní klient implementovaný v jazyce JAVA
+\item Herní server implementovaný v jazyce C
+\end{itemize}
+\subsection*{Zásady vypracování semestrální práce viz. CW}
+\begin{itemize}
+\setlength\itemsep{0em}
+\item Úlohu naprogramujte v programovacím jazyku C/C++ anebo Java. Pokud se jedná o úlohu server/klient, pak klient bude v Javě a server v C/C++.
+
+\item Komunikace bude realizována textovým nešifrovaným protokolem nad TCP protokolem.
+
+\item Výstupy serveru budou v alfanumerické podobě, klient může komunikovat i v grafice (není podmínkou).
+
+\item Server řešte pod operačním systémem Linux, klient může běžet pod OS Windows XP. Emulátory typu Cygwin nebudou podporovány.
+
+\item Realizujte konkurentní (paralelní) servery. Server musí být schopen obsluhovat požadavky více klientů souběžně.
+
+\item Součástí programu bude trasování komunikace, dovolující zachytit proces komunikace na úrovni aplikačního protokolu a zápis trasování do souboru.
+
+\item Každý program bude doplněn o zpracování statistických údajů (přenesený počet bytů, přenesený počet zpráv, počet navázaných spojení, počet přenosů zrušených pro chybu, doba běhu apod.).
+
+\item Zdrojové kódy organizujte tak, aby od sebe byly odděleny části volání komunikačních funkcí, které jste vytvořili na základě zadání, od částí určených k demonstraci funkčnosti vašeho řešení (grafické rozhraní).
+\end{itemize}
+\section{Programátorská dokumentace}
+\subsection{Protokol}
+Zprávy mezi klientem a serverem se přenáší pomocí protokolu realizovaného nad transportním protokolem TCP. Zprávy nemusí mít jednotnou délku ale vždy musí odpovídat následujícímu formátu:
+\begin{center}
+\texttt{<hlavička><tělo><LF>}
+\end{center}
+\begin{itemize}
+\setlength\itemsep{0em}
+\item \textbf{hlavička} zprávy se skládá ze 4 hexadecimálních znaků, které představují typ zprávy
+\item \textbf{tělo} zprávy se odvíjí podle typu zprávy, čísla jsou přenášena v hexadecimální podobě a jsou vycpávána nulami na začátku do konstantní délky
+\item \textbf{LF} představuje znak "Line Feed" a je vyžadován na konci každé zprávy
+\end{itemize}
+\subsubsection{Výčet typů zpráv a jejich významů}
+\begin{table}[h]
+\center
+\begin{tabular}{|c|c|c|p{10cm}|}
+\hline
+Kód & Název & Zdroj & Tělo zprávy / poznámka\\ \hline
+0 & Nedefinováno & - & Používá se pro rozpoznání neplatného přenosu \\ \hline
+1 & Potvrzení & K/S & Generické schválení požadavku, nepoužívat \\ \hline
+2 & Zamítnutí & K/S & Generické zamítnutí požadavku, nepoužívat \\ \hline
+3 & Echo Request & K/S & Vyžádání aktivity protější strany \\ \hline
+4 & Echo Reply & K/S & Odpověď generující aktivitu \\ \hline
+5 & Špatný formát & K/S & Oznámení protistraně o nerozpoznaném příkazu \\ \hline
+6 & Představení & K/S & Představení klienta \newline Tělo zprávy od klienta nenese žádný význam \newline Tělo zprávy od serveru obsahuje klientské id tohoto klienta a tajný kód pro opětovné připojení \\ \hline
+7 & Znovu-představení & K & Pokus o znovu navázání spojení pod stejnou identitou \\ \hline
+
+\end{tabular}
+\end{table}
+\subsection{Herní server}
+\subsection{Herní klient}
+
+\section{Uživatelská dokumentace}
+
+
+
+
+%------------------------------------------
+
+\end{document}
