@@ -23,9 +23,14 @@ public class NetAdapter extends Thread implements IUpdatable {
 	private boolean keepRunning;
 
 	public NetAdapter() {
+		this(null);
+	}
+	
+	public NetAdapter(INetCommandHandler handler){
 		super(NetAdapter.class.getSimpleName());
 		this.parser = new CommandParser();
 		this.keepRunning = true;
+		this.setHandler(handler);
 	}
 
 	public void setHandler(INetCommandHandler handler) {
@@ -134,7 +139,7 @@ public class NetAdapter extends Thread implements IUpdatable {
 				connection.open();
 				handler.handle(new Command(CommandType.VirtConnectionEstabilished));
 
-				Command introduction = this.createCommand(CommandType.RoomPlayerIntroduce);
+				Command introduction = this.createCommand(CommandType.RoomClientIntroduce);
 				introduction.setData(localClient.getName());
 				this.issueCommand(introduction);
 			} catch (IOException e) {

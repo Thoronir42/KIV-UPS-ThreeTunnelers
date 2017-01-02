@@ -117,9 +117,9 @@ Zprávy mezi klientem a serverem se přenáší pomocí protokolu realizovaného
 \subsubsection{Výčet typů zpráv a jejich významů}
 \begin{table}[h]
 \center
-\begin{tabular}{|c|c|c|p{10cm}|}
+\begin{tabular}{|l|p{3cm}|l|p{10cm}|}
 \hline
-Kód & Název & Zdroj & Tělo zprávy / poznámka\\ \hline
+\textbf{Kód} & \textbf{Název} & \textbf{Zdroj} & \textbf{Tělo zprávy / poznámka}\\ \hline
 0 & Nedefinováno & - & Používá se pro rozpoznání neplatného přenosu \\ \hline
 1 & Potvrzení & K/S & Generické schválení požadavku, nepoužívat \\ \hline
 2 & Zamítnutí & K/S & Generické zamítnutí požadavku, nepoužívat \\ \hline
@@ -129,6 +129,22 @@ Kód & Název & Zdroj & Tělo zprávy / poznámka\\ \hline
 6 & Představení & K/S & Představení klienta \newline Tělo zprávy od klienta nenese žádný význam \newline Tělo zprávy od serveru obsahuje klientské id tohoto klienta a tajný kód pro opětovné připojení \\ \hline
 7 & Znovu-představení & K & Pokus o znovu navázání spojení pod stejnou identitou \\ \hline
 
+\end{tabular}
+\end{table}
+\begin{table}[h]
+\center
+\begin{tabular}{|l|p{3cm}|l|p{10cm}|}
+\hline
+\textbf{Kód} & \textbf{Název} & \textbf{Zdroj} & \textbf{Tělo zprávy / poznámka}\\ \hline
+10 & Vypsat místnosti & K & - \\ \hline
+11 & Vytvořit místnost & K & - \\ \hline
+12 & Vstoupit do místnosti & K & (XX) - číslo místnosti \\ \hline
+20 & Opustit místnost & K & - \\ \hline
+25 & Seznam místnosti & S & (XX)(XX)(M)*n - počet místností ve zprávě, zbývající počet místností výpisu, n identifikátorů místnosti \\ \hline
+40 & Zpráva - prostý text & K/S & K: (zpráva) \newline S: (XX)(zpráva) - identifikátor odesílatele, 0 vždy odpovídá systému, v místnosti jsou pozice klientů číslovány od 1 \\ \hline
+45 & Zpráva - příkaz & K & (zpráva) / umožňuje vzdálené vykonávání příkazů pro ovládání serveru jako z příkazové řádky \\ \hline
+110 & Chybná fáze & S & (XX) stav místnosti \\ \hline
+111 & Dotaz na klienta & K & (XX) identifikátor 
 \end{tabular}
 \end{table}
 \subsection{Herní server}
