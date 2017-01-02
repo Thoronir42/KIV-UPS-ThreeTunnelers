@@ -1,6 +1,7 @@
 package temp;
 
 import generic.RNG;
+import java.util.ArrayList;
 import tunnelers.core.gameRoom.GameContainer;
 import tunnelers.core.player.controls.Controls;
 import tunnelers.core.player.controls.InputAction;
@@ -28,16 +29,21 @@ public class Mock {
 			new NetClient("Frederick"),
 			new NetClient("Obama"),};
 
-		Player[] players = new Player[]{
-			new Player(0, RNG.getRandInt(maxColorId), clients[0], csmgr.getKeyboardScheme((byte) 0)),
-			new Player(1, RNG.getRandInt(maxColorId), clients[0], csmgr.getKeyboardScheme((byte) 1)),
-			new Player(2, RNG.getRandInt(maxColorId), clients[1], MOCKED_CONTROLS[0]),
-			new Player(3, RNG.getRandInt(maxColorId), clients[2], MOCKED_CONTROLS[1]),};
+		Controls[] playerControls = csmgr.getAllSchemes();
+		int iPlayer = 0;
+		ArrayList<Player> players = new ArrayList<>();
 
-		GameContainer c = new GameContainer(players.length);
+		for (Controls c : playerControls) {
+			players.add(new Player(iPlayer++, RNG.getRandInt(maxColorId), clients[0], c));
+		}
 
-		for(int i = 0; i < players.length; i++){
-			c.setPlayer(players[i].getID(), players[i]);
+		players.add(new Player(iPlayer++, RNG.getRandInt(maxColorId), clients[1], MOCKED_CONTROLS[0]));
+		players.add(new Player(iPlayer++, RNG.getRandInt(maxColorId), clients[2], MOCKED_CONTROLS[1]));
+
+		GameContainer c = new GameContainer(players.size());
+
+		for (Player p : players) {
+			c.setPlayer(p.getID(), p);
 		}
 
 		return c;

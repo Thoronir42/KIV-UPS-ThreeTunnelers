@@ -43,12 +43,10 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 
 	public Engine(int version, AControlsManager controls, Settings settings) {
 		this.version = version;
-		this.netadapter = new NetAdapter();
+		this.netadapter = new NetAdapter(this);
 		this.controls = controls;
 
-		this.chat = new Chat(24); // TODO: configurability
-
-		netadapter.setHandler(this);
+		this.chat = new Chat(settings.getChatMessageCapacity());
 
 		this.setStage(Stage.Menu);
 		this.tickRate = settings.getTickRate();
@@ -156,9 +154,8 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 		this.view.showScene(IView.Scene.Game);
 	}
 
-	public void viewServerList() {
-		// fixme: perform real server listing
-		this.view.showScene(IView.Scene.ServerList);
+	public void refreshServerList() {
+		// TODO: implement
 	}
 
 	public void joinGame(GameRoom gameRoom) {

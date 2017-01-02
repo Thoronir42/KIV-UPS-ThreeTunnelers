@@ -1,5 +1,6 @@
 package tunnelers.app.controls;
 
+import java.util.Arrays;
 import tunnelers.core.player.controls.ControlInput;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
@@ -11,10 +12,22 @@ import tunnelers.core.player.controls.InputAction;
  *
  * @author Stepan
  */
-public class FxControlsManager extends AControlsManager{
+public class FxControlsManager extends AControlsManager {
 
 	private EventHandler<InputEvent> onInputChanged;
 
+	private final FxKeyMap keyMap;
+	private final Controls[] keyboardSchemes;
+
+	public FxControlsManager(int enabledSchemes) {
+		this.keyboardSchemes = new Controls[enabledSchemes];
+		this.keyMap = new FxKeyMap(this);
+		for (byte i = 0; i < enabledSchemes; i++) {
+			this.keyboardSchemes[i] = new Controls(i);
+			this.keyMap.setSchemeDefault(i);
+		}
+	}
+	
 	public byte[] getKeyboardLayoutIDs() {
 		// TODO: optimize
 		byte[] ids = new byte[this.keyboardSchemes.length];
@@ -23,16 +36,19 @@ public class FxControlsManager extends AControlsManager{
 		}
 		return ids;
 	}
-//
-	private final FxKeyMap keyMap;
 
-	public FxControlsManager() {
-		super();
-		this.keyMap = new FxKeyMap(this);
-		for (byte i = 0; i < 2; i++) {
-			this.keyboardSchemes[i] = new Controls(i);
-			this.keyMap.setSchemeDefault(i);
-		}
+	@Override
+	public Controls[] getAllSchemes() {
+		return Arrays.copyOf(this.keyboardSchemes, this.keyboardSchemes.length);
+	}
+
+	@Override
+	public Controls getScheme(byte id) {
+		return this.getKeyboardScheme(id);
+	}
+
+	public Controls getKeyboardScheme(byte sIndex) {
+		return this.keyboardSchemes[sIndex];
 	}
 
 	public ControlInput getControlInputByKey(KeyCode code) {
@@ -55,7 +71,6 @@ public class FxControlsManager extends AControlsManager{
 
 	public void keyPressSet(KeyCode kc, boolean pressed) {
 		ControlInput pi = this.getControlInputByKey(kc);
-//		System.out.format("%s´= %s -> %s", kc, pressed, pi);
 		if (pi == null) {
 			return;
 		}

@@ -36,7 +36,7 @@ public final class TunnelersApplication extends Application {
 
 		this.imp = new Impulser(settings.getTickRate());
 
-		FxControlsManager csmgr = new FxControlsManager();
+		FxControlsManager csmgr = new FxControlsManager(1);
 
 		DefaultColorScheme colorScheme = new DefaultColorScheme(new FxPlayerColorManager());
 		colorScheme.setRandomizer((int x, int y) -> {

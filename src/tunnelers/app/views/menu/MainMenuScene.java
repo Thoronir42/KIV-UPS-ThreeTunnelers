@@ -45,7 +45,7 @@ public class MainMenuScene extends ATunnelersScene {
 
 		Button[] buttons = new Button[]{
 			createButton("Seznam serverů", (ActionEvent event) -> {
-				scene.getEngine().viewServerList();
+				scene.getStage().showScene(IView.Scene.ServerList);
 			}),
 			createButton("Nastavení", (ActionEvent event) -> {
 				scene.getStage().showScene(IView.Scene.Settings);
