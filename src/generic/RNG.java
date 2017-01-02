@@ -21,7 +21,7 @@ public class RNG {
 	}
 
 	public int getInt(int i) {
-		if(i < 1){
+		if (i < 1) {
 			return 0;
 		}
 		return rand.nextInt(i);

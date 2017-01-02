@@ -1,44 +1,46 @@
 package tunnelers.core.model.map;
 
+import java.util.HashMap;
+
 /**
  *
  * @author Stepan
  */
 public enum Block {
-
-	Breakable(Block.C_BREAKABLE),
-	Tough(Block.C_TOUGH),
-	Empty(Block.C_EMPTY),
-	BaseWall(Block.C_BASEWALL),
-	Undefined(Block.C_UNDEFINED);
-	private static final char C_BREAKABLE = 'a',
-			C_TOUGH = 'b',
-			C_EMPTY = 'c',
-			C_BASEWALL = 'd',
-			C_UNDEFINED = 'z';
-
-	public static Block fromChar(char c) {
-		switch (c) {
-			default:
-				return Undefined;
-			case C_BREAKABLE:
-				return Breakable;
-			case C_TOUGH:
-				return Tough;
-			case C_EMPTY:
-				return Empty;
-			case C_BASEWALL:
-				return BaseWall;
-		}
+	Empty(0),
+	Breakable(1),
+	Tough(2),
+	BaseWall(3),
+	Undefined(16);
+	
+	private static final HashMap<Byte, Block> typeMap;
+	
+	public static Block fromByteValue(byte c) {
+		return typeMap.getOrDefault(c, Undefined);
 	}
 
-	private final char type;
+	static{
+		typeMap = new HashMap<>();
+		for(Block type : Block.values()){
+			typeMap.put(type.byteValue(), type);
+		}
+	}
+	
+	private final byte typeValue;
 
-	private Block(char type) {
-		this.type = type;
+	private Block(byte type) {
+		this.typeValue = type;
+	}
+
+	private Block(int type) {
+		this((byte) type);
 	}
 
 	public boolean isBreakable() {
-		return this.type == Breakable.type;
+		return this.typeValue == Breakable.typeValue;
+	}
+	
+	public byte byteValue(){
+		return this.typeValue;
 	}
 }

@@ -1,5 +1,6 @@
 package tunnelers.core.model.map;
 
+import java.util.Arrays;
 import javafx.geometry.Point2D;
 import tunnelers.core.player.Player;
 
@@ -9,16 +10,16 @@ import tunnelers.core.player.Player;
  */
 public class Chunk {
 
-	protected Block[][] chunkData;
+	protected Block[] chunkData;
 	public final Bounds bounds;
 	private final int chunkSize;
 	protected Player assignedPlayer;
 	protected ChunkType type;
-	
+
 	protected int x, y;
 
 	public Chunk(int x, int y, int chunkSize) {
-		this.chunkData = new Block[chunkSize][chunkSize];
+		this.chunkData = this.createBlockArray(chunkSize);
 		this.chunkSize = chunkSize;
 		this.x = x;
 		this.y = y;
@@ -29,11 +30,16 @@ public class Chunk {
 				yMin = y * chunkSize,
 				yMax = ((y + 1) * chunkSize) - 1;
 		this.bounds = new Bounds(xMin, xMax, yMin, yMax);
-
-		//System.out.format("Chunk [%d,%d] is from [%d,%d] to [%d,%d]%n",x, y, selfXmin, selfYmin, selfXmax, selfYmax);
 	}
-	
-	public void setType(ChunkType type){
+
+	private Block[] createBlockArray(int chunkSize) {
+		int blockInChunk = chunkSize * chunkSize;
+		Block[] array = new Block[blockInChunk];
+		Arrays.fill(array, 0, blockInChunk, Block.Breakable);
+		return array;
+	}
+
+	public void setType(ChunkType type) {
 		this.type = type;
 	}
 
@@ -41,23 +47,23 @@ public class Chunk {
 		this.assignedPlayer = p;
 	}
 
-	protected int applyData(char[][] chunkData) {
+	protected int applyData(byte[][] chunkData) {
 		int errors = 0;
 		for (int row = 0; row < chunkData.length; row++) {
 			if (row > chunkSize) {
 				break;
 			}
-			char[] chunkRow = chunkData[row];
+			byte[] chunkRow = chunkData[row];
 			for (int col = 0; col < chunkRow.length; col++) {
 				if (col > chunkSize) {
 					break;
 				}
-				Block b = Block.fromChar(chunkRow[col]);
+				Block b = Block.fromByteValue(chunkRow[col]);
 				if (b.equals(Block.Undefined)) {
 					errors++;
 					continue;
 				}
-				this.chunkData[row][col] = b;
+				this.chunkData[row * chunkSize + col] = b;
 			}
 		}
 
@@ -65,11 +71,11 @@ public class Chunk {
 	}
 
 	public Block getBlock(int x, int y) {
-		return chunkData[x][y];
+		return chunkData[y * chunkSize + x];
 	}
-	
-	public void setBlock(int x, int y, Block block){
-		this.chunkData[x][y] = block;
+
+	public void setBlock(int x, int y, Block block) {
+		this.chunkData[y * chunkSize + x] = block;
 	}
 
 	public Player getAssignedPlayer() {
@@ -79,20 +85,20 @@ public class Chunk {
 	public boolean isAssigned() {
 		return this.assignedPlayer != null;
 	}
-	
-	public boolean isBase(){
+
+	public boolean isBase() {
 		return this.type == ChunkType.Base;
 	}
 
-	Point2D getCenter() {
+	public Point2D getCenter() {
 		return new Point2D(
 				(this.bounds.xMax + this.bounds.xMin) / 2,
 				(this.bounds.yMax + this.bounds.yMin) / 2
 		);
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return String.format("Chunk %8s at %02d:%02d", Integer.toHexString(System.identityHashCode(this)), this.x, this.y);
 	}
 

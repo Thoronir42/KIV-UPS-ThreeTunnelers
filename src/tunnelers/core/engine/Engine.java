@@ -1,7 +1,7 @@
 package tunnelers.core.engine;
 
 import tunnelers.core.view.IView;
-import temp.MapGenerator;
+import temp.mapGenerator.MapGenerator;
 import temp.Mock;
 import tunnelers.common.IUpdatable;
 import tunnelers.app.views.serverList.GameRoom;
@@ -164,7 +164,7 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	public void joinGame(GameRoom gameRoom) {
 		// TODO: link this through network events
 		container = Mock.gameContainer(controls, view.getColorScheme().getAvailablePlayerColors());
-		container.initWarzone(MapGenerator.mockMap(20, 12, 8, container.getPlayerCount()));
+		container.initWarzone((new MapGenerator()).mockMap(20, 12, 8, container.getPlayerCount()));
 		
 		this.view.prepareGame(container.getWarzone().getMap(), container.getPlayers());
 		

@@ -14,19 +14,6 @@ public class Map {
 	public final int Xchunks, Ychunks;
 	protected final int chunkSize;
 	protected final int Xblocks, Yblocks;
-	
-
-	public int getWidth() {
-		return Xblocks;
-	}
-
-	public int getHeight() {
-		return Yblocks;
-	}
-
-	public int getChunkSize() {
-		return chunkSize;
-	}
 
 	public Map(int chunkSize, int width, int height, int playerCount) {
 		this.Xchunks = width;
@@ -34,34 +21,32 @@ public class Map {
 		this.chunkSize = chunkSize;
 		this.Xblocks = Xchunks * chunkSize;
 		this.Yblocks = Ychunks * chunkSize;
-		this.chunks = new Chunk[width][height];
+		this.chunks = new Chunk[height][width];
+
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				this.chunks[y][x] = new Chunk(x, y, chunkSize);
+			}
+		}
 
 		this.playerBaseChunks = new Chunk[playerCount];
 	}
 
-	public void initChunks(Chunk[][] chunks, Chunk[] baseChunks) {
-		int newX = chunks.length, newY = this.chunks[0].length;
-
-		if (newX != this.Xchunks || newY != this.Ychunks) {
-			throw new IllegalArgumentException(String.format(
-					"Invalid chunk array size. Required: [%02d, %02d], got: [%02d, %02d]",
-					this.Xchunks, this.Ychunks, newX, newY)
-			);
-		}
+	public void setPlayerBaseChunks(Chunk[] baseChunks) {
 		if (this.playerBaseChunks.length != baseChunks.length) {
 			throw new IllegalArgumentException(String.format(
 					"Invalid player base chunk arary size. Required: %02d, got: %02d",
 					this.playerBaseChunks.length, baseChunks.length));
 		}
-		this.chunks = chunks;
+
 		this.playerBaseChunks = baseChunks;
 	}
 
-	public void updateChunk(int x, int y, char[][] chunkData) throws ChunkException {
+	public void updateChunk(int x, int y, byte[][] chunkData) throws ChunkException {
 		if ((x < 0 || x >= this.Xchunks) || (y < 0 || y >= this.Ychunks)) {
 			throw new ChunkException(x, y, Xchunks, Ychunks);
 		}
-		this.chunks[x][y].applyData(chunkData);
+		this.chunks[y][x].applyData(chunkData);
 	}
 
 	public Point2D assignBase(int i, Player p) throws IllegalStateException, IndexOutOfBoundsException {
@@ -78,7 +63,7 @@ public class Map {
 	}
 
 	void assignPlayer(int chX, int chY, Player p) {
-		Chunk c = this.chunks[chX][chY];
+		Chunk c = this.chunks[chY][chX];
 		c.assignedPlayer = p;
 	}
 
@@ -86,7 +71,23 @@ public class Map {
 		if ((x < 0 || x >= this.Xchunks) || (y < 0 || y >= this.Ychunks)) {
 			throw new ChunkException(x, y, Xchunks, Ychunks);
 		}
-		return this.chunks[x][y];
+		return this.chunks[y][x];
+	}
+
+	public int getWidth() {
+		return Xblocks;
+	}
+
+	public int getHeight() {
+		return Yblocks;
+	}
+
+	public int getChunkSize() {
+		return chunkSize;
+	}
+	
+	public int getPlayerCount(){
+		return this.playerBaseChunks.length;
 	}
 
 }
