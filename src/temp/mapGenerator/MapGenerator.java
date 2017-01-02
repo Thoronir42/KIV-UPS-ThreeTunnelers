@@ -12,9 +12,10 @@ public class MapGenerator {
 	private IMapGeneratorStep[] steps;
 
 	public MapGenerator() {
+		RNG mapRng = new RNG(119);
 		steps = new IMapGeneratorStep[]{
-			new MapRockifier(),
-			new MapBasePlanter(new RNG(119)),
+			new MapRockifier(mapRng, 6),
+			new MapBasePlanter(mapRng),
 		};
 	}
 
