@@ -11,7 +11,7 @@ public class DefaultColorScheme extends AColorScheme {
 
 	private final Color[] breakable = {Color.BURLYWOOD, Color.BURLYWOOD.interpolate(Color.BROWN, 0.1)};
 	private final Color[] tough = {Color.DARKGREY};
-	private final Color[] empty = {Color.DARKRED};
+	private final Color[] empty = {Color.BLACK};
 	public final Color error = Color.RED;
 
 	public final Color UI_ENERGY = Color.DEEPPINK;

@@ -1,6 +1,6 @@
 package tunnelers.core.player;
 
-import tunnelers.core.colors.Colorable;
+import tunnelers.core.colors.IColorable;
 import tunnelers.core.player.controls.Controls;
 import tunnelers.core.chat.IChatParticipant;
 import tunnelers.core.model.entities.Tank;
@@ -10,7 +10,7 @@ import tunnelers.network.NetClient;
  *
  * @author Stepan
  */
-public final class Player implements IChatParticipant, Colorable{
+public final class Player implements IChatParticipant, IColorable{
 
 	private final int id;
 	
@@ -18,7 +18,7 @@ public final class Player implements IChatParticipant, Colorable{
 	private final Controls controls;
 	private int color;
 	private Tank tank;
-
+	
 	public Player(int playerID, int colorID, NetClient client, Controls controls) {
 		this.id = playerID;
 		this.color = colorID;

@@ -3,13 +3,13 @@ package tunnelers.core.model.entities;
 import tunnelers.core.player.Player;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
-import tunnelers.core.colors.Colorable;
+import tunnelers.core.colors.IColorable;
 
 /**
  *
  * @author Stepan
  */
-public abstract class GameEntity  implements Colorable{
+public abstract class GameEntity  implements IColorable{
 	protected Direction direction;
 	protected Point2D location;
 	protected Player player;

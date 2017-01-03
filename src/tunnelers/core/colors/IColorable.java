@@ -4,7 +4,7 @@ package tunnelers.core.colors;
  *
  * @author Stepan
  */
-public interface Colorable {
+public interface IColorable {
 	
 	public int getColor();
 }

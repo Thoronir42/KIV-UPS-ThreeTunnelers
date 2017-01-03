@@ -61,7 +61,7 @@ public class AssetsRenderer extends ARenderer {
 		return projectile;
 	}
 
-	public void initAssets(Collection<Player> players) {
+	public void initGameAssets(Collection<Player> players) {
 		players.stream().forEach((player) -> {
 			Color c = colorScheme.playerColors().get(player).color();
 			Image[] tankImages = new Image[2];

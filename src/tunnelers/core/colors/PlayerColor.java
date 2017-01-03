@@ -4,7 +4,7 @@ package tunnelers.core.colors;
  *
  * @author Stepan
  */
-public abstract class PlayerColor {
+public abstract class PlayerColor implements IColorable{
 
 	protected final int value;
 	protected boolean inUse;
@@ -23,5 +23,10 @@ public abstract class PlayerColor {
 
 	public void setInUse(boolean value) {
 		this.inUse = value;
+	}
+
+	@Override
+	public int getColor() {
+		return this.intValue();
 	}
 }

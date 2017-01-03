@@ -41,7 +41,9 @@ public class GameContainer {
 	public int getPlayerCount() {
 		int count = 0;
 		for(Player p : this.players){
-			count++;
+			if(p != null){
+				count++;
+			}
 		}
 		return count;
 	}

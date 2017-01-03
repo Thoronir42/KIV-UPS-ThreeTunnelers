@@ -103,7 +103,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	@Override
 	public void prepareGame(Map map, Player[] players) {
 		this.renderer.getMapRenderer().setMap(map);
-		this.renderer.getAssetsRenderer().initAssets(Arrays.asList(players));
+		this.renderer.getAssetsRenderer().initGameAssets(Arrays.asList(players));
 	}
 
 	@Override
