@@ -38,7 +38,7 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	private IView view;
 	private final AControlsManager controls;
 	private final int tickRate;
-	
+
 	private final PersistentString connectionSecret;
 
 	public Engine(int version, AControlsManager controls, Settings settings) {
@@ -160,11 +160,11 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 
 	public void joinGame(GameRoom gameRoom) {
 		// TODO: link this through network events
-		container = Mock.gameContainer(controls, view.getColorScheme().getAvailablePlayerColors());
+		container = Mock.gameContainer(controls, view.getColorScheme().getPlayerColorManager());
 		container.initWarzone((new MapGenerator()).mockMap(20, 12, 8, container.getPlayerCount()));
-		
+
 		this.view.prepareGame(container.getWarzone().getMap(), container.getPlayers());
-		
+
 		if (gameRoom.Full.get()) {
 			this.view.alert("Hra je již plná");
 			return;

@@ -2,6 +2,7 @@ package temp;
 
 import generic.RNG;
 import java.util.ArrayList;
+import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.gameRoom.GameContainer;
 import tunnelers.core.player.controls.Controls;
 import tunnelers.core.player.controls.InputAction;
@@ -19,7 +20,7 @@ public class Mock {
 
 	private static Controls[] MOCKED_CONTROLS;
 
-	public static GameContainer gameContainer(AControlsManager csmgr, int maxColorId) {
+	public static GameContainer gameContainer(AControlsManager csmgr, PlayerColorManager colors) {
 		MOCKED_CONTROLS = new Controls[]{
 			new Controls(2),
 			new Controls(4),};
@@ -28,17 +29,17 @@ public class Mock {
 			new NetClient("Karel"),
 			new NetClient("Frederick"),
 			new NetClient("Obama"),};
-
+		
 		Controls[] playerControls = csmgr.getAllSchemes();
 		int iPlayer = 0;
 		ArrayList<Player> players = new ArrayList<>();
 
 		for (Controls c : playerControls) {
-			players.add(new Player(iPlayer++, RNG.getRandInt(maxColorId), clients[0], c));
+			players.add(new Player(iPlayer++, colors.useRandomColor().intValue(), clients[0], c));
 		}
 
-		players.add(new Player(iPlayer++, RNG.getRandInt(maxColorId), clients[1], MOCKED_CONTROLS[0]));
-		players.add(new Player(iPlayer++, RNG.getRandInt(maxColorId), clients[2], MOCKED_CONTROLS[1]));
+		players.add(new Player(iPlayer++, colors.useRandomColor().intValue(), clients[1], MOCKED_CONTROLS[0]));
+		players.add(new Player(iPlayer++, colors.useRandomColor().intValue(), clients[2], MOCKED_CONTROLS[1]));
 
 		GameContainer c = new GameContainer(players.size());
 

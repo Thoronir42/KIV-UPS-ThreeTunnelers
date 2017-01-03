@@ -1,6 +1,7 @@
 package tunnelers.app.render.colors;
 
 import javafx.scene.paint.Color;
+import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.model.map.Block;
 
 /**
@@ -69,5 +70,12 @@ public class DefaultColorScheme extends AColorScheme {
 	public Color getUiEnergy() {
 		return UI_ENERGY;
 	}
+
+	@Override
+	public PlayerColorManager getPlayerColorManager() {
+		return this.playerColors;
+	}
+	
+	
 
 }
