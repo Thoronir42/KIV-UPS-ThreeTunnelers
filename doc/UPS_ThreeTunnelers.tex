@@ -114,6 +114,7 @@ Zprávy mezi klientem a serverem se přenáší pomocí protokolu realizovaného
 \item \textbf{tělo} zprávy se odvíjí podle typu zprávy, čísla jsou přenášena v hexadecimální podobě a jsou vycpávána nulami na začátku do konstantní délky
 \item \textbf{LF} představuje znak "Line Feed" a je vyžadován na konci každé zprávy
 \end{itemize}
+
 \subsubsection{Výčet typů zpráv a jejich významů}
 \begin{table}[h]
 \center
@@ -125,12 +126,13 @@ Zprávy mezi klientem a serverem se přenáší pomocí protokolu realizovaného
 2 & Zamítnutí & K/S & Generické zamítnutí požadavku, nepoužívat \\ \hline
 3 & Echo Request & K/S & Vyžádání aktivity protější strany \\ \hline
 4 & Echo Reply & K/S & Odpověď generující aktivitu \\ \hline
-5 & Špatný formát & K/S & Oznámení protistraně o nerozpoznaném příkazu \\ \hline
+5 & Špatný formát & K/S & (zpráva) Oznámení protistraně o nerozpoznaném příkazu s neplatnou zprávou\\ \hline
 6 & Představení & K/S & Představení klienta \newline Tělo zprávy od klienta nenese žádný význam \newline Tělo zprávy od serveru obsahuje klientské id tohoto klienta a tajný kód pro opětovné připojení \\ \hline
 7 & Znovu-představení & K & Pokus o znovu navázání spojení pod stejnou identitou \\ \hline
 
 \end{tabular}
 \end{table}
+
 \begin{table}[h]
 \center
 \begin{tabular}{|l|p{3cm}|l|p{10cm}|}
@@ -141,15 +143,38 @@ Zprávy mezi klientem a serverem se přenáší pomocí protokolu realizovaného
 12 & Vstoupit do místnosti & K & (XX) - číslo místnosti \\ \hline
 20 & Opustit místnost & K & - \\ \hline
 25 & Seznam místnosti & S & (XX)(XX)(M)*n - počet místností ve zprávě, zbývající počet místností výpisu, n identifikátorů místnosti \\ \hline
-40 & Zpráva - prostý text & K/S & K: (zpráva) \newline S: (XX)(zpráva) - identifikátor odesílatele, 0 vždy odpovídá systému, v místnosti jsou pozice klientů číslovány od 1 \\ \hline
+40 & Zpráva - prostý texůt & K/S & K: (zpráva) \newline S: (XX)(zpráva) - identifikátor odesílatele, 0 vždy odpovídá systému, v místnosti jsou pozice klientů číslovány od 1 \\ \hline
 45 & Zpráva - příkaz & K & (zpráva) / umožňuje vzdálené vykonávání příkazů pro ovládání serveru jako z příkazové řádky \\ \hline
-110 & Chybná fáze & S & (XX) stav místnosti \\ \hline
-111 & Dotaz na klienta & K & (XX) identifikátor 
+100 & Synchronizace fáze & S & (XX) aktuální fáze místnosti \\ \hline
+101 & Kontrolní signál místnosti & K/S & (XX) identifikátor signálu - signály místnosti mají různé významy dle aktuální fáze\\ \hline
+110 & Žádost o informace klienta & K & (XX) identifikátor klienta v místnosti \\ \hline
+111 & Představení klienta & S & (XX)(XX)(jméno) - číslo klienta v místnosti, délka jména, jméno \\ \hline
+112 & Odebrání klienta & S & (XX) - číslo klienta v místnosti \\ \hline
+
 \end{tabular}
 \end{table}
-\subsection{Herní server}
-\subsection{Herní klient}
 
+\begin{table}[h]
+\center
+\begin{tabular}{|l|p{3cm}|l|p{10cm}|}
+\hline
+\textbf{Kód} & \textbf{Název} & \textbf{Zdroj} & \textbf{Tělo zprávy / poznámka}\\ \hline
+120 & Vyhodit klienta & K & (XX) číslo klienta v místnosti \\ \hline
+121 & Předat vedení klientovi & K/S & (XX) číslo klienta v místnosti \\ \hline
+130 & Přidání hráče & K/S & K: (XX) - slot v místnosti \newline S: (XX)(XX)(XX)(XX) - slot v místnosti, klient, hráč klienta, barva \\ \hline
+131 & Odebrání hráče & K/S & (XX) - slot v místnosti \\ \hline
+132 & Přesunutí hráće mezi sloty & K/S& (XX)(XX) - slot ODKUD, slot KAM \\ \hline
+133 & Nastavení barvy hráče & K/S & (XX)(XX) - slot v místnosti, barva \\ \hline
+
+
+\end{tabular}
+\end{table}
+
+\newpage
+\subsection{Herní server}
+Zdrojové soubory serveru jsou tříděny do modulů podle jejich významu...
+\subsection{Herní klient}
+Zdrojové soubory serveru jsou tříděny do balíků podle jejich významu...
 \section{Uživatelská dokumentace}
 
 
