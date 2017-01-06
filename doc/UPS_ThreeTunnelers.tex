@@ -165,6 +165,14 @@ Zprávy mezi klientem a serverem se přenáší pomocí protokolu realizovaného
 131 & Odebrání hráče & K/S & (XX) - slot v místnosti \\ \hline
 132 & Přesunutí hráće mezi sloty & K/S& (XX)(XX) - slot ODKUD, slot KAM \\ \hline
 133 & Nastavení barvy hráče & K/S & (XX)(XX) - slot v místnosti, barva \\ \hline
+140 & Specifikace mapy & S & (XX)(XX)(XX) - velikost chunku, šířka v chuncích, výška v chuncích \\ \hline
+141 & Chunková data & S & (XX)(XX)(chunková data)\\ \hline
+142 & Požadavek o chunk & K & (XX)(XX)(XX) - X chunku, Y chunku, checksum chunku \\ \hline
+201 & Nastavení ovládání & K/S & (XX)(XX) - K: číslo hráče klienta, bitová mapa stisklých kláves \newline S: (XX)(XX) - číslo hráče v místnosti, bitová mapa stisklých kláves \\ \hline
+210 & Požadavek o informace tanku & K & (XX) - číslo hráče v místnosti \\ \hline
+211 & Informace o tanku & S & (XX)(XXXX)(XXXX)(XX)(XX)(XX)( - číslo hráče v místnosti, pozice X, pozice Y, směr, zdraví, energie tanku \\ \hline
+220 & Vytvoření projektilu & S & (XX)(XX)(XX) - identifikátor projektilu, číslo hráče, počáteční směr \\ \hline
+221 & Odstranění projektilu & S & (XX) - identifikátor projektilu \\ \hline
 
 
 \end{tabular}

@@ -26,19 +26,24 @@ public enum CommandType {
 	MsgPlain(40),
 	MsgRcon(45),
 	//    ROOM CONTROLS
-	RoomSetCurrentPhase(110),
-	RoomGetClientInfo(111),
-	RoomClientIntroduce(112),
-	RoomSetColor(113),
-	RoomKickClient(118),
-	RoomClientLeft(119),
-	RoomSetLeader(120),
-	RoomStartGame(125),
-	RoomGameStarted(126),
-	// GAME-MAP CONTROLS
-	GameChunkRequest(140),
-	GameChunkData(141),
-	GameVerifyChunk(142),
+	RoomSyncPhase(100),
+	RoomControlSignal(101),
+	//    CLIENT RELATED COMMANDS
+	RoomGetClientInfo(110),
+	RoomClientIntroduce(111),
+	RoomClientLeft(112),
+	//    CLIENT CONTROLLING COMMANDS
+	RoomKickClient(120),
+	RoomSetLeader(121),
+	//    PLAYER CONTROLLING COMMANDS
+	PlayerAttach(130),
+	PlayerDetach(131),
+	PlayerMove(132),
+	PlayerSetColor(133),
+	//    MAP COMMANDS
+	MapSpecification(140),
+	MapChunkData(141),
+	MapChunkRequest(142),
 	//    GAME-ENTITY CONTROLS
 	GameControlsSet(201),
 	GameTankRequest(210),
