@@ -60,7 +60,7 @@ public class FxRenderHelper {
 	}
 
 	public Player[] getPlayers() {
-		return this.engine.getContainer().getPlayers();
+		return this.engine.getGameRoom().getPlayers();
 	}
 
 	public Collection<Projectile> getProjectiles() {

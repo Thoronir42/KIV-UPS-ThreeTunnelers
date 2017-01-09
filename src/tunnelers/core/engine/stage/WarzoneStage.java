@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import javafx.geometry.Point2D;
 import temp.Mock;
-import tunnelers.core.gameRoom.GameContainer;
+import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.Warzone;
 import tunnelers.core.player.controls.Controls;
 import tunnelers.core.model.entities.Direction;
@@ -19,19 +19,19 @@ import tunnelers.core.player.Player;
  */
 public class WarzoneStage extends AEngineStage {
 
-	private final GameContainer container;
+	private final GameRoom gameRoom;
 	private final Warzone warzone;
 
-	public WarzoneStage(GameContainer container) {
-		this.container = container;
-		this.warzone = container.getWarzone();
+	public WarzoneStage(GameRoom gameRoom) {
+		this.gameRoom = gameRoom;
+		this.warzone = gameRoom.getWarzone();
 
 	}
 
 	@Override
 	public void update(long tick) {
 		if (tick % 3 == 0) {
-			Player[] players = this.container.getPlayers();
+			Player[] players = this.gameRoom.getPlayers();
 			for(Player p : players){
 				this.updateTank(p.getTank(), p.getControls());
 			};
@@ -57,7 +57,7 @@ public class WarzoneStage extends AEngineStage {
 	}
 
 	protected Point2D moveTank(Tank tank, Direction d) {
-		Map map = this.container.getWarzone().getMap();
+		Map map = this.gameRoom.getWarzone().getMap();
 
 		if (d == null) {
 			return null;
@@ -78,7 +78,7 @@ public class WarzoneStage extends AEngineStage {
 	}
 
 	private void updateProjectiles(Collection<Projectile> projectiles, long tick) {
-		Map map = this.container.getWarzone().getMap();
+		Map map = this.gameRoom.getWarzone().getMap();
 		
 		for (Iterator<Projectile> it = projectiles.iterator(); it.hasNext();) {
 			Projectile p = it.next();

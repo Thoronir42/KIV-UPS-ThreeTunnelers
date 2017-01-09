@@ -17,6 +17,7 @@ import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.app.views.serverList.ServerListScene;
 import tunnelers.app.views.settings.SettingsScene;
 import tunnelers.core.engine.Engine;
+import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 
@@ -120,11 +121,11 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 					this.changeScene(ServerListScene.getInstance());
 					break;
 				case Lobby:
-					this.changeScene(LobbyScene.getInstance(this.engine.getChat(), this.renderer.getColorScheme(), engine.getContainer().getCapacity()));
+					this.changeScene(LobbyScene.getInstance(this.engine.getChat(), this.renderer.getColorScheme(), engine.getGameRoom().getCapacity()));
 					break;
 				case Game:
 					PlayScene sc = PlayScene.getInstance(controlsManager);
-					sc.initLayout(engine.getContainer().getPlayerCount(), this.renderer);
+					sc.initLayout(engine.getGameRoom().getPlayerCount(), this.renderer);
 					this.changeScene(sc);
 					break;
 			}
@@ -139,5 +140,13 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	@Override
 	public AColorScheme getColorScheme() {
 		return colorScheme;
+	}
+
+	@Override
+	public void appendGameRoomsToList(IGameRoomInfo[] rooms) {
+		if (!(this.currentScene instanceof ServerListScene)) {
+			System.err.println("Can't append game rooms, wrong scene");
+		}
+		((ServerListScene)this.currentScene).appendGameRooms(rooms);
 	}
 }

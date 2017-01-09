@@ -1,34 +1,36 @@
 package tunnelers.core.gameRoom;
 
 import tunnelers.core.player.Player;
-import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.geometry.Point2D;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.model.entities.Tank;
+import tunnelers.network.NetClient;
 
-/**
- *
- * @author Stepan
- */
-public class GameContainer {
 
-	private Warzone warzone;
+public class GameRoom {
+	private final NetClient[] clients;
 	private final Player[] players;
+	private Warzone warzone;
 
-	public GameContainer(int capacity) {
+	public GameRoom(int capacity) {
+		this.clients = new NetClient[capacity];
 		this.players = new Player[capacity];
 	}
 
 	public void initWarzone(Map map) {
-		ArrayList<Tank> tanks = new ArrayList<>(players.length);
+		Tank[] tanks = new Tank[players.length];
 		
-		int i = 0;
-		for (Player p : players) {
+		
+		for (int i = 0; i < players.length; i++) {
+			Player p  = players[i];
+			if(p == null){
+				continue;
+			}
 			Point2D baseCenter = map.assignBase(i++, p);
 			Tank tank = new Tank(p, baseCenter);
 			p.setTank(tank);
-			tanks.add(tank);
+			tanks[i] = tank;
 		}
 		
 		this.warzone = new Warzone(tanks, map);

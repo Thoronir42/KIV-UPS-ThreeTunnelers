@@ -3,11 +3,13 @@ package temp;
 import generic.RNG;
 import java.util.ArrayList;
 import tunnelers.core.colors.PlayerColorManager;
-import tunnelers.core.gameRoom.GameContainer;
+import tunnelers.core.gameRoom.GameRoom;
+import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.player.controls.Controls;
 import tunnelers.core.player.controls.InputAction;
 import tunnelers.core.player.Player;
 import tunnelers.core.player.controls.AControlsManager;
+import tunnelers.core.settings.Settings;
 import tunnelers.network.NetClient;
 
 /**
@@ -20,7 +22,7 @@ public class Mock {
 
 	private static Controls[] MOCKED_CONTROLS;
 
-	public static GameContainer gameContainer(AControlsManager csmgr, PlayerColorManager colors) {
+	public static GameRoom gameRoom(AControlsManager csmgr, PlayerColorManager colors) {
 		MOCKED_CONTROLS = new Controls[]{
 			new Controls(2),
 			new Controls(4),};
@@ -29,7 +31,7 @@ public class Mock {
 			new NetClient("Karel"),
 			new NetClient("Frederick"),
 			new NetClient("Obama"),};
-		
+
 		Controls[] playerControls = csmgr.getAllSchemes();
 		int iPlayer = 0;
 		ArrayList<Player> players = new ArrayList<>();
@@ -41,7 +43,7 @@ public class Mock {
 		players.add(new Player(iPlayer++, colors.useRandomColor().intValue(), clients[1], MOCKED_CONTROLS[0]));
 		players.add(new Player(iPlayer++, colors.useRandomColor().intValue(), clients[2], MOCKED_CONTROLS[1]));
 
-		GameContainer c = new GameContainer(players.size());
+		GameRoom c = new GameRoom(players.size());
 
 		for (Player p : players) {
 			c.setPlayer(p.getID(), p);
@@ -59,6 +61,25 @@ public class Mock {
 				controls.setControlState(ia, REMOTE_CONTROLS_RNG.nextBoolean());
 			}
 		}
+	}
 
+	public static String serverListString(int n) {
+		StringBuilder sb = new StringBuilder(String.format("%02X%02X", n, 0));
+		for (byte i = 0; i < n; i++) {
+			int players = RNG.getRandInt(Settings.MAX_PLAYERS) + 1;
+			int difficulty = RNG.getRandInt(4);
+			byte flags = 0;
+			if (i % 2 == 0) {
+				flags |= IGameRoomInfo.FLAG_RUNNING;
+			}
+			if (i % 3 == 1) {
+				flags |= IGameRoomInfo.FLAG_SPECTATABLE;
+			}
+			
+			String s = String.format("%04X%02X%02X%02X%02X", i, Settings.MAX_PLAYERS, players, difficulty, flags);
+			sb.append(s);
+		}
+		
+		return sb.toString();
 	}
 }

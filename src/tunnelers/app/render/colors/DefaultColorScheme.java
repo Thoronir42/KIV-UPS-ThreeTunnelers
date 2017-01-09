@@ -75,7 +75,4 @@ public class DefaultColorScheme extends AColorScheme {
 	public PlayerColorManager getPlayerColorManager() {
 		return this.playerColors;
 	}
-	
-	
-
 }

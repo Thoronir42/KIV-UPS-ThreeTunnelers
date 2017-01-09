@@ -4,17 +4,17 @@ import tunnelers.core.view.IView;
 import temp.mapGenerator.MapGenerator;
 import temp.Mock;
 import tunnelers.common.IUpdatable;
-import tunnelers.app.views.serverList.GameRoom;
 import tunnelers.network.NetAdapter;
 import tunnelers.core.player.Player;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.player.controls.InputAction;
-import tunnelers.core.gameRoom.GameContainer;
 import tunnelers.core.gameRoom.Warzone;
 import tunnelers.core.chat.ServerMessenger;
 import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;
 import tunnelers.core.engine.stage.WarzoneStage;
+import tunnelers.core.gameRoom.GameRoom;
+import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.player.controls.AControlsManager;
 import tunnelers.core.settings.Settings;
 import tunnelers.network.INetCommandHandler;
@@ -29,7 +29,9 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 
 	private final int version;
 
-	private GameContainer container;
+	private GameRoomParser gameRoomParser;
+
+	private GameRoom gameRoom;
 	private final NetAdapter netadapter;
 	private final Chat chat;
 
@@ -44,6 +46,7 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	public Engine(int version, AControlsManager controls, Settings settings) {
 		this.version = version;
 		this.netadapter = new NetAdapter(this);
+		this.gameRoomParser = new GameRoomParser(12);
 		this.controls = controls;
 
 		this.chat = new Chat(settings.getChatMessageCapacity());
@@ -61,8 +64,8 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 		this.view = view;
 	}
 
-	public void setContainer(GameContainer container) {
-		this.container = container;
+	public void setGameRoom(GameRoom gameRoom) {
+		this.gameRoom = gameRoom;
 	}
 
 	public void setStage(Stage stage) {
@@ -71,13 +74,13 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 				this.currentStage = new MenuStage();
 				break;
 			case Warzone:
-				this.currentStage = new WarzoneStage(container);
+				this.currentStage = new WarzoneStage(gameRoom);
 				break;
 		}
 	}
 
-	public GameContainer getContainer() {
-		return container;
+	public GameRoom getGameRoom() {
+		return gameRoom;
 	}
 
 	@Override
@@ -93,7 +96,7 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	}
 
 	public void handleInput(InputAction inp, int playerID, boolean pressed) {
-		Player p = this.container.getPlayer(playerID);
+		Player p = this.gameRoom.getPlayer(playerID);
 
 		if (p.getControls().setControlState(inp, pressed)) {
 			Command cmd = this.netadapter.createCommand(CommandType.GameControlsSet);
@@ -105,7 +108,7 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	}
 
 	public Warzone getWarzone() {
-		return this.container.getWarzone();
+		return this.gameRoom.getWarzone();
 	}
 
 	public void connect(String name, String addr, int port) {
@@ -155,17 +158,20 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	}
 
 	public void refreshServerList() {
-		// TODO: implement
+		int n = 16;
+		String lobbiesString = Mock.serverListString(16);
+		IGameRoomInfo[] rooms = this.gameRoomParser.parse(16, lobbiesString);
+		this.view.appendGameRoomsToList(rooms);
 	}
 
-	public void joinGame(GameRoom gameRoom) {
+	public void joinGame(IGameRoomInfo gameRoom) {
 		// TODO: link this through network events
-		container = Mock.gameContainer(controls, view.getColorScheme().getPlayerColorManager());
-		container.initWarzone((new MapGenerator()).mockMap(20, 12, 8, container.getPlayerCount()));
+		this.gameRoom = Mock.gameRoom(controls, view.getColorScheme().getPlayerColorManager());
+		this.gameRoom.initWarzone((new MapGenerator()).mockMap(20, 12, 8, this.gameRoom.getPlayerCount()));
 
-		this.view.prepareGame(container.getWarzone().getMap(), container.getPlayers());
+		this.view.prepareGame(this.gameRoom.getWarzone().getMap(), this.gameRoom.getPlayers());
 
-		if (gameRoom.Full.get()) {
+		if (gameRoom.isFull()) {
 			this.view.alert("Hra je již plná");
 			return;
 		}

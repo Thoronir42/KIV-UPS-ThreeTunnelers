@@ -18,10 +18,10 @@ public class Warzone {
 
 	private final Map map;
 
-	private final List<Tank> tanks;
+	private final Tank[] tanks;
 	private final List<Projectile> projectiles;
 
-	public Warzone(List<Tank> tanks, Map map) {
+	public Warzone(Tank[] tanks, Map map) {
 		this.tanks = tanks;
 		this.map = map;
 

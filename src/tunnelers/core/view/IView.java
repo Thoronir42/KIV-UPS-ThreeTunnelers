@@ -1,5 +1,6 @@
 package tunnelers.core.view;
 
+import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 
@@ -21,4 +22,6 @@ public interface IView {
 	public IColorScheme getColorScheme();
 	
 	public void prepareGame(Map map, Player[] players);
+	
+	public void appendGameRoomsToList(IGameRoomInfo[] rooms);
 }

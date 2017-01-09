@@ -1,7 +1,6 @@
 package tunnelers.app.views.serverList;
 
-import tunnelers.app.views.serverList.GameRoomView.GRTVItem;
-import generic.RNG;
+import tunnelers.app.views.serverList.GameRoomView.GameRoomViewWrapper;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,6 +22,8 @@ import tunnelers.app.views.serverList.GameRoomView.GameRoomTreeTableView;
 import tunnelers.core.settings.Settings;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.core.settings.NameManager;
+import tunnelers.app.views.serverList.GameRoomView.IGameRoomTreeViewItem;
+import tunnelers.core.gameRoom.IGameRoomInfo;
 
 /**
  *
@@ -65,7 +66,6 @@ public class ServerListScene extends ATunnelersScene {
 //
 //		HBox top = new HBox(hugeWarning);
 //		top.setAlignment(Pos.CENTER);
-
 		center.add(createTopBar(scene, settings), 0, 0);
 		center.add(scene.serverList, 0, 1);
 		center.add(but_goBack, 0, 2);
@@ -73,7 +73,6 @@ public class ServerListScene extends ATunnelersScene {
 		root.setCenter(center);
 		root.setBottom(createBottomBar(scene));
 
-		scene.refreshServerList();
 		scene.alert("Čekání na akci");
 
 		but_goBack.requestFocus();
@@ -147,41 +146,22 @@ public class ServerListScene extends ATunnelersScene {
 
 	private void refreshServerList() {
 		serverList.clearItems();
-
-		int n = RNG.getRandInt(10) + 3;
-		String[] lobbies = new String[n];
-		for (byte i = 0; i < n; i++) {
-			int players = RNG.getRandInt(Settings.MAX_PLAYERS) + 1;
-			byte flags = 0;
-			if (i % 2 == 0) {
-				flags |= GameRoom.FLAG_RUNNING;
-			}
-			if (i % 3 == 1) {
-				flags |= GameRoom.FLAG_SPECTATABLE;
-			}
-			if (players == Settings.MAX_PLAYERS) {
-				flags |= GameRoom.FLAG_FULL;
-			}
-			String s = String.format("%02X%02X%02X%02X", i, Settings.MAX_PLAYERS, players, flags);
-			lobbies[i] = s;
-		}
-		parseAndInsertLobbies(lobbies);
+		this.getEngine().refreshServerList();
 	}
 
-	private void parseAndInsertLobbies(String[] lobbies) {
-		for (String l : lobbies) {
-			GameRoom gr = GameRoom.fromString(l);
-			if (gr == null) {
+	public void appendGameRooms(IGameRoomInfo[] gameRooms) {
+		for (IGameRoomInfo gri : gameRooms) {
+			if (gri == null) {
 				continue;
 			}
-			serverList.add(gr);
+			serverList.add(new GameRoomViewWrapper(gri));
 		}
 	}
 
 	private void serverListClicked(MouseEvent e) {
-		GRTVItem selected = this.serverList.getSelectedItem();
+		IGameRoomTreeViewItem selected = this.serverList.getSelectedItem();
 
-		if (selected == null || !(selected instanceof GameRoom)) {
+		if (selected == null || !selected.isGameRoom()) {
 			return;
 		}
 		if (e.getClickCount() == 2) {
@@ -189,7 +169,7 @@ public class ServerListScene extends ATunnelersScene {
 			if (name.length() == 0) {
 				name = tf_localName.getPromptText();
 			}
-			this.getEngine().joinGame((GameRoom) selected);
+			this.getEngine().joinGame(selected);
 		}
 	}
 

@@ -5,21 +5,21 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-import tunnelers.app.views.serverList.RoomDifficulty;
+import tunnelers.app.views.serverList.GameRoomDifficulty;
 
 /**
  *
  * @author Stepan
  */
-public class GameRoomTreeTableView extends TreeTableView<GRTVItem> {
+public class GameRoomTreeTableView extends TreeTableView<IGameRoomTreeViewItem> {
 
 	public static GameRoomTreeTableView createInstance() {
-		return new GameRoomTreeTableView(new TreeItem<>(new GRTVRoot()));
+		return new GameRoomTreeTableView(new TreeItem<>(new GameRoomTreeViewRoot()));
 	}
 
-	final TreeItem<GRTVItem> root;
+	final TreeItem<IGameRoomTreeViewItem> root;
 
-	private GameRoomTreeTableView(TreeItem<GRTVItem> root) {
+	private GameRoomTreeTableView(TreeItem<IGameRoomTreeViewItem> root) {
 		super(root);
 		this.root = root;
 		this.showRootProperty().set(false);
@@ -29,28 +29,28 @@ public class GameRoomTreeTableView extends TreeTableView<GRTVItem> {
 
 	public void clearItems() {
 		root.getChildren().clear();
-		for (RoomDifficulty d : RoomDifficulty.values()) {
-			root.getChildren().add(new TreeItem<>(d));
+		for (GameRoomDifficulty d : GameRoomDifficulty.values()) {
+			root.getChildren().add(new TreeItem<>(new GameRoomViewWrapper(d)));
 		}
 		root.setExpanded(true);
 	}
 
 	private void initColumns() {
-		TreeTableColumn<GRTVItem, String> columnName = new TreeTableColumn<>("Název");
+		TreeTableColumn<IGameRoomTreeViewItem, String> columnName = new TreeTableColumn<>("Název");
 		columnName.setCellValueFactory(c -> {
-			GRTVItem item = c.getValue().getValue();
+			IGameRoomTreeViewItem item = c.getValue().getValue();
 			return new ReadOnlyStringWrapper(item.getTitle());
 		});
-		TreeTableColumn<GRTVItem, String> columnPlayers = new TreeTableColumn<>("Hráčů");
+		TreeTableColumn<IGameRoomTreeViewItem, String> columnPlayers = new TreeTableColumn<>("Hráčů");
 		columnPlayers.setCellValueFactory(c -> {
-			GRTVItem item = c.getValue().getValue();
+			IGameRoomTreeViewItem item = c.getValue().getValue();
 			return new ReadOnlyStringWrapper(item.getOccupancy());
 		});
 
-		TreeTableColumn<GRTVItem, String> columnFlags = new TreeTableColumn<>("Příznaky");
+		TreeTableColumn<IGameRoomTreeViewItem, String> columnFlags = new TreeTableColumn<>("Příznaky");
 		columnFlags.setCellValueFactory(c -> {
-			GRTVItem item = c.getValue().getValue();
-			return new ReadOnlyStringWrapper(item.getFlags());
+			IGameRoomTreeViewItem item = c.getValue().getValue();
+			return new ReadOnlyStringWrapper(item.describeFlags());
 		});
 		columnFlags.setPrefWidth(180);
 
@@ -58,21 +58,24 @@ public class GameRoomTreeTableView extends TreeTableView<GRTVItem> {
 
 	}
 
-	public void addAll(Collection<GRTVItem> items) {
-		for (GRTVItem item : items) {
+	public void addAll(Collection<IGameRoomTreeViewItem> items) {
+		for (IGameRoomTreeViewItem item : items) {
 			add(item);
 		}
 	}
 
-	public void add(GRTVItem gr) {
-		TreeItem<GRTVItem> result = root.getChildren().stream().filter(child -> child.getValue().getDIfficulty() == gr.getDIfficulty()).findFirst().get();
-		if (result != null) {
-			result.getChildren().add(new TreeItem<>(gr));
+	public void add(IGameRoomTreeViewItem gr) {
+		TreeItem<IGameRoomTreeViewItem> result = root.getChildren().stream().filter(child -> child.getValue().getDifficultyView() == gr.getDifficultyView()).findFirst().orElse(null);
+		if (result == null) {
+			System.err.println("failed adding game room tree view item");
+			return;
 		}
+		
+		result.getChildren().add(new TreeItem<>(gr));
 	}
 
-	public GRTVItem getSelectedItem() {
-		TreeItem<GRTVItem> selected = getSelectionModel().getSelectedItem();
+	public IGameRoomTreeViewItem getSelectedItem() {
+		TreeItem<IGameRoomTreeViewItem> selected = getSelectionModel().getSelectedItem();
 		if (selected == null) {
 			return null;
 		}
