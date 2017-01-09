@@ -102,7 +102,16 @@ Počítačová hra Three Tunnelers založená na původní DOSové hře Tunneler
 
 \item Zdrojové kódy organizujte tak, aby od sebe byly odděleny části volání komunikačních funkcí, které jste vytvořili na základě zadání, od částí určených k demonstraci funkčnosti vašeho řešení (grafické rozhraní).
 \end{itemize}
+
+\section{Úvod}
+Three Tunnelers je síťová adaptace rozšiřující možnosti originální hry Tunnelers pro DOS. V této hře hráč přebírá kontrolu nad hrabacím tankem v podzemní oblasti a jeho cílem je zabrat tuto oblast pro sebe. V oblasti se nachází další hráči, jejichž cílem je to samé. Zabrání oblasti je možné docílit tím, že bude hráč poslední žijící nejvíce-krát z daného počtu kol.
+
+
 \section{Programátorská dokumentace}
+\subsection{Datová struktura}
+\subsubsection*{Herní místnost}
+Herní místnost obsahuje odkazy na struktury reprezentující připojené klienty, struktury reprezentující jednotlivé hráče
+
 \subsection{Protokol}
 Zprávy mezi klientem a serverem se přenáší pomocí protokolu realizovaného nad transportním protokolem TCP. Zprávy nemusí mít jednotnou délku ale vždy musí odpovídat následujícímu formátu:
 \begin{center}
