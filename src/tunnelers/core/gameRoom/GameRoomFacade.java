@@ -56,4 +56,44 @@ public class GameRoomFacade implements IGameRoomInfo {
 		return (this.flags & FLAG_SPECTATABLE) > 0;
 	}
 
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 53 * hash + this.id;
+		hash = 53 * hash + this.maxPlayers;
+		hash = 53 * hash + this.curPlayers;
+		hash = 53 * hash + this.flags;
+		hash = 53 * hash + this.difficulty;
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final GameRoomFacade other = (GameRoomFacade) obj;
+		if (this.id != other.id) {
+			return false;
+		}
+		if (this.maxPlayers != other.maxPlayers) {
+			return false;
+		}
+		if (this.curPlayers != other.curPlayers) {
+			return false;
+		}
+		if (this.flags != other.flags) {
+			return false;
+		}
+		if (this.difficulty != other.difficulty) {
+			return false;
+		}
+		return true;
+	}
 }

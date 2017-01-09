@@ -29,7 +29,7 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 
 	private final int version;
 
-	private GameRoomParser gameRoomParser;
+	private final GameRoomParser gameRoomParser;
 
 	private GameRoom gameRoom;
 	private final NetAdapter netadapter;
@@ -46,7 +46,7 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	public Engine(int version, AControlsManager controls, Settings settings) {
 		this.version = version;
 		this.netadapter = new NetAdapter(this);
-		this.gameRoomParser = new GameRoomParser(12);
+		this.gameRoomParser = new GameRoomParser();
 		this.controls = controls;
 
 		this.chat = new Chat(settings.getChatMessageCapacity());
@@ -160,7 +160,7 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	public void refreshServerList() {
 		int n = 16;
 		String lobbiesString = Mock.serverListString(16);
-		IGameRoomInfo[] rooms = this.gameRoomParser.parse(16, lobbiesString);
+		IGameRoomInfo[] rooms = this.gameRoomParser.parse(16, lobbiesString.substring(4));
 		this.view.appendGameRoomsToList(rooms);
 	}
 

@@ -9,13 +9,12 @@ import tunnelers.core.gameRoom.GameRoomFacade;
  */
 public class GameRoomParser {
 
-	private final int lobbyStringLength;
+	public static final int LOBBY_STRING_LENGTH = 12;
 	
 	private final SimpleScanner wholeScanner;
 	private final SimpleScanner singleScanner;
 
-	public GameRoomParser(int lobbyStringLength) {
-		this.lobbyStringLength = 12;
+	public GameRoomParser() {
 		this.wholeScanner = new SimpleScanner();
 		this.singleScanner = new SimpleScanner(16);
 	}
@@ -24,7 +23,7 @@ public class GameRoomParser {
 		this.wholeScanner.setSourceString(lobbies);
 		GameRoomFacade[] facades = new GameRoomFacade[n];
 		for (int i = 0; i < n; i++) {
-			facades[i] = this.parseOne(this.wholeScanner.read(this.lobbyStringLength));
+			facades[i] = this.parseOne(this.wholeScanner.read(LOBBY_STRING_LENGTH));
 		}
 
 		return facades;

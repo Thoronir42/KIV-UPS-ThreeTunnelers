@@ -62,9 +62,13 @@ public class Mock {
 			}
 		}
 	}
+	
+	public static String serverListString(int n){
+		return serverListString(n, 0);
+	}
 
-	public static String serverListString(int n) {
-		StringBuilder sb = new StringBuilder(String.format("%02X%02X", n, 0));
+	public static String serverListString(int n, int remaining) {
+		StringBuilder sb = new StringBuilder(String.format("%02X%02X", n, remaining));
 		for (byte i = 0; i < n; i++) {
 			int players = RNG.getRandInt(Settings.MAX_PLAYERS) + 1;
 			int difficulty = RNG.getRandInt(4);
