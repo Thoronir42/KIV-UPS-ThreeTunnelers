@@ -2,7 +2,6 @@ package tunnelers.app.render.rectangleLayout;
 
 import java.util.Collection;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -10,6 +9,7 @@ import javafx.scene.transform.Affine;
 import tunnelers.app.render.FxRenderContainer;
 import tunnelers.app.render.MapRenderer;
 import tunnelers.app.render.colors.AColorScheme;
+import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
 
@@ -40,23 +40,23 @@ public class PlayerAreaRenderer {
 	}
 
 	protected void draw(GraphicsContext g, Dimension2D bounds, Tank currentTank) {
-		Collection<Tank> players = renderer.getTanks();
-		Collection<Projectile> projectiles = renderer.getProjectiles();
-
-		Affine defTransform = g.getTransform();
-
 		if (this.renderer == null) {
 			System.err.println("Renderer was not previously set");
 			return;
 		}
-		
+
+		Collection<Tank> tanks = renderer.getTanks();
+		Collection<Projectile> projectiles = renderer.getProjectiles();
+
+		Affine defTransform = g.getTransform();
+
 		AColorScheme colors = renderer.getColorScheme();
 
 		g.setFill(colors.playerColors().get(currentTank).color());
 		g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
 
 		g.translate(renderWindow.getX(), renderWindow.getY());
-		drawViewWindow(g, currentTank.getLocation(), players, projectiles);
+		drawViewWindow(g, currentTank.getLocation(), tanks, projectiles);
 		g.setTransform(defTransform);
 
 		Rectangle inBounds = new Rectangle(bounds.getWidth() * 0.8, bounds.getHeight() * 0.1);
@@ -76,20 +76,19 @@ public class PlayerAreaRenderer {
 		g.fillRect(r.getX(), r.getY(), r.getWidth(), r.getHeight());
 	}
 
-	private void drawViewWindow(GraphicsContext g, Point2D center, Collection<Tank> tanks, Collection<Projectile> projectiles) {
+	private void drawViewWindow(GraphicsContext g, IntPoint center, Collection<Tank> tanks, Collection<Projectile> projectiles) {
 		Affine defTransform = g.getTransform();
 		MapRenderer mr = renderer.getMapRenderer();
-
+		
 		g.setFill(Color.BLACK);
 		g.fillRect(0 - 2, 0 - 2, renderWindow.getWidth() + 6, renderWindow.getHeight() + 4);
 		alignSourceWindow(sourceWindow, center, mr.getMapBounds());
 		try {
-			
-			this.renderer.offsetBlocks(-sourceWindow.getX(), -sourceWindow.getY());
+			this.renderer.offsetBlocks(g, -sourceWindow.getX(), -sourceWindow.getY());
 			mr.drawMap(sourceWindow);
 			this.drawProjectiles(g, sourceWindow, projectiles);
 			this.drawTanks(g, sourceWindow, tanks);
-			
+
 			g.setTransform(defTransform);
 		} catch (Exception e) {
 			System.err.println("Error with drawViewWindow: " + e.getMessage());
@@ -104,31 +103,36 @@ public class PlayerAreaRenderer {
 
 	private int drawProjectiles(GraphicsContext g, Rectangle render, Collection<Projectile> projectiles) {
 		Affine defTransform = g.getTransform();
-		
-		return (int)projectiles.stream().filter(
-				(projectile) -> (render.contains(projectile.getLocation()))
-		).peek((proj) -> {
-			renderer.offsetBlocks(proj.getLocation());
-			renderer.getAssetsRenderer().drawProjectile(proj);
-			
+		int n = 0;
+		for (Projectile projectile : projectiles) {
+			if (!render.contains(projectile.getLocation().fx())) {
+				continue;
+			}
+			renderer.offsetBlocks(g, projectile.getLocation());
+			renderer.getAssetsRenderer().drawProjectile(projectile);
+
 			g.setTransform(defTransform);
-		}).count();
+			n++;
+		}
+
+		return n;
 	}
 
 	private void drawTanks(GraphicsContext g, Rectangle render, Collection<Tank> tanks) {
 		Affine defTransform = g.getTransform();
-		
-		tanks.stream().filter(
-				(tank) -> (render.contains(tank.getLocation()))
-		).forEach((t) -> {
-			renderer.offsetBlocks(t.getLocation());
-			renderer.getAssetsRenderer().drawTank(t);
-			
+
+		for (Tank tank : tanks) {
+			if (!render.contains(tank.getLocation().fx())) {
+				continue;
+			}
+			renderer.offsetBlocks(g, tank.getLocation());
+			renderer.getAssetsRenderer().drawTank(tank);
+
 			g.setTransform(defTransform);
-		});
+		}
 	}
 
-	private void alignSourceWindow(RectangleHalf source, Point2D center, Dimension2D mapSize) {
+	private void alignSourceWindow(RectangleHalf source, IntPoint center, Dimension2D mapSize) {
 		double halfWidth = source.getHalfWidth(),
 				halfHeight = source.getHalfHeight();
 		double mapWidth = mapSize.getWidth(),

@@ -1,6 +1,6 @@
 package tunnelers.core.model.map;
 
-import javafx.geometry.Point2D;
+import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.player.Player;
 
 /**
@@ -22,7 +22,7 @@ public class Map {
 
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				this.chunks[y * width + x] = new Chunk(x, y, chunkSize);
+				this.chunks[y * width + x] = new Chunk(chunkSize);
 			}
 		}
 
@@ -38,7 +38,7 @@ public class Map {
 
 		this.playerBaseChunks = baseChunks;
 	}
-	
+
 	public Chunk getChunk(int x, int y) throws ChunkException {
 		if ((x < 0 || x >= this.Xchunks) || (y < 0 || y >= this.Ychunks)) {
 			throw new ChunkException(x, y, Xchunks, Ychunks);
@@ -46,30 +46,44 @@ public class Map {
 		return this.chunks[y * this.Xchunks + x];
 	}
 
-	public void updateChunk(int x, int y, byte[][] chunkData) throws ChunkException {
+	private IntPoint findChunk(Chunk chunk) {
+		for (int i = 0; i < this.chunks.length; i++) {
+			if (this.chunks[i] == chunk) {
+				return new IntPoint(i % this.getWidth(), i / this.getWidth());
+			}
+		}
+
+		return null;
+	}
+
+	public void updateChunk(int x, int y, byte[] chunkData) throws ChunkException {
 		this.getChunk(x, y).applyData(chunkData);
 	}
 
-	public Point2D assignBase(int i, Player p) throws IllegalStateException, IndexOutOfBoundsException {
+	public IntPoint assignBase(int i, Player p) throws IllegalStateException, IndexOutOfBoundsException {
 		Chunk c = this.playerBaseChunks[i];
 
 		if (c.isAssigned()) {
 			throw new IllegalStateException("Player base " + i + " chunk is already assigned.");
 		}
-		
+
 		c.assignPlayer(p);
-		return c.getCenter();
+
+		IntPoint chunkPosition = this.findChunk(c);
+		if (chunkPosition == null) {
+			System.err.println("Chunk was not found");
+			return new IntPoint(-1, -1);
+		}
+		chunkPosition.multiply(chunkSize);
+		chunkPosition.add(new IntPoint(chunkSize / 2, chunkSize / 2));
+		return chunkPosition;
 	}
 
-	void assignPlayer(int chX, int chY, Player p) {
-		this.getChunk(chX, chY).assignedPlayer = p;
-	}
-	
-	public int getWidth(){
+	public int getWidth() {
 		return this.Xchunks;
 	}
-	
-	public int getHeight(){
+
+	public int getHeight() {
 		return this.Ychunks;
 	}
 
@@ -84,8 +98,8 @@ public class Map {
 	public int getChunkSize() {
 		return chunkSize;
 	}
-	
-	public int getPlayerCount(){
+
+	public int getPlayerCount() {
 		return this.playerBaseChunks.length;
 	}
 

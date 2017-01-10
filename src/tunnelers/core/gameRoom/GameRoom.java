@@ -4,6 +4,7 @@ import tunnelers.core.player.Player;
 import java.util.Arrays;
 import javafx.geometry.Point2D;
 import tunnelers.core.chat.Chat;
+import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.model.entities.Tank;
 import tunnelers.network.NetClient;
@@ -33,7 +34,7 @@ public class GameRoom {
 			if(p == null){
 				continue;
 			}
-			Point2D baseCenter = map.assignBase(i, p);
+			IntPoint baseCenter = map.assignBase(i, p);
 			Tank tank = new Tank(p, baseCenter);
 			p.setTank(tank);
 			tanks[i] = tank;

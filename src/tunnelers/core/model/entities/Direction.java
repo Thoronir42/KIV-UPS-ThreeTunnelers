@@ -1,7 +1,5 @@
 package tunnelers.core.model.entities;
 
-import javafx.geometry.Point2D;
-
 /**
  *
  * @author Stepan
@@ -26,12 +24,12 @@ public enum Direction {
 		return alignMent[Y + 1][X + 1];
 	}
 
-	private final Point2D direction;
+	private final IntPoint direction;
 	private final boolean diagonal;
 	private final int rotation;
 
 	private Direction(int x, int y, boolean offset, int rotation) {
-		this.direction = new Point2D(x, y);
+		this.direction = new IntPoint(x, y);
 		this.diagonal = offset;
 		this.rotation = rotation;
 	}
@@ -44,15 +42,15 @@ public enum Direction {
 		return this.rotation;
 	}
 
-	public Point2D asPoint() {
+	public IntPoint asPoint() {
 		return this.direction;
 	}
 
-	public double getX() {
+	public int getX() {
 		return this.direction.getX();
 	}
 
-	public double getY() {
+	public int getY() {
 		return this.direction.getY();
 	}
 }

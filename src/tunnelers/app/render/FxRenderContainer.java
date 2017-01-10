@@ -3,11 +3,11 @@ package tunnelers.app.render;
 import java.util.ArrayList;
 import java.util.Collection;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.core.engine.Engine;
+import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
 import tunnelers.core.player.Player;
@@ -22,7 +22,6 @@ public class FxRenderContainer {
 	private final AColorScheme colorScheme;
 
 	private Dimension2D blockSize;
-	private GraphicsContext gc;
 
 	protected final MapRenderer mapRenderer;
 	protected final AssetsRenderer assetsRenderer;
@@ -42,7 +41,6 @@ public class FxRenderContainer {
 	}
 
 	public void setGraphicsContext(GraphicsContext context) {
-		this.gc = context;
 		this.mapRenderer.setGraphicsContext(context);
 		this.assetsRenderer.setGraphicsContext(context);
 	}
@@ -82,14 +80,14 @@ public class FxRenderContainer {
 		return tanks;
 	}
 
-	public void offsetBlocks(double x, double y) {
+	public void offsetBlocks(GraphicsContext gc, double x, double y) {
 		gc.translate(
 				x * this.blockSize.getWidth(),
 				y * this.blockSize.getHeight()
 		);
 	}
 
-	public void offsetBlocks(Point2D point) {
-		this.offsetBlocks(point.getX(), point.getY());
+	public void offsetBlocks(GraphicsContext gc, IntPoint point) {
+		this.offsetBlocks(gc, point.getX(), point.getY());
 	}
 }

@@ -2,7 +2,6 @@ package tunnelers.core.model.entities;
 
 import tunnelers.core.player.Player;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.Point2D;
 import tunnelers.core.colors.IColorable;
 
 /**
@@ -11,22 +10,23 @@ import tunnelers.core.colors.IColorable;
  */
 public abstract class GameEntity  implements IColorable{
 	protected Direction direction;
-	protected Point2D location;
+	protected IntPoint location;
 	protected Player player;
 
-	public GameEntity(Direction direction, Point2D location, Player player) {
+	public GameEntity(Direction direction, IntPoint location, Player player) {
 		this.direction = direction;
-		this.location = location;
 		this.player = player;
+		this.setLocation(location);
+		
 	}
 
 	public abstract Dimension2D getSize();
 
-	public Point2D getLocation() {
+	public IntPoint getLocation() {
 		return this.location;
 	}
 
-	public void setLocation(Point2D loc) {
+	public void setLocation(IntPoint loc) {
 		this.location = loc;
 	}
 
@@ -82,6 +82,4 @@ public abstract class GameEntity  implements IColorable{
 	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}
-	
-	
 }

@@ -36,13 +36,15 @@ public class MapRenderer extends ARenderer {
 				chBottom = (int) Math.min(map.getHeight() - 1, Math.ceil((yMax + 1.0) / chunkSize));
 		for (int Y = chTop; Y <= chBottom; Y++) {
 			for (int X = chLeft; X < chRight; X++) {
-				renderChunk(map.getChunk(X, Y), bounds, chunkSize);
+				Bounds chunkBounds = new Bounds(X * chunkSize, (X + 1) * chunkSize - 1, Y * chunkSize, (Y + 1) * chunkSize);
+				renderChunk(map.getChunk(X, Y), chunkBounds, bounds, chunkSize);
 			}
 		}
 	}
 
-	void renderChunk(Chunk chunk, Bounds renderBounds, int chunkSize) {
-		Bounds currentBounds = renderBounds.intersection(chunk.bounds);
+	void renderChunk(Chunk chunk, Bounds chunkBounds, Bounds renderBounds, int chunkSize) {
+		
+		Bounds currentBounds = renderBounds.intersection(chunkBounds);
 		for (int y = currentBounds.yMin; y <= currentBounds.yMax; y++) {
 			for (int x = currentBounds.xMin; x <= currentBounds.xMax; x++) {
 				Block b = chunk.getBlock(x % chunkSize, y % chunkSize);
