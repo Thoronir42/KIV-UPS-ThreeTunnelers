@@ -20,9 +20,9 @@ public abstract class RenderLayout {
 		}
 	}
 	
-	protected FxRenderHelper renderer;
+	protected FxRenderContainer renderer;
 	
-	public void setRenderer(FxRenderHelper r) {
+	public void setRenderer(FxRenderContainer r) {
 		this.renderer = r;
 	}
 	

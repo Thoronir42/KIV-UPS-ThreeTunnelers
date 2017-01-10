@@ -43,7 +43,7 @@ public class Mock {
 		players.add(new Player(iPlayer++, colors.useRandomColor().intValue(), clients[1], MOCKED_CONTROLS[0]));
 		players.add(new Player(iPlayer++, colors.useRandomColor().intValue(), clients[2], MOCKED_CONTROLS[1]));
 
-		GameRoom c = new GameRoom(players.size());
+		GameRoom c = new GameRoom(players.size(), 12);
 
 		for (Player p : players) {
 			c.setPlayer(p.getID(), p);

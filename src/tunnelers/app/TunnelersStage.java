@@ -10,8 +10,10 @@ import javafx.stage.Stage;
 import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.views.warzone.PlayScene;
 import tunnelers.app.assets.Assets;
-import tunnelers.app.render.FxRenderHelper;
+import tunnelers.app.render.FxRenderContainer;
 import tunnelers.app.render.colors.AColorScheme;
+import tunnelers.app.render.colors.DefaultColorScheme;
+import tunnelers.app.render.colors.FxPlayerColorManager;
 import tunnelers.app.views.lobby.LobbyScene;
 import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.app.views.serverList.ServerListScene;
@@ -20,6 +22,7 @@ import tunnelers.core.engine.Engine;
 import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
+import tunnelers.core.player.controls.AControlsManager;
 
 /**
  *
@@ -35,10 +38,10 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	protected static final Settings SETTINGS = Settings.getInstance();
 
 	protected final FxControlsManager controlsManager;
-	protected final FxRenderHelper renderer;
+	protected final FxRenderContainer renderer;
 
 	protected ATunnelersScene currentScene;
-	protected final AColorScheme colorScheme;
+	protected final DefaultColorScheme colorScheme;
 
 	protected final Engine engine;
 	protected final Assets assets;
@@ -50,15 +53,23 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 		}
 	}
 
-	public TunnelersStage(Engine engine, FxControlsManager controlsManager, AColorScheme colorScheme, Assets assets) {
+	public TunnelersStage(Engine engine, Assets assets, int supportedControlSchemes) {
 		super();
-
+		
 		this.engine = engine;
 		this.assets = assets;
-
-		this.renderer = new FxRenderHelper(engine, colorScheme, assets);
-		this.colorScheme = colorScheme;
-		this.controlsManager = controlsManager;
+		
+		colorScheme = new DefaultColorScheme(new FxPlayerColorManager());
+		colorScheme.setRandomizer((int x, int y) -> {
+			return ((int) Math.abs(Math.sin((x + 2) * 7) * 6 + Math.cos(y * 21) * 6));
+		});
+		
+		this.controlsManager = new FxControlsManager(supportedControlSchemes);
+		this.controlsManager.setOnInputChanged((event) -> {
+			this.engine.handleInput(event.getInput(), event.getPlayerId(), event.isPressed());
+		});
+		
+		this.renderer = new FxRenderContainer(engine, colorScheme, assets);
 
 		this.ROUTER = this.getRouter();
 	}
@@ -141,6 +152,11 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	public AColorScheme getColorScheme() {
 		return colorScheme;
 	}
+	
+	@Override
+	public AControlsManager getControlsManager() {
+		return this.controlsManager;
+	}
 
 	@Override
 	public void appendGameRoomsToList(IGameRoomInfo[] rooms) {
@@ -149,4 +165,6 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 		}
 		((ServerListScene)this.currentScene).appendGameRooms(rooms);
 	}
+
+	
 }

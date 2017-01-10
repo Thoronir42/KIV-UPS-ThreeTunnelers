@@ -29,39 +29,36 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 
 	private final int version;
 
-	private final GameRoomParser gameRoomParser;
-
-	private GameRoom gameRoom;
-	private final NetAdapter netadapter;
-	private final Chat chat;
-
-	private AEngineStage currentStage;
-
-	private IView view;
-	private final AControlsManager controls;
 	private final int tickRate;
-
+	private AEngineStage currentStage;
+	
+	private final NetAdapter netadapter;
 	private final PersistentString connectionSecret;
+	private final GameRoomParser gameRoomParser;
+	
+	private GameRoom gameRoom;
+	
+	private IView view;
+	private AControlsManager controls;
 
-	public Engine(int version, AControlsManager controls, Settings settings) {
+	public Engine(int version, Settings settings) {
 		this.version = version;
 		this.netadapter = new NetAdapter(this);
 		this.gameRoomParser = new GameRoomParser();
-		this.controls = controls;
-
-		this.chat = new Chat(settings.getChatMessageCapacity());
 
 		this.setStage(Stage.Menu);
 		this.tickRate = settings.getTickRate();
 		this.connectionSecret = new PersistentString(settings.getConnectionLogRelativePath());
 	}
+	
+	public void setView(IView view){
+		this.view = view;
+		this.controls = view.getControlsManager();
+		
+	}
 
 	public void start() {
 		this.netadapter.start();
-	}
-
-	public void setView(IView view) {
-		this.view = view;
 	}
 
 	public void setGameRoom(GameRoom gameRoom) {
@@ -104,7 +101,7 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	}
 
 	public Chat getChat() {
-		return chat;
+		return gameRoom.getChat();
 	}
 
 	public Warzone getWarzone() {
@@ -134,7 +131,7 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 				return true;
 			case MsgRcon:
 			case MsgPlain:
-				chat.addMessage(ServerMessenger.getInstance(), cmd.getData());
+				this.getChat().addMessage(ServerMessenger.getInstance(), cmd.getData());
 				view.updateChat();
 				return true;
 			case VirtConnectionEstabilished:
@@ -165,16 +162,18 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	}
 
 	public void joinGame(IGameRoomInfo gameRoom) {
+		if (gameRoom.isFull()) {
+			this.view.alert("Hra je již plná");
+			return;
+		}
+
 		// TODO: link this through network events
 		this.gameRoom = Mock.gameRoom(controls, view.getColorScheme().getPlayerColorManager());
 		this.gameRoom.initWarzone((new MapGenerator()).mockMap(20, 12, 8, this.gameRoom.getPlayerCount()));
 
 		this.view.prepareGame(this.gameRoom.getWarzone().getMap(), this.gameRoom.getPlayers());
 
-		if (gameRoom.isFull()) {
-			this.view.alert("Hra je již plná");
-			return;
-		}
+		
 		this.view.alert("Probíhá připojování");
 
 		this.view.showScene(IView.Scene.Lobby);

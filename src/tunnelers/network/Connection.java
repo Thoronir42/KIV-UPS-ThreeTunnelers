@@ -29,13 +29,13 @@ public class Connection {
 	private int invalidMessageCounter;
 	
 
-	public Connection(String adress, int port, int receiveBufferSize) throws NetworksException {
-		this(adress, port, receiveBufferSize, new NoCodec());
+	public Connection(String hostname, int port, int receiveBufferSize) throws NetworksException {
+		this(hostname, port, receiveBufferSize, new NoCodec());
 	}
 
-	public Connection(String adress, int port, int receiveBufferSize, ICodec codec) throws NetworksException {
+	public Connection(String hostname, int port, int receiveBufferSize, ICodec codec) throws NetworksException {
 		try {
-			this.address = InetAddress.getByName(adress);
+			this.address = InetAddress.getByName(hostname);
 			this.port = port;
 			this.lastActive = System.currentTimeMillis();
 			this.codec = codec;

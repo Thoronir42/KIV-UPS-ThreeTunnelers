@@ -53,5 +53,4 @@ public class GameRoomParserTest {
 		GameRoomFacade[] result = parser.parse(n, lobbies);
 		assertArrayEquals(expResult, result);
 	}
-
 }

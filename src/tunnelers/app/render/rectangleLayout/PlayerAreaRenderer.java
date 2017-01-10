@@ -7,7 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Affine;
-import tunnelers.app.render.FxRenderHelper;
+import tunnelers.app.render.FxRenderContainer;
 import tunnelers.app.render.MapRenderer;
 import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.core.model.entities.Projectile;
@@ -26,7 +26,7 @@ public class PlayerAreaRenderer {
 	private final Dimension2D blockSize;
 	private final RectangleHalf sourceWindow;
 
-	private FxRenderHelper renderer;
+	private FxRenderContainer renderer;
 
 	PlayerAreaRenderer(Dimension2D bounds) {
 		this.bounds = bounds;
@@ -190,7 +190,7 @@ public class PlayerAreaRenderer {
 		);
 	}
 
-	void setRenderer(FxRenderHelper renderer) {
+	void setRenderer(FxRenderContainer renderer) {
 		this.renderer = renderer;
 	}
 

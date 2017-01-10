@@ -3,19 +3,25 @@ package tunnelers.core.gameRoom;
 import tunnelers.core.player.Player;
 import java.util.Arrays;
 import javafx.geometry.Point2D;
+import tunnelers.core.chat.Chat;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.model.entities.Tank;
 import tunnelers.network.NetClient;
 
 
 public class GameRoom {
+	
 	private final NetClient[] clients;
 	private final Player[] players;
+	
+	private final Chat chat;
+	
 	private Warzone warzone;
 
-	public GameRoom(int capacity) {
+	public GameRoom(int capacity, int chatCapacity) {
 		this.clients = new NetClient[capacity];
 		this.players = new Player[capacity];
+		this.chat = new Chat(chatCapacity);
 	}
 
 	public void initWarzone(Map map) {
@@ -27,7 +33,7 @@ public class GameRoom {
 			if(p == null){
 				continue;
 			}
-			Point2D baseCenter = map.assignBase(i++, p);
+			Point2D baseCenter = map.assignBase(i, p);
 			Tank tank = new Tank(p, baseCenter);
 			p.setTank(tank);
 			tanks[i] = tank;
@@ -64,5 +70,9 @@ public class GameRoom {
 	
 	public Player[] getPlayers() {
 		return Arrays.copyOf(this.players, this.players.length);
+	}
+
+	public Chat getChat() {
+		return this.chat;
 	}
 }

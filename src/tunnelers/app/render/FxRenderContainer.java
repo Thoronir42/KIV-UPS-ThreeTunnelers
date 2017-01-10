@@ -16,7 +16,7 @@ import tunnelers.core.player.Player;
  *
  * @author Stepan
  */
-public class FxRenderHelper {
+public class FxRenderContainer {
 
 	private final Engine engine;
 	private final AColorScheme colorScheme;
@@ -27,7 +27,7 @@ public class FxRenderHelper {
 	protected final MapRenderer mapRenderer;
 	protected final AssetsRenderer assetsRenderer;
 
-	public FxRenderHelper(Engine engine, AColorScheme colorScheme, Assets assets) {
+	public FxRenderContainer(Engine engine, AColorScheme colorScheme, Assets assets) {
 		this.colorScheme = colorScheme;
 		this.engine = engine;
 

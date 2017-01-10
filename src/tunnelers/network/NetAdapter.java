@@ -41,6 +41,13 @@ public class NetAdapter extends Thread implements IUpdatable {
 		return false;
 	}
 
+	/**
+	 * Non-blocking
+	 * Schedules connection creation.
+	 * @param clientName
+	 * @param adress
+	 * @param port 
+	 */
 	public void connectTo(String clientName, String adress, int port) {
 		try {
 			this.connection = new Connection(adress, port, BUFFER_SIZE);

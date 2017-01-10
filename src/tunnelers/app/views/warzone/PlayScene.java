@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.render.RenderLayout;
 import tunnelers.app.ATunnelersScene;
-import tunnelers.app.render.FxRenderHelper;
+import tunnelers.app.render.FxRenderContainer;
 
 /**
  *
@@ -57,7 +57,7 @@ public class PlayScene extends ATunnelersScene {
 		this.csmgr = csmgr;
 	}
 
-	public void initLayout(int playerCount, FxRenderHelper renderer) {
+	public void initLayout(int playerCount, FxRenderContainer renderer) {
 		Dimension2D availableArea = new Dimension2D(canvas.getWidth(), canvas.getHeight());
 		layout = RenderLayout.choseIdeal(playerCount, availableArea);
 		layout.setRenderer(renderer);

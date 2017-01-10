@@ -35,21 +35,10 @@ public final class TunnelersApplication extends Application {
 		assets.init();
 
 		this.imp = new Impulser(settings.getTickRate());
-
-		FxControlsManager csmgr = new FxControlsManager(1);
-
-		DefaultColorScheme colorScheme = new DefaultColorScheme(new FxPlayerColorManager());
-		colorScheme.setRandomizer((int x, int y) -> {
-			return ((int) Math.abs(Math.sin((x + 2) * 7) * 6 + Math.cos(y * 21) * 6));
-		});
 		
-		Engine e = new Engine(VERSION, csmgr, settings);
+		Engine e = new Engine(VERSION, settings);
 
-		csmgr.setOnInputChanged((InputEvent event) -> {
-			e.handleInput(event.getInput(), event.getPlayerId(), event.isPressed());
-		});
-
-		currentStage = new TunnelersStage(e, csmgr, colorScheme, assets);
+		currentStage = new TunnelersStage(e, assets, 1);
 		e.setView(currentStage);
 
 		currentStage.setOnHidden((WindowEvent event) -> {

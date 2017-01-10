@@ -6,7 +6,7 @@ import java.util.List;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
-import tunnelers.app.render.FxRenderHelper;
+import tunnelers.app.render.FxRenderContainer;
 import tunnelers.core.player.Player;
 
 /**
@@ -40,7 +40,7 @@ public class RectangularLayout extends RenderLayout {
 	}
 	
 	@Override
-	public void setRenderer(FxRenderHelper renderer){
+	public void setRenderer(FxRenderContainer renderer){
 		super.setRenderer(renderer);
 		this.playerArea.setRenderer(renderer);
 		this.renderer.setBlockSize(playerArea.getBlockSize());
