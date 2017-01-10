@@ -55,13 +55,35 @@ public class GameRoom {
 		}
 		return count;
 	}
-
-	public Player getPlayer(int playerId) {
-		return this.players[playerId];
+	
+	public NetClient getClient(int roomId){
+		return this.clients[roomId];
 	}
 	
-	public void setPlayer(int playerId, Player player){
-		this.players[playerId] = player;
+	public void setClient(int roomId, NetClient client){
+		this.clients[roomId] = client;
+	}
+	
+	public NetClient removeClient(int roomId){
+		NetClient client = this.getClient(roomId);
+		this.setClient(roomId, null);
+		
+		return client;
+	}
+
+	public Player getPlayer(int roomId) {
+		return this.players[roomId];
+	}
+	
+	public void setPlayer(int roomId, Player player){
+		this.players[roomId] = player;
+	}
+	
+	public Player removePlayer(int roomId){
+		Player p = this.getPlayer(roomId);
+		this.setPlayer(roomId, null);
+		
+		return p;
 	}
 	
 	public Warzone getWarzone() {

@@ -68,8 +68,8 @@ public class WarzoneStage extends AEngineStage {
 
 		if ((newY - tank.getHeight() / 2 > 0)
 				&& (newX - tank.getWidth() / 2 > 0)
-				&& (newX + tank.getWidth() / 2 < map.getWidth())
-				&& (newY + tank.getHeight() / 2 < map.getHeight())) {
+				&& (newX + tank.getWidth() / 2 < map.getBlockWidth())
+				&& (newY + tank.getHeight() / 2 < map.getBlockHeight())) {
 			tank.setLocation(new Point2D(newX, newY));
 			tank.setDirection(d);
 		}
@@ -84,8 +84,8 @@ public class WarzoneStage extends AEngineStage {
 			Projectile p = it.next();
 			Point2D newLocation = p.getLocation().add(p.getDirection().asPoint());
 
-			if (newLocation.getX() < 0 || newLocation.getX() > map.getWidth()
-					|| newLocation.getY() < 0 || newLocation.getY() > map.getHeight()) {
+			if (newLocation.getX() < 0 || newLocation.getX() > map.getBlockWidth()
+					|| newLocation.getY() < 0 || newLocation.getY() > map.getBlockHeight()) {
 				it.remove();
 				continue;
 			}

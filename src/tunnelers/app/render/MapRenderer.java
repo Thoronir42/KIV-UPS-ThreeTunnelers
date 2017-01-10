@@ -32,8 +32,8 @@ public class MapRenderer extends ARenderer {
 
 		int chTop = Math.max(0, yMin / chunkSize),
 				chLeft = Math.max(0, xMin / chunkSize),
-				chRight = (int) Math.min(map.Xchunks, Math.ceil((xMax + 1.0) / chunkSize)),
-				chBottom = (int) Math.min(map.Ychunks - 1, Math.ceil((yMax + 1.0) / chunkSize));
+				chRight = (int) Math.min(map.getWidth(), Math.ceil((xMax + 1.0) / chunkSize)),
+				chBottom = (int) Math.min(map.getHeight() - 1, Math.ceil((yMax + 1.0) / chunkSize));
 		for (int Y = chTop; Y <= chBottom; Y++) {
 			for (int X = chLeft; X < chRight; X++) {
 				renderChunk(map.getChunk(X, Y), bounds, chunkSize);
@@ -66,7 +66,7 @@ public class MapRenderer extends ARenderer {
 	public void setMap(Map map) {
 		System.out.println("Setting map");
 		this.map = map;
-		this.mapBounds = new Dimension2D(map.getWidth(), map.getHeight());
+		this.mapBounds = new Dimension2D(map.getBlockWidth(), map.getBlockHeight());
 	}
 
 	public Dimension2D getMapBounds() {

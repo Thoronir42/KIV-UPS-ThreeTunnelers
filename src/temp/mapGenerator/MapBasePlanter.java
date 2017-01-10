@@ -19,7 +19,7 @@ public class MapBasePlanter implements IMapGeneratorStep {
 	public void applyOn(Map map) {
 		int playerCount = map.getPlayerCount();
 		Chunk[] chunks = new Chunk[playerCount];
-		int mapWidth = map.Xchunks, Ychunks = map.Ychunks;
+		int mapWidth = map.getWidth(), mapHeight = map.getHeight();
 
 		// TODO: base distance
 		// TODO: terrain editing
@@ -28,7 +28,7 @@ public class MapBasePlanter implements IMapGeneratorStep {
 
 			do {
 				int x = RNG.getRandInt(mapWidth - 2) + 1,
-						y = RNG.getRandInt(Ychunks - 2) + 1;
+						y = RNG.getRandInt(mapHeight - 2) + 1;
 				currentChunk = map.getChunk(x, y);
 			} while (currentChunk.isBase());
 
@@ -64,7 +64,6 @@ public class MapBasePlanter implements IMapGeneratorStep {
 
 		int start = (chunkSize - width) / 2, end = (chunkSize + width) / 2;
 		int orientation = this.rng.getInt(2);
-		System.out.println(chunk + " orientation: " + orientation);
 		for (int i = start; i <= end; i++) {
 			if (orientation == 0) {
 				chunk.setBlock(left, i, Block.Empty);

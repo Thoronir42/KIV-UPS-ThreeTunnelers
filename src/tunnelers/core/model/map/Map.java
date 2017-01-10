@@ -9,23 +9,20 @@ import tunnelers.core.player.Player;
  */
 public class Map {
 
-	private Chunk[][] chunks;
+	private final Chunk[] chunks;
 	private Chunk[] playerBaseChunks;
 	public final int Xchunks, Ychunks;
 	protected final int chunkSize;
-	protected final int Xblocks, Yblocks;
 
 	public Map(int chunkSize, int width, int height, int playerCount) {
 		this.Xchunks = width;
 		this.Ychunks = height;
 		this.chunkSize = chunkSize;
-		this.Xblocks = Xchunks * chunkSize;
-		this.Yblocks = Ychunks * chunkSize;
-		this.chunks = new Chunk[height][width];
+		this.chunks = new Chunk[height * width];
 
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				this.chunks[y][x] = new Chunk(x, y, chunkSize);
+				this.chunks[y * width + x] = new Chunk(x, y, chunkSize);
 			}
 		}
 
@@ -41,12 +38,16 @@ public class Map {
 
 		this.playerBaseChunks = baseChunks;
 	}
-
-	public void updateChunk(int x, int y, byte[][] chunkData) throws ChunkException {
+	
+	public Chunk getChunk(int x, int y) throws ChunkException {
 		if ((x < 0 || x >= this.Xchunks) || (y < 0 || y >= this.Ychunks)) {
 			throw new ChunkException(x, y, Xchunks, Ychunks);
 		}
-		this.chunks[y][x].applyData(chunkData);
+		return this.chunks[y * this.Xchunks + x];
+	}
+
+	public void updateChunk(int x, int y, byte[][] chunkData) throws ChunkException {
+		this.getChunk(x, y).applyData(chunkData);
 	}
 
 	public Point2D assignBase(int i, Player p) throws IllegalStateException, IndexOutOfBoundsException {
@@ -55,31 +56,29 @@ public class Map {
 		if (c.isAssigned()) {
 			throw new IllegalStateException("Player base " + i + " chunk is already assigned.");
 		}
-
-		System.out.println(" Assigning base " + c.getCenter() + " to " + p.getID());
+		
 		c.assignPlayer(p);
 		return c.getCenter();
-
 	}
 
 	void assignPlayer(int chX, int chY, Player p) {
-		Chunk c = this.chunks[chY][chX];
-		c.assignedPlayer = p;
+		this.getChunk(chX, chY).assignedPlayer = p;
+	}
+	
+	public int getWidth(){
+		return this.Xchunks;
+	}
+	
+	public int getHeight(){
+		return this.Ychunks;
 	}
 
-	public Chunk getChunk(int x, int y) throws ChunkException {
-		if ((x < 0 || x >= this.Xchunks) || (y < 0 || y >= this.Ychunks)) {
-			throw new ChunkException(x, y, Xchunks, Ychunks);
-		}
-		return this.chunks[y][x];
+	public int getBlockWidth() {
+		return this.getWidth() * chunkSize;
 	}
 
-	public int getWidth() {
-		return Xblocks;
-	}
-
-	public int getHeight() {
-		return Yblocks;
+	public int getBlockHeight() {
+		return this.getHeight() * chunkSize;
 	}
 
 	public int getChunkSize() {

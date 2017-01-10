@@ -19,7 +19,7 @@ public class MapRockifier implements IMapGeneratorStep {
 	
 	@Override
 	public void applyOn(Map map) {
-		int width = map.Xchunks, height = map.Ychunks;
+		int width = map.getWidth(), height = map.getHeight();
 		int chunkSize = map.getChunkSize();
 		
 		AvgLine l1 = new AvgLine(this.borderSmoothness, chunkSize / 2);
