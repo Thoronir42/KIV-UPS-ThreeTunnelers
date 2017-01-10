@@ -2,7 +2,6 @@ package tunnelers.core.gameRoom;
 
 import tunnelers.core.player.Player;
 import java.util.Arrays;
-import javafx.geometry.Point2D;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.map.Map;

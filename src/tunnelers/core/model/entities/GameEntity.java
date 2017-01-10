@@ -1,7 +1,6 @@
 package tunnelers.core.model.entities;
 
 import tunnelers.core.player.Player;
-import javafx.geometry.Dimension2D;
 import tunnelers.core.colors.IColorable;
 
 /**
@@ -20,7 +19,7 @@ public abstract class GameEntity  implements IColorable{
 		
 	}
 
-	public abstract Dimension2D getSize();
+	public abstract IntDimension getSize();
 
 	public IntPoint getLocation() {
 		return this.location;

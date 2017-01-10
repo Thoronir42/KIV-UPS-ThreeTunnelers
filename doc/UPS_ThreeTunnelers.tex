@@ -106,11 +106,17 @@ Počítačová hra Three Tunnelers založená na původní DOSové hře Tunneler
 \section{Úvod}
 Three Tunnelers je síťová adaptace rozšiřující možnosti originální hry Tunnelers pro DOS. V této hře hráč přebírá kontrolu nad hrabacím tankem v podzemní oblasti a jeho cílem je zabrat tuto oblast pro sebe. V oblasti se nachází další hráči, jejichž cílem je to samé. Zabrání oblasti je možné docílit tím, že bude hráč poslední žijící nejvíce-krát z daného počtu kol.
 
+Hlavní vlastností hry Tunnelers je, že si hráči musejí postupně získat přehled o oblasti z pohledů na půdorys. K dispozici totiž nemají pohled na celou oblast ale jen na malé části kolem tanků. Každý hráč vidí půdorysy nad všemi tanky.
+
 
 \section{Programátorská dokumentace}
-\subsection{Datová struktura}
-\subsubsection*{Herní místnost}
-Herní místnost obsahuje odkazy na struktury reprezentující připojené klienty, struktury reprezentující jednotlivé hráče
+\subsection{Datové struktury}
+Pro zjednodušení popisu funkcí systémů jsou předpokládány následující struktury:
+\subsubsection*{Mapa}
+Mapa představuje oblast, o kterou se bojuje. Oblast se skládá z (W * H) sekcí, takzvaných chunků, stejné velikosti N. V oblasti je několik sekcí, které představují základnu.
+\subsubsection*{Chunk}
+Chunk je malý útvar skládající se z bloků, který reprezentuje terén oblasti. Některé chunky obsahují seskupení bloků představující hráčskou základnu, u těchto chunků je určen identifikátor 
+
 
 \subsection{Protokol}
 Zprávy mezi klientem a serverem se přenáší pomocí protokolu realizovaného nad transportním protokolem TCP. Zprávy nemusí mít jednotnou délku ale vždy musí odpovídat následujícímu formátu:
@@ -119,10 +125,12 @@ Zprávy mezi klientem a serverem se přenáší pomocí protokolu realizovaného
 \end{center}
 \begin{itemize}
 \setlength\itemsep{0em}
-\item \textbf{hlavička} zprávy se skládá ze 4 hexadecimálních znaků, které představují typ zprávy
+\item \textbf{hlavička} zprávy se skládá ze 2 hexadecimálních znaků, které představují typ zprávy
 \item \textbf{tělo} zprávy se odvíjí podle typu zprávy, čísla jsou přenášena v hexadecimální podobě a jsou vycpávána nulami na začátku do konstantní délky
 \item \textbf{LF} představuje znak "Line Feed" a je vyžadován na konci každé zprávy
 \end{itemize}
+
+Protokol je bezestavový, což znamená, že žádná ze zpráv nevyžaduje okamžitou odpověď. Většina druhů zpráv však významově předpokládá návaznost jiných zpráv.
 
 \subsubsection{Výčet typů zpráv a jejich významů}
 \begin{table}[h]
@@ -187,7 +195,7 @@ Zprávy mezi klientem a serverem se přenáší pomocí protokolu realizovaného
 \end{tabular}
 \end{table}
 
-\newpage
+
 \subsection{Herní server}
 Zdrojové soubory serveru jsou tříděny do modulů podle jejich významu...
 \subsection{Herní klient}

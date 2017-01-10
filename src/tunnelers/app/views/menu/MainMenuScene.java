@@ -57,18 +57,16 @@ public class MainMenuScene extends ATunnelersScene {
 		for (int i = 0; i < buttons.length; i++) {
 			content.add(buttons[i], 0, i);
 		}
-
-		scene.tf_addr = new TextField(settings.getServerAddress());
-		scene.tf_port = new TextField("" + settings.getServerPort());
-		scene.tf_name = new TextField("Karel");
-
-		content.add(scene.tf_addr, 1, 0);
-		content.add(scene.tf_port, 2, 0);
-		content.add(scene.tf_name, 1, 1, 2, 1);
-		content.add(createButton("TMP: Připoj", (e) -> {
-			int port = Integer.parseInt(scene.tf_port.getText());
-			scene.getEngine().connect(scene.tf_name.getText(), scene.tf_addr.getText(), port);
-		}), 1, 2, 2, 1);
+		
+		ServerSelectControl serverSelect = new ServerSelectControl(420);
+		serverSelect.setHostname(settings.getServerAddress());
+		serverSelect.setPort(settings.getServerPort());
+		serverSelect.setName("Karel");
+		serverSelect.setOnConnectAction((e) -> {
+			scene.getEngine().connect(serverSelect.getName(), serverSelect.getHostname(), serverSelect.getPort());
+		});
+		
+		content.add(serverSelect, 1, 0, 1, 3);
 		return scene;
 
 	}
@@ -79,8 +77,6 @@ public class MainMenuScene extends ATunnelersScene {
 		btn.setPrefSize(BTN_PREF_WIDTH, BTN_PREF_HEIGHT);
 		return btn;
 	}
-
-	private TextField tf_addr, tf_port, tf_name;
 
 	public MainMenuScene(Parent root, double width, double height) {
 		super(root, width, height, "Hlavní menu");

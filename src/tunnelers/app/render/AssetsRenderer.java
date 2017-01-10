@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.assets.IAssetImagesProvider;
+import tunnelers.core.model.entities.IntDimension;
 import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
 import tunnelers.core.player.Player;
@@ -91,14 +92,14 @@ public class AssetsRenderer extends ARenderer {
 		Image iv_body = this.getTankBodyImage(t.getPlayerId(), t.getDirection().isDiagonal());
 		Image iv_cannon = this.getTankCannonImage(t.getDirection().isDiagonal());
 
-		Dimension2D size = Tank.SIZE;
+		IntDimension size = Tank.SIZE;
 		double bw = blockSize.getWidth(), bh = blockSize.getHeight();
 
 		int rotation = t.getDirection().getRotation();
 		Point2D cbo = this.getCenterBlockOffset(rotation);
 
-		int dx = (int) (size.getWidth() / 2),
-				dy = (int) (size.getHeight() / 2);
+		int dx = size.getWidth() / 2,
+				dy = size.getHeight() / 2;
 
 		g.translate(cbo.getX() * bw, cbo.getY() * bh);
 
@@ -117,9 +118,9 @@ public class AssetsRenderer extends ARenderer {
 
 		int rotation = p.getDirection().getRotation();
 		Point2D cbo = this.getCenterBlockOffset(rotation);
-		Dimension2D size = p.getSize();
-		int dx = (int) (size.getWidth() / 2),
-				dy = (int) (size.getHeight() / 2);
+		IntDimension size = p.getSize();
+		int dx = size.getWidth() / 2,
+				dy = size.getHeight() / 2;
 
 		g.translate(cbo.getX() * bw, cbo.getY() * bh);
 

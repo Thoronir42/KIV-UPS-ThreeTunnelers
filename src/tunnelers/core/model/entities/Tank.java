@@ -1,7 +1,6 @@
 package tunnelers.core.model.entities;
 
 import tunnelers.core.player.Player;
-import javafx.geometry.Dimension2D;
 
 /**
  *
@@ -9,7 +8,7 @@ import javafx.geometry.Dimension2D;
  */
 public class Tank extends GameEntity {
 
-	public static final Dimension2D SIZE = new Dimension2D(7, 7);
+	public static final IntDimension SIZE = new IntDimension(7, 7);
 
 	public static final int MAX_HITPOINTS = 20,
 			MAX_ENERGY = 250,
@@ -30,7 +29,7 @@ public class Tank extends GameEntity {
 	}
 
 	@Override
-	public Dimension2D getSize() {
+	public IntDimension getSize() {
 		return SIZE;
 	}
 

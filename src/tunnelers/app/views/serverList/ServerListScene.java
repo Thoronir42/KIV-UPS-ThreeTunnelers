@@ -4,7 +4,6 @@ import tunnelers.app.views.serverList.GameRoomView.GameRoomViewWrapper;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,7 +20,6 @@ import javafx.scene.text.Font;
 import tunnelers.app.views.serverList.GameRoomView.GameRoomTreeTableView;
 import tunnelers.core.settings.Settings;
 import tunnelers.app.ATunnelersScene;
-import tunnelers.core.settings.NameManager;
 import tunnelers.app.views.serverList.GameRoomView.IGameRoomTreeViewItem;
 import tunnelers.core.gameRoom.IGameRoomInfo;
 
@@ -89,18 +87,10 @@ public class ServerListScene extends ATunnelersScene {
 		scene.topLabels = new HBox(4);
 		scene.topLabels.setAlignment(Pos.CENTER);
 
-		scene.tf_localName = new TextField();
-		scene.tf_localName.textProperty().bindBidirectional(scene.names.CurrentName);
+		Label lblServer = new Label(String.format("%s:%d", settings.getServerAddress(), settings.getServerPort()));
+		
 
-		Label lblName = new Label("Přezdívka:"),
-				lblServer = new Label(String.format("%s:%d", settings.getServerAddress(), settings.getServerPort()));
-
-		lblName.setCursor(Cursor.HAND);
-		lblName.setOnMouseClicked(e -> {
-			scene.tf_localName.setText(scene.names.generateNext());
-		});
-
-		scene.topLabels.getChildren().addAll(lblName, scene.tf_localName, lblServer);
+		scene.topLabels.getChildren().addAll(lblServer);
 
 		scene.topButtons.getChildren().add(scene.but_getLobbies);
 
@@ -125,7 +115,6 @@ public class ServerListScene extends ATunnelersScene {
 		return bottom;
 	}
 
-	protected TextField tf_localName;
 	protected Button but_getLobbies,
 			but_join;
 
@@ -136,12 +125,8 @@ public class ServerListScene extends ATunnelersScene {
 	protected HBox topButtons,
 			topLabels;
 
-	private final NameManager names;
-
 	public ServerListScene(Parent root, double width, double height) {
 		super(root, width, height, "Výpis serverů");
-
-		this.names = new NameManager(420);
 	}
 
 	private void refreshServerList() {
@@ -165,10 +150,6 @@ public class ServerListScene extends ATunnelersScene {
 			return;
 		}
 		if (e.getClickCount() == 2) {
-			String name = tf_localName.getText();
-			if (name.length() == 0) {
-				name = tf_localName.getPromptText();
-			}
 			this.getEngine().joinGame(selected);
 		}
 	}

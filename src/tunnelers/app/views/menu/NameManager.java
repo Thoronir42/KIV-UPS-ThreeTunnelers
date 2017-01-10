@@ -1,8 +1,6 @@
-package tunnelers.core.settings;
+package tunnelers.app.views.menu;
 
 import java.util.Random;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 
 /**
  *
@@ -22,8 +20,6 @@ public final class NameManager {
    
    
 	private Random rand;
-   
-	public final StringProperty CurrentName;
 
 	public NameManager(){
 	   this(System.currentTimeMillis());
@@ -31,7 +27,6 @@ public final class NameManager {
    
 	public NameManager(long seed){
 		this.rand = new Random(seed);
-		CurrentName = new SimpleStringProperty(generateNext());
 	}
    
 	public String generateNext() {
