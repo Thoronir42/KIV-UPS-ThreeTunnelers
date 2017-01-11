@@ -12,12 +12,12 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import tunnelers.app.ATunnelersScene;
-import tunnelers.app.render.colors.AColorScheme;
+import tunnelers.app.render.colors.FxDefaultColorScheme;
 import tunnelers.app.views.components.chat.SimpleChat;
 import tunnelers.core.chat.Chat;
+import tunnelers.core.player.Player;
 
 /**
  *
@@ -27,7 +27,7 @@ public class LobbyScene extends ATunnelersScene {
 
 	private static LobbyScene instance;
 
-	public static LobbyScene getInstance(Chat chat, AColorScheme colors, int capacity) throws IllegalStateException {
+	public static LobbyScene getInstance(Chat chat, FxDefaultColorScheme colors, int capacity) throws IllegalStateException {
 		if (instance == null) {
 			instance = createInstance(chat, colors, capacity);
 		}
@@ -39,16 +39,25 @@ public class LobbyScene extends ATunnelersScene {
 		instance = null;
 	}
 
-	private static LobbyScene createInstance(Chat chat, AColorScheme colors, int capacity) {
+	private static LobbyScene createInstance(Chat chat, FxDefaultColorScheme colors, int capacity) {
 		BorderPane content = new BorderPane();
 
 		content.setBackground(new Background(new BackgroundFill(new Color(0.11, 0.17, 0.69, 0.2), CornerRadii.EMPTY, Insets.EMPTY)));
 
 		LobbyScene scene = new LobbyScene(content, settings.getWindowWidth(), settings.getWindowHeight(), chat, colors, capacity);
-		content.setTop(scene.caption);
+		
+		scene.caption.prefWidthProperty().bind(scene.widthProperty());
 		scene.caption.setAlignment(Pos.TOP_RIGHT);
+		
+		
+		scene.playerListView.setPrefWidth(200);
+		scene.playerListView.setAlignment(Pos.CENTER);
+		
+		content.setTop(scene.caption);
+		
+		
 		content.setCenter(buildCenter(scene));
-		content.setLeft(buildSidePlayerList(scene, 190));
+		content.setLeft(scene.playerListView);
 
 		return scene;
 	}
@@ -59,7 +68,7 @@ public class LobbyScene extends ATunnelersScene {
 		center.setVgap(20);
 		center.setAlignment(Pos.CENTER);
 
-		SimpleChat chat = scene.chatView = new SimpleChat(scene.colors.playerColors());
+		SimpleChat chat = scene.chatView;
 		chat.box().setPrefSize(400, 260);
 
 		chat.setOnMessageSend(event -> {
@@ -92,32 +101,19 @@ public class LobbyScene extends ATunnelersScene {
 		return center;
 	}
 
-	private static VBox buildSidePlayerList(LobbyScene scene, int prefWidth) {
-		VBox listing = new VBox(4);
-		listing.setPrefWidth(prefWidth);
-		listing.setAlignment(Pos.CENTER);
-		
-		for (int i = 0; i < scene.playerViews.length; i++) {
-			PlayerView view = scene.playerViews[i] = new PlayerView();
-			view.set("Empty " + i, scene.colors.playerColors().get(i).color());
-			
-			listing.getChildren().add(view);
-		}
-		return listing;
-	}
-
-	protected SimpleChat chatView;
-	private final Label caption;
 	private final Chat chat;
-	private final AColorScheme colors;
-	private final PlayerView[] playerViews;
+	
+	protected final SimpleChat chatView;
+	private final Label caption;
+	private final PlayerListView playerListView;
 
-	public LobbyScene(Parent root, double width, double height, Chat chat, AColorScheme colors, int capacity) {
+	public LobbyScene(Parent root, double width, double height, Chat chat, FxDefaultColorScheme colors, int capacity) {
 		super(root, width, height, "Join Game");
 		this.caption = new Label("GAME ROM 6");
+		this.chatView = new SimpleChat(colors.getPlayerColorManager());
+		this.playerListView = new PlayerListView(colors.getPlayerColorManager(), capacity);
+		
 		this.chat = chat;
-		this.colors = colors;
-		this.playerViews = new PlayerView[capacity];
 	}
 
 	public void updateChatbox() {
@@ -125,5 +121,12 @@ public class LobbyScene extends ATunnelersScene {
 			this.chatView.setContent(chat.iterator());
 			System.out.println("Chat updated");
 		});
+	}
+	
+	public void setPlayers(Player[] players){
+		System.out.println("Setting players to lobby list view");
+		for(int i = 0; i < players.length; i++){
+			this.playerListView.setPlayer(i, players[i]);
+		}
 	}
 }

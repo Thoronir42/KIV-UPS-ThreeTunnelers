@@ -2,7 +2,6 @@ package tunnelers.app.render.rectangleLayout;
 
 import tunnelers.app.render.RenderLayout;
 import tunnelers.app.render.RenderLayoutException;
-import java.util.List;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
@@ -61,10 +60,12 @@ public class RectangularLayout extends RenderLayout {
 		Dimension2D playerAreaBounds = this.playerArea.getBounds();
 		int row = 0, col = 0;
 
-		for (int i = 0; i < players.length; i++) {
+		for (Player player : players) {
+			if (player == null) {
+				continue;
+			}
 			g.translate(col * playerAreaBounds.getWidth(), row * playerAreaBounds.getHeight());
-			this.playerArea.draw(g, playerAreaBounds, players[i].getTank());
-
+			this.playerArea.draw(g, playerAreaBounds, player.getTank());
 			if (++col >= cols) {
 				col = 0;
 				row++;

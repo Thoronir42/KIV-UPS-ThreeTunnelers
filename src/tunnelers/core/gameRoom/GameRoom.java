@@ -27,13 +27,13 @@ public class GameRoom {
 	public void initWarzone(Map map) {
 		Tank[] tanks = new Tank[players.length];
 		
-		
+		int baseIndex = 0;
 		for (int i = 0; i < players.length; i++) {
 			Player p  = players[i];
 			if(p == null){
 				continue;
 			}
-			IntPoint baseCenter = map.assignBase(i, p);
+			IntPoint baseCenter = map.assignBase(baseIndex++, p);
 			Tank tank = new Tank(p, baseCenter);
 			p.setTank(tank);
 			tanks[i] = tank;
@@ -72,18 +72,11 @@ public class GameRoom {
 	}
 
 	public Player getPlayer(int roomId) {
-		return this.players[roomId];
+		return this.players[roomId - 1];
 	}
 	
 	public void setPlayer(int roomId, Player player){
-		this.players[roomId] = player;
-	}
-	
-	public Player removePlayer(int roomId){
-		Player p = this.getPlayer(roomId);
-		this.setPlayer(roomId, null);
-		
-		return p;
+		this.players[roomId - 1] = player;
 	}
 	
 	public Warzone getWarzone() {

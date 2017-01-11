@@ -27,4 +27,6 @@ public interface IView {
 	public void prepareGame(Map map, Player[] players);
 	
 	public void appendGameRoomsToList(IGameRoomInfo[] rooms);
+	
+	public void updatePlayerList(Player[] players);
 }

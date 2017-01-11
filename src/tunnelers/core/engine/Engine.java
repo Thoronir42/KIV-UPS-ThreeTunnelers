@@ -36,10 +36,12 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	private final PersistentString connectionSecret;
 	private final GameRoomParser gameRoomParser;
 	
-	private GameRoom gameRoom;
+	private GameRoom currentGameRoom;
 	
 	private IView view;
 	private AControlsManager controls;
+	
+	public final IEngineQuerier Query;
 
 	public Engine(int version, Settings settings) {
 		this.version = version;
@@ -49,6 +51,18 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 		this.setStage(Stage.Menu);
 		this.tickRate = settings.getTickRate();
 		this.connectionSecret = new PersistentString(settings.getConnectionLogRelativePath());
+		
+		this.Query = this.getGameRoomFacade();
+	}
+	
+	private IEngineQuerier getGameRoomFacade(){
+		return new IEngineQuerier() {
+			
+			@Override
+			public void updatePlayers() {
+				view.updatePlayerList(getGameRoom().getPlayers());
+			}
+		};
 	}
 	
 	public void setView(IView view){
@@ -62,7 +76,7 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	}
 
 	public void setGameRoom(GameRoom gameRoom) {
-		this.gameRoom = gameRoom;
+		this.currentGameRoom = gameRoom;
 	}
 
 	public void setStage(Stage stage) {
@@ -71,13 +85,13 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 				this.currentStage = new MenuStage();
 				break;
 			case Warzone:
-				this.currentStage = new WarzoneStage(gameRoom);
+				this.currentStage = new WarzoneStage(currentGameRoom);
 				break;
 		}
 	}
 
 	public GameRoom getGameRoom() {
-		return gameRoom;
+		return currentGameRoom;
 	}
 
 	@Override
@@ -93,7 +107,7 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	}
 
 	public void handleInput(InputAction inp, int playerID, boolean pressed) {
-		Player p = this.gameRoom.getPlayer(playerID);
+		Player p = this.currentGameRoom.getPlayer(playerID);
 
 		if (p.getControls().setControlState(inp, pressed)) {
 			Command cmd = this.netadapter.createCommand(CommandType.GameControlsSet);
@@ -101,11 +115,11 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	}
 
 	public Chat getChat() {
-		return gameRoom.getChat();
+		return currentGameRoom.getChat();
 	}
 
 	public Warzone getWarzone() {
-		return this.gameRoom.getWarzone();
+		return this.currentGameRoom.getWarzone();
 	}
 
 	public void connect(String name, String addr, int port) {
@@ -168,10 +182,10 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 		}
 
 		// TODO: link this through network events
-		this.gameRoom = Mock.gameRoom(controls, view.getColorScheme().getPlayerColorManager());
-		this.gameRoom.initWarzone((new MapGenerator()).mockMap(20, 12, 8, this.gameRoom.getPlayerCount()));
+		this.currentGameRoom = Mock.gameRoom(controls, view.getColorScheme().getPlayerColorManager());
+		this.currentGameRoom.initWarzone((new MapGenerator()).mockMap(20, 12, 8, this.currentGameRoom.getPlayerCount()));
 
-		this.view.prepareGame(this.gameRoom.getWarzone().getMap(), this.gameRoom.getPlayers());
+		this.view.prepareGame(this.currentGameRoom.getWarzone().getMap(), this.currentGameRoom.getPlayers());
 
 		
 		this.view.alert("Probíhá připojování");

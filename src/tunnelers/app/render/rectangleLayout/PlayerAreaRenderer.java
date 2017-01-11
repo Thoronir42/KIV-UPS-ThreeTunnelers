@@ -45,7 +45,7 @@ public class PlayerAreaRenderer {
 			return;
 		}
 
-		Collection<Tank> tanks = renderer.getTanks();
+		Tank[] tanks = renderer.getTanks();
 		Collection<Projectile> projectiles = renderer.getProjectiles();
 
 		Affine defTransform = g.getTransform();
@@ -76,7 +76,7 @@ public class PlayerAreaRenderer {
 		g.fillRect(r.getX(), r.getY(), r.getWidth(), r.getHeight());
 	}
 
-	private void drawViewWindow(GraphicsContext g, IntPoint center, Collection<Tank> tanks, Collection<Projectile> projectiles) {
+	private void drawViewWindow(GraphicsContext g, IntPoint center, Tank[] tanks, Collection<Projectile> projectiles) {
 		Affine defTransform = g.getTransform();
 		MapRenderer mr = renderer.getMapRenderer();
 		
@@ -118,10 +118,13 @@ public class PlayerAreaRenderer {
 		return n;
 	}
 
-	private void drawTanks(GraphicsContext g, Rectangle render, Collection<Tank> tanks) {
+	private void drawTanks(GraphicsContext g, Rectangle render, Tank[] tanks) {
 		Affine defTransform = g.getTransform();
 
 		for (Tank tank : tanks) {
+			if(tank == null){
+				continue;
+			}
 			if (!render.contains(tank.getLocation().fx())) {
 				continue;
 			}

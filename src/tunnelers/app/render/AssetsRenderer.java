@@ -1,9 +1,7 @@
 package tunnelers.app.render;
 
 import tunnelers.app.render.colors.AColorScheme;
-import java.util.Collection;
 import java.util.HashMap;
-import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -62,14 +60,18 @@ public class AssetsRenderer extends ARenderer {
 		return projectile;
 	}
 
-	public void initGameAssets(Collection<Player> players) {
-		players.stream().forEach((player) -> {
+	public void initGameAssets(Player[] players) {
+		for(Player player : players){
+			if(player == null){
+				continue;
+			}
+			
 			Color c = colorScheme.playerColors().get(player).color();
 			Image[] tankImages = new Image[2];
 			tankImages[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.TANK_BODY, c);
 			tankImages[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.TANK_BODY_DIAG, c);
 			tankBody.put(player.getID(), tankImages);
-		});
+		}
 	}
 
 	public Image getTankBodyImage(int playerId, boolean diagonal) {
@@ -89,7 +91,7 @@ public class AssetsRenderer extends ARenderer {
 	}
 
 	public void drawTank(Tank t) {
-		Image iv_body = this.getTankBodyImage(t.getPlayerId(), t.getDirection().isDiagonal());
+		Image iv_body = this.getTankBodyImage(t.getPlayer().getID(), t.getDirection().isDiagonal());
 		Image iv_cannon = this.getTankCannonImage(t.getDirection().isDiagonal());
 
 		IntDimension size = Tank.SIZE;

@@ -1,11 +1,10 @@
 package tunnelers.app.render;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import tunnelers.app.assets.Assets;
-import tunnelers.app.render.colors.AColorScheme;
+import tunnelers.app.render.colors.FxDefaultColorScheme;
 import tunnelers.core.engine.Engine;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.Projectile;
@@ -19,14 +18,14 @@ import tunnelers.core.player.Player;
 public class FxRenderContainer {
 
 	private final Engine engine;
-	private final AColorScheme colorScheme;
+	private final FxDefaultColorScheme colorScheme;
 
 	private Dimension2D blockSize;
 
 	protected final MapRenderer mapRenderer;
 	protected final AssetsRenderer assetsRenderer;
 
-	public FxRenderContainer(Engine engine, AColorScheme colorScheme, Assets assets) {
+	public FxRenderContainer(Engine engine, FxDefaultColorScheme colorScheme, Assets assets) {
 		this.colorScheme = colorScheme;
 		this.engine = engine;
 
@@ -45,7 +44,7 @@ public class FxRenderContainer {
 		this.assetsRenderer.setGraphicsContext(context);
 	}
 
-	public AColorScheme getColorScheme() {
+	public FxDefaultColorScheme getColorScheme() {
 		return this.colorScheme;
 	}
 
@@ -70,11 +69,12 @@ public class FxRenderContainer {
 	 *
 	 * @return Collection of tanks to be rendered
 	 */
-	public Collection<Tank> getTanks() {
+	public Tank[] getTanks() {
 		Player[] players = this.getPlayers();
-		Collection<Tank> tanks = new ArrayList<>(players.length);
-		for (Player p : players) {
-			tanks.add(p.getTank());
+		Tank[] tanks = new Tank[players.length];
+		for (int i = 0; i < players.length; i++) {
+			Player p = players[i];
+			tanks[i] = p == null ? null : p.getTank();
 		};
 
 		return tanks;

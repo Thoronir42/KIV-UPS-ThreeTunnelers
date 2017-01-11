@@ -1,14 +1,13 @@
 package tunnelers.app.render.colors;
 
 import javafx.scene.paint.Color;
-import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.model.map.Block;
 
 /**
  *
  * @author Stepan
  */
-public class DefaultColorScheme extends AColorScheme {
+public class FxDefaultColorScheme extends AColorScheme {
 
 	private final Color[] breakable = {Color.BURLYWOOD, Color.BURLYWOOD.interpolate(Color.BROWN, 0.1)};
 	private final Color[] tough = {Color.DARKGREY};
@@ -20,7 +19,7 @@ public class DefaultColorScheme extends AColorScheme {
 
 	protected ILocationRandomizer randomizer;
 
-	public DefaultColorScheme(FxPlayerColorManager playerColors) {
+	public FxDefaultColorScheme(FxPlayerColorManager playerColors) {
 		super(playerColors);
 		this.randomizer = (int x, int y) -> 0;
 	}
@@ -72,7 +71,7 @@ public class DefaultColorScheme extends AColorScheme {
 	}
 
 	@Override
-	public PlayerColorManager getPlayerColorManager() {
+	public FxPlayerColorManager getPlayerColorManager() {
 		return this.playerColors;
 	}
 }

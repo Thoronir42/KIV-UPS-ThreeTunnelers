@@ -32,12 +32,15 @@ public class WarzoneStage extends AEngineStage {
 	public void update(long tick) {
 		if (tick % 3 == 0) {
 			Player[] players = this.gameRoom.getPlayers();
-			for(Player p : players){
+			for (Player p : players) {
+				if (p == null) {
+					continue;
+				}
 				this.updateTank(p.getTank(), p.getControls());
 			};
 
 		}
-		if(tick % 15 == 0){
+		if (tick % 15 == 0) {
 			Mock.controls(tick);
 		}
 
@@ -79,10 +82,10 @@ public class WarzoneStage extends AEngineStage {
 
 	private void updateProjectiles(Collection<Projectile> projectiles, long tick) {
 		Map map = this.gameRoom.getWarzone().getMap();
-		
+
 		for (Iterator<Projectile> it = projectiles.iterator(); it.hasNext();) {
 			Projectile p = it.next();
-			
+
 			IntPoint newLocation = p.getLocation().copy();
 			newLocation.add(p.getDirection().asPoint());
 

@@ -12,7 +12,7 @@ import tunnelers.app.views.warzone.PlayScene;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.render.FxRenderContainer;
 import tunnelers.app.render.colors.AColorScheme;
-import tunnelers.app.render.colors.DefaultColorScheme;
+import tunnelers.app.render.colors.FxDefaultColorScheme;
 import tunnelers.app.render.colors.FxPlayerColorManager;
 import tunnelers.app.views.lobby.LobbyScene;
 import tunnelers.app.views.menu.MainMenuScene;
@@ -41,7 +41,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	protected final FxRenderContainer renderer;
 
 	protected ATunnelersScene currentScene;
-	protected final DefaultColorScheme colorScheme;
+	protected final FxDefaultColorScheme colorScheme;
 
 	protected final Engine engine;
 	protected final Assets assets;
@@ -55,20 +55,20 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 
 	public TunnelersStage(Engine engine, Assets assets, int supportedControlSchemes) {
 		super();
-		
+
 		this.engine = engine;
 		this.assets = assets;
-		
-		colorScheme = new DefaultColorScheme(new FxPlayerColorManager());
+
+		colorScheme = new FxDefaultColorScheme(new FxPlayerColorManager());
 		colorScheme.setRandomizer((int x, int y) -> {
 			return ((int) Math.abs(Math.sin((x + 2) * 7) * 6 + Math.cos(y * 21) * 6));
 		});
-		
+
 		this.controlsManager = new FxControlsManager(supportedControlSchemes);
 		this.controlsManager.setOnInputChanged((event) -> {
 			this.engine.handleInput(event.getInput(), event.getPlayerId(), event.isPressed());
 		});
-		
+
 		this.renderer = new FxRenderContainer(engine, colorScheme, assets);
 
 		this.ROUTER = this.getRouter();
@@ -115,7 +115,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	@Override
 	public void prepareGame(Map map, Player[] players) {
 		this.renderer.getMapRenderer().setMap(map);
-		this.renderer.getAssetsRenderer().initGameAssets(Arrays.asList(players));
+		this.renderer.getAssetsRenderer().initGameAssets(players);
 	}
 
 	@Override
@@ -133,6 +133,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 					break;
 				case Lobby:
 					this.changeScene(LobbyScene.getInstance(this.engine.getChat(), this.renderer.getColorScheme(), engine.getGameRoom().getCapacity()));
+					this.updatePlayerList(this.engine.getGameRoom().getPlayers());
 					break;
 				case Game:
 					PlayScene sc = PlayScene.getInstance(controlsManager);
@@ -145,14 +146,14 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 
 	@Override
 	public void alert(String message) {
-		this.currentScene.flash.display(message);
+		this.currentScene.flashDisplay(message);
 	}
 
 	@Override
 	public AColorScheme getColorScheme() {
 		return colorScheme;
 	}
-	
+
 	@Override
 	public AControlsManager getControlsManager() {
 		return this.controlsManager;
@@ -162,9 +163,18 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	public void appendGameRoomsToList(IGameRoomInfo[] rooms) {
 		if (!(this.currentScene instanceof ServerListScene)) {
 			System.err.println("Can't append game rooms, wrong scene");
+			return;
 		}
-		((ServerListScene)this.currentScene).appendGameRooms(rooms);
+		((ServerListScene) this.currentScene).appendGameRooms(rooms);
 	}
 
-	
+	@Override
+	public void updatePlayerList(Player[] players) {
+		if (!(this.currentScene instanceof LobbyScene)) {
+			System.err.println("Can't update player list, wrong scene");
+			return;
+		}
+		((LobbyScene) this.currentScene).setPlayers(players);
+	}
+
 }

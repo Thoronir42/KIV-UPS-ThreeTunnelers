@@ -69,10 +69,6 @@ public abstract class GameEntity  implements IColorable{
 	public int getColor() {
 		return this.player.getColor();
 	}
-	
-	public int getPlayerId(){
-		return this.player.getID();
-	}
 
 	public Direction getDirection() {
 		return direction;

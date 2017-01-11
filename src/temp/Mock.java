@@ -1,7 +1,6 @@
 package temp;
 
 import generic.RNG;
-import java.util.ArrayList;
 import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.IGameRoomInfo;
@@ -33,20 +32,19 @@ public class Mock {
 			new NetClient("Obama"),};
 
 		Controls[] playerControls = csmgr.getAllSchemes();
-		int iPlayer = 0;
-		ArrayList<Player> players = new ArrayList<>();
+		
+		Player[] players = new Player[]{
+			new Player(1, colors.useRandomColor().intValue(), clients[0], playerControls[0]),
+			null,
+			new Player(3, colors.useRandomColor().intValue(), clients[1], MOCKED_CONTROLS[0]),
+			new Player(4, colors.useRandomColor().intValue(), clients[2], MOCKED_CONTROLS[1])
+		};
 
-		for (Controls c : playerControls) {
-			players.add(new Player(iPlayer++, colors.useRandomColor().intValue(), clients[0], c));
-		}
+		GameRoom c = new GameRoom(4, 12);
 
-		players.add(new Player(iPlayer++, colors.useRandomColor().intValue(), clients[1], MOCKED_CONTROLS[0]));
-		players.add(new Player(iPlayer++, colors.useRandomColor().intValue(), clients[2], MOCKED_CONTROLS[1]));
-
-		GameRoom c = new GameRoom(players.size(), 12);
-
-		for (Player p : players) {
-			c.setPlayer(p.getID(), p);
+		
+		for (int i = 1; i <= 4; i++) {
+			c.setPlayer(i, players[i - 1]);
 		}
 
 		return c;
