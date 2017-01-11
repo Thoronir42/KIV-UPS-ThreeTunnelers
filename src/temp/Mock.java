@@ -34,10 +34,10 @@ public class Mock {
 		Controls[] playerControls = csmgr.getAllSchemes();
 		
 		Player[] players = new Player[]{
-			new Player(1, colors.useRandomColor().intValue(), clients[0], playerControls[0]),
+			new Player(colors.useRandomColor().intValue(), clients[0], playerControls[0]),
 			null,
-			new Player(3, colors.useRandomColor().intValue(), clients[1], MOCKED_CONTROLS[0]),
-			new Player(4, colors.useRandomColor().intValue(), clients[2], MOCKED_CONTROLS[1])
+			new Player(colors.useRandomColor().intValue(), clients[1], MOCKED_CONTROLS[0]),
+			new Player(colors.useRandomColor().intValue(), clients[2], MOCKED_CONTROLS[1])
 		};
 
 		GameRoom c = new GameRoom(4, 12);

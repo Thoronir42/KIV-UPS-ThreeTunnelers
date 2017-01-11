@@ -5,7 +5,6 @@ import temp.mapGenerator.MapGenerator;
 import temp.Mock;
 import tunnelers.common.IUpdatable;
 import tunnelers.network.NetAdapter;
-import tunnelers.core.player.Player;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.player.controls.InputAction;
 import tunnelers.core.gameRoom.Warzone;
@@ -16,7 +15,9 @@ import tunnelers.core.engine.stage.MenuStage;
 import tunnelers.core.engine.stage.WarzoneStage;
 import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.IGameRoomInfo;
+import tunnelers.core.model.map.Map;
 import tunnelers.core.player.controls.AControlsManager;
+import tunnelers.core.player.controls.Controls;
 import tunnelers.core.settings.Settings;
 import tunnelers.network.INetCommandHandler;
 import tunnelers.network.command.Command;
@@ -93,10 +94,10 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 		this.netadapter.shutdown();
 	}
 
-	public void handleInput(InputAction inp, int playerID, boolean pressed) {
-		Player p = this.currentGameRoom.getPlayer(playerID);
+	public void handleInput(InputAction inp, int controlsID, boolean pressed) {
+		Controls controlsScheme = this.controls.getScheme((byte)controlsID);
 
-		if (p.getControls().setControlState(inp, pressed)) {
+		if (controlsScheme.setControlState(inp, pressed)) {
 			Command cmd = this.netadapter.createCommand(CommandType.GameControlsSet);
 		}
 	}
@@ -161,8 +162,8 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 
 	public void refreshServerList() {
 		int n = 16;
-		String lobbiesString = Mock.serverListString(16);
-		IGameRoomInfo[] rooms = this.gameRoomParser.parse(16, lobbiesString.substring(4));
+		String lobbiesString = Mock.serverListString(n);
+		IGameRoomInfo[] rooms = this.gameRoomParser.parse(n, lobbiesString.substring(4));
 		this.view.appendGameRoomsToList(rooms);
 	}
 
@@ -176,13 +177,20 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 
 		// TODO: link this through network events
 		this.currentGameRoom = Mock.gameRoom(controls, playerColorManager);
-		this.currentGameRoom.initWarzone((new MapGenerator()).mockMap(20, 12, 8, this.currentGameRoom.getPlayerCount()));
+		
+		System.out.println("Generating map");
+		Map map = (new MapGenerator()).mockMap(20, 12, 8, this.currentGameRoom.getPlayerCount());
+		
+		System.out.println("Initializing warzone");
+		this.currentGameRoom.initWarzone(map);
 
+		System.out.println("Preparing game");
+		
 		this.view.prepareGame(this.currentGameRoom.getWarzone().getMap(), this.currentGameRoom.getPlayers());
-
+		
 		
 		this.view.alert("Probíhá připojování");
-
+		
 		this.view.showScene(IView.Scene.Lobby);
 	}
 

@@ -3,7 +3,6 @@ package tunnelers.core.player;
 import tunnelers.core.colors.IColorable;
 import tunnelers.core.player.controls.Controls;
 import tunnelers.core.chat.IChatParticipant;
-import tunnelers.core.model.entities.Tank;
 import tunnelers.network.NetClient;
 
 /**
@@ -12,19 +11,15 @@ import tunnelers.network.NetClient;
  */
 public final class Player implements IChatParticipant, IColorable{
 
-	private final int id;
-	
 	private final NetClient client;
 	private final Controls controls;
 	private int color;
 	
-	public Player(int playerID, int colorID, NetClient client, Controls controls) {
-		this.id = playerID;
+	public Player(int colorID, NetClient client, Controls controls) {
 		this.color = colorID;
 		this.client = client;
 
 		this.controls = controls;
-		this.controls.setPlayerID(this.id);
 	}
 
 	
@@ -42,17 +37,13 @@ public final class Player implements IChatParticipant, IColorable{
 		return this.client.getName(this);
 	}
 
-	public int getID() {
-		return this.id;
-	}
-
 	public Controls getControls() {
 		return controls;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("[%2d] %16s (%s)", this.id, this.getName(), this.color);
+		return String.format("Player %16s (color=%02d)", this.getName(), this.color);
 	}
 
 }

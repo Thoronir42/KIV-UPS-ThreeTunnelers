@@ -16,7 +16,6 @@ public abstract class GameEntity  implements IColorable{
 		this.direction = direction;
 		this.player = player;
 		this.setLocation(location);
-		
 	}
 
 	public abstract IntDimension getSize();

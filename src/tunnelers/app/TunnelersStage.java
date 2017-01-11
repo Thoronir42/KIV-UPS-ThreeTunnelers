@@ -65,13 +65,12 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 
 		this.controlsManager = new FxControlsManager(supportedControlSchemes);
 		this.controlsManager.setOnInputChanged((event) -> {
-			this.engine.handleInput(event.getInput(), event.getPlayerId(), event.isPressed());
+			this.engine.handleInput(event.getInput(), event.getControlsId(), event.isPressed());
 		});
 
 		this.renderer = new FxRenderContainer(engine, colorScheme, assets);
-		
+
 		this.ROUTER = this.getRouter();
-		
 	}
 
 	private HashMap<Class, IView.Scene> getRouter() {
@@ -120,8 +119,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 
 	@Override
 	public void showScene(Scene scene) {
-		
-		
+
 		Platform.runLater(() -> {
 			Runnable afterChange = null;
 			ATunnelersScene newScene = null;
@@ -147,13 +145,13 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 					newScene = sc;
 					break;
 			}
-			if(newScene == null){
+			if (newScene == null) {
 				System.err.println("Error switching scene to " + scene.toString());
 				return;
 			}
 			newScene.setAfterFX(renderer.getAfterFX());
 			this.changeScene(newScene);
-			if(afterChange != null){
+			if (afterChange != null) {
 				afterChange.run();
 			}
 		});

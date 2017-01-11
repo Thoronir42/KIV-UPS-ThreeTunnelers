@@ -116,8 +116,17 @@ Pro zjednodušení popisu funkcí systémů jsou předpokládány následující
 Mapa představuje oblast, o kterou se bojuje. Oblast se skládá z (W * H) sekcí, takzvaných chunků, stejné velikosti N. V oblasti je několik sekcí, které představují základnu.
 \subsubsection*{Chunk}
 Chunk je malý útvar skládající se z bloků, který reprezentuje terén oblasti. Některé chunky obsahují seskupení bloků představující hráčskou základnu, u těchto chunků je nastaven identifikátor odpovídajícího hráče.
+\subsubsection*{Blok}
+Blok na mapě je základní jednotku mapy. Jedná se pouze o číselnou hodnotu identifikující typ bloku, možné hodnoty, kterých blok může nabývat jsou: Prázdný blok = 0, Zemina = 1, Kámen = 2, Zeď základny = 3.
+\subsubsection*{Klient}
+Klient je struktura reprezentující klientskou aplikaci, pomocí které hráči vstupují a ovládají hru. Sdílené informace v této struktuře jsou klientské jméno a odkazy na hráče v místnosti.
+\subsubsection*{Hráč}
+Hráč je skupina informací o účastníkovi boje o oblast. Tato struktura je oddělena od Klienta pro jednodušší realizaci více hráčů v jedné spuštěné aplikaci. Struktura hráče obsahuje odkaz na klienta, kterému náleží, ovládání, což je struktura uchovávající stav stisknutých vstupů, a číslo barvy tohoto hráče.
 \subsubsection*{Tank}
 Tank, rozlehlý 7*7 bloků, je struktura definující hráčem ovládaný prvek v oblasti. Tank je definován hráčem, kterému přísluší, svojí polohou na mapě a směrem, kam je natočen. Dále stav tanku definují jeho aktuální počet bodů zásahů, které zbývají do jeho zničení, zbývající energií a časem zbývajícím do možností vystřelení dalšího projektilu.
+\subsubsection*{Projektil}
+Projektil zabírající oblast pouze 3 bloky je stejně jako Tank definován hráčem, kterému náleží, svojí polohou na mapě a směrem kam je natočen a kam letí.
+
 
 
 

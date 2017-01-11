@@ -76,6 +76,8 @@ public class Map {
 		}
 		chunkPosition.multiply(chunkSize);
 		chunkPosition.add(new IntPoint(chunkSize / 2, chunkSize / 2));
+		
+		System.out.format("PlayerBase Chunk %d assigned to %s", i, p.getName());
 		return chunkPosition;
 	}
 

@@ -62,6 +62,6 @@ public class Chunk {
 	}
 
 	public boolean isBase() {
-		return this.assignedPlayer == null;
+		return this.assignedPlayer != null;
 	}
 }

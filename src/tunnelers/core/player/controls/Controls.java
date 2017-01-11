@@ -9,7 +9,6 @@ import tunnelers.core.model.entities.Direction;
 public final class Controls {
 
 	protected final byte schemeID;
-	protected int playerID;
 	
 	private final boolean[] heldKeys;
 	
@@ -29,14 +28,6 @@ public final class Controls {
 
 	public byte getID() {
 		return this.schemeID;
-	}
-
-	public int getPlayerID() {
-		return playerID;
-	}
-
-	public void setPlayerID(int id) {
-		this.playerID = id;
 	}
 	
 	

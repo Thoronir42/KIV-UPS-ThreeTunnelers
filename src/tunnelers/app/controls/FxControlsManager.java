@@ -74,11 +74,11 @@ public class FxControlsManager extends AControlsManager {
 		if (pi == null) {
 			return;
 		}
-		Controls controlSchemeId = pi.getControlScheme();
+		Controls controls = pi.getControlScheme();
 		InputAction inp = pi.getInput();
 
 		if (this.onInputChanged != null) {
-			this.onInputChanged.handle(new InputEvent(controlSchemeId.getPlayerID(), inp, pressed));
+			this.onInputChanged.handle(new InputEvent(controls, inp, pressed));
 		}
 	}
 

@@ -26,7 +26,7 @@ public class AssetsRenderer extends ARenderer {
 			CBO_3 = new Point2D(0, 1);
 	private final Assets assets;
 
-	final HashMap<Integer, Image[]> tankBody;
+	final HashMap<Player, Image[]> tankBody;
 
 	final Image[] assetCannon;
 
@@ -70,11 +70,11 @@ public class AssetsRenderer extends ARenderer {
 			Image[] tankImages = new Image[2];
 			tankImages[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.TANK_BODY, c);
 			tankImages[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.TANK_BODY_DIAG, c);
-			tankBody.put(player.getID(), tankImages);
+			tankBody.put(player, tankImages);
 		}
 	}
 
-	public Image getTankBodyImage(int playerId, boolean diagonal) {
+	public Image getTankBodyImage(Player playerId, boolean diagonal) {
 		return imgDiagSwitch(tankBody.get(playerId), diagonal);
 	}
 
@@ -91,7 +91,7 @@ public class AssetsRenderer extends ARenderer {
 	}
 
 	public void drawTank(Tank t) {
-		Image iv_body = this.getTankBodyImage(t.getPlayer().getID(), t.getDirection().isDiagonal());
+		Image iv_body = this.getTankBodyImage(t.getPlayer(), t.getDirection().isDiagonal());
 		Image iv_cannon = this.getTankCannonImage(t.getDirection().isDiagonal());
 
 		IntDimension size = Tank.SIZE;
