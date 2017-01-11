@@ -8,7 +8,7 @@ import tunnelers.core.player.Player;
  */
 public class Projectile extends GameEntity {
 
-	private static final IntDimension SHOT_HORIZONTAL = new IntDimension(3, 1),
+	private static final IntDimension SHOT_VERTICAL = new IntDimension(1, 3),
 			SHOT_DIAGONAL = new IntDimension(3, 3);
 
 	public Projectile(IntPoint location, Direction direction, Player player) {
@@ -17,6 +17,6 @@ public class Projectile extends GameEntity {
 
 	@Override
 	public IntDimension getSize() {
-		return this.direction.isDiagonal() ? SHOT_DIAGONAL : SHOT_HORIZONTAL;
+		return this.direction.isDiagonal() ? SHOT_DIAGONAL : SHOT_VERTICAL;
 	}
 }

@@ -24,10 +24,14 @@ public final class TunnelersApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		Settings settings = Settings.getInstance();
-		settings.addConfigFile(System.getProperty("user.dir") + "\\config\\settings.cfg");
+		String userDir = System.getProperty("user.dir");
+		
+		settings.addConfigFile(userDir + "\\config\\settings.cfg");
 		settings.init();
 
 		Assets assets = new Assets();
+//		Assets assets = new Assets(userDir + "\\resources\\");
+		
 		assets.init();
 
 		this.imp = new Impulser(settings.getTickRate());

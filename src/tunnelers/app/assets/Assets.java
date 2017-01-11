@@ -1,7 +1,5 @@
 package tunnelers.app.assets;
 
-import java.util.Arrays;
-import java.util.Collection;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
@@ -9,34 +7,32 @@ import javafx.scene.paint.Color;
  *
  * @author Stepan
  */
-public class Assets{
+public class Assets {
 
 	public static int IMAGE_UPSCALE_MULT = 10;
-	
+
 	private final Image[] RESOURCES;
 
-	private final Collection<IAssetImagesProvider> imageProviders;
+	private final IAssetImagesProvider[] imageProviders;
 
 	public Assets() {
-		this(Arrays.asList(
-				new IAssetImagesProvider[]{
-					new StandardImageProvider(),}
-		));
+		this(new IAssetImagesProvider[]{
+			new StandardImageProvider(),}
+		);
 	}
 
 	public Assets(String imagesPath) {
-		this(Arrays.asList(
-				new IAssetImagesProvider[]{
-					new FileSystemImageProvider(imagesPath),
-					new StandardImageProvider(),}
-		));
+		this(new IAssetImagesProvider[]{
+			new FileSystemImageProvider(imagesPath),
+			new StandardImageProvider(),}
+		);
 	}
 
-	private Assets(Collection<IAssetImagesProvider> imageProviders) {
+	private Assets(IAssetImagesProvider[] imageProviders) {
 		RESOURCES = new Image[IAssetImagesProvider.IMAGES_COUNT];
 		this.imageProviders = imageProviders;
 	}
-	
+
 	public Image getImage(int type) {
 		if (type < 0 || type >= IAssetImagesProvider.IMAGES_COUNT) {
 			throw new IllegalArgumentException("Unrecognised resource const: " + type);

@@ -5,11 +5,11 @@ package tunnelers.core.model.entities;
  * @author Stepan
  */
 public enum Direction {
-
-	North(0, -1, false, 3), NorthEast(1, -1, true, 0),
-	East(1, 0, false, 0), SouthEast(1, 1, true, 1),
-	South(0, 1, false, 1), SouthWest(-1, 1, true, 2),
-	West(-1, 0, false, 2), NorthWest(-1, -1, true, 3);
+	Undefined(0, 0, 0, false),
+	North(1, 0, -1, false), NorthEast(2, 1, -1, true),
+	East(3, 1, 0, false), SouthEast(4, 1, 1, true),
+	South(5, 0, 1, false), SouthWest(6, -1, 1, true),
+	West(7, -1, 0, false), NorthWest(8, -1, -1, true);
 
 	private static final Direction[][] alignMent = {
 		{NorthWest, North, NorthEast},
@@ -18,28 +18,27 @@ public enum Direction {
 	};
 
 	public static Direction getDirection(int X, int Y) {
-		if ((X < -1 || X > 1) || (Y < -1 || Y > 1)) {
-			return null;
-		}
+		X = (int) Math.signum(X);
+		Y = (int) Math.signum(Y);
 		return alignMent[Y + 1][X + 1];
 	}
 
+	private final int intval;
 	private final IntPoint direction;
 	private final boolean diagonal;
-	private final int rotation;
 
-	private Direction(int x, int y, boolean offset, int rotation) {
+	private Direction(int intval, int x, int y, boolean diagonal) {
+		this.intval = intval;
 		this.direction = new IntPoint(x, y);
-		this.diagonal = offset;
-		this.rotation = rotation;
+		this.diagonal = diagonal;
 	}
 
 	public boolean isDiagonal() {
 		return this.diagonal;
 	}
 
-	public int getRotation() {
-		return this.rotation;
+	public int intVal() {
+		return this.intval;
 	}
 
 	public IntPoint asPoint() {
