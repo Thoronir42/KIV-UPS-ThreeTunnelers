@@ -10,6 +10,8 @@ import tunnelers.network.NetClient;
 
 public class GameRoom {
 
+	private GameRoomState state;
+	
 	private final NetClient[] clients;
 	private final Player[] players;
 
@@ -18,6 +20,8 @@ public class GameRoom {
 	private Warzone warzone;
 
 	public GameRoom(int capacity, int chatCapacity) {
+		this.state = GameRoomState.Idle;
+		
 		this.clients = new NetClient[capacity];
 		this.players = new Player[capacity];
 		this.chat = new Chat(chatCapacity);

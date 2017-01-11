@@ -44,6 +44,7 @@ public enum CommandType {
 	MapSpecification(140),
 	MapChunkData(141),
 	MapChunkRequest(142),
+	MapBlocksChanges(143),
 	//    GAME-ENTITY CONTROLS
 	GameControlsSet(201),
 	GameTankRequest(210),

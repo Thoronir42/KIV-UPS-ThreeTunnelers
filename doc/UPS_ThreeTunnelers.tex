@@ -122,11 +122,16 @@ Blok na mapě je základní jednotku mapy. Jedná se pouze o číselnou hodnotu 
 Klient je struktura reprezentující klientskou aplikaci, pomocí které hráči vstupují a ovládají hru. Sdílené informace v této struktuře jsou klientské jméno a odkazy na hráče v místnosti.
 \subsubsection*{Hráč}
 Hráč je skupina informací o účastníkovi boje o oblast. Tato struktura je oddělena od Klienta pro jednodušší realizaci více hráčů v jedné spuštěné aplikaci. Struktura hráče obsahuje odkaz na klienta, kterému náleží, ovládání, což je struktura uchovávající stav stisknutých vstupů, a číslo barvy tohoto hráče.
+\subsubsection*{Směr}
+Směr je výčet identifikující jeden z 8 světových směrů reprezentovaný celočíselnou hodnotou. Možné hodnoty jsou: 0 = Žádný směr, 1 = Sever, 2 = Severovýchod, 3 = Východ, 4 = Jihovýchod, 5 = Jih, 6 = Jihozápad, 7 = Západ, 8 = Severozápad.
 \subsubsection*{Tank}
 Tank, rozlehlý 7*7 bloků, je struktura definující hráčem ovládaný prvek v oblasti. Tank je definován hráčem, kterému přísluší, svojí polohou na mapě a směrem, kam je natočen. Dále stav tanku definují jeho aktuální počet bodů zásahů, které zbývají do jeho zničení, zbývající energií a časem zbývajícím do možností vystřelení dalšího projektilu.
 \subsubsection*{Projektil}
 Projektil zabírající oblast pouze 3 bloky je stejně jako Tank definován hráčem, kterému náleží, svojí polohou na mapě a směrem kam je natočen a kam letí.
-
+\subsubsection{Herní místnost}
+Herní místnost je kontejner nesoucí informace aktuálním stavu místnosti. Stavy místností jsou reprezentovány celočíselnými hodnotami 0 = Čeká, 1 = Lobby, 2 = Bitva, 3 = Souhrny. Dále herní místnost nese informace klientech, kteří se účastní dění v místnosti, o hráčích účastnících se hry a v určitém stavu i o bitevní zóně.
+\subsubsection*{Bitevní zóna}
+Bitevní zóna je střed dění a zde se uchovávají informace o mapě definující oblast, o tancích v oblasti a o projektilech létajících oblastí.
 
 
 
@@ -197,6 +202,7 @@ Protokol je bezestavový, což znamená, že žádná ze zpráv nevyžaduje okam
 140 & Specifikace mapy & S & (XX)(XX)(XX) - velikost chunku, šířka v chuncích, výška v chuncích \\ \hline
 141 & Chunková data & S & (XX)(XX)(chunková data)\\ \hline
 142 & Požadavek o chunk & K & (XX)(XX)(XX) - X chunku, Y chunku, checksum chunku \\ \hline
+143 & Seznam změn bloků & S & (XX)((XXXX)(XXXX)(XX)) * n - počet změn bloků obsažených ve zprávě n, n * (pozice X, pozice Y, nový blok) \\ \hline
 201 & Nastavení ovládání & K/S & (XX)(XX) - K: číslo hráče klienta, bitová mapa stisklých kláves \newline S: (XX)(XX) - číslo hráče v místnosti, bitová mapa stisklých kláves \\ \hline
 210 & Požadavek o informace tanku & K & (XX) - číslo hráče v místnosti \\ \hline
 211 & Informace o tanku & S & (XX)(XXXX)(XXXX)(XX)(XX)(XX)( - číslo hráče v místnosti, pozice X, pozice Y, směr, zdraví, energie tanku \\ \hline
