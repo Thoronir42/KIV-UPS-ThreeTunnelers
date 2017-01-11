@@ -3,7 +3,6 @@ package temp.mapGenerator;
 import generic.RNG;
 import tunnelers.core.model.map.Block;
 import tunnelers.core.model.map.Chunk;
-import tunnelers.core.model.map.ChunkType;
 import tunnelers.core.model.map.Map;
 
 public class MapBasePlanter implements IMapGeneratorStep {
@@ -40,7 +39,6 @@ public class MapBasePlanter implements IMapGeneratorStep {
 	}
 
 	private Chunk plantBaseOn(Chunk chunk, int chunkSize) {
-		chunk.setType(ChunkType.Base);
 		int padding = 3;
 
 		int top = padding, left = top, bottom = chunkSize - padding, right = bottom;

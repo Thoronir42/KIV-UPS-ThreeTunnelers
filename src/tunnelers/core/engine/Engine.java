@@ -10,6 +10,7 @@ import tunnelers.core.chat.Chat;
 import tunnelers.core.player.controls.InputAction;
 import tunnelers.core.gameRoom.Warzone;
 import tunnelers.core.chat.ServerMessenger;
+import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;
 import tunnelers.core.engine.stage.WarzoneStage;
@@ -167,9 +168,11 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 			this.view.alert("Hra je již plná");
 			return;
 		}
+		PlayerColorManager playerColorManager = view.getColorScheme().getPlayerColorManager();
+		playerColorManager.resetColorUsage();
 
 		// TODO: link this through network events
-		this.currentGameRoom = Mock.gameRoom(controls, view.getColorScheme().getPlayerColorManager());
+		this.currentGameRoom = Mock.gameRoom(controls, playerColorManager);
 		this.currentGameRoom.initWarzone((new MapGenerator()).mockMap(20, 12, 8, this.currentGameRoom.getPlayerCount()));
 
 		this.view.prepareGame(this.currentGameRoom.getWarzone().getMap(), this.currentGameRoom.getPlayers());

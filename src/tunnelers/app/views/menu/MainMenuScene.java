@@ -79,9 +79,9 @@ public class MainMenuScene extends ATunnelersScene {
 		txt_flash.setPromptText("Zpráva k zobrazení");
 		Button but_flashDisplay = new Button("Zobrazit");
 		Button but_flashClear = new Button("Schovat");
-		
+
 		but_flashDisplay.setOnAction(e -> {
-			if(!"".equals(txt_flash.getText().trim())){
+			if (!"".equals(txt_flash.getText().trim())) {
 				scene.flashDisplay(txt_flash.getText());
 				txt_flash.setText("");
 			}
@@ -89,12 +89,12 @@ public class MainMenuScene extends ATunnelersScene {
 		but_flashClear.setOnAction(e -> {
 			scene.flashClear();
 		});
-		
+
 		GridPane flasher = new GridPane();
 		flasher.add(txt_flash, 0, 0, 2, 1);
 		flasher.add(but_flashDisplay, 0, 1);
 		flasher.add(but_flashClear, 1, 1);
-		
+
 		content.add(flasher, 1, 0, 1, 3);
 
 		return scene;

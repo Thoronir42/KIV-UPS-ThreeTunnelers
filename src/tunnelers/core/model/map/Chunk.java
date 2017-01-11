@@ -9,7 +9,6 @@ import tunnelers.core.player.Player;
  */
 public class Chunk {
 	private final int chunkSize;
-	protected ChunkType type;
 	
 	protected Block[] chunkData;
 	protected Player assignedPlayer;
@@ -17,8 +16,6 @@ public class Chunk {
 	public Chunk(int chunkSize) {
 		this.chunkSize = chunkSize;
 		this.chunkData = this.createBlockArray(chunkSize);
-		
-		this.type = ChunkType.Standard;
 	}
 
 	private Block[] createBlockArray(int chunkSize) {
@@ -26,10 +23,6 @@ public class Chunk {
 		Block[] array = new Block[blockInChunk];
 		Arrays.fill(array, 0, blockInChunk, Block.Breakable);
 		return array;
-	}
-
-	public void setType(ChunkType type) {
-		this.type = type;
 	}
 
 	void assignPlayer(Player p) {
@@ -69,6 +62,6 @@ public class Chunk {
 	}
 
 	public boolean isBase() {
-		return this.type == ChunkType.Base;
+		return this.assignedPlayer == null;
 	}
 }

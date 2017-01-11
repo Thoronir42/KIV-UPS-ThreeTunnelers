@@ -49,8 +49,8 @@ public class PlayerColorManager<PCC extends PlayerColor> {
 			return useColor(null, colorId);
 		}
 	}
-	
-	public PCC useRandomColor(){
+
+	public PCC useRandomColor() {
 		return this.useColor(null, RNG.getRandInt(this.colors.length));
 	}
 
@@ -77,5 +77,11 @@ public class PlayerColorManager<PCC extends PlayerColor> {
 	public PCC getRandom() {
 		int i = RNG.getRandInt(this.colors.length);
 		return this.get(i);
+	}
+
+	public void resetColorUsage() {
+		for (PCC color : this.colors) {
+			color.setInUse(false);
+		}
 	}
 }

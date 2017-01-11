@@ -66,7 +66,6 @@ public class MapRenderer extends ARenderer {
 	}
 
 	public void setMap(Map map) {
-		System.out.println("Setting map");
 		this.map = map;
 		this.mapBounds = new Dimension2D(map.getBlockWidth(), map.getBlockHeight());
 	}
