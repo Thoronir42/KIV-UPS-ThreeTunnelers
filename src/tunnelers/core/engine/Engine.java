@@ -40,8 +40,6 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	
 	private IView view;
 	private AControlsManager controls;
-	
-	public final IEngineQuerier Query;
 
 	public Engine(int version, Settings settings) {
 		this.version = version;
@@ -51,18 +49,6 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 		this.setStage(Stage.Menu);
 		this.tickRate = settings.getTickRate();
 		this.connectionSecret = new PersistentString(settings.getConnectionLogRelativePath());
-		
-		this.Query = this.getGameRoomFacade();
-	}
-	
-	private IEngineQuerier getGameRoomFacade(){
-		return new IEngineQuerier() {
-			
-			@Override
-			public void updatePlayers() {
-				view.updatePlayerList(getGameRoom().getPlayers());
-			}
-		};
 	}
 	
 	public void setView(IView view){
@@ -138,7 +124,7 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 
 	@Override
 	public boolean handle(Command cmd) {
-		System.out.println("Engine processing command: " + cmd.toString());
+		System.out.format("Engine processing command '%s': [%s]\n", cmd.getType().toString(), cmd.getData());
 		switch (cmd.getType()) {
 			case LeadApprove:
 				System.out.println("Ano");
@@ -149,12 +135,13 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 				view.updateChat();
 				return true;
 			case VirtConnectionEstabilished:
-				view.showScene(IView.Scene.Lobby);
+				view.showScene(IView.Scene.ServerList);
 			case VirtConnectingError:
 			case VirtConnectingTimedOut:
 				System.err.println("Nepripojeno: " + cmd.getData());
 				return true;
 			case VirtConnectionTerminated:
+				view.alert("Spojení bylo ukončeno: " + cmd.getData());
 				view.showScene(IView.Scene.MainMenu);
 				return true;
 			default:
