@@ -13,6 +13,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import tunnelers.app.ATunnelersScene;
+import tunnelers.core.gameRoom.GameRoomFacade;
 import tunnelers.core.view.IView;
 
 /**
@@ -44,8 +45,8 @@ public class MainMenuScene extends ATunnelersScene {
 		MainMenuScene scene = new MainMenuScene(content, settings.getWindowWidth(), settings.getWindowHeight());
 
 		Button[] buttons = new Button[]{
-			createButton("Seznam serverů", (ActionEvent event) -> {
-				scene.getStage().showScene(IView.Scene.ServerList);
+			createButton("TEST-do lobby", (ActionEvent event) -> {
+				scene.getEngine().joinGame(new GameRoomFacade((short) 0, (byte) 4, (byte) 0, (byte) 0, (byte) 0));
 			}),
 			createButton("Nastavení", (ActionEvent event) -> {
 				scene.getStage().showScene(IView.Scene.Settings);
@@ -54,19 +55,48 @@ public class MainMenuScene extends ATunnelersScene {
 				scene.getStage().close();
 			}),};
 
-		for (int i = 0; i < buttons.length; i++) {
-			content.add(buttons[i], 0, i);
-		}
-		
-		ServerSelectControl serverSelect = new ServerSelectControl(420);
+		ServerSelectControl serverSelect = new ServerSelectControl(8, new NameManager(420));
 		serverSelect.setHostname(settings.getServerAddress());
 		serverSelect.setPort(settings.getServerPort());
 		serverSelect.setName("Karel");
 		serverSelect.setOnConnectAction((e) -> {
 			scene.getEngine().connect(serverSelect.getName(), serverSelect.getHostname(), serverSelect.getPort());
 		});
+
+		serverSelect.setStyle("-fx-background-color: rgba(245,245,245,0.95);"
+				+ " -fx-border-size: 2px;"
+				+ " -fx-border-style: solid;"
+				+ " -fx-border-color: black;"
+				+ " -fx-padding: 20px;");
+
+		content.add(serverSelect, 0, 0);
+		for (int i = 0; i < buttons.length; i++) {
+			buttons[i].prefWidthProperty().bind(serverSelect.widthProperty());
+			content.add(buttons[i], 0, 1 + i);
+		}
+
+		TextField txt_flash = new TextField();
+		txt_flash.setPromptText("Zpráva k zobrazení");
+		Button but_flashDisplay = new Button("Zobrazit");
+		Button but_flashClear = new Button("Schovat");
 		
-		content.add(serverSelect, 1, 0, 1, 3);
+		but_flashDisplay.setOnAction(e -> {
+			if(!"".equals(txt_flash.getText().trim())){
+				scene.flash.display(txt_flash.getText());
+				txt_flash.setText("");
+			}
+		});
+		but_flashClear.setOnAction(e -> {
+			scene.flash.clear();
+		});
+		
+		GridPane flasher = new GridPane();
+		flasher.add(txt_flash, 0, 0, 2, 1);
+		flasher.add(but_flashDisplay, 0, 1);
+		flasher.add(but_flashClear, 1, 1);
+		
+		content.add(flasher, 1, 0, 1, 3);
+
 		return scene;
 
 	}

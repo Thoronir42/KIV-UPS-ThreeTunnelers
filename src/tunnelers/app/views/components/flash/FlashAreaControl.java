@@ -1,6 +1,8 @@
 package tunnelers.app.views.components.flash;
 
+import javafx.beans.property.FloatProperty;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -12,23 +14,23 @@ import javafx.scene.paint.Color;
  *
  * @author Stepan
  */
-public class FlashArea extends VBox {
+public class FlashAreaControl extends VBox {
 
 	private final Label label;
+	private final FlashContainer container;
 
-	private float visibility;
-
-	private LinearEaseFunction ease;
-
-	public FlashArea() {
+	public FlashAreaControl(FlashContainer container) {
 		super();
 		this.label = new Label();
-		this.visibility = 0;
+		
+		label.prefWidthProperty().bind(this.widthProperty());
+		label.setAlignment(Pos.CENTER);
 		
 		this.setBackground(new Background(new BackgroundFill(Color.SNOW, CornerRadii.EMPTY, Insets.EMPTY)));
 		this.setPadding(new Insets(10));
 		
 		this.getChildren().add(this.label);
+		this.container = container;
 	}
 
 	public void display(String message) {
@@ -37,7 +39,7 @@ public class FlashArea extends VBox {
 
 	public void display(String message, boolean immediate) {
 		label.setText(message);
-		setTarget(1, immediate);
+		container.setTarget(1, immediate);
 	}
 
 	public void clear() {
@@ -45,34 +47,20 @@ public class FlashArea extends VBox {
 	}
 
 	public void clear(boolean immediately) {
-		this.setTarget(0, immediately);
+		this.container.setTarget(0, immediately);
 	}
 
-	private void setTarget(float value, boolean immediate) {
-		if (immediate) {
-			this.visibility = value;
-		} else {
-			this.ease = new LinearEaseFunction(this.visibility, value, 0.1f);
-		}
-	}
+	
 
 	public float getVisibility() {
-		return visibility;
+		return container.visibilityProperty().get();
 	}
 
 	public boolean updateVisibility() {
-		if (this.ease == null) {
-			return false;
-		}
-
-		float newVal = this.ease.next();
-		if (newVal == this.visibility) {
-			this.ease = null;
-			return false;
-		}
-
-		this.visibility = newVal;
-
-		return true;
+		return this.container.updateVisibility();
+	}
+	
+	public FloatProperty visibilityProperty(){
+		return container.visibilityProperty();
 	}
 }
