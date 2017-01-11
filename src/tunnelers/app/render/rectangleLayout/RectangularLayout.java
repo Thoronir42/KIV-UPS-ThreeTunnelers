@@ -6,6 +6,7 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
 import tunnelers.app.render.FxRenderContainer;
+import tunnelers.core.model.entities.Tank;
 import tunnelers.core.player.Player;
 
 /**
@@ -49,17 +50,17 @@ public class RectangularLayout extends ARenderLayout {
 
 	@Override
 	public void draw(GraphicsContext g) {
-		Player[] players = this.renderer.getPlayers();
+		Tank[] tanks = this.renderer.getTanks();
 		Affine defTransform = g.getTransform();
 		Dimension2D playerAreaBounds = this.playerArea.getBounds();
 		int row = 0, col = 0;
 
-		for (Player player : players) {
-			if (player == null) {
+		for (Tank tank : tanks) {
+			if (tank == null) {
 				continue;
 			}
 			g.translate(col * playerAreaBounds.getWidth(), row * playerAreaBounds.getHeight());
-			this.playerArea.draw(g, playerAreaBounds, player.getTank());
+			this.playerArea.draw(g, playerAreaBounds, tank);
 			if (++col >= cols) {
 				col = 0;
 				row++;

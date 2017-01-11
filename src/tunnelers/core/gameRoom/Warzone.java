@@ -39,4 +39,8 @@ public class Warzone {
 	public void addProjectile(IntPoint location, Direction direction, Player player) {
 		this.projectiles.add(new Projectile(location, direction, player));
 	}
+
+	public Tank[] getTanks() {
+		return this.tanks;
+	}
 }

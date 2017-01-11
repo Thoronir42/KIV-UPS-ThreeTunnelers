@@ -16,15 +16,12 @@ public class Tank extends GameEntity {
 
 	protected int hitpoints, energy;
 
-	protected int cooldownRate;
 	protected int cannonCooldown;
 
 	public Tank(Player player, IntPoint initialLocation) {
 		super(Direction.North, initialLocation, player);
 		this.hitpoints = MAX_HITPOINTS;
 		this.energy = MAX_ENERGY;
-
-		this.cooldownRate = 1;
 		this.cannonCooldown = 0;
 	}
 
@@ -37,8 +34,8 @@ public class Tank extends GameEntity {
 		this.direction = d;
 	}
 
-	public void cooldown() {
-		int newValue = this.cannonCooldown - cooldownRate;
+	public void cooldown(int cooldown) {
+		int newValue = this.cannonCooldown - cooldown;
 		this.cannonCooldown = newValue < 0 ? 0 : newValue;
 	}
 

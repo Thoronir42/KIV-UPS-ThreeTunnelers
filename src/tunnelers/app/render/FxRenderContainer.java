@@ -70,20 +70,8 @@ public class FxRenderContainer {
 		return this.engine.getWarzone().getProjectiles();
 	}
 
-	/**
-	 * FIXME: add own references directly to the tanks
-	 *
-	 * @return Collection of tanks to be rendered
-	 */
 	public Tank[] getTanks() {
-		Player[] players = this.getPlayers();
-		Tank[] tanks = new Tank[players.length];
-		for (int i = 0; i < players.length; i++) {
-			Player p = players[i];
-			tanks[i] = p == null ? null : p.getTank();
-		};
-
-		return tanks;
+		return this.engine.getWarzone().getTanks();
 	}
 
 	public void offsetBlocks(GraphicsContext gc, double x, double y) {

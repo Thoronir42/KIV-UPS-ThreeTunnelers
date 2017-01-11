@@ -17,7 +17,6 @@ public final class Player implements IChatParticipant, IColorable{
 	private final NetClient client;
 	private final Controls controls;
 	private int color;
-	private Tank tank;
 	
 	public Player(int playerID, int colorID, NetClient client, Controls controls) {
 		this.id = playerID;
@@ -45,17 +44,6 @@ public final class Player implements IChatParticipant, IColorable{
 
 	public int getID() {
 		return this.id;
-	}
-
-	public void setTank(Tank t) {
-		if (this.tank != null) {
-			System.err.println("Re-assigning player tank");
-		}
-		this.tank = t;
-	}
-
-	public Tank getTank() {
-		return this.tank;
 	}
 
 	public Controls getControls() {

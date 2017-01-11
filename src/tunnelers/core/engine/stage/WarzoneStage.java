@@ -19,6 +19,8 @@ import tunnelers.core.player.Player;
  */
 public class WarzoneStage extends AEngineStage {
 
+	private static final int COOLDOWN_RATE = 1;
+	
 	private final GameRoom gameRoom;
 	private final Warzone warzone;
 
@@ -32,11 +34,16 @@ public class WarzoneStage extends AEngineStage {
 	public void update(long tick) {
 		if (tick % 3 == 0) {
 			Player[] players = this.gameRoom.getPlayers();
-			for (Player p : players) {
+			Tank[] tanks = this.warzone.getTanks();
+			
+			for (int i = 0; i < players.length; i++) {
+				Player p = players[i];
+				Tank t = tanks[i];
 				if (p == null) {
 					continue;
 				}
-				this.updateTank(p.getTank(), p.getControls());
+				
+				this.updateTank(t, p.getControls());
 			};
 
 		}
@@ -48,7 +55,7 @@ public class WarzoneStage extends AEngineStage {
 	}
 
 	private void updateTank(Tank tank, Controls c) {
-		tank.cooldown();
+		tank.cooldown(COOLDOWN_RATE);
 		if (true && c.isShooting()) { // TODO: omezeni poctu strel
 			IntPoint location = tank.tryShoot();
 			if (location != null) {

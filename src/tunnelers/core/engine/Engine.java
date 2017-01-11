@@ -106,6 +106,9 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	}
 
 	public Warzone getWarzone() {
+		if(this.currentGameRoom == null){
+			return null;
+		}
 		return this.currentGameRoom.getWarzone();
 	}
 
