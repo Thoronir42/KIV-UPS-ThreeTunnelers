@@ -9,21 +9,21 @@ import tunnelers.app.render.rectangleLayout.RectangularLayout;
  *
  * @author Stepan
  */
-public abstract class RenderLayout {
+public abstract class ARenderLayout {
 
-	public static RenderLayout choseIdeal(int playerCount, Dimension2D d) {
+	public static ARenderLayout choseIdeal(FxRenderContainer renderer, int playerCount, Dimension2D d) {
 		try {
-			RenderLayout layout = RectangularLayout.getLayoutFor(playerCount, d);
+			ARenderLayout layout = RectangularLayout.getLayoutFor(renderer, playerCount, d);
 			return layout;
 		} catch (RenderLayoutException e) {
 			throw new IllegalArgumentException(String.format("Could not find layout suitable for %d players.", playerCount));
 		}
 	}
 	
-	protected FxRenderContainer renderer;
+	protected final FxRenderContainer renderer;
 	
-	public void setRenderer(FxRenderContainer r) {
-		this.renderer = r;
+	public ARenderLayout(FxRenderContainer renderer){
+		this.renderer = renderer;
 	}
 	
 	protected MapRenderer getMapRenderer(){

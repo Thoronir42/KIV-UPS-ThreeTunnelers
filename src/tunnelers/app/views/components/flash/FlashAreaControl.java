@@ -21,7 +21,9 @@ public class FlashAreaControl extends VBox {
 
 	public FlashAreaControl(FlashContainer container) {
 		super();
-		this.label = new Label();
+		this.label = new Label(container.getMessage());
+		
+		System.out.println("New flash area control created with " + container.getMessage());
 		
 		label.prefWidthProperty().bind(this.widthProperty());
 		label.setAlignment(Pos.CENTER);
@@ -38,6 +40,7 @@ public class FlashAreaControl extends VBox {
 	}
 
 	public void display(String message, boolean immediate) {
+		this.container.setMessage(message);
 		label.setText(message);
 		container.setTarget(1, immediate);
 	}

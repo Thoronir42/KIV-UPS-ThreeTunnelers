@@ -21,7 +21,8 @@ public class FlashContainer {
 	
 	
 	private final SimpleFloatProperty visibility = new SimpleFloatProperty(0.5f);
-
+	
+	private String message;
 	private LinearEaseFunction ease;
 	
 	public FloatProperty visibilityProperty(){
@@ -51,5 +52,13 @@ public class FlashContainer {
 		} else {
 			this.ease = new LinearEaseFunction(this.visibility.get(), value, 0.1f);
 		}
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 }

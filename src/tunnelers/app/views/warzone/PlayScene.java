@@ -9,7 +9,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import tunnelers.app.controls.FxControlsManager;
-import tunnelers.app.render.RenderLayout;
+import tunnelers.app.render.ARenderLayout;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.render.FxRenderContainer;
 
@@ -48,7 +48,7 @@ public class PlayScene extends ATunnelersScene {
 
 	protected TextArea ta_chatBox;
 	protected TextField tf_chatIn;
-	protected RenderLayout layout;
+	protected ARenderLayout layout;
 	
 	private final FxControlsManager csmgr;
 
@@ -59,8 +59,8 @@ public class PlayScene extends ATunnelersScene {
 
 	public void initLayout(int playerCount, FxRenderContainer renderer) {
 		Dimension2D availableArea = new Dimension2D(canvas.getWidth(), canvas.getHeight());
-		layout = RenderLayout.choseIdeal(playerCount, availableArea);
-		layout.setRenderer(renderer);
+		layout = ARenderLayout.choseIdeal(renderer, playerCount, availableArea);
+
 	}
 
 	@Override

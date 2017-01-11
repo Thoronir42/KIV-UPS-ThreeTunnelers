@@ -2,7 +2,7 @@ package tunnelers.app.render;
 
 import tunnelers.app.render.colors.AColorScheme;
 import javafx.geometry.Dimension2D;
-import javafx.scene.shape.Rectangle;
+import javafx.geometry.Rectangle2D;
 import tunnelers.core.model.map.Block;
 import tunnelers.core.model.map.Bounds;
 import tunnelers.core.model.map.Map;
@@ -22,11 +22,11 @@ public class MapRenderer extends ARenderer {
 		super(colorScheme);
 	}
 
-	public void drawMap(Rectangle rendSrc) {
-		int yMin = (int) (rendSrc.getY()),
-				xMin = (int) (rendSrc.getX()),
-				xMax = (int) (rendSrc.getX() + rendSrc.getWidth() - 1),
-				yMax = (int) (rendSrc.getY() + rendSrc.getHeight() - 1);
+	public void drawMap(Rectangle2D rendSrc) {
+		int yMin = (int) (rendSrc.getMinY()),
+				xMin = (int) (rendSrc.getMinX()),
+				xMax = (int) (rendSrc.getMinX() + rendSrc.getWidth() - 1),
+				yMax = (int) (rendSrc.getMinY() + rendSrc.getHeight() - 1);
 		Bounds bounds = new Bounds(xMin, xMax, yMin, yMax);
 		int chunkSize = this.map.getChunkSize();
 

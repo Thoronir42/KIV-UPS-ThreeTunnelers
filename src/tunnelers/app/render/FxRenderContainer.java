@@ -24,6 +24,7 @@ public class FxRenderContainer {
 
 	protected final MapRenderer mapRenderer;
 	protected final AssetsRenderer assetsRenderer;
+	protected final AfterFX afterFx;
 
 	public FxRenderContainer(Engine engine, FxDefaultColorScheme colorScheme, Assets assets) {
 		this.colorScheme = colorScheme;
@@ -31,6 +32,7 @@ public class FxRenderContainer {
 
 		this.mapRenderer = new MapRenderer(colorScheme);
 		this.assetsRenderer = new AssetsRenderer(colorScheme, assets);
+		this.afterFx = new AfterFX(colorScheme);
 	}
 
 	public void setBlockSize(Dimension2D blockSize) {
@@ -54,6 +56,10 @@ public class FxRenderContainer {
 
 	public AssetsRenderer getAssetsRenderer() {
 		return this.assetsRenderer;
+	}
+	
+	public AfterFX getAfterFX(){
+		return this.afterFx;
 	}
 
 	public Player[] getPlayers() {

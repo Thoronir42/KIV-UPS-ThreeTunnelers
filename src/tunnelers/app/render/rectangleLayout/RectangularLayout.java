@@ -1,6 +1,6 @@
 package tunnelers.app.render.rectangleLayout;
 
-import tunnelers.app.render.RenderLayout;
+import tunnelers.app.render.ARenderLayout;
 import tunnelers.app.render.RenderLayoutException;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,9 +12,9 @@ import tunnelers.core.player.Player;
  *
  * @author Stepan
  */
-public class RectangularLayout extends RenderLayout {
+public class RectangularLayout extends ARenderLayout {
 
-	public static RenderLayout getLayoutFor(int playerCount, Dimension2D canvasArea) throws RenderLayoutException {
+	public static ARenderLayout getLayoutFor(FxRenderContainer renderer, int playerCount, Dimension2D canvasArea) throws RenderLayoutException {
 		int rows = 1, cols = 2;
 		while (rows * cols < playerCount) {
 			if (cols > rows) {
@@ -23,26 +23,20 @@ public class RectangularLayout extends RenderLayout {
 				cols++;
 			}
 		}
-		return new RectangularLayout(rows, cols, canvasArea);
+		return new RectangularLayout(renderer, rows, cols, canvasArea);
 	}
 
 	private final int rows, cols;
 
 	private final PlayerAreaRenderer playerArea;
 
-	public RectangularLayout(int rows, int cols, Dimension2D availableArea) {
+	public RectangularLayout(FxRenderContainer renderer, int rows, int cols, Dimension2D availableArea) {
+		super(renderer);
 		this.rows = rows;
 		this.cols = cols;
 		Dimension2D playerAreaBounds = new Dimension2D(availableArea.getWidth() / cols,
 				availableArea.getHeight() / rows);
-		this.playerArea = new PlayerAreaRenderer(playerAreaBounds);
-	}
-	
-	@Override
-	public void setRenderer(FxRenderContainer renderer){
-		super.setRenderer(renderer);
-		this.playerArea.setRenderer(renderer);
-		this.renderer.setBlockSize(playerArea.getBlockSize());
+		this.playerArea = new PlayerAreaRenderer(playerAreaBounds, renderer);
 	}
 
 	protected int getRowAmount() {

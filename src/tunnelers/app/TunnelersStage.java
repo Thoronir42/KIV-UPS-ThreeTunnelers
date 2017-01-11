@@ -1,7 +1,6 @@
 package tunnelers.app;
 
 import tunnelers.common.IUpdatable;
-import java.util.Arrays;
 import tunnelers.core.view.IView;
 import java.util.HashMap;
 import tunnelers.core.settings.Settings;
@@ -70,8 +69,9 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 		});
 
 		this.renderer = new FxRenderContainer(engine, colorScheme, assets);
-
+		
 		this.ROUTER = this.getRouter();
+		
 	}
 
 	private HashMap<Class, IView.Scene> getRouter() {
@@ -120,33 +120,50 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 
 	@Override
 	public void showScene(Scene scene) {
+		
+		
 		Platform.runLater(() -> {
+			Runnable afterChange = null;
+			ATunnelersScene newScene = null;
 			switch (scene) {
 				case MainMenu:
-					this.changeScene(MainMenuScene.getInstance());
+					newScene = MainMenuScene.getInstance();
 					break;
 				case Settings:
-					this.changeScene(SettingsScene.getInstance(controlsManager));
+					newScene = SettingsScene.getInstance(controlsManager);
 					break;
 				case ServerList:
-					this.changeScene(ServerListScene.getInstance());
+					newScene = ServerListScene.getInstance();
 					break;
 				case Lobby:
-					this.changeScene(LobbyScene.getInstance(this.engine.getChat(), this.renderer.getColorScheme(), engine.getGameRoom().getCapacity()));
-					this.updatePlayerList(this.engine.getGameRoom().getPlayers());
+					newScene = LobbyScene.getInstance(this.engine.getChat(), this.renderer.getColorScheme(), engine.getGameRoom().getCapacity());
+					afterChange = () -> {
+						updatePlayerList(this.engine.getGameRoom().getPlayers());
+					};
 					break;
 				case Game:
 					PlayScene sc = PlayScene.getInstance(controlsManager);
 					sc.initLayout(engine.getGameRoom().getPlayerCount(), this.renderer);
-					this.changeScene(sc);
+					newScene = sc;
 					break;
+			}
+			if(newScene == null){
+				System.err.println("Error switching scene to " + scene.toString());
+				return;
+			}
+			newScene.setAfterFX(renderer.getAfterFX());
+			this.changeScene(newScene);
+			if(afterChange != null){
+				afterChange.run();
 			}
 		});
 	}
 
 	@Override
 	public void alert(String message) {
-		this.currentScene.flashDisplay(message);
+		Platform.runLater(() -> {
+			this.currentScene.flashDisplay(message);
+		});
 	}
 
 	@Override

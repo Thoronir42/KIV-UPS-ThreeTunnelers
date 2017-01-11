@@ -6,11 +6,7 @@ import tunnelers.core.settings.Settings;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.assets.Assets;
-import tunnelers.app.controls.InputEvent;
-import tunnelers.app.render.colors.FxDefaultColorScheme;
-import tunnelers.app.render.colors.FxPlayerColorManager;
 import tunnelers.core.engine.Engine;
 
 /**

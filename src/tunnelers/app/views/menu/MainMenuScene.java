@@ -82,12 +82,12 @@ public class MainMenuScene extends ATunnelersScene {
 		
 		but_flashDisplay.setOnAction(e -> {
 			if(!"".equals(txt_flash.getText().trim())){
-				scene.flash.display(txt_flash.getText());
+				scene.flashDisplay(txt_flash.getText());
 				txt_flash.setText("");
 			}
 		});
 		but_flashClear.setOnAction(e -> {
-			scene.flash.clear();
+			scene.flashClear();
 		});
 		
 		GridPane flasher = new GridPane();

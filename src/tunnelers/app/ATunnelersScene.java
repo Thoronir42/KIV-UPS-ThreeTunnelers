@@ -1,6 +1,8 @@
 package tunnelers.app;
 
-import generic.RNG;
+import javafx.application.Platform;
+import javafx.geometry.Dimension2D;
+import javafx.geometry.Rectangle2D;
 import tunnelers.core.settings.Settings;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -10,8 +12,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import tunnelers.app.assets.Assets;
+import tunnelers.app.render.AfterFX;
 import tunnelers.app.views.components.flash.FlashAreaControl;
 import tunnelers.app.views.components.flash.FlashContainer;
 import tunnelers.common.IUpdatable;
@@ -34,13 +36,10 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 
 	protected FlashAreaControl flash;
 
-	public void setName(String name) {
-		this.sceneName = name;
-	}
+	private AfterFX afterFx;
 
-	public String getName() {
-		return sceneName;
-	}
+	private Rectangle2D canvasTarget;
+	private Dimension2D blockSize;
 
 	public ATunnelersScene(Parent root, double width, double height) {
 		this(root, width, height, "scene " + (++sceneCount));
@@ -61,22 +60,28 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 		flash = new FlashAreaControl(FlashContainer.getInstance());
 
 		StackPane root = ((StackPane) this.getRoot());
-		
+
 		AnchorPane anchor = new AnchorPane(flash);
 		anchor.prefWidthProperty().bind(root.widthProperty());
 		flash.prefWidthProperty().bind(anchor.widthProperty());
 		flash.visibilityProperty().addListener((observable, oldValue, newValue) -> {
 			AnchorPane.setTopAnchor(flash, (newValue.floatValue() - 1) * flash.getHeight());
 		});
-		
+
 		flash.clear();
 
-		
 		root.getChildren().addAll(canvas, anchor, content);
+
+		canvasTarget = new Rectangle2D(0, 0, canvas.getWidth(), canvas.getHeight());
+		blockSize = new Dimension2D(40, 40);
 	}
-	
-	public void setFlashControl(FlashAreaControl control){
-		this.flash = control;
+
+	public void setName(String name) {
+		this.sceneName = name;
+	}
+
+	public String getName() {
+		return sceneName;
 	}
 
 	public void handleKeyPressed(KeyCode code) {
@@ -93,20 +98,18 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 			//this.reanchorFlash();
 		}
 
-		int x1 = RNG.getRandInt((int) this.getWidth()),
-				y1 = RNG.getRandInt((int) this.getHeight());
-		int x2 = RNG.getRandInt((int) this.getWidth() - x1),
-				y2 = RNG.getRandInt((int) this.getHeight() - y1);
+		if (this.afterFx != null) {
+			Platform.runLater(() -> {
+				GraphicsContext g = this.getGraphicsContext();
+				this.afterFx.renderStaticNoise(g, canvasTarget, 0.12, blockSize);
+			});
 
-		GraphicsContext g = this.getGraphicsContext();
-		if (tick % 20 == 0) {
-			g.clearRect(0, 0, this.getWidth(), this.getHeight());
 		}
 
-		g.setStroke(Color.BLACK);
-		g.setLineWidth(2);
-		g.strokeRect(x1, y1, x2, y2);
+	}
 
+	protected void setAfterFX(AfterFX afterFx) {
+		this.afterFx = afterFx;
 	}
 
 	protected TunnelersStage getStage() {
@@ -123,6 +126,7 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 
 	@Override
 	public void flashDisplay(String message) {
+		System.out.println(this.getClass().getSimpleName() + " displays flash " + message);
 		this.flash.display(message);
 	}
 
