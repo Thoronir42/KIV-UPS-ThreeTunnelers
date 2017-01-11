@@ -109,4 +109,8 @@ public class Connection {
 	public String getHostString() {
 		return this.address.getHostAddress() + ':' + this.port;
 	}
+
+	int getInvalidCounter() {
+		return this.invalidMessageCounter;
+	}
 }

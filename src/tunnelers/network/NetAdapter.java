@@ -25,8 +25,8 @@ public class NetAdapter extends Thread implements IUpdatable {
 	public NetAdapter() {
 		this(null);
 	}
-	
-	public NetAdapter(INetCommandHandler handler){
+
+	public NetAdapter(INetCommandHandler handler) {
 		super(NetAdapter.class.getSimpleName());
 		this.parser = new CommandParser();
 		this.keepRunning = true;
@@ -42,11 +42,11 @@ public class NetAdapter extends Thread implements IUpdatable {
 	}
 
 	/**
-	 * Non-blocking
-	 * Schedules connection creation.
+	 * Non-blocking Schedules connection creation.
+	 *
 	 * @param clientName
 	 * @param adress
-	 * @param port 
+	 * @param port
 	 */
 	public void connectTo(String clientName, String adress, int port) {
 		try {
@@ -61,13 +61,13 @@ public class NetAdapter extends Thread implements IUpdatable {
 
 	@Override
 	public void update(long tick) {
-		if (this.connection == null) {
+		if (this.connection == null || !this.connection.isOpen()) {
 			return;
 		}
 
 		long now = System.currentTimeMillis();
 		long d = now - this.connection.lastActive;
-		System.out.println(d);
+		this.log(String.format("Since last message from server: %d ms", d));
 		if (d > 5000) {
 			this.disconnect("Server was irresponsive.");
 		}
@@ -76,12 +76,12 @@ public class NetAdapter extends Thread implements IUpdatable {
 	public boolean issueCommand(Command cmd) {
 		String message = parser.parse(cmd);
 		try {
-			if(this.connection == null){
-				System.err.println("Attempted to send a command while connection was null.");
+			if (this.connection == null) {
+				this.log("Attempted to send a command while connection was null.");
 				return false;
 			}
 			this.connection.send(message);
-			System.out.println("Connection sent: " + message);
+			this.log("Connection sent: " + message);
 			return true;
 		} catch (IOException e) {
 			return false;
@@ -90,7 +90,7 @@ public class NetAdapter extends Thread implements IUpdatable {
 
 	@Override
 	public void run() {
-		System.out.println("Networks: starting");
+		this.log("Starting");
 
 		while (this.keepRunning) {
 			try {
@@ -100,10 +100,10 @@ public class NetAdapter extends Thread implements IUpdatable {
 
 				// and now we wait...
 				String message = this.connection.receive();
-				System.out.println("Connection received: " + message);
+				this.log("Connection received: " + message);
 
 				if (message == null || message.length() == 0) {
-					System.out.println("Something is wronk");
+					this.log("Connection reset");
 					Command err = new Command(CommandType.VirtConnectionTerminated);
 					this.handler.handle(err);
 					connection = null;
@@ -112,25 +112,38 @@ public class NetAdapter extends Thread implements IUpdatable {
 
 				try {
 					Command cmd = this.parser.parse(message);
-					System.out.println("Handling cmd: " + cmd.toString());
-					this.handler.handle(cmd);
-					this.connection.invalidCounterReset();
-				} catch (CommandNotRecognisedException e) {
-					System.err.println(e.toString());
-					if (this.connection.invalidCounterIncrease() > 4) {// TODO: configurability
-						return;
+					this.log("Handling cmd: " + cmd.toString());
+					if (this.handler.handle(cmd)) {
+						this.connection.invalidCounterReset();
+					} else {
+						this.connection.invalidCounterIncrease();
 					}
+
+				} catch (CommandNotRecognisedException e) {
+					this.logError(e.toString());
+					this.connection.invalidCounterIncrease();
+				}
+				if (this.connection.getInvalidCounter() > 2) {
+					this.disconnect("Received too many invallid messages");
 				}
 			} catch (InterruptedException e) {
-				System.err.println("Network: waiting interrupted");
+				this.logError("Network: waiting interrupted");
 				break;
 			} catch (IOException e) {
-				System.err.println("Network run error: " + e.getClass() + ": " + e.getMessage());
+				this.logError("Network run error: " + e.getClass() + ": " + e.getMessage());
 				connection = null;
 			}
 		}
 	}
 
+	/**
+	 * Ensures that provided connection is valid and returns true. If there are
+	 * problems - no connection, connection creation not scheduled, returns
+	 * false.
+	 *
+	 * @param connection
+	 * @return
+	 */
 	private boolean isValidConnection(Connection connection) {
 		if (connection == null) {
 			try {
@@ -161,7 +174,7 @@ public class NetAdapter extends Thread implements IUpdatable {
 		return true;
 	}
 
-	public void disconnect() {
+	synchronized public void disconnect() {
 		this.disconnect("");
 	}
 
@@ -169,15 +182,18 @@ public class NetAdapter extends Thread implements IUpdatable {
 		this.disconnectReason = reason;
 		try {
 			if (this.connection == null) {
-				System.out.println("Disconnect error: not connected");
+				this.logError("Disconnect error: not connected");
 				return;
 			}
 			this.connection.close();
+			this.log("disconnected: " + reason);
 		} catch (IOException e) {
-			System.err.println("Disconnect error: " + e.getMessage());
+			this.logError("Disconnect error: " + e.getMessage());
 		} finally {
 			this.connection = null;
-			this.handler.handle(new Command(CommandType.VirtConnectionTerminated));
+			Command terminator = new Command(CommandType.VirtConnectionTerminated);
+			terminator.setData(reason);
+			this.handler.handle(terminator);
 		}
 	}
 
@@ -190,10 +206,18 @@ public class NetAdapter extends Thread implements IUpdatable {
 			this.disconnect("Shutting down");
 			this.keepRunning = false;
 			super.join();
-			System.out.println("NetWorks ended succesfully");
+			this.log("NetWorks ended succesfully");
 		} catch (InterruptedException ex) {
-			System.err.println("Failed to close networks: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+			this.logError("Failed to close networks: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
 		}
+	}
+
+	private void log(String message) {
+		System.out.println(this.getName() + ": " + message);
+	}
+
+	private void logError(String message) {
+		System.err.println(this.getName() + ": " + message);
 	}
 
 	public Command createCommand(CommandType commandType) {
