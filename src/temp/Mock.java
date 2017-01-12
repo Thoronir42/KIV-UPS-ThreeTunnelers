@@ -39,8 +39,12 @@ public class Mock {
 			new Player(colors.useRandomColor().intValue(), clients[1], MOCKED_CONTROLS[0]),
 			new Player(colors.useRandomColor().intValue(), clients[2], MOCKED_CONTROLS[1])
 		};
+		
+		int playerCapacity = 4;
+		int chatCapacity = 20;
+		int projectileCapacity = playerCapacity * 20;
 
-		GameRoom c = new GameRoom(4, 12);
+		GameRoom c = new GameRoom(playerCapacity, chatCapacity, projectileCapacity);
 
 		
 		for (int i = 1; i <= 4; i++) {

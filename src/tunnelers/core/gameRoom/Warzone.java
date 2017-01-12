@@ -1,8 +1,6 @@
 package tunnelers.core.gameRoom;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.Projectile;
@@ -19,16 +17,16 @@ public class Warzone {
 	private final Map map;
 
 	private final Tank[] tanks;
-	private final List<Projectile> projectiles;
+	private final Projectile[] projectiles;
 
-	public Warzone(Tank[] tanks, Map map) {
+	public Warzone(Tank[] tanks, Map map, int projectileCapacity) {
 		this.tanks = tanks;
 		this.map = map;
 
-		this.projectiles = new ArrayList<>();
+		this.projectiles = new Projectile[projectileCapacity];
 	}
 
-	public Collection<Projectile> getProjectiles() {
+	public Projectile[] getProjectiles() {
 		return projectiles;
 	}
 
@@ -36,8 +34,12 @@ public class Warzone {
 		return this.map;
 	}
 
-	public void addProjectile(IntPoint location, Direction direction, Player player) {
-		this.projectiles.add(new Projectile(location, direction, player));
+	public void setProjectile(int id, IntPoint location, Direction direction, Player player) {
+		this.projectiles[id] = new Projectile(location, direction, player);
+	}
+	
+	public void removeProjectile(int id){
+		this.projectiles[id] = null;
 	}
 
 	public Tank[] getTanks() {

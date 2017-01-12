@@ -1,7 +1,5 @@
 package tunnelers.core.engine.stage;
 
-import java.util.Collection;
-import java.util.Iterator;
 import temp.Mock;
 import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.Warzone;
@@ -20,7 +18,7 @@ import tunnelers.core.player.Player;
 public class WarzoneStage extends AEngineStage {
 
 	private static final int COOLDOWN_RATE = 1;
-	
+
 	private final GameRoom gameRoom;
 	private final Warzone warzone;
 
@@ -35,16 +33,16 @@ public class WarzoneStage extends AEngineStage {
 		if (tick % 3 == 0) {
 			Player[] players = this.gameRoom.getPlayers();
 			Tank[] tanks = this.warzone.getTanks();
-			
+
 			for (int i = 0; i < players.length; i++) {
 				Player p = players[i];
 				Tank t = tanks[i];
 				if (p == null) {
 					continue;
 				}
-				
+
 				this.updateTank(t, p.getControls());
-			};
+			}
 
 		}
 		if (tick % 15 == 0) {
@@ -59,11 +57,24 @@ public class WarzoneStage extends AEngineStage {
 		if (true && c.isShooting()) { // TODO: omezeni poctu strel
 			IntPoint location = tank.tryShoot();
 			if (location != null) {
-				warzone.addProjectile(location, tank.getDirection(), tank.getPlayer());
+				int projectilePosition = findFreeProjectileSlot(this.warzone.getProjectiles());
+				if (projectilePosition >= 0) {
+					warzone.setProjectile(projectilePosition, location, tank.getDirection(), tank.getPlayer());
+				}
 			}
 		}
 
 		moveTank(tank, c.getDirection());
+	}
+
+	private int findFreeProjectileSlot(Projectile[] projectiles) {
+		for (int i = 0; i < projectiles.length; i++) {
+			if (projectiles[i] == null) {
+				return i;
+			}
+		}
+
+		return -1;
 	}
 
 	protected IntPoint moveTank(Tank tank, Direction d) {
@@ -87,18 +98,21 @@ public class WarzoneStage extends AEngineStage {
 		return tank.getLocation();
 	}
 
-	private void updateProjectiles(Collection<Projectile> projectiles, long tick) {
+	private void updateProjectiles(Projectile[] projectiles, long tick) {
 		Map map = this.gameRoom.getWarzone().getMap();
 
-		for (Iterator<Projectile> it = projectiles.iterator(); it.hasNext();) {
-			Projectile p = it.next();
+		for (int i = 0; i < projectiles.length; i++) {
+			Projectile p = projectiles[i];
+			if (p == null) {
+				continue;
+			}
 
 			IntPoint newLocation = p.getLocation().copy();
 			newLocation.add(p.getDirection().asPoint());
 
 			if (newLocation.getX() < 0 || newLocation.getX() > map.getBlockWidth()
 					|| newLocation.getY() < 0 || newLocation.getY() > map.getBlockHeight()) {
-				it.remove();
+				projectiles[i] = null;
 				continue;
 			}
 

@@ -1,6 +1,5 @@
 package tunnelers.app.render.rectangleLayout;
 
-import java.util.Collection;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -15,7 +14,8 @@ import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
 
 /**
- *
+ * TODO: This class is owed some refactorisation love. Unused arguments are 
+ * passed only to be passed more, etc...
  * @author Stepan
  */
 public class PlayerAreaRenderer {
@@ -50,7 +50,7 @@ public class PlayerAreaRenderer {
 		}
 
 		Tank[] tanks = renderer.getTanks();
-		Collection<Projectile> projectiles = renderer.getProjectiles();
+		Projectile[] projectiles = renderer.getProjectiles();
 
 		Affine defTransform = g.getTransform();
 
@@ -80,7 +80,7 @@ public class PlayerAreaRenderer {
 		g.fillRect(r.getX(), r.getY(), r.getWidth(), r.getHeight());
 	}
 
-	private void drawViewWindow(GraphicsContext g, IntPoint center, Tank[] tanks, Collection<Projectile> projectiles) {
+	private void drawViewWindow(GraphicsContext g, IntPoint center, Tank[] tanks, Projectile[] projectiles) {
 		Affine defTransform = g.getTransform();
 		MapRenderer mr = renderer.getMapRenderer();
 		
@@ -105,10 +105,13 @@ public class PlayerAreaRenderer {
 
 	}
 
-	private int drawProjectiles(GraphicsContext g, Rectangle2D render, Collection<Projectile> projectiles) {
+	private int drawProjectiles(GraphicsContext g, Rectangle2D render, Projectile[] projectiles) {
 		Affine defTransform = g.getTransform();
 		int n = 0;
 		for (Projectile projectile : projectiles) {
+			if(projectile == null){
+				continue;
+			}
 			if (!render.contains(projectile.getLocation().fx())) {
 				continue;
 			}

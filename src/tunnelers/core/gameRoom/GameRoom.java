@@ -18,13 +18,17 @@ public class GameRoom {
 	private final Chat chat;
 
 	private Warzone warzone;
+	
+	private final int projectileCapacity;
 
-	public GameRoom(int capacity, int chatCapacity) {
+	public GameRoom(int capacity, int chatCapacity, int projectilesCapacity) {
 		this.state = GameRoomState.Idle;
 		
 		this.clients = new NetClient[capacity];
 		this.players = new Player[capacity];
 		this.chat = new Chat(chatCapacity);
+		
+		this.projectileCapacity = projectilesCapacity;
 	}
 
 	public void initWarzone(Map map) {
@@ -41,7 +45,15 @@ public class GameRoom {
 			tanks[i] = tank;
 		}
 
-		this.warzone = new Warzone(tanks, map);
+		this.warzone = new Warzone(tanks, map, this.projectileCapacity);
+	}
+
+	public GameRoomState getState() {
+		return state;
+	}
+
+	public void setState(GameRoomState state) {
+		this.state = state;
 	}
 
 	public int getCapacity() {

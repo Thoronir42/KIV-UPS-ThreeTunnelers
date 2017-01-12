@@ -66,7 +66,7 @@ public class FxRenderContainer {
 		return this.engine.getGameRoom().getPlayers();
 	}
 
-	public Collection<Projectile> getProjectiles() {
+	public Projectile[] getProjectiles() {
 		return this.engine.getWarzone().getProjectiles();
 	}
 
