@@ -134,7 +134,7 @@ Herní místnost je kontejner nesoucí informace aktuálním stavu místnosti. S
 Bitevní zóna je střed dění a zde se uchovávají informace o mapě definující oblast, o tancích v oblasti a o projektilech létajících oblastí.
 
 
-
+\newpage
 \subsection{Protokol}
 Zprávy mezi klientem a serverem se přenáší pomocí protokolu realizovaného nad transportním protokolem TCP. Zprávy nemusí mít jednotnou délku ale vždy musí odpovídat následujícímu formátu:
 \begin{center}
@@ -161,8 +161,6 @@ Protokol je bezestavový, což znamená, že žádná ze zpráv nevyžaduje okam
 3 & Echo Request & K/S & Vyžádání aktivity protější strany \\ \hline
 4 & Echo Reply & K/S & Odpověď generující aktivitu \\ \hline
 5 & Špatný formát & K/S & (zpráva) Oznámení protistraně o nerozpoznaném příkazu s neplatnou zprávou\\ \hline
-6 & Představení & K/S & Představení klienta \newline Tělo zprávy od klienta nenese žádný význam \newline Tělo zprávy od serveru obsahuje klientské id tohoto klienta a tajný kód pro opětovné připojení \\ \hline
-7 & Znovu-představení & K & Pokus o znovu navázání spojení pod stejnou identitou \\ \hline
 
 \end{tabular}
 \end{table}
@@ -172,12 +170,16 @@ Protokol je bezestavový, což znamená, že žádná ze zpráv nevyžaduje okam
 \begin{tabular}{|l|p{3cm}|l|p{10cm}|}
 \hline
 \textbf{Kód} & \textbf{Název} & \textbf{Zdroj} & \textbf{Tělo zprávy / poznámka}\\ \hline
-10 & Vypsat místnosti & K & - \\ \hline
-11 & Vytvořit místnost & K & - \\ \hline
-12 & Vstoupit do místnosti & K & (XX) - číslo místnosti \\ \hline
-20 & Opustit místnost & K & - \\ \hline
-25 & Seznam místnosti & S & (XX)(XX)(M)*n - počet místností ve zprávě, zbývající počet místností výpisu, n identifikátorů místnosti \\ \hline
-40 & Zpráva - prostý texůt & K/S & K: (zpráva) \newline S: (XX)(zpráva) - identifikátor odesílatele, 0 vždy odpovídá systému, v místnosti jsou pozice klientů číslovány od 1 \\ \hline
+10 & Představení & K/S & (XX)(tajný kód) - signalizace, zda-li se jedná o nové připojení (nulová hodnota) nebo o opětovné připojení (kladná hodnota). Pokud se jedná o nové připojení, klient nemusí posílat tajný kód.  \\ \hline
+11 & Odpojení & K/S & (důvod odpojení) - odůvodnění ukončení spojení \\ \hline
+14 & Vypsat místnosti & K & - \\ \hline
+15 & Seznam místnosti & S & (XX)(XX)(M)*n - počet místností ve zprávě, zbývající počet místností výpisu, n identifikátorů místnosti \\ \hline
+16 & Vytvořit místnost & K & - \\ \hline
+17 & Vstoupit do místnosti & K & (XX) - číslo místnosti \\ \hline
+ & Opustit místnost & K & - \\ \hline
+18 & Opustit místnost & K/S & K: - \newline S: důvod opuštění místnosti \\ \hline
+
+40 & Zpráva - prostý text & K/S & K: (zpráva) \newline S: (XX)(zpráva) - identifikátor odesílatele, 0 vždy odpovídá systému, v místnosti jsou pozice klientů číslovány od 1 \\ \hline
 45 & Zpráva - příkaz & K & (zpráva) / umožňuje vzdálené vykonávání příkazů pro ovládání serveru jako z příkazové řádky \\ \hline
 100 & Synchronizace fáze & S & (XX) aktuální fáze místnosti \\ \hline
 101 & Kontrolní signál místnosti & K/S & (XX) identifikátor signálu - signály místnosti mají různé významy dle aktuální fáze\\ \hline

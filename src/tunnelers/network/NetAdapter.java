@@ -159,7 +159,7 @@ public class NetAdapter extends Thread implements IUpdatable {
 				connection.open();
 				handler.handle(new Command(CommandType.VirtConnectionEstabilished));
 
-				Command introduction = this.createCommand(CommandType.RoomClientIntroduce);
+				Command introduction = this.createCommand(CommandType.ClientIntroduce);
 				introduction.setData(localClient.getName());
 				this.issueCommand(introduction);
 			} catch (IOException e) {
