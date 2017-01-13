@@ -19,27 +19,29 @@ import tunnelers.core.model.map.Map;
 import tunnelers.core.player.controls.AControlsManager;
 import tunnelers.core.player.controls.Controls;
 import tunnelers.core.settings.Settings;
-import tunnelers.network.INetCommandHandler;
+import tunnelers.network.CommandNotHandledException;
 import tunnelers.network.command.Command;
 import tunnelers.network.command.CommandType;
+import tunnelers.network.command.INetworkProcessor;
+import tunnelers.network.command.Signal;
 
 /**
  *
  * @author Stepan
  */
-public final class Engine implements INetCommandHandler, IUpdatable {
+public final class Engine implements INetworkProcessor, IUpdatable {
 
 	private final int version;
 
 	private final int tickRate;
 	private AEngineStage currentStage;
-	
+
 	private final NetAdapter netadapter;
 	private final PersistentString connectionSecret;
 	private final GameRoomParser gameRoomParser;
-	
+
 	private GameRoom currentGameRoom;
-	
+
 	private IView view;
 	private AControlsManager controls;
 
@@ -52,11 +54,11 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 		this.tickRate = settings.getTickRate();
 		this.connectionSecret = new PersistentString(settings.getConnectionLogRelativePath());
 	}
-	
-	public void setView(IView view){
+
+	public void setView(IView view) {
 		this.view = view;
 		this.controls = view.getControlsManager();
-		
+
 	}
 
 	public void start() {
@@ -95,10 +97,11 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	}
 
 	public void handleInput(InputAction inp, int controlsID, boolean pressed) {
-		Controls controlsScheme = this.controls.getScheme((byte)controlsID);
+		Controls controlsScheme = this.controls.getScheme((byte) controlsID);
 
 		if (controlsScheme.setControlState(inp, pressed)) {
 			Command cmd = this.netadapter.createCommand(CommandType.GameControlsSet);
+			
 		}
 	}
 
@@ -107,14 +110,14 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	}
 
 	public Warzone getWarzone() {
-		if(this.currentGameRoom == null){
+		if (this.currentGameRoom == null) {
 			return null;
 		}
 		return this.currentGameRoom.getWarzone();
 	}
 
 	public void connect(String name, String addr, int port) {
-		this.netadapter.connectTo(name, addr, port);
+		this.netadapter.connectTo(this.connectionSecret, name, addr, port);
 	}
 
 	public void disconnect() {
@@ -128,30 +131,32 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 	}
 
 	@Override
-	public boolean handle(Command cmd) {
+	public void handle(Command cmd) throws CommandNotHandledException {
 		System.out.format("Engine processing command '%s': [%s]\n", cmd.getType().toString(), cmd.getData());
 		switch (cmd.getType()) {
-			case LeadApprove:
-				System.out.println("Ano");
-				return true;
 			case MsgRcon:
 			case MsgPlain:
 				this.getChat().addMessage(ServerMessenger.getInstance(), cmd.getData());
 				view.updateChat();
-				return true;
-			case VirtConnectionEstabilished:
-				view.showScene(IView.Scene.ServerList);
-			case VirtConnectingError:
-			case VirtConnectingTimedOut:
-				System.err.println("Nepripojeno: " + cmd.getData());
-				return true;
-			case VirtConnectionTerminated:
-				view.alert("Spojení bylo ukončeno: " + cmd.getData());
-				view.showScene(IView.Scene.MainMenu);
-				return true;
+				break;
 			default:
-				System.err.println("Command was not handled: " + cmd.toString());
-				return false;
+				throw new CommandNotHandledException(cmd);
+		}
+	}
+
+	@Override
+	public void signal(Signal signal) {
+		switch (signal.getType()) {
+			case ConnectionEstabilished:
+				view.showScene(IView.Scene.ServerList);
+			case ConnectingError:
+			case ConnectingTimedOut:
+				System.err.println("Nepripojeno: " + signal.getMessage());
+				break;
+			case ConnectionReset:
+				view.alert("Spojení bylo ukončeno: " + signal.getMessage());
+				view.showScene(IView.Scene.MainMenu);
+				break;
 		}
 	}
 
@@ -177,20 +182,19 @@ public final class Engine implements INetCommandHandler, IUpdatable {
 
 		// TODO: link this through network events
 		this.currentGameRoom = Mock.gameRoom(controls, playerColorManager);
-		
+
 		System.out.println("Generating map");
 		Map map = (new MapGenerator()).mockMap(20, 12, 8, this.currentGameRoom.getPlayerCount());
-		
+
 		System.out.println("Initializing warzone");
 		this.currentGameRoom.initWarzone(map);
 
 		System.out.println("Preparing game");
-		
+
 		this.view.prepareGame(this.currentGameRoom.getWarzone().getMap(), this.currentGameRoom.getPlayers());
-		
-		
+
 		this.view.alert("Probíhá připojování");
-		
+
 		this.view.showScene(IView.Scene.Lobby);
 	}
 

@@ -4,7 +4,7 @@ package tunnelers.network;
  *
  * @author Stepan
  */
-public class CommandNotRecognisedException extends NetworksException{
+public class CommandNotRecognisedException extends CommandException{
 	
 	private final String data;
 	

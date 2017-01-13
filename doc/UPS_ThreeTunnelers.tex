@@ -156,11 +156,12 @@ Protokol je bezestavový, což znamená, že žádná ze zpráv nevyžaduje okam
 \hline
 \textbf{Kód} & \textbf{Název} & \textbf{Zdroj} & \textbf{Tělo zprávy / poznámka}\\ \hline
 0 & Nedefinováno & - & Používá se pro rozpoznání neplatného přenosu \\ \hline
-1 & Potvrzení & K/S & Generické schválení požadavku, nepoužívat \\ \hline
-2 & Zamítnutí & K/S & Generické zamítnutí požadavku, nepoužívat \\ \hline
-3 & Echo Request & K/S & Vyžádání aktivity protější strany \\ \hline
-4 & Echo Reply & K/S & Odpověď generující aktivitu \\ \hline
+1 & Představení & K/S & (XX)(tajný kód) - signalizace, zda-li se jedná o nové připojení (nulová hodnota) nebo o opětovné připojení (kladná hodnota). Pokud se jedná o nové připojení, klient nemusí posílat tajný kód. \\ \hline
+2 & Odpojení & K/S & (důvod odpojení) - odůvodnění ukončení spojení \\ \hline
+3 & Marco & K/S & Vyžádání aktivity protější strany \\ \hline
+4 & Polo & K/S & Odpověď generující aktivitu \\ \hline
 5 & Špatný formát & K/S & (zpráva) Oznámení protistraně o nerozpoznaném příkazu s neplatnou zprávou\\ \hline
+10 & Nastavení jména & K/S & (jméno) \\ \hline
 
 \end{tabular}
 \end{table}
@@ -170,13 +171,9 @@ Protokol je bezestavový, což znamená, že žádná ze zpráv nevyžaduje okam
 \begin{tabular}{|l|p{3cm}|l|p{10cm}|}
 \hline
 \textbf{Kód} & \textbf{Název} & \textbf{Zdroj} & \textbf{Tělo zprávy / poznámka}\\ \hline
-10 & Představení & K/S & (XX)(tajný kód) - signalizace, zda-li se jedná o nové připojení (nulová hodnota) nebo o opětovné připojení (kladná hodnota). Pokud se jedná o nové připojení, klient nemusí posílat tajný kód.  \\ \hline
-11 & Odpojení & K/S & (důvod odpojení) - odůvodnění ukončení spojení \\ \hline
-14 & Vypsat místnosti & K & - \\ \hline
-15 & Seznam místnosti & S & (XX)(XX)(M)*n - počet místností ve zprávě, zbývající počet místností výpisu, n identifikátorů místnosti \\ \hline
+14 & Vypsat místnosti & K & K: požadavek o výpis místností \newline S: (XX)(XX)(M)*n - počet místností ve zprávě, zbývající počet místností výpisu, n identifikátorů místnosti \\ \hline
 16 & Vytvořit místnost & K & - \\ \hline
-17 & Vstoupit do místnosti & K & (XX) - číslo místnosti \\ \hline
- & Opustit místnost & K & - \\ \hline
+17 & Vstoupit do místnosti & K/S & (XX) - číslo místnosti \\ \hline
 18 & Opustit místnost & K/S & K: - \newline S: důvod opuštění místnosti \\ \hline
 
 40 & Zpráva - prostý text & K/S & K: (zpráva) \newline S: (XX)(zpráva) - identifikátor odesílatele, 0 vždy odpovídá systému, v místnosti jsou pozice klientů číslovány od 1 \\ \hline

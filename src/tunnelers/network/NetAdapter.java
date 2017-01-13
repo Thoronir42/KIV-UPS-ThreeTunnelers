@@ -2,38 +2,42 @@ package tunnelers.network;
 
 import java.io.IOException;
 import tunnelers.common.IUpdatable;
+import tunnelers.core.engine.PersistentString;
 import tunnelers.network.command.Command;
 import tunnelers.network.command.CommandParser;
 import tunnelers.network.command.CommandType;
+import tunnelers.network.command.INetworkProcessor;
+import tunnelers.network.command.Signal;
 
 /**
  *
  * @author Stepan
  */
-public class NetAdapter extends Thread implements IUpdatable {
+public final class NetAdapter extends Thread implements IUpdatable {
 
 	private static final int BUFFER_SIZE = 512;
 
 	private Connection connection;
+	private PersistentString connectionSecret;
 	private NetClient localClient;
 	private String disconnectReason;
 
 	private final CommandParser parser;
-	private INetCommandHandler handler;
+	private INetworkProcessor handler;
 	private boolean keepRunning;
 
 	public NetAdapter() {
 		this(null);
 	}
 
-	public NetAdapter(INetCommandHandler handler) {
+	public NetAdapter(INetworkProcessor handler) {
 		super(NetAdapter.class.getSimpleName());
 		this.parser = new CommandParser();
 		this.keepRunning = true;
 		this.setHandler(handler);
 	}
 
-	public void setHandler(INetCommandHandler handler) {
+	public void setHandler(INetworkProcessor handler) {
 		this.handler = handler;
 	}
 
@@ -44,18 +48,21 @@ public class NetAdapter extends Thread implements IUpdatable {
 	/**
 	 * Non-blocking Schedules connection creation.
 	 *
+	 * @param connectionSecret
 	 * @param clientName
 	 * @param adress
 	 * @param port
 	 */
-	public void connectTo(String clientName, String adress, int port) {
+	public void connectTo(PersistentString connectionSecret, String clientName, String adress, int port) {
+		this.connectionSecret = connectionSecret;
+		if (this.connectionSecret == null) {
+			throw new IllegalArgumentException("Connection secret must be specified");
+		}
 		try {
 			this.connection = new Connection(adress, port, BUFFER_SIZE);
 			this.localClient = new NetClient(clientName);
 		} catch (NetworksException e) {
-			Command err = new Command(CommandType.VirtConnectingError);
-			err.setData(e.getMessage());
-			this.handler.handle(err);
+			this.handler.signal(new Signal(Signal.Type.ConnectingError, e.getMessage()));
 		}
 	}
 
@@ -94,7 +101,7 @@ public class NetAdapter extends Thread implements IUpdatable {
 
 		while (this.keepRunning) {
 			try {
-				if (!isValidConnection(connection)) {
+				if (!ensureConnectionValid(connection)) {
 					continue;
 				}
 
@@ -104,22 +111,17 @@ public class NetAdapter extends Thread implements IUpdatable {
 
 				if (message == null || message.length() == 0) {
 					this.log("Connection reset");
-					Command err = new Command(CommandType.VirtConnectionTerminated);
-					this.handler.handle(err);
+					this.handler.signal(new Signal(Signal.Type.ConnectingTimedOut));
 					connection = null;
 					continue;
 				}
 
 				try {
 					Command cmd = this.parser.parse(message);
-					this.log("Handling cmd: " + cmd.toString());
-					if (this.handler.handle(cmd)) {
-						this.connection.invalidCounterReset();
-					} else {
-						this.connection.invalidCounterIncrease();
-					}
+					this.handler.handle(cmd);
+					this.connection.invalidCounterReset();
 
-				} catch (CommandNotRecognisedException e) {
+				} catch (CommandException e) {
 					this.logError(e.toString());
 					this.connection.invalidCounterIncrease();
 				}
@@ -144,7 +146,7 @@ public class NetAdapter extends Thread implements IUpdatable {
 	 * @param connection
 	 * @return
 	 */
-	private boolean isValidConnection(Connection connection) {
+	private boolean ensureConnectionValid(Connection connection) {
 		if (connection == null) {
 			try {
 				sleep(200);
@@ -157,15 +159,13 @@ public class NetAdapter extends Thread implements IUpdatable {
 		if (!connection.isOpen()) {
 			try {
 				connection.open();
-				handler.handle(new Command(CommandType.VirtConnectionEstabilished));
+				this.handler.signal(new Signal(Signal.Type.ConnectionEstabilished));
 
-				Command introduction = this.createCommand(CommandType.ClientIntroduce);
-				introduction.setData(localClient.getName());
+				Command introduction = this.createCommand(CommandType.LeadIntroduce);
+				introduction.setData(this.connectionSecret.get());
 				this.issueCommand(introduction);
 			} catch (IOException e) {
-				Command err = new Command(CommandType.VirtConnectingTimedOut);
-				err.setData(e.getMessage());
-				handler.handle(err);
+				this.handler.signal(new Signal(Signal.Type.ConnectingTimedOut, e.getMessage()));
 				this.connection = null;
 				return false;
 			}
@@ -175,15 +175,14 @@ public class NetAdapter extends Thread implements IUpdatable {
 	}
 
 	synchronized public void disconnect() {
-		this.disconnect("");
+		this.disconnect("Closed by client");
 	}
 
 	synchronized public void disconnect(String reason) {
 		this.disconnectReason = reason;
 		try {
 			if (this.connection == null) {
-				this.logError("Disconnect error: not connected");
-				return;
+				throw new IOException("Can not close connection - none open");
 			}
 			this.connection.close();
 			this.log("disconnected: " + reason);
@@ -191,9 +190,7 @@ public class NetAdapter extends Thread implements IUpdatable {
 			this.logError("Disconnect error: " + e.getMessage());
 		} finally {
 			this.connection = null;
-			Command terminator = new Command(CommandType.VirtConnectionTerminated);
-			terminator.setData(reason);
-			this.handler.handle(terminator);
+			this.handler.signal(new Signal(Signal.Type.ConnectionReset, reason));
 		}
 	}
 

@@ -1,26 +1,20 @@
 package tunnelers.network.command;
 
 public enum CommandType {
-	VirtConnectionTerminated(-4),
-	VirtConnectingError(-3),
-	VirtConnectingTimedOut(-2),
-	VirtConnectionEstabilished(-1),
-	
 	Undefined(0),
 	//    LEAD
-	LeadApprove(1),
-	LeadDeny(2),
+	LeadIntroduce(1),
+	LeadDisconnect(2),
 	LeadMarco(3),
 	LeadPolo(4),
 	LeadBadFormat(5),
 	//    CLIENT
-	ClientIntroduce(10),
-	ClientDisconnect(11),
-	ClientFetchGameList(14),
-	ClientGamesList(15),
-	ClientCreateGame(16),
-	ClientJoinGame(17),
-	ClientLeaveGame(18),
+	ClientSetName(10),
+	
+	RoomsList(14),
+	RoomsCreate(16),
+	RoomsJoin(17),
+	RoomsLeave(18),
 	//    MESSAGE
 	MsgPlain(40),
 	MsgRcon(45),
