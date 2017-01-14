@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import tunnelers.network.codec.ICodec;
 import tunnelers.network.codec.NoCodec;
 
@@ -16,9 +17,12 @@ import tunnelers.network.codec.NoCodec;
  */
 public class Connection {
 
+	protected final String hostname;
+	protected final int port;
+	
+	
 	private final ICodec codec;
 	protected InetAddress address;
-	protected int port;
 	
 	private long latency;
 
@@ -31,21 +35,17 @@ public class Connection {
 	private int invalidMessageCounter;
 	
 
-	public Connection(String hostname, int port, int receiveBufferSize) throws NetworksException {
+	public Connection(String hostname, int port, int receiveBufferSize) {
 		this(hostname, port, receiveBufferSize, new NoCodec());
 	}
 
-	public Connection(String hostname, int port, int receiveBufferSize, ICodec codec) throws NetworksException {
-		try {
-			this.address = InetAddress.getByName(hostname);
-			this.port = port;
-			this.lastActive = System.currentTimeMillis();
-			this.codec = codec;
-			this.lastMsgId = 0;
-			this.invalidMessageCounter = 0;
-		} catch (IOException e) {
-			throw new NetworksException(e);
-		}
+	public Connection(String hostname, int port, int receiveBufferSize, ICodec codec) {
+		this.hostname = hostname;
+		this.port = port;
+		this.lastActive = System.currentTimeMillis();
+		this.codec = codec;
+		this.lastMsgId = 0;
+		this.invalidMessageCounter = 0;
 	}
 	
 	public int invalidCounterIncrease(){
@@ -59,10 +59,12 @@ public class Connection {
 		return this.socket != null;
 	}
 
-	public void open() throws IOException {
+	public void open() throws UnknownHostException, IOException {
 		if (this.isOpen()) {
 			throw new IOException("Connection is already open");
 		}
+		this.address = InetAddress.getByName(this.hostname);
+		
 		this.socket = new Socket(address, port);
 
 		this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -109,7 +111,7 @@ public class Connection {
 	}
 
 	public String getHostString() {
-		return this.address.getHostAddress() + ':' + this.port;
+		return this.hostname + ':' + this.port;
 	}
 
 	int getInvalidCounter() {

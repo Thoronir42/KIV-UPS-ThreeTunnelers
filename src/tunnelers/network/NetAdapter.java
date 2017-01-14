@@ -1,6 +1,7 @@
 package tunnelers.network;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import tunnelers.common.IUpdatable;
 import tunnelers.core.engine.PersistentString;
 import tunnelers.network.command.Command;
@@ -50,20 +51,16 @@ public final class NetAdapter extends Thread implements IUpdatable {
 	 *
 	 * @param connectionSecret
 	 * @param clientName
-	 * @param adress
+	 * @param hostname
 	 * @param port
 	 */
-	public void connectTo(PersistentString connectionSecret, String clientName, String adress, int port) {
+	public void connectTo(PersistentString connectionSecret, String clientName, String hostname, int port) {
 		this.connectionSecret = connectionSecret;
 		if (this.connectionSecret == null) {
 			throw new IllegalArgumentException("Connection secret must be specified");
 		}
-		try {
-			this.connection = new Connection(adress, port, BUFFER_SIZE);
-			this.localClient = new NetClient(clientName);
-		} catch (NetworksException e) {
-			this.handler.signal(new Signal(Signal.Type.ConnectingError, e.getMessage()));
-		}
+
+		this.connection = new Connection(hostname, port, BUFFER_SIZE);
 	}
 
 	@Override
@@ -164,6 +161,8 @@ public final class NetAdapter extends Thread implements IUpdatable {
 				Command introduction = this.createCommand(CommandType.LeadIntroduce);
 				introduction.setData(this.connectionSecret.get());
 				this.issueCommand(introduction);
+			} catch (UnknownHostException e) {
+				this.handler.signal(new Signal(Signal.Type.ConnectingError, e.getMessage()));
 			} catch (IOException e) {
 				this.handler.signal(new Signal(Signal.Type.ConnectingTimedOut, e.getMessage()));
 				this.connection = null;
