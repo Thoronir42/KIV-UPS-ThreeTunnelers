@@ -155,7 +155,7 @@ public final class NetAdapter extends Thread implements IUpdatable {
 
 		if (!connection.isOpen()) {
 			try {
-				connection.open();
+				connection.open(5000);
 				this.handler.signal(new Signal(Signal.Type.ConnectionEstabilished));
 
 				Command introduction = this.createCommand(CommandType.LeadIntroduce);

@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import tunnelers.network.codec.ICodec;
 import tunnelers.network.codec.NoCodec;
@@ -56,16 +58,25 @@ public class Connection {
 	}
 
 	public boolean isOpen() {
-		return this.socket != null;
+		return this.socket != null && this.socket.isConnected();
 	}
 
-	public void open() throws UnknownHostException, IOException {
+	/**
+	 * 
+	 * @param timeout Time to wait for connection in milliseconds
+	 * @throws UnknownHostException
+	 * @throws IOException 
+	 */
+	public void open(int timeout) throws UnknownHostException, IOException {
 		if (this.isOpen()) {
 			throw new IOException("Connection is already open");
 		}
 		this.address = InetAddress.getByName(this.hostname);
 		
-		this.socket = new Socket(address, port);
+		this.socket = new Socket();
+		InetSocketAddress sockAddr = new InetSocketAddress(address, port);
+		
+		socket.connect(sockAddr, timeout);
 
 		this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 		this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
