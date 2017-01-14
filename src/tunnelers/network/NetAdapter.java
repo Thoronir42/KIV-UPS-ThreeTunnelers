@@ -159,7 +159,13 @@ public final class NetAdapter extends Thread implements IUpdatable {
 				this.handler.signal(new Signal(Signal.Type.ConnectionEstabilished));
 
 				Command introduction = this.createCommand(CommandType.LeadIntroduce);
-				introduction.setData(this.connectionSecret.get());
+				String secret = this.connectionSecret.get();
+				if (secret.length() > 0) {
+					introduction.append((byte) 1).append(secret);
+				} else {
+					introduction.append((byte) 0);
+				}
+
 				this.issueCommand(introduction);
 			} catch (UnknownHostException e) {
 				this.handler.signal(new Signal(Signal.Type.UnknownHost, e.getMessage()));
@@ -183,7 +189,7 @@ public final class NetAdapter extends Thread implements IUpdatable {
 	synchronized public void disconnect(String reason) {
 		this.disconnectReason = reason;
 		try {
-			if(this.connection != null){
+			if (this.connection != null) {
 				this.connection.close();
 				this.log("disconnected: " + reason);
 			}

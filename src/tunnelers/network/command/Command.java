@@ -35,20 +35,26 @@ public class Command {
 	 *
 	 * @return length of data
 	 */
-	public short getLength() {
-		return (short) data.length();
+	public int getLength() {
+		return data.length();
 	}
 
-	protected void append(byte n) {
-		this.data += String.format("%02X", n);
+	public Command append(byte n) {
+		return this.append(String.format("%02X", n));
 	}
 
-	protected void append(short n) {
-		this.data += String.format("%04X", n);
+	public Command append(short n) {
+		return this.append(String.format("%04X", n));
 	}
 
-	protected void append(int n) {
-		this.data += String.format("%08X", n);
+	public Command append(int n) {
+		return this.append(String.format("%08X", n));
+	}
+	
+	public Command append(String s){
+		this.data += s;
+		
+		return this;
 	}
 
 	public String getData() {
