@@ -1,6 +1,5 @@
 package tunnelers.core.engine;
 
-import tunnelers.core.view.IView;
 import temp.mapGenerator.MapGenerator;
 import temp.Mock;
 import tunnelers.common.IUpdatable;
@@ -101,7 +100,7 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 
 		if (controlsScheme.setControlState(inp, pressed)) {
 			Command cmd = this.netadapter.createCommand(CommandType.GameControlsSet);
-			
+
 		}
 	}
 
@@ -117,6 +116,7 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 	}
 
 	public void connect(String name, String addr, int port) {
+		this.view.setConnectEnabled(false);
 		this.netadapter.connectTo(this.connectionSecret, name, addr, port);
 	}
 
@@ -146,6 +146,7 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 
 	@Override
 	public void signal(Signal signal) {
+		view.setConnectEnabled(true);
 		switch (signal.getType()) {
 			case ConnectionEstabilished:
 				view.showScene(IView.Scene.ServerList);
@@ -179,7 +180,7 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 			this.view.alert("Hra je již plná");
 			return;
 		}
-		PlayerColorManager playerColorManager = view.getColorScheme().getPlayerColorManager();
+		PlayerColorManager playerColorManager = view.getPlayerColorManager();
 		playerColorManager.resetColorUsage();
 
 		// TODO: link this through network events

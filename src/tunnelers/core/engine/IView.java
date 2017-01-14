@@ -1,5 +1,6 @@
-package tunnelers.core.view;
+package tunnelers.core.engine;
 
+import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
@@ -22,7 +23,9 @@ public interface IView {
 	public void updateChat();
 	
 	public AControlsManager getControlsManager();
-	public IColorScheme getColorScheme();
+	public PlayerColorManager getPlayerColorManager();
+	
+	public void setConnectEnabled(boolean value);
 	
 	public void prepareGame(Map map, Player[] players);
 	

@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -14,7 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.core.gameRoom.GameRoomFacade;
-import tunnelers.core.view.IView;
+import tunnelers.core.engine.IView;
 
 /**
  *
@@ -55,23 +56,15 @@ public class MainMenuScene extends ATunnelersScene {
 				scene.getStage().close();
 			}),};
 
-		ServerSelectControl serverSelect = new ServerSelectControl(8, new NameManager(420));
-		serverSelect.setHostname(settings.getServerAddress());
-		serverSelect.setPort(settings.getServerPort());
-		serverSelect.setName("Karel");
-		serverSelect.setOnConnectAction((e) -> {
-			scene.getEngine().connect(serverSelect.getName(), serverSelect.getHostname(), serverSelect.getPort());
-		});
-
-		serverSelect.setStyle("-fx-background-color: rgba(245,245,245,0.95);"
+		scene.serverSelect.setStyle("-fx-background-color: rgba(245,245,245,0.95);"
 				+ " -fx-border-size: 2px;"
 				+ " -fx-border-style: solid;"
 				+ " -fx-border-color: black;"
 				+ " -fx-padding: 20px;");
 
-		content.add(serverSelect, 0, 0);
+		content.add(scene.serverSelect, 0, 0);
 		for (int i = 0; i < buttons.length; i++) {
-			buttons[i].prefWidthProperty().bind(serverSelect.widthProperty());
+			buttons[i].prefWidthProperty().bind(scene.serverSelect.widthProperty());
 			content.add(buttons[i], 0, 1 + i);
 		}
 
@@ -107,8 +100,25 @@ public class MainMenuScene extends ATunnelersScene {
 		btn.setPrefSize(BTN_PREF_WIDTH, BTN_PREF_HEIGHT);
 		return btn;
 	}
+	
+	private final ServerSelectControl serverSelect;
 
 	public MainMenuScene(Parent root, double width, double height) {
 		super(root, width, height, "Hlavní menu");
+		ServerSelectControl serverSelectControl = new ServerSelectControl(8, new NameManager(420));
+		serverSelectControl.setHostname(settings.getServerAddress());
+		serverSelectControl.setPort(settings.getServerPort());
+		serverSelectControl.setName("Karel");
+		
+		serverSelectControl.setOnSelected((ServerSelectEvent e) -> {
+			this.getEngine().connect(e.getUsername(), e.getHostname(), e.getPort());
+		});
+		
+		this.serverSelect = serverSelectControl;
+	}
+	
+	public void setConnectEnabled(boolean value) {
+		serverSelect.setDisable(!value);
+		serverSelect.setCursor(value ? Cursor.DEFAULT : Cursor.WAIT);
 	}
 }

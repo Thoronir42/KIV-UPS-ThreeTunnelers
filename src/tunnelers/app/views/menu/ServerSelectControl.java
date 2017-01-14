@@ -20,10 +20,12 @@ import tunnelers.app.views.settings.controls.PortTextField;
 public final class ServerSelectControl extends GridPane{
 	
 	private final NameManager names;
-	private final TextField tf_hostname, tf_name;
+	private final TextField tf_hostname, tf_username;
 	private final PortTextField tf_port;
 	
 	private final Button but_connect;
+	
+	private EventHandler<ServerSelectEvent> onSelected;
 	
 	public ServerSelectControl(int spacing, NameManager names){
 		this.names = names;
@@ -36,7 +38,7 @@ public final class ServerSelectControl extends GridPane{
 		
 		this.tf_hostname = new TextField();
 		this.tf_port = new PortTextField();
-		this.tf_name = new TextField();
+		this.tf_username = new TextField();
 		this.but_connect = new Button("Připojit se!");
 		
 		Label lbl_hostname = new Label("Adresa");
@@ -46,7 +48,7 @@ public final class ServerSelectControl extends GridPane{
 		
 		tf_hostname.prefWidthProperty().bind(prefControlWidth);
 		tf_port.prefWidthProperty().bind(prefControlWidth);
-		tf_name.prefWidthProperty().bind(prefControlWidth);
+		tf_username.prefWidthProperty().bind(prefControlWidth);
 		
 		lbl_hostname.setAlignment(Pos.CENTER_RIGHT);
 		lbl_port.setAlignment(Pos.CENTER_RIGHT);
@@ -58,7 +60,12 @@ public final class ServerSelectControl extends GridPane{
 		lbl_name.prefWidthProperty().bind(prefLabelWidth);
 		
 		but_connect.prefWidthProperty().bind(prefControlWidth.add(prefLabelWidth));
-		
+		but_connect.setOnAction(e -> {
+			if(onSelected == null){
+				return;
+			}
+			onSelected.handle(new ServerSelectEvent(this.getHostname(), this.getPort(), this.getUsername()));
+		});
 		
 		lbl_name.setCursor(Cursor.HAND);
 		lbl_name.setStyle("-fx-underline: true;");
@@ -69,7 +76,7 @@ public final class ServerSelectControl extends GridPane{
 		
 		
 		this.addColumn(0, lbl_hostname, lbl_port, lbl_name);
-		this.addColumn(1, this.tf_hostname, this.tf_port, this.tf_name);
+		this.addColumn(1, this.tf_hostname, this.tf_port, this.tf_username);
 		
 		this.add(but_connect, 0, 3, 2, 1);
 		
@@ -93,14 +100,14 @@ public final class ServerSelectControl extends GridPane{
 	}
 	
 	public void setName(String name){
-		this.tf_name.setText(name);
+		this.tf_username.setText(name);
 	}
 	
-	public String getName(){
-		return this.tf_name.getText();
+	public String getUsername(){
+		return this.tf_username.getText();
 	}
 	
-	public void setOnConnectAction(EventHandler<ActionEvent> eventHandler){
-		this.but_connect.setOnAction(eventHandler);
+	public void setOnSelected(EventHandler<ServerSelectEvent> eventHandler){
+		this.onSelected = eventHandler;
 	}
 }

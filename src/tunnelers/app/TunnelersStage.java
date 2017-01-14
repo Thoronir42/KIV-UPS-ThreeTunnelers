@@ -1,7 +1,7 @@
 package tunnelers.app;
 
 import tunnelers.common.IUpdatable;
-import tunnelers.core.view.IView;
+import tunnelers.core.engine.IView;
 import java.util.HashMap;
 import tunnelers.core.settings.Settings;
 import javafx.application.Platform;
@@ -10,13 +10,13 @@ import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.views.warzone.PlayScene;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.render.FxRenderContainer;
-import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.app.render.colors.FxDefaultColorScheme;
 import tunnelers.app.render.colors.FxPlayerColorManager;
 import tunnelers.app.views.lobby.LobbyScene;
 import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.app.views.serverList.ServerListScene;
 import tunnelers.app.views.settings.SettingsScene;
+import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.engine.Engine;
 import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.model.map.Map;
@@ -163,10 +163,10 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 			this.currentScene.flashDisplay(message);
 		});
 	}
-
+	
 	@Override
-	public AColorScheme getColorScheme() {
-		return colorScheme;
+	public PlayerColorManager getPlayerColorManager() {
+		return colorScheme.getPlayerColorManager();
 	}
 
 	@Override
@@ -190,6 +190,14 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 			return;
 		}
 		((LobbyScene) this.currentScene).setPlayers(players);
+	}
+
+	@Override
+	public void setConnectEnabled(boolean value) {
+		if (!(this.currentScene instanceof MainMenuScene)) {
+			return;
+		}
+		((MainMenuScene) this.currentScene).setConnectEnabled(value);
 	}
 
 }

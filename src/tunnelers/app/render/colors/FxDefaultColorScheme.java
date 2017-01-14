@@ -70,7 +70,6 @@ public class FxDefaultColorScheme extends AColorScheme {
 		return UI_ENERGY;
 	}
 
-	@Override
 	public FxPlayerColorManager getPlayerColorManager() {
 		return this.playerColors;
 	}

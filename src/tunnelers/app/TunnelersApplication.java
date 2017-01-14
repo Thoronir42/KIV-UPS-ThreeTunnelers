@@ -1,6 +1,6 @@
 package tunnelers.app;
 
-import tunnelers.core.view.IView;
+import tunnelers.core.engine.IView;
 import generic.Impulser.Impulser;
 import tunnelers.core.settings.Settings;
 import javafx.application.Application;

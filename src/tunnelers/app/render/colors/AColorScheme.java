@@ -2,13 +2,11 @@ package tunnelers.app.render.colors;
 
 import javafx.scene.paint.Color;
 import tunnelers.core.model.map.Block;
-import tunnelers.core.view.IColorScheme;
-
 /**
  *
  * @author Stepan
  */
-public abstract class AColorScheme implements IColorScheme {
+public abstract class AColorScheme{
 
 	protected final FxPlayerColorManager playerColors;
 
@@ -43,11 +41,6 @@ public abstract class AColorScheme implements IColorScheme {
 	public abstract Color getUiHitpoints();
 
 	public abstract Color getUiEnergy();
-
-	@Override
-	public int getAvailablePlayerColors() {
-		return this.playerColors.size();
-	}
 	
 	public Color getCannonColor(){
 		return cannonColor;
