@@ -11,6 +11,8 @@ public class NetClient {
 	public static int MAX_NAME_LENGTH = 12;
 	public static int PLAYER_CAPACITY = 2;
 
+	private int latency;
+	private boolean connected;
 	private String name;
 	private final Player[] players;
 	private int activePlayers;
@@ -66,6 +68,22 @@ public class NetClient {
 
 	public Player getPlayer(int n) {
 		return this.players[n];
+	}
+
+	public int getLatency() {
+		return latency;
+	}
+
+	public void setLatency(int latency) {
+		this.latency = latency;
+	}
+
+	public boolean isConnected() {
+		return connected;
+	}
+
+	public void setConnected(boolean connected) {
+		this.connected = connected;
 	}
 
 }

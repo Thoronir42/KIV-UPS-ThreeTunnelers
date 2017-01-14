@@ -129,14 +129,23 @@ Tank, rozlehlý 7*7 bloků, je struktura definující hráčem ovládaný prvek 
 \subsubsection*{Projektil}
 Projektil zabírající oblast pouze 3 bloky je stejně jako Tank definován hráčem, kterému náleží, svojí polohou na mapě a směrem kam je natočen a kam letí.
 \subsubsection{Herní místnost}
-Herní místnost je kontejner nesoucí informace aktuálním stavu místnosti. Stavy místností jsou reprezentovány celočíselnými hodnotami 0 = Čeká, 1 = Lobby, 2 = Bitva, 3 = Souhrny. Dále herní místnost nese informace klientech, kteří se účastní dění v místnosti, o hráčích účastnících se hry a v určitém stavu i o bitevní zóně.
+Herní místnost je kontejner nesoucí informace aktuálním stavu místnosti, informace klientech, kteří se účastní dění v místnosti a identifikátor klienta, který má místnost "na starost". Dále místnost nese informace o hráčích účastnících se hry a v určitém stavu i o bitevní zóně.
+Stavy místností jsou reprezentovány celočíselnými hodnotami 0 = Čeká, 1 = Lobby, 2 = Bitva začíná, 3 = Bitva, 4 = Souhrny.
 \subsubsection*{Bitevní zóna}
 Bitevní zóna je střed dění a zde se uchovávají informace o mapě definující oblast, o tancích v oblasti a o projektilech létajících oblastí.
 
 
-\newpage
-\subsection{Protokol}
-Zprávy mezi klientem a serverem se přenáší pomocí protokolu realizovaného nad transportním protokolem TCP. Zprávy nemusí mít jednotnou délku ale vždy musí odpovídat následujícímu formátu:
+\subsection{Herní server}
+Zdrojové soubory serveru jsou tříděny do modulů podle jejich významu...
+\subsection{Herní klient}
+Zdrojové soubory serveru jsou tříděny do balíků podle jejich významu...
+\section{Uživatelská dokumentace}
+
+
+\section{Přílohy}
+\subsection{Aplikační protokol TTP}
+Protokol STTP (Three Tunnelers Protocol) definuje rozhraní mezi dvěma účastníky komunikace po síti. Komunikace je asynchronní, což znamená že účastníci nemají stejné role, zde mají mezi sebou vztah Klient-Server.
+Aplikační protokol STTP je realizován nad transportním protokolem TCP. Zprávy nemusí mít jednotnou délku ale vždy musí odpovídat následujícímu formátu:
 \begin{center}
 \texttt{<hlavička><tělo><LF>}
 \end{center}
@@ -149,75 +158,79 @@ Zprávy mezi klientem a serverem se přenáší pomocí protokolu realizovaného
 
 Protokol je bezestavový, což znamená, že žádná ze zpráv nevyžaduje okamžitou odpověď. Většina druhů zpráv však významově předpokládá návaznost jiných zpráv.
 
-\subsubsection{Výčet typů zpráv a jejich významů}
-\begin{table}[h]
-\center
-\begin{tabular}{|l|p{3cm}|l|p{10cm}|}
-\hline
-\textbf{Kód} & \textbf{Název} & \textbf{Zdroj} & \textbf{Tělo zprávy / poznámka}\\ \hline
-0 & Nedefinováno & - & Používá se pro rozpoznání neplatného přenosu \\ \hline
-1 & Představení & K/S & (XX)(tajný kód) - signalizace, zda-li se jedná o nové připojení (nulová hodnota) nebo o opětovné připojení (kladná hodnota). Pokud se jedná o nové připojení, klient nemusí posílat tajný kód. \\ \hline
-2 & Odpojení & K/S & (důvod odpojení) - odůvodnění ukončení spojení \\ \hline
-3 & Marco & K/S & Vyžádání aktivity protější strany \\ \hline
-4 & Polo & K/S & Odpověď generující aktivitu \\ \hline
-5 & Špatný formát & K/S & (zpráva) Oznámení protistraně o nerozpoznaném příkazu s neplatnou zprávou\\ \hline
-10 & Nastavení jména & K/S & (jméno) \\ \hline
+Definice zpráv protokolu podle hlaviček určují formát těla. V definici je možné se setkat s následujícími symboly:
+\begin{itemize}
+\item[C] = Znak
+\item[X] = Znak představující hexadecimální hodnotu
+\item[text]
+\end{itemize}
 
-\end{tabular}
-\end{table}
+\subsubsection*{Organizační zprávy mezi klientem a serverem}
+\begin{description}
+\item[1 Představení klienta] (XX)(text) [pořadí připojení, tajný kód] \\
+Klient MUSÍ poslat jako první segment těla číselné pořadí určující, po kolikáté se klient přihlašuje. Rozpoznávané hodnoty jsou: nulová hodnota - klient se přihlašuje poprvé, nenulová hodnota - klient se snaží připojit znovu. Pokud se klient přihlašuje znovu, MUSÍ zahrnout druhý segment zprávy - tajný kód. \\
+Server MUSÍ poslat jako první segment těla číselné pořadí, jako klient. V obou případech server MUSÍ zahrnout druhý segment - tajný kód.
+Pokud se jedná o opětovné připojení klienta, server BY MĚL následovně poslat zprávu typu "Nastavení jména".
+\item[2 Odpojení] (text)[důvod odpojení]\\
+Pokud je to možné, klient i server BY MĚLI před ukončením spojení poslat zprávu o ukončení spojení. Zpráva MŮŽE obsahovat segment důvod odpojení.
+\item[3 Marco] (XX)(XXXXXXXX)(XXXXXXXX) [počet předcházejících zpráv, časový otisk odesílající strany, časový otisk přijímající strany] \\
+Zpráva vyžadující odpověď protistrany. Zpráva MUSÍ obsahovat časový otisk odesílající strany. Pokud je počet předcházejících zpráv nenulový, zpráva MUSÍ obsahovat i časový otisk přijímající strany. V opačném případě NESMÍ časový otisk přijímající strany. \\
+Zpráva MŮŽE být použita jako odpověď, pokud přijímající strana také požaduje synchronizaci. V takovém případě MUSÍ být počet předcházejících zpráv nenulový.
+\item[4 Polo] (XXXXXXXX) [Časový otisk přijímající strany]\\
+Odpovídající zpráva na zprávu "Marco". Zpráva MUSÍ obsahovat časový otisk přijímající strany.
+Zpráva odpovídající
+\item[5 Neplatný příkaz] (text) [přijatá neplatná zpráva]\\
+Zpráva sloužící k informaci protistrany o neplatném formátu přijaté zprávy. Zpráva MUSÍ obsahovat neplatnou příchozí zprávu v podobě, v jaké byla přijata.
+\item[10 Nastavení jména] (text) [Jméno klienta] \\
+Zpráva od klienta MUSÍ obsahovat požadované jméno. Zpráva od serveru MUSÍ obsahovat jméno v takové podobě, v jaké je přijata.
+\end{description}
+\subsubsection*{Zprávy spravující místnosti}
+\begin{description}
+\item[14 Výpis místností] (XX)(M)*n [počet místností (n) ve zprávě, n popisů místnosti] \\
+Zpráva od klienta NESMÍ obsahovat tělo. Zpráva od Serveru MUSÍ určit kolik místností nese a MUSÍ obsahovat tolik popisů místností. \\
+Popis místnosti je tohoto formátu: (XXXX)(XX)(XX)(C)(C) [id místnosti, maximální počet hráčů, aktuální počet hráčů, stav místnosti, nastavená obtížnost]
+\item[16 Vytvořit místnost] - \\
+\item[17 Vstoupit do místnosti] (XX) [Číslo místnosti]
+\item[18 Opustit místnost] -
+\end{description}
+\subsubsection*{Mimo-herní zprávy v rámci místnost}
+\begin{description}
+\item[40 Zpráva - prostý text](XX)(text) [identifikátor odesílatele] \\
+Klient NESMÍ zahrnovat identifikátor odesílatele. Identifikátor odesílatele označuje pořadí klienta v místnosti číslovaně od 1. Nula představuje systémem odeslané zprávy.
+\item[42 Zpráva - vzdálený příkaz](text) [Příkaz k vykonání] \\
+Umožňuje vzdálené vykonávání příkazů pro ovládání serveru jako z příkazové řádky.
 
-\begin{table}[h]
-\center
-\begin{tabular}{|l|p{3cm}|l|p{10cm}|}
-\hline
-\textbf{Kód} & \textbf{Název} & \textbf{Zdroj} & \textbf{Tělo zprávy / poznámka}\\ \hline
-14 & Vypsat místnosti & K & K: požadavek o výpis místností \newline S: (XX)(XX)(M)*n - počet místností ve zprávě, zbývající počet místností výpisu, n identifikátorů místnosti \\ \hline
-16 & Vytvořit místnost & K & - \\ \hline
-17 & Vstoupit do místnosti & K/S & (XX) - číslo místnosti \\ \hline
-18 & Opustit místnost & K/S & K: - \newline S: důvod opuštění místnosti \\ \hline
+\item[60 Synchronizace fáze] (C) [stav místnosti]
+\item[61 Stav připravení] (XX)(XX) [nová připravenost (nulová / nenulová hodnota), identifikátor klienta v místnosti]
+Klient NESMÍ poslat identifikátor klienta.
+\item[65 Informace o klientovi] (XX)(XX)(text)[identifikátor klienta v místnosti, délka jména, jméno] \\
+Klient MUSÍ poslat pouze identifikátor klienta. Server MUSÍ poskytnout k identifikátoru i kompletní popis klienta.
+\item[66 Odezva klienta] (XX)(XXXX) [identifikátor klienta v místnosti, doba odezvy v milisekundách] \\
+Klient NESMÍ poslat tuto zprávu.
+\item[67 Odebrání klienta] (XX) [identifikátor klienta v místnosti]
+\item[68 Předat vedení klientovi] (XX) [číslo klienta v místnosti]
+\end{description}
 
-40 & Zpráva - prostý text & K/S & K: (zpráva) \newline S: (XX)(zpráva) - identifikátor odesílatele, 0 vždy odpovídá systému, v místnosti jsou pozice klientů číslovány od 1 \\ \hline
-45 & Zpráva - příkaz & K & (zpráva) / umožňuje vzdálené vykonávání příkazů pro ovládání serveru jako z příkazové řádky \\ \hline
-100 & Synchronizace fáze & S & (XX) aktuální fáze místnosti \\ \hline
-101 & Kontrolní signál místnosti & K/S & (XX) identifikátor signálu - signály místnosti mají různé významy dle aktuální fáze\\ \hline
-110 & Žádost o informace klienta & K & (XX) identifikátor klienta v místnosti \\ \hline
-111 & Představení klienta & S & (XX)(XX)(jméno) - číslo klienta v místnosti, délka jména, jméno \\ \hline
-112 & Odebrání klienta & S & (XX) - číslo klienta v místnosti \\ \hline
+\subsubsection*{Herní zprávy}
+\begin{description}
+\item[80 Přidání hráče] (XX)(XX)(XX) [slot v místnosti, barva, číslo klienta v místnosti] \\
+Klient NESMÍ zahrnout ve zprávě číslo klienta. Klient NEMUSÍ zahrnout ve zprávě barvu.
+\item[81 Odebrání hráče] (XX) [slot v místnosti]
+\item[82 Přesunutí hráče mezi sloty] (XX)(XX) [slot odkud, slot kam]
+\item[83 Nastavení barvy hráče] (XX)(XX) [slot hráče, barva]
 
-\end{tabular}
-\end{table}
+\item[90 Specifikace mapy] (XX)(XX)(XX) [velikost chunku, šířka v chuncích, výška v chuncích]
+\item[91 Chunková data] (XX)(XX)(XX)(text) [X chunku, Y chunku, checksum chunku, <domluvená velikost chunku> * X]\\
+Klient NESMÍ posílat chunková data na server.
+\item[92 Seznam změn bloků] (XX)(změna) * N [Počet změn bloků N, N změn bloků]\\ 
+Změna bloku je následujícího formátu: (XXXX)(XXXX)(X) [X souřadnice bloku, Y souřadnice bloku, nový blok]
 
-\begin{table}[h]
-\center
-\begin{tabular}{|l|p{3cm}|l|p{10cm}|}
-\hline
-\textbf{Kód} & \textbf{Název} & \textbf{Zdroj} & \textbf{Tělo zprávy / poznámka}\\ \hline
-120 & Vyhodit klienta & K & (XX) číslo klienta v místnosti \\ \hline
-121 & Předat vedení klientovi & K/S & (XX) číslo klienta v místnosti \\ \hline
-130 & Přidání hráče & K/S & K: (XX) - slot v místnosti \newline S: (XX)(XX)(XX)(XX) - slot v místnosti, klient, hráč klienta, barva \\ \hline
-131 & Odebrání hráče & K/S & (XX) - slot v místnosti \\ \hline
-132 & Přesunutí hráće mezi sloty & K/S& (XX)(XX) - slot ODKUD, slot KAM \\ \hline
-133 & Nastavení barvy hráče & K/S & (XX)(XX) - slot v místnosti, barva \\ \hline
-140 & Specifikace mapy & S & (XX)(XX)(XX) - velikost chunku, šířka v chuncích, výška v chuncích \\ \hline
-141 & Chunková data & S & (XX)(XX)(chunková data)\\ \hline
-142 & Požadavek o chunk & K & (XX)(XX)(XX) - X chunku, Y chunku, checksum chunku \\ \hline
-143 & Seznam změn bloků & S & (XX)((XXXX)(XXXX)(XX)) * n - počet změn bloků obsažených ve zprávě n, n * (pozice X, pozice Y, nový blok) \\ \hline
-201 & Nastavení ovládání & K/S & (XX)(XX) - K: číslo hráče klienta, bitová mapa stisklých kláves \newline S: (XX)(XX) - číslo hráče v místnosti, bitová mapa stisklých kláves \\ \hline
-210 & Požadavek o informace tanku & K & (XX) - číslo hráče v místnosti \\ \hline
-211 & Informace o tanku & S & (XX)(XXXX)(XXXX)(XX)(XX)(XX)( - číslo hráče v místnosti, pozice X, pozice Y, směr, zdraví, energie tanku \\ \hline
-220 & Vytvoření projektilu & S & (XX)(XX)(XX) - identifikátor projektilu, číslo hráče, počáteční směr \\ \hline
-221 & Odstranění projektilu & S & (XX) - identifikátor projektilu \\ \hline
-
-
-\end{tabular}
-\end{table}
-
-
-\subsection{Herní server}
-Zdrojové soubory serveru jsou tříděny do modulů podle jejich významu...
-\subsection{Herní klient}
-Zdrojové soubory serveru jsou tříděny do balíků podle jejich významu...
-\section{Uživatelská dokumentace}
+\item[120 Nastavení ovládání] (XX)(XX) - [číslo hráče v místnosti, bitová mapa stisklých kláves]
+\item[130 Informace o tanku] (XX)(XXXX)(XXXX)(XX)(XX)(XX) [číslo hráče v místnosti, pozice X, pozice Y, směr, body zásahu, energie tanku] \\
+Klient MUSÍ poslat pouze číslo hráče v místnosti.
+\item[140 Vytvoření projektilu] (XX)(XX)(XX) [identifikátor projektilu, číslo hráče, počáteční směr]
+\item[141 Odebrání projektilu] (XX) [identifikátor projektilu]
+\end{description}
 
 
 

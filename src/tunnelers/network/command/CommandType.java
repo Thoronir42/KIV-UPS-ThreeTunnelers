@@ -17,33 +17,29 @@ public enum CommandType {
 	RoomsLeave(18),
 	//    MESSAGE
 	MsgPlain(40),
-	MsgRcon(45),
+	MsgRcon(42),
 	//    ROOM CONTROLS
-	RoomSyncPhase(100),
-	RoomControlSignal(101),
+	RoomSyncPhase(60),
+	RoomReadyState(61),
 	//    CLIENT RELATED COMMANDS
-	RoomGetClientInfo(110),
-	RoomClientIntroduce(111),
-	RoomClientLeft(112),
-	//    CLIENT CONTROLLING COMMANDS
-	RoomKickClient(120),
-	RoomSetLeader(121),
+	RoomClientInfo(65),
+	RoomClientLatency(66),
+	RoomClientRemove(67),
+	RoomSetLeader(68),
 	//    PLAYER CONTROLLING COMMANDS
-	PlayerAttach(130),
-	PlayerDetach(131),
-	PlayerMove(132),
-	PlayerSetColor(133),
+	PlayerAttach(80),
+	PlayerDetach(81),
+	PlayerMove(82),
+	PlayerSetColor(83),
 	//    MAP COMMANDS
-	MapSpecification(140),
-	MapChunkData(141),
-	MapChunkRequest(142),
-	MapBlocksChanges(143),
+	MapSpecification(90),
+	MapChunkData(91),
+	MapBlocksChanges(92),
 	//    GAME-ENTITY CONTROLS
-	GameControlsSet(201),
-	GameTankRequest(210),
-	GameTankInfo(211),
-	GameProjAdd(220),
-	GameProjRem(221),;
+	GameControlsSet(120),
+	GameTankInfo(130),
+	GameProjAdd(140),
+	GameProjRem(141),;
 
 	private final short value;
 

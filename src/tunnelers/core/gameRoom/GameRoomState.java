@@ -5,7 +5,7 @@ package tunnelers.core.gameRoom;
  * @author Skoro
  */
 public enum GameRoomState {
-	Idle(0), Lobby(1), Battle(2), Summarization(3);
+	Idle(0), Lobby(1), BattleStarting(2), Battle(3), Summarization(4);
 
 	private final int intValue;
 

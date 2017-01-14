@@ -19,6 +19,8 @@ public class Connection {
 	private final ICodec codec;
 	protected InetAddress address;
 	protected int port;
+	
+	private long latency;
 
 	private Socket socket;
 	protected BufferedReader reader;
@@ -112,5 +114,13 @@ public class Connection {
 
 	int getInvalidCounter() {
 		return this.invalidMessageCounter;
+	}
+
+	public long getLatency() {
+		return latency;
+	}
+
+	public void setLatency(long latency) {
+		this.latency = latency;
 	}
 }
