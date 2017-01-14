@@ -149,9 +149,11 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		switch (signal.getType()) {
 			case ConnectionEstabilished:
 				view.showScene(IView.Scene.ServerList);
-			case ConnectingError:
+			case UnknownHost:
+				System.err.println("Adresa nebyla rozpoznána: " + signal.getMessage());
+				break;
 			case ConnectingTimedOut:
-				System.err.println("Nepripojeno: " + signal.getMessage());
+				System.err.println("Čas pro navázání spojení vypršel: " + signal.getMessage());
 				break;
 			case ConnectionReset:
 				view.alert("Spojení bylo ukončeno: " + signal.getMessage());

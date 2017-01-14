@@ -129,7 +129,7 @@ public final class NetAdapter extends Thread implements IUpdatable {
 				this.logError("Network: waiting interrupted");
 				break;
 			} catch (IOException e) {
-				this.logError("Network run error: " + e.getClass() + ": " + e.getMessage());
+				this.logError("Network run error: " + e.toString());
 				connection = null;
 			}
 		}
@@ -162,8 +162,11 @@ public final class NetAdapter extends Thread implements IUpdatable {
 				introduction.setData(this.connectionSecret.get());
 				this.issueCommand(introduction);
 			} catch (UnknownHostException e) {
-				this.handler.signal(new Signal(Signal.Type.ConnectingError, e.getMessage()));
+				this.handler.signal(new Signal(Signal.Type.UnknownHost, e.getMessage()));
+				this.connection = null;
+				return false;
 			} catch (IOException e) {
+				System.err.println(e.getClass());
 				this.handler.signal(new Signal(Signal.Type.ConnectingTimedOut, e.getMessage()));
 				this.connection = null;
 				return false;
@@ -180,11 +183,10 @@ public final class NetAdapter extends Thread implements IUpdatable {
 	synchronized public void disconnect(String reason) {
 		this.disconnectReason = reason;
 		try {
-			if (this.connection == null) {
-				throw new IOException("Can not close connection - none open");
+			if(this.connection != null){
+				this.connection.close();
+				this.log("disconnected: " + reason);
 			}
-			this.connection.close();
-			this.log("disconnected: " + reason);
 		} catch (IOException e) {
 			this.logError("Disconnect error: " + e.getMessage());
 		} finally {
@@ -201,6 +203,7 @@ public final class NetAdapter extends Thread implements IUpdatable {
 		try {
 			this.disconnect("Shutting down");
 			this.keepRunning = false;
+			super.interrupt();
 			super.join();
 			this.log("NetWorks ended succesfully");
 		} catch (InterruptedException ex) {

@@ -30,7 +30,7 @@ public class Signal {
 		ConnectingTimedOut,
 		ConnectionEstabilished,
 		ConnectionReset,
-		ConnectingError,
+		UnknownHost,
 		
 		
 	}

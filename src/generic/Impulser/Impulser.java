@@ -48,7 +48,7 @@ public class Impulser extends Thread {
 				sleep(tickDelay);
 			}
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			System.err.println("Impulser has been interrupted. Shutting everything down");
 			Platform.exit();
 		}
 	}
