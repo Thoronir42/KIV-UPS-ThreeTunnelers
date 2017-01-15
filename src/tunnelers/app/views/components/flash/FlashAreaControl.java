@@ -23,8 +23,6 @@ public class FlashAreaControl extends VBox {
 		super();
 		this.label = new Label(container.getMessage());
 		
-		System.out.println("New flash area control created with " + container.getMessage());
-		
 		label.prefWidthProperty().bind(this.widthProperty());
 		label.setAlignment(Pos.CENTER);
 		

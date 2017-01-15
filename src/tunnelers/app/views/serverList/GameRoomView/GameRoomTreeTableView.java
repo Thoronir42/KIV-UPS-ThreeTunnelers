@@ -2,6 +2,7 @@ package tunnelers.app.views.serverList.GameRoomView;
 
 import java.util.Collection;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.geometry.Insets;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
@@ -13,11 +14,11 @@ import tunnelers.app.views.serverList.GameRoomDifficulty;
  */
 public class GameRoomTreeTableView extends TreeTableView<IGameRoomTreeViewItem> {
 
-	public static GameRoomTreeTableView createInstance() {
-		return new GameRoomTreeTableView(new TreeItem<>(new GameRoomTreeViewRoot()));
-	}
-
 	final TreeItem<IGameRoomTreeViewItem> root;
+
+	public GameRoomTreeTableView() {
+		this(new TreeItem<>(new GameRoomTreeViewRoot()));
+	}
 
 	private GameRoomTreeTableView(TreeItem<IGameRoomTreeViewItem> root) {
 		super(root);
@@ -46,13 +47,25 @@ public class GameRoomTreeTableView extends TreeTableView<IGameRoomTreeViewItem> 
 			IGameRoomTreeViewItem item = c.getValue().getValue();
 			return new ReadOnlyStringWrapper(item.getOccupancy());
 		});
+		
+		columnPlayers.setPrefWidth(72);
+		columnPlayers.setResizable(false);
 
 		TreeTableColumn<IGameRoomTreeViewItem, String> columnFlags = new TreeTableColumn<>("Příznaky");
 		columnFlags.setCellValueFactory(c -> {
 			IGameRoomTreeViewItem item = c.getValue().getValue();
 			return new ReadOnlyStringWrapper(item.describeFlags());
 		});
-		columnFlags.setPrefWidth(180);
+		
+		Insets insets = this.getInsets();
+		double horizontalInsets = insets.getLeft() + insets.getRight() + 2;
+		
+		columnFlags.prefWidthProperty().bind(
+				this.widthProperty()
+						.subtract(columnName.widthProperty())
+						.subtract(columnPlayers.widthProperty())
+						.subtract(horizontalInsets)
+		);
 
 		this.getColumns().addAll(columnName, columnPlayers, columnFlags);
 
@@ -70,7 +83,7 @@ public class GameRoomTreeTableView extends TreeTableView<IGameRoomTreeViewItem> 
 			System.err.println("failed adding game room tree view item");
 			return;
 		}
-		
+
 		result.getChildren().add(new TreeItem<>(gr));
 	}
 

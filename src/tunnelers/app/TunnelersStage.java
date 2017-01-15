@@ -14,7 +14,7 @@ import tunnelers.app.render.colors.FxDefaultColorScheme;
 import tunnelers.app.render.colors.FxPlayerColorManager;
 import tunnelers.app.views.lobby.LobbyScene;
 import tunnelers.app.views.menu.MainMenuScene;
-import tunnelers.app.views.serverList.ServerListScene;
+import tunnelers.app.views.serverList.GameRoomListScene;
 import tunnelers.app.views.settings.SettingsScene;
 import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.engine.EngineUserInterface;
@@ -78,8 +78,8 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 		HashMap<Class, IView.Scene> r = new HashMap<>();
 
 		r.put(SettingsScene.class, IView.Scene.MainMenu);
-		r.put(ServerListScene.class, IView.Scene.MainMenu);
-		r.put(LobbyScene.class, IView.Scene.ServerList);
+		r.put(GameRoomListScene.class, IView.Scene.MainMenu);
+		r.put(LobbyScene.class, IView.Scene.GameRoomList);
 
 		return r;
 	}
@@ -131,8 +131,8 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 				case Settings:
 					newScene = SettingsScene.getInstance(controlsManager);
 					break;
-				case ServerList:
-					newScene = ServerListScene.getInstance();
+				case GameRoomList:
+					newScene = GameRoomListScene.getInstance(engine.getHostLocator());
 					break;
 				case Lobby:
 					gr = this.engine.getGameRoom();
@@ -175,11 +175,11 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 
 	@Override
 	public void appendGameRoomsToList(IGameRoomInfo[] rooms) {
-		if (!(this.currentScene instanceof ServerListScene)) {
+		if (!(this.currentScene instanceof GameRoomListScene)) {
 			System.err.println("Can't append game rooms, wrong scene");
 			return;
 		}
-		((ServerListScene) this.currentScene).appendGameRooms(rooms);
+		((GameRoomListScene) this.currentScene).appendGameRooms(rooms);
 	}
 
 	@Override

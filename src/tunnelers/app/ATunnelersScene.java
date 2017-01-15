@@ -57,8 +57,10 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 		canvas = new Canvas();
 		canvas.widthProperty().bind(this.widthProperty());
 		canvas.heightProperty().bind(this.heightProperty());
-
-		flash = new FlashAreaControl(FlashContainer.getInstance());
+		
+		FlashContainer flashContainer = FlashContainer.getInstance();
+		flash = new FlashAreaControl(flashContainer);
+		System.out.format("New flash area control created for %s with %s\n", this.getClass().getSimpleName(), flashContainer.getMessage());
 
 		StackPane root = ((StackPane) this.getRoot());
 

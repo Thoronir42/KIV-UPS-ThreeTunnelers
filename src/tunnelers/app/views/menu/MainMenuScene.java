@@ -83,12 +83,12 @@ public class MainMenuScene extends ATunnelersScene {
 			scene.flashClear();
 		});
 
-		GridPane flasher = new GridPane();
-		flasher.add(txt_flash, 0, 0, 2, 1);
-		flasher.add(but_flashDisplay, 0, 1);
-		flasher.add(but_flashClear, 1, 1);
+		GridPane flashTester = new GridPane();
+		flashTester.add(txt_flash, 0, 0, 2, 1);
+		flashTester.add(but_flashDisplay, 0, 1);
+		flashTester.add(but_flashClear, 1, 1);
 
-		content.add(flasher, 1, 0, 1, 3);
+		content.add(flashTester, 1, 0, 1, 3);
 
 		return scene;
 

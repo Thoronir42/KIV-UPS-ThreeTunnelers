@@ -28,6 +28,7 @@ public class EngineUserInterface {
 
 	public void disconnect() {
 		engine.netadapter.disconnect("Disconnecting");
+		engine.view.showScene(IView.Scene.MainMenu);
 	}
 	
 	public void refreshServerList() {
@@ -79,5 +80,9 @@ public class EngineUserInterface {
 	
 	public Warzone getWarzone(){
 		return engine.getWarzone();
+	}
+
+	public String getHostLocator() {
+		return engine.netadapter.getHostLocator();
 	}
 }

@@ -226,4 +226,12 @@ public final class NetAdapter extends Thread implements IUpdatable {
 	public Command createCommand(CommandType commandType) {
 		return new Command(commandType);
 	}
+	
+	public String getHostLocator(){
+		if(this.connection == null){
+			return "N/A";
+		}
+		
+		return connection.getHostString();
+	}
 }

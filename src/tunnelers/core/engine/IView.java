@@ -13,7 +13,7 @@ import tunnelers.core.player.controls.AControlsManager;
 public interface IView {
 
 	public static enum Scene{
-		MainMenu, Settings, ServerList, Lobby, Game
+		MainMenu, Settings, GameRoomList, Lobby, Game
 	}
 	
 	public void showScene(Scene scene);

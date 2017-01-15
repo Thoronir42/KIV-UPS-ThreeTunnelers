@@ -142,7 +142,7 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		view.setConnectEnabled(true);
 		switch (signal.getType()) {
 			case ConnectionEstabilished:
-				view.showScene(IView.Scene.ServerList);
+				view.showScene(IView.Scene.GameRoomList);
 			case UnknownHost:
 				System.err.println("Adresa nebyla rozpoznána: " + signal.getMessage());
 				break;
