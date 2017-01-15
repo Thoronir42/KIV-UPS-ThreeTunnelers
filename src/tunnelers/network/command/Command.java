@@ -6,10 +6,6 @@ package tunnelers.network.command;
  */
 public class Command {
 
-	/**
-	 * fixme: unused
-	 */
-	protected short id;
 	protected final CommandType type;
 	protected String data;
 
@@ -24,10 +20,6 @@ public class Command {
 
 	public CommandType getType() {
 		return this.type;
-	}
-
-	public short getId() {
-		return id;
 	}
 
 	/**
@@ -51,6 +43,10 @@ public class Command {
 		return this.append(String.format("%08X", n));
 	}
 	
+	public Command append(long n){
+		return this.append(String.format("%016X", n));
+	}
+	
 	public Command append(String s){
 		this.data += s;
 		
@@ -67,6 +63,6 @@ public class Command {
 
 	@Override
 	public String toString() {
-		return String.format("Cmd[%03d]: %05d %05d: %s ", this.id, this.type.value(), this.getLength(), this.data);
+		return String.format(getClass().getSimpleName() + ": %05d %05d: %s ", this.type.value(), this.getLength(), this.data);
 	}
 }

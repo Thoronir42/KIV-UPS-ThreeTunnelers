@@ -3,6 +3,7 @@ nbproject/
 /dist/
 nbbuild.xml
 build.xml
+/files/connection.txt
 
 doc/*
 !doc/*.tex

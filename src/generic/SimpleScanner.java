@@ -10,28 +10,24 @@ public class SimpleScanner {
 	public static final int RADIX_HEXADECIMAL = 16;
 
 	private final int parse_radix;
-	
+
 	private String source;
 	private int pointer;
 
-	public SimpleScanner(){
-		this("", RADIX_DECIMAL);
-	}
-	
-	public SimpleScanner(String source) {
-		this(source, RADIX_DECIMAL);
-	}
-	
-	public SimpleScanner(int radix){
-		this("", radix);
+	public SimpleScanner() {
+		this(RADIX_DECIMAL, "");
 	}
 
-	public SimpleScanner(String source, int radix) {
+	public SimpleScanner(int radix) {
+		this(radix, "");
+	}
+
+	public SimpleScanner(int radix, String source) {
 		this.parse_radix = radix;
 		this.setSourceString(source);
 	}
-	
-	public void setSourceString(String source){
+
+	public void setSourceString(String source) {
 		this.source = source;
 		this.pointer = 0;
 	}
@@ -50,6 +46,10 @@ public class SimpleScanner {
 
 	public int nextInt() {
 		return Integer.parseInt(read(8), parse_radix);
+	}
+
+	public long nextLong() {
+		return Long.parseLong(read(16), parse_radix);
 	}
 
 	public String read(int n) {
