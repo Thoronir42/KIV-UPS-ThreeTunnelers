@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
  */
 public class SimpleScannerTest {
 
-	private static final int TESTED_RADIX = 16;
+	private static final int TESTED_RADIX = SimpleScanner.RADIX_HEXADECIMAL;
 	private static final String TESTED_STRING = "123456789ABCDEF0";
 
 	private SimpleScanner sc;

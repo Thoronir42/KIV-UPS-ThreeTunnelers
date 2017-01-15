@@ -18,6 +18,7 @@ import tunnelers.app.views.components.flash.FlashAreaControl;
 import tunnelers.app.views.components.flash.FlashContainer;
 import tunnelers.common.IUpdatable;
 import tunnelers.core.engine.Engine;
+import tunnelers.core.engine.EngineUserInterface;
 
 /**
  *
@@ -116,7 +117,7 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 		return (TunnelersStage) this.getWindow();
 	}
 
-	protected Engine getEngine() {
+	protected EngineUserInterface getEngine() {
 		return this.getStage().engine;
 	}
 

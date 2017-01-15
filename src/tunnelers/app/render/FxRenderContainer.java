@@ -1,11 +1,10 @@
 package tunnelers.app.render;
 
-import java.util.Collection;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.render.colors.FxDefaultColorScheme;
-import tunnelers.core.engine.Engine;
+import tunnelers.core.engine.EngineUserInterface;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
@@ -17,7 +16,7 @@ import tunnelers.core.player.Player;
  */
 public class FxRenderContainer {
 
-	private final Engine engine;
+	private final EngineUserInterface engine;
 	private final FxDefaultColorScheme colorScheme;
 
 	private Dimension2D blockSize;
@@ -26,7 +25,7 @@ public class FxRenderContainer {
 	protected final AssetsRenderer assetsRenderer;
 	protected final AfterFX afterFx;
 
-	public FxRenderContainer(Engine engine, FxDefaultColorScheme colorScheme, Assets assets) {
+	public FxRenderContainer(EngineUserInterface engine, FxDefaultColorScheme colorScheme, Assets assets) {
 		this.colorScheme = colorScheme;
 		this.engine = engine;
 

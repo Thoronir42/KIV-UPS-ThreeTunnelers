@@ -1,26 +1,22 @@
 package tunnelers.core.engine;
 
+import generic.SimpleScanner;
 import temp.mapGenerator.MapGenerator;
-import temp.Mock;
 import tunnelers.common.IUpdatable;
 import tunnelers.network.NetAdapter;
 import tunnelers.core.chat.Chat;
-import tunnelers.core.player.controls.InputAction;
+import tunnelers.core.chat.IChatParticipant;
 import tunnelers.core.gameRoom.Warzone;
-import tunnelers.core.chat.ServerMessenger;
-import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;
 import tunnelers.core.engine.stage.WarzoneStage;
 import tunnelers.core.gameRoom.GameRoom;
-import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.controls.AControlsManager;
-import tunnelers.core.player.controls.Controls;
 import tunnelers.core.settings.Settings;
 import tunnelers.network.CommandNotHandledException;
+import tunnelers.network.NetClient;
 import tunnelers.network.command.Command;
-import tunnelers.network.command.CommandType;
 import tunnelers.network.command.INetworkProcessor;
 import tunnelers.network.command.Signal;
 
@@ -35,14 +31,17 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 	private final int tickRate;
 	private AEngineStage currentStage;
 
-	private final NetAdapter netadapter;
-	private final PersistentString connectionSecret;
-	private final GameRoomParser gameRoomParser;
+	protected final EngineUserInterface guiInterface;
 
-	private GameRoom currentGameRoom;
+	protected final NetAdapter netadapter;
+	protected final PersistentString connectionSecret;
+	protected final GameRoomParser gameRoomParser;
+	protected final SimpleScanner commandScanner;
 
-	private IView view;
-	private AControlsManager controls;
+	protected GameRoom currentGameRoom;
+
+	protected IView view;
+	protected AControlsManager controls;
 
 	public Engine(int version, Settings settings) {
 		this.version = version;
@@ -52,6 +51,13 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		this.setStage(Stage.Menu);
 		this.tickRate = settings.getTickRate();
 		this.connectionSecret = new PersistentString(settings.getConnectionLogRelativePath());
+
+		this.guiInterface = new EngineUserInterface(this);
+		this.commandScanner = new SimpleScanner(SimpleScanner.RADIX_HEXADECIMAL);
+	}
+
+	public EngineUserInterface intefrace() {
+		return guiInterface;
 	}
 
 	public void setView(IView view) {
@@ -62,10 +68,6 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 
 	public void start() {
 		this.netadapter.start();
-	}
-
-	public void setGameRoom(GameRoom gameRoom) {
-		this.currentGameRoom = gameRoom;
 	}
 
 	public void setStage(Stage stage) {
@@ -95,17 +97,11 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		this.netadapter.shutdown();
 	}
 
-	public void handleInput(InputAction inp, int controlsID, boolean pressed) {
-		Controls controlsScheme = this.controls.getScheme((byte) controlsID);
-
-		if (controlsScheme.setControlState(inp, pressed)) {
-			Command cmd = this.netadapter.createCommand(CommandType.GameControlsSet);
-
-		}
-	}
-
 	public Chat getChat() {
-		return currentGameRoom.getChat();
+		if(this.currentGameRoom == null){
+			return null;
+		}
+		return this.currentGameRoom.getChat();
 	}
 
 	public Warzone getWarzone() {
@@ -115,28 +111,25 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		return this.currentGameRoom.getWarzone();
 	}
 
-	public void connect(String name, String addr, int port) {
-		this.view.setConnectEnabled(false);
-		this.netadapter.connectTo(this.connectionSecret, name, addr, port);
-	}
-
-	public void disconnect() {
-		this.netadapter.disconnect("Disconnecting");
-	}
-
-	public void sendPlainText(String text) {
-		Command cmd = this.netadapter.createCommand(CommandType.MsgPlain);
-		cmd.setData(text);
-		this.netadapter.issueCommand(cmd);
-	}
-
 	@Override
 	public void handle(Command cmd) throws CommandNotHandledException {
 		System.out.format("Engine processing command '%s': [%s]\n", cmd.getType().toString(), cmd.getData());
+		commandScanner.setSourceString(cmd.getData());
 		switch (cmd.getType()) {
+			case LeadIntroduce:
+				
 			case MsgRcon:
+				System.err.println("Rcon received, interpretting as plain msg");
+				break;
 			case MsgPlain:
-				this.getChat().addMessage(ServerMessenger.getInstance(), cmd.getData());
+				int id = commandScanner.nextByte();
+				String message = commandScanner.readToEnd();
+				if(id == 0){
+					
+				}
+				NetClient client = currentGameRoom.getClient(id);
+				IChatParticipant p = client.getAnyPlayer();
+				this.getChat().addMessage(p != null ? p : Chat.error(), message);
 				view.updateChat();
 				break;
 			default:
@@ -164,28 +157,6 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 	}
 
 	public void beginGame() {
-		this.setStage(Engine.Stage.Warzone);
-		this.view.showScene(IView.Scene.Game);
-	}
-
-	public void refreshServerList() {
-		int n = 16;
-		String lobbiesString = Mock.serverListString(n);
-		IGameRoomInfo[] rooms = this.gameRoomParser.parse(n, lobbiesString.substring(4));
-		this.view.appendGameRoomsToList(rooms);
-	}
-
-	public void joinGame(IGameRoomInfo gameRoom) {
-		if (gameRoom.isFull()) {
-			this.view.alert("Hra je již plná");
-			return;
-		}
-		PlayerColorManager playerColorManager = view.getPlayerColorManager();
-		playerColorManager.resetColorUsage();
-
-		// TODO: link this through network events
-		this.currentGameRoom = Mock.gameRoom(controls, playerColorManager);
-
 		System.out.println("Generating map");
 		Map map = (new MapGenerator()).mockMap(20, 12, 8, this.currentGameRoom.getPlayerCount());
 
@@ -196,9 +167,8 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 
 		this.view.prepareGame(this.currentGameRoom.getWarzone().getMap(), this.currentGameRoom.getPlayers());
 
-		this.view.alert("Probíhá připojování");
-
-		this.view.showScene(IView.Scene.Lobby);
+		this.setStage(Engine.Stage.Warzone);
+		this.view.showScene(IView.Scene.Game);
 	}
 
 	public static enum Stage {

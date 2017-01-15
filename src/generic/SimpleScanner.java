@@ -6,7 +6,8 @@ package generic;
  */
 public class SimpleScanner {
 
-	private static final int DEFAULT_RADIX = 10;
+	public static final int RADIX_DECIMAL = 10;
+	public static final int RADIX_HEXADECIMAL = 16;
 
 	private final int parse_radix;
 	
@@ -14,11 +15,11 @@ public class SimpleScanner {
 	private int pointer;
 
 	public SimpleScanner(){
-		this("", DEFAULT_RADIX);
+		this("", RADIX_DECIMAL);
 	}
 	
 	public SimpleScanner(String source) {
-		this(source, DEFAULT_RADIX);
+		this(source, RADIX_DECIMAL);
 	}
 	
 	public SimpleScanner(int radix){

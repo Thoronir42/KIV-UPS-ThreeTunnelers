@@ -17,7 +17,8 @@ import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.app.views.serverList.ServerListScene;
 import tunnelers.app.views.settings.SettingsScene;
 import tunnelers.core.colors.PlayerColorManager;
-import tunnelers.core.engine.Engine;
+import tunnelers.core.engine.EngineUserInterface;
+import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
@@ -42,7 +43,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	protected ATunnelersScene currentScene;
 	protected final FxDefaultColorScheme colorScheme;
 
-	protected final Engine engine;
+	protected final EngineUserInterface engine;
 	protected final Assets assets;
 
 	@Override
@@ -52,7 +53,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 		}
 	}
 
-	public TunnelersStage(Engine engine, Assets assets, int supportedControlSchemes) {
+	public TunnelersStage(EngineUserInterface engine, Assets assets, int supportedControlSchemes) {
 		super();
 
 		this.engine = engine;
@@ -119,8 +120,8 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 
 	@Override
 	public void showScene(Scene scene) {
-
 		Platform.runLater(() -> {
+			GameRoom gr;
 			Runnable afterChange = null;
 			ATunnelersScene newScene = null;
 			switch (scene) {
@@ -134,10 +135,8 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 					newScene = ServerListScene.getInstance();
 					break;
 				case Lobby:
-					newScene = LobbyScene.getInstance(this.engine.getChat(), this.renderer.getColorScheme(), engine.getGameRoom().getCapacity());
-					afterChange = () -> {
-						updatePlayerList(this.engine.getGameRoom().getPlayers());
-					};
+					gr = this.engine.getGameRoom();
+					newScene = LobbyScene.getInstance(gr.getChat(), this.renderer.getColorScheme(), gr.getCapacity());
 					break;
 				case Game:
 					PlayScene sc = PlayScene.getInstance(controlsManager);

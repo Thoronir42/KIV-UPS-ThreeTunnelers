@@ -16,7 +16,7 @@ public class GameRoomParser {
 
 	public GameRoomParser() {
 		this.wholeScanner = new SimpleScanner();
-		this.singleScanner = new SimpleScanner(16);
+		this.singleScanner = new SimpleScanner(SimpleScanner.RADIX_HEXADECIMAL);
 	}
 
 	public GameRoomFacade[] parse(int n, String lobbies) {

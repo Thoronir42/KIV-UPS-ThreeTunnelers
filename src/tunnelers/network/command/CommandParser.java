@@ -10,9 +10,7 @@ import tunnelers.network.CommandNotRecognisedException;
  */
 public class CommandParser {
 
-	private static final int PARSE_RADIX = 16;
-
-	private final SimpleScanner sc = new SimpleScanner(PARSE_RADIX);
+	private final SimpleScanner sc = new SimpleScanner(SimpleScanner.RADIX_HEXADECIMAL);
 	private static final HashMap<Short, CommandType> TYPE_MAP;
 
 	static {

@@ -20,7 +20,6 @@ public final class NetAdapter extends Thread implements IUpdatable {
 
 	private Connection connection;
 	private PersistentString connectionSecret;
-	private NetClient localClient;
 	private String disconnectReason;
 
 	private final CommandParser parser;
@@ -172,7 +171,6 @@ public final class NetAdapter extends Thread implements IUpdatable {
 				this.connection = null;
 				return false;
 			} catch (IOException e) {
-				System.err.println(e.getClass());
 				this.handler.signal(new Signal(Signal.Type.ConnectingTimedOut, e.getMessage()));
 				this.connection = null;
 				return false;

@@ -66,6 +66,16 @@ public class NetClient {
 		this.activePlayers = count;
 	}
 
+	public Player getAnyPlayer() {
+		for(Player p : this.players){
+			if(p != null){
+				return p;
+			}
+		}
+		
+		return null;
+	}
+	
 	public Player getPlayer(int n) {
 		return this.players[n];
 	}
