@@ -1,6 +1,7 @@
 package tunnelers.core.engine;
 
 import generic.SimpleScanner;
+import java.util.HashMap;
 import temp.mapGenerator.MapGenerator;
 import tunnelers.common.IUpdatable;
 import tunnelers.network.NetAdapter;
@@ -13,9 +14,9 @@ import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.controls.AControlsManager;
 import tunnelers.core.settings.Settings;
-import tunnelers.network.CommandNotHandledException;
 import tunnelers.network.NetClient;
 import tunnelers.network.command.Command;
+import tunnelers.network.command.CommandType;
 import tunnelers.network.command.INetworkProcessor;
 import tunnelers.network.command.Signal;
 
@@ -35,7 +36,9 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 	protected final NetAdapter netadapter;
 	protected final PersistentString connectionSecret;
 	protected final GameRoomParser gameRoomParser;
+
 	protected final SimpleScanner commandScanner;
+	protected final HashMap<CommandType, IAction> commandActions;
 
 	protected GameRoom currentGameRoom;
 
@@ -53,6 +56,26 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 
 		this.guiInterface = new EngineUserInterface(this);
 		this.commandScanner = new SimpleScanner(SimpleScanner.RADIX_HEXADECIMAL);
+		this.commandActions = this.prepareActions();
+
+		String missing = "";
+		int n = 0;
+		for (CommandType type : CommandType.values()) {
+			if (type == CommandType.Undefined) {
+				continue;
+			}
+			if (!this.commandActions.containsKey(type)) {
+				missing += type.toString() + ", ";
+			}
+			if (++n % 10 == 0) {
+				missing += "\n";
+			}
+		}
+
+		if (missing.length() > 0) {
+			System.err.println("Engine does not implement handling of these "
+					+ "command types: " + missing.substring(0, missing.length() - 2));
+		}
 	}
 
 	public EngineUserInterface intefrace() {
@@ -97,44 +120,23 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 	}
 
 	public Chat getChat() {
-		if(this.currentGameRoom == null){
+		if (this.currentGameRoom == null) {
 			return null;
 		}
 		return this.currentGameRoom.getChat();
 	}
 
 	@Override
-	public void handle(Command cmd) throws CommandNotHandledException {
+	public boolean handle(Command cmd) {
 		System.out.format("Engine processing command '%s': [%s]\n", cmd.getType().toString(), cmd.getData());
 		commandScanner.setSourceString(cmd.getData());
-		switch (cmd.getType()) {
-			case LeadIntroduce:
-				int n = commandScanner.nextByte();
-				String secret = commandScanner.readToEnd();
-				break;
-			case LeadDisconnect:
-				this.netadapter.disconnect(commandScanner.readToEnd());
-				break;
-			case LeadMarco:
-			case LeadPolo:
-				break;
-			case MsgRcon:
-				System.err.println("Rcon received, interpretting as plain msg");
-				break;
-			case MsgPlain:
-				int id = commandScanner.nextByte();
-				String message = commandScanner.readToEnd();
-				if(id == 0){
-					
-				}
-				NetClient client = currentGameRoom.getClient(id);
-				IChatParticipant p = client.getAnyPlayer();
-				this.getChat().addMessage(p != null ? p : Chat.error(), message);
-				view.updateChat();
-				break;
-			default:
-				throw new CommandNotHandledException(cmd);
+		IAction action = this.commandActions.get(cmd.getType());
+		
+		if (action == null) {
+			System.err.format("Action for %s not implemented\n", cmd.getType());
+			return false;
 		}
+		return action.execute(commandScanner);
 	}
 
 	@Override
@@ -143,6 +145,7 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		switch (signal.getType()) {
 			case ConnectionEstabilished:
 				view.showScene(IView.Scene.GameRoomList);
+				break;
 			case UnknownHost:
 				System.err.println("Adresa nebyla rozpoznána: " + signal.getMessage());
 				break;
@@ -156,20 +159,17 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		}
 	}
 
-	private void prepareMap(int chunkSize, int xChunks, int yChunks){
-		
-	}
-	
-	public void beginGame() {
-		System.out.println("Generating map");
-		Map map = (new MapGenerator()).mockMap(20, 12, 8, this.currentGameRoom.getPlayerCount());
-
-		System.out.println("Initializing warzone");
+	private void prepareMap(int chunkSize, int xChunks, int yChunks) {
+		Map map = new Map(chunkSize, xChunks, yChunks, currentGameRoom.getPlayerCount());
+		// todo remove mocking
+		map = (new MapGenerator()).generate(chunkSize, xChunks, yChunks, this.currentGameRoom.getPlayerCount());
 		this.currentGameRoom.initWarzone(map);
+	}
 
-		System.out.println("Preparing game");
+	public void beginGame() {
+		this.prepareMap(20, 12, 8);
 
-		this.view.prepareGame(this.currentGameRoom.getMap(), this.currentGameRoom.getPlayers());
+		this.view.setGameData(this.currentGameRoom.getMap(), this.currentGameRoom.getPlayers());
 
 		this.setStage(Engine.Stage.Warzone);
 		this.view.showScene(IView.Scene.Game);
@@ -178,5 +178,71 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 	public static enum Stage {
 		Menu,
 		Warzone,
+	}
+
+	private HashMap<CommandType, IAction> prepareActions() {
+		HashMap<CommandType, IAction> map = new HashMap<>();
+		this.putSoloCommands(map);
+		this.putRoomCommands(map);
+
+		return map;
+	}
+
+	private void putSoloCommands(HashMap<CommandType, IAction> map) {
+		map.put(CommandType.LeadIntroduce, ((sc) -> {
+			int n = sc.nextByte();
+			String secret = sc.readToEnd();
+			System.out.println(n + "=" + secret);
+			this.connectionSecret.set(secret);
+
+			return true;
+		}));
+
+		map.put(CommandType.LeadDisconnect, sc -> {
+			this.netadapter.disconnect(sc.readToEnd());
+			return true;
+		});
+
+		map.put(CommandType.LeadMarco, sc -> {
+			Command polo = netadapter.createCommand(CommandType.LeadPolo);
+			polo.append(sc.nextLong());
+			return true;
+		});
+
+		map.put(CommandType.LeadBadFormat, sc -> {
+			System.err.println("Server did not recognise folliwing command: " + sc.readToEnd());
+
+			return true;
+		});
+
+		map.put(CommandType.MsgRcon, sc -> {
+			System.err.println("Rcon messages not implemented");
+			return false;
+		});
+
+	}
+
+	private void putRoomCommands(HashMap<CommandType, IAction> map) {
+		map.put(CommandType.MsgPlain, sc -> {
+			int id = sc.nextByte();
+			String message = sc.readToEnd();
+			if (id == 0) {
+
+			}
+			NetClient client = currentGameRoom.getClient(id);
+			IChatParticipant p = client.getAnyPlayer();
+			this.getChat().addMessage(p != null ? p : Chat.error(), message);
+			view.updateChat();
+			return true;
+		});
+
+		map.put(CommandType.MapSpecification, sc -> {
+			int chunkSize = sc.nextByte();
+			int xChunks = sc.nextByte();
+			int yChunks = sc.nextByte();
+			prepareMap(chunkSize, xChunks, yChunks);
+
+			return true;
+		});
 	}
 }

@@ -1,7 +1,5 @@
 package tunnelers.network.command;
 
-import tunnelers.network.CommandNotHandledException;
-
 /**
  * 
  * @author Stepan
@@ -22,9 +20,9 @@ public interface INetworkProcessor {
 	 * 
 	 * 
 	 * @param cmd
-	 * @throws CommandNotHandledException 
+	 * @return success of command handling
 	 */
-	public void handle(Command cmd) throws CommandNotHandledException;
+	public boolean handle(Command cmd);
 	
 	
 }

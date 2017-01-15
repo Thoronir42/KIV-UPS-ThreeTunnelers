@@ -19,7 +19,7 @@ public class MapGenerator {
 		};
 	}
 
-	public Map mockMap(int chunkSize, int width, int height, int playerCount) {
+	public Map generate(int chunkSize, int width, int height, int playerCount) {
 		Map map = new Map(chunkSize, width, height, playerCount);
 		for(IMapGeneratorStep step : this.steps){
 			System.out.println("Generating map - step " + step.getClass().getSimpleName());

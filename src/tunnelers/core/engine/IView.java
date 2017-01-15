@@ -27,7 +27,7 @@ public interface IView {
 	
 	public void setConnectEnabled(boolean value);
 	
-	public void prepareGame(Map map, Player[] players);
+	public void setGameData(Map map, Player[] players);
 	
 	public void appendGameRoomsToList(IGameRoomInfo[] rooms);
 	

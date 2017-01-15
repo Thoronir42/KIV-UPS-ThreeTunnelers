@@ -70,9 +70,9 @@ public final class NetAdapter extends Thread implements IUpdatable {
 
 		long now = System.currentTimeMillis();
 		long d = now - this.connection.lastActive;
-		this.log(String.format("Since last message from server: %d ms", d));
-		if (d > 5000) {
-			this.disconnect("Server was irresponsive.");
+		int timeout = 60000;
+		if (d > timeout) {
+			this.disconnect("Server failed to communicate for " + (timeout / 1000) + " seconds.");
 		}
 	}
 
@@ -100,37 +100,45 @@ public final class NetAdapter extends Thread implements IUpdatable {
 				if (!ensureConnectionValid(connection)) {
 					continue;
 				}
-
-				// and now we wait...
-				String message = this.connection.receive();
-				this.log("Connection received: " + message);
-
-				if (message == null || message.length() == 0) {
-					this.log("Connection reset");
-					this.handler.signal(new Signal(Signal.Type.ConnectingTimedOut));
-					connection = null;
-					continue;
-				}
-
-				try {
-					Command cmd = this.parser.parse(message);
-					this.handler.handle(cmd);
-					this.connection.invalidCounterReset();
-
-				} catch (CommandException e) {
-					this.logError(e.toString());
-					this.connection.invalidCounterIncrease();
-				}
-				if (this.connection.getInvalidCounter() > 2) {
-					this.disconnect("Received too many invallid messages");
-				}
+				this.processIncommingMessage();
 			} catch (InterruptedException e) {
 				this.logError("Network: waiting interrupted");
 				break;
 			} catch (IOException e) {
-				this.logError("Network run error: " + e.toString());
+				this.logError("Connection error: " + e.toString());
 				connection = null;
 			}
+		}
+	}
+
+	private void processIncommingMessage() throws IOException, InterruptedException {
+		// and now we wait...
+		String message = this.connection.receive();
+		this.log("Connection received: " + message);
+
+		if (message == null || message.length() == 0) {
+			this.log("Connection reset");
+			this.handler.signal(new Signal(Signal.Type.ConnectingTimedOut));
+			connection = null;
+			return;
+		}
+
+		try {
+			Command cmd = this.parser.parse(message);
+			if (!this.handler.handle(cmd)) {
+				throw new CommandNotHandledException(cmd);
+			}
+			if (this.connection == null) {
+				return;
+			}
+			this.connection.invalidCounterReset();
+
+		} catch (CommandException e) {
+			this.logError(e.toString());
+			this.connection.invalidCounterIncrease();
+		}
+		if (this.connection.getInvalidCounter() > 2) {
+			this.disconnect("Received too many invallid messages");
 		}
 	}
 
@@ -142,13 +150,9 @@ public final class NetAdapter extends Thread implements IUpdatable {
 	 * @param connection
 	 * @return
 	 */
-	private boolean ensureConnectionValid(Connection connection) {
+	private boolean ensureConnectionValid(Connection connection) throws InterruptedException {
 		if (connection == null) {
-			try {
-				sleep(200);
-			} catch (InterruptedException ex) {
-				// 
-			}
+			sleep(200);
 			return false;
 		}
 
@@ -226,12 +230,12 @@ public final class NetAdapter extends Thread implements IUpdatable {
 	public Command createCommand(CommandType commandType) {
 		return new Command(commandType);
 	}
-	
-	public String getHostLocator(){
-		if(this.connection == null){
+
+	public String getHostLocator() {
+		if (this.connection == null) {
 			return "N/A";
 		}
-		
+
 		return connection.getHostString();
 	}
 }
