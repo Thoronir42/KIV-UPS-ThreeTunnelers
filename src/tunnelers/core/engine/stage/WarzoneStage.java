@@ -25,7 +25,6 @@ public class WarzoneStage extends AEngineStage {
 	public WarzoneStage(GameRoom gameRoom) {
 		this.gameRoom = gameRoom;
 		this.warzone = gameRoom.getWarzone();
-
 	}
 
 	@Override
@@ -78,9 +77,9 @@ public class WarzoneStage extends AEngineStage {
 	}
 
 	protected IntPoint moveTank(Tank tank, Direction d) {
-		Map map = this.gameRoom.getWarzone().getMap();
+		Map map = this.warzone.getMap();
 
-		if (d == null) {
+		if (d == null || d == Direction.Undefined) {
 			return null;
 		}
 		IntPoint plr_loc = tank.getLocation();
@@ -99,7 +98,7 @@ public class WarzoneStage extends AEngineStage {
 	}
 
 	private void updateProjectiles(Projectile[] projectiles, long tick) {
-		Map map = this.gameRoom.getWarzone().getMap();
+		Map map = this.warzone.getMap();
 
 		for (int i = 0; i < projectiles.length; i++) {
 			Projectile p = projectiles[i];

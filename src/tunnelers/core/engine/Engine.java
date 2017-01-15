@@ -6,7 +6,6 @@ import tunnelers.common.IUpdatable;
 import tunnelers.network.NetAdapter;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.chat.IChatParticipant;
-import tunnelers.core.gameRoom.Warzone;
 import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;
 import tunnelers.core.engine.stage.WarzoneStage;
@@ -104,20 +103,21 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		return this.currentGameRoom.getChat();
 	}
 
-	public Warzone getWarzone() {
-		if (this.currentGameRoom == null) {
-			return null;
-		}
-		return this.currentGameRoom.getWarzone();
-	}
-
 	@Override
 	public void handle(Command cmd) throws CommandNotHandledException {
 		System.out.format("Engine processing command '%s': [%s]\n", cmd.getType().toString(), cmd.getData());
 		commandScanner.setSourceString(cmd.getData());
 		switch (cmd.getType()) {
 			case LeadIntroduce:
-				
+				int n = commandScanner.nextByte();
+				String secret = commandScanner.readToEnd();
+				break;
+			case LeadDisconnect:
+				this.netadapter.disconnect(commandScanner.readToEnd());
+				break;
+			case LeadMarco:
+			case LeadPolo:
+				break;
 			case MsgRcon:
 				System.err.println("Rcon received, interpretting as plain msg");
 				break;
@@ -156,6 +156,10 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		}
 	}
 
+	private void prepareMap(int chunkSize, int xChunks, int yChunks){
+		
+	}
+	
 	public void beginGame() {
 		System.out.println("Generating map");
 		Map map = (new MapGenerator()).mockMap(20, 12, 8, this.currentGameRoom.getPlayerCount());
@@ -165,7 +169,7 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 
 		System.out.println("Preparing game");
 
-		this.view.prepareGame(this.currentGameRoom.getWarzone().getMap(), this.currentGameRoom.getPlayers());
+		this.view.prepareGame(this.currentGameRoom.getMap(), this.currentGameRoom.getPlayers());
 
 		this.setStage(Engine.Stage.Warzone);
 		this.view.showScene(IView.Scene.Game);

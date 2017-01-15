@@ -1,6 +1,5 @@
 package tunnelers.core.gameRoom;
 
-import java.util.Collection;
 import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.Projectile;

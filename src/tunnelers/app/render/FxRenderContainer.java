@@ -8,6 +8,7 @@ import tunnelers.core.engine.EngineUserInterface;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
+import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 
 /**
@@ -32,6 +33,11 @@ public class FxRenderContainer {
 		this.mapRenderer = new MapRenderer(colorScheme);
 		this.assetsRenderer = new AssetsRenderer(colorScheme, assets);
 		this.afterFx = new AfterFX(colorScheme);
+	}
+	
+	public void prepareGame(Map map, Player[] players){
+		this.mapRenderer.setMap(map);
+		this.assetsRenderer.initGameAssets(players);
 	}
 
 	public void setBlockSize(Dimension2D blockSize) {
@@ -66,11 +72,11 @@ public class FxRenderContainer {
 	}
 
 	public Projectile[] getProjectiles() {
-		return this.engine.getWarzone().getProjectiles();
+		return this.engine.getGameRoom().getProjectiles();
 	}
 
 	public Tank[] getTanks() {
-		return this.engine.getWarzone().getTanks();
+		return this.engine.getGameRoom().getTanks();
 	}
 
 	public void offsetBlocks(GraphicsContext gc, double x, double y) {

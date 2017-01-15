@@ -4,7 +4,6 @@ import temp.Mock;
 import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.IGameRoomInfo;
-import tunnelers.core.gameRoom.Warzone;
 import tunnelers.core.player.controls.Controls;
 import tunnelers.core.player.controls.InputAction;
 import tunnelers.network.command.Command;
@@ -76,10 +75,6 @@ public class EngineUserInterface {
 	
 	public GameRoom getGameRoom(){
 		return engine.getGameRoom();
-	}
-	
-	public Warzone getWarzone(){
-		return engine.getWarzone();
 	}
 
 	public String getHostLocator() {

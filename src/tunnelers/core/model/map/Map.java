@@ -1,5 +1,6 @@
 package tunnelers.core.model.map;
 
+import tunnelers.core.model.entities.IntDimension;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.player.Player;
 
@@ -9,14 +10,15 @@ import tunnelers.core.player.Player;
  */
 public class Map {
 
+	protected final IntDimension chunksSize;
+	protected final IntDimension blockSize;
+	
 	private final Chunk[] chunks;
 	private Chunk[] playerBaseChunks;
-	public final int Xchunks, Ychunks;
 	protected final int chunkSize;
 
 	public Map(int chunkSize, int width, int height, int playerCount) {
-		this.Xchunks = width;
-		this.Ychunks = height;
+		this.chunksSize = new IntDimension(width, height);
 		this.chunkSize = chunkSize;
 		this.chunks = new Chunk[height * width];
 
@@ -27,6 +29,8 @@ public class Map {
 		}
 
 		this.playerBaseChunks = new Chunk[playerCount];
+		
+		this.blockSize = new IntDimension(width * chunkSize, height * chunkSize);
 	}
 
 	public void setPlayerBaseChunks(Chunk[] baseChunks) {
@@ -40,10 +44,12 @@ public class Map {
 	}
 
 	public Chunk getChunk(int x, int y) throws ChunkException {
-		if ((x < 0 || x >= this.Xchunks) || (y < 0 || y >= this.Ychunks)) {
-			throw new ChunkException(x, y, Xchunks, Ychunks);
+		int width = this.getWidth(), height = this.getHeight();
+		
+		if ((x < 0 || x >= width) || (y < 0 || y >= height)) {
+			throw new ChunkException(x, y, width, height);
 		}
-		return this.chunks[y * this.Xchunks + x];
+		return this.chunks[y * width + x];
 	}
 
 	private IntPoint findChunk(Chunk chunk) {
@@ -77,16 +83,16 @@ public class Map {
 		chunkPosition.multiply(chunkSize);
 		chunkPosition.add(new IntPoint(chunkSize / 2, chunkSize / 2));
 		
-		System.out.format("PlayerBase Chunk %d assigned to %s", i, p.getName());
+		System.out.format("PlayerBase Chunk %d assigned to %s\n", i, p.getName());
 		return chunkPosition;
 	}
 
 	public int getWidth() {
-		return this.Xchunks;
+		return this.chunksSize.getWidth();
 	}
 
 	public int getHeight() {
-		return this.Ychunks;
+		return this.chunksSize.getHeight();
 	}
 
 	public int getBlockWidth() {
@@ -103,6 +109,10 @@ public class Map {
 
 	public int getPlayerCount() {
 		return this.playerBaseChunks.length;
+	}
+	
+	public IntDimension getBlockSize(){
+		return this.blockSize;
 	}
 
 }

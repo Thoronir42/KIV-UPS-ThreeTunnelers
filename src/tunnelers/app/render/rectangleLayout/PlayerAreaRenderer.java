@@ -9,7 +9,9 @@ import javafx.scene.transform.Affine;
 import tunnelers.app.render.FxRenderContainer;
 import tunnelers.app.render.MapRenderer;
 import tunnelers.app.render.colors.AColorScheme;
+import tunnelers.core.model.entities.IntDimension;
 import tunnelers.core.model.entities.IntPoint;
+import tunnelers.core.model.entities.IntRectangle;
 import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
 
@@ -25,7 +27,7 @@ public class PlayerAreaRenderer {
 	private final Dimension2D bounds;
 	private final Rectangle2D renderWindow;
 	private final Dimension2D blockSize;
-	private final RectangleHalf sourceWindow;
+	private final IntDimension sourceWindowSize;
 
 	private final FxRenderContainer renderer;
 
@@ -33,7 +35,7 @@ public class PlayerAreaRenderer {
 		this.bounds = bounds;
 		this.renderWindow = new Rectangle2D(bounds.getWidth() * 0.05, bounds.getHeight() * 0.05, bounds.getWidth() * 0.9, bounds.getHeight() * 0.6);
 		this.blockSize = calcBlockSize(this.renderWindow, MIN_RENDERED_BLOCKS_ON_DIMENSION);
-		this.sourceWindow = calcSource(this.renderWindow, this.blockSize);
+		this.sourceWindowSize = calcSourceSize(this.renderWindow, this.blockSize);
 		this.renderer = renderer;
 		
 		renderer.setBlockSize(blockSize);
@@ -49,9 +51,6 @@ public class PlayerAreaRenderer {
 			return;
 		}
 
-		Tank[] tanks = renderer.getTanks();
-		Projectile[] projectiles = renderer.getProjectiles();
-
 		Affine defTransform = g.getTransform();
 
 		AColorScheme colors = renderer.getColorScheme();
@@ -60,7 +59,7 @@ public class PlayerAreaRenderer {
 		g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
 
 		g.translate(renderWindow.getMinX(), renderWindow.getMinY());
-		drawViewWindow(g, currentTank.getLocation(), tanks, projectiles);
+		drawViewWindow(g, currentTank.getLocation(), renderer.getTanks(), renderer.getProjectiles());
 		g.setTransform(defTransform);
 
 		Rectangle inBounds = new Rectangle(bounds.getWidth() * 0.8, bounds.getHeight() * 0.1);
@@ -86,7 +85,7 @@ public class PlayerAreaRenderer {
 		
 		g.setFill(Color.BLACK);
 		g.fillRect(0 - 2, 0 - 2, renderWindow.getWidth() + 6, renderWindow.getHeight() + 4);
-		Rectangle2D source = alignSourceWindow(sourceWindow, center, mr.getMapBounds());
+		IntRectangle source = alignSourceWindow(sourceWindowSize, center, mr.getMapSize());
 		try {
 			this.renderer.offsetBlocks(g, -source.getMinX(), -source.getMinY());
 			mr.drawMap(source);
@@ -101,18 +100,18 @@ public class PlayerAreaRenderer {
 		}
 
 		//this.renderStatic(g, render, curPlayer.getTank().getEnergyPct());
-		this.renderer.getAfterFX().renderStaticNoise(g, sourceWindow, 1 - 0.95, this.blockSize);
+		this.renderer.getAfterFX().renderStaticNoise(g, renderWindow, 1 - 0.95, this.blockSize);
 
 	}
 
-	private int drawProjectiles(GraphicsContext g, Rectangle2D render, Projectile[] projectiles) {
+	private int drawProjectiles(GraphicsContext g, IntRectangle render, Projectile[] projectiles) {
 		Affine defTransform = g.getTransform();
 		int n = 0;
 		for (Projectile projectile : projectiles) {
 			if(projectile == null){
 				continue;
 			}
-			if (!render.contains(projectile.getLocation().fx())) {
+			if (!render.contains(projectile.getLocation())) {
 				continue;
 			}
 			renderer.offsetBlocks(g, projectile.getLocation());
@@ -125,14 +124,14 @@ public class PlayerAreaRenderer {
 		return n;
 	}
 
-	private void drawTanks(GraphicsContext g, Rectangle2D render, Tank[] tanks) {
+	private void drawTanks(GraphicsContext g, IntRectangle render, Tank[] tanks) {
 		Affine defTransform = g.getTransform();
 
 		for (Tank tank : tanks) {
 			if(tank == null){
 				continue;
 			}
-			if (!render.contains(tank.getLocation().fx())) {
+			if (!render.contains(tank.getLocation())) {
 				continue;
 			}
 			renderer.offsetBlocks(g, tank.getLocation());
@@ -142,13 +141,13 @@ public class PlayerAreaRenderer {
 		}
 	}
 
-	private Rectangle2D alignSourceWindow(RectangleHalf source, IntPoint center, Dimension2D mapSize) {
-		double halfWidth = source.getHalfWidth(),
-				halfHeight = source.getHalfHeight();
-		double mapWidth = mapSize.getWidth(),
+	private IntRectangle alignSourceWindow(IntDimension source, IntPoint center, IntDimension mapSize) {
+		int halfWidth = source.getWidth() / 2,
+				halfHeight = source.getHeight() / 2;
+		int mapWidth = mapSize.getWidth(),
 				mapHeight = mapSize.getHeight();
 
-		double x,y;
+		int x,y;
 		
 		if (center.getX() - halfWidth < 0) {
 			x = 0;
@@ -166,7 +165,7 @@ public class PlayerAreaRenderer {
 			y = center.getY() - (int) halfHeight;
 		}
 		
-		return new Rectangle2D(x, y, source.getWidth(), source.getHeight());
+		return new IntRectangle(x, x + source.getWidth(), y, y + source.getHeight());
 	}
 
 	private Dimension2D calcBlockSize(Rectangle2D viewWindow, int minimumBlocksOnAxis) {
@@ -192,10 +191,10 @@ public class PlayerAreaRenderer {
 		return new Dimension2D((int) width, (int) height);
 	}
 
-	private RectangleHalf calcSource(Rectangle2D viewWindow, Dimension2D blockSize) {
-		return new RectangleHalf(
-				Math.floor(viewWindow.getWidth() / blockSize.getWidth()),
-				Math.floor(viewWindow.getHeight() / blockSize.getHeight())
+	private IntDimension calcSourceSize(Rectangle2D viewWindow, Dimension2D blockSize) {
+		return new IntDimension(
+				(int)Math.floor(viewWindow.getWidth() / blockSize.getWidth()),
+				(int)Math.floor(viewWindow.getHeight() / blockSize.getHeight())
 		);
 	}
 

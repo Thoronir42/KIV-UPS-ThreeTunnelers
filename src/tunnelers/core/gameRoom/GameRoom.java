@@ -3,6 +3,7 @@ package tunnelers.core.gameRoom;
 import tunnelers.core.player.Player;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.model.entities.IntPoint;
+import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.model.entities.Tank;
 import tunnelers.network.NetClient;
@@ -123,5 +124,17 @@ public class GameRoom {
 
 	public Chat getChat() {
 		return this.chat;
+	}
+
+	public Map getMap() {
+		return this.warzone.getMap();
+	}
+
+	public Projectile[] getProjectiles() {
+		return this.warzone.getProjectiles();
+	}
+
+	public Tank[] getTanks() {
+		return this.warzone.getTanks();
 	}
 }

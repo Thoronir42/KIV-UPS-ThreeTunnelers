@@ -10,10 +10,6 @@ public class IntDimension {
 
 	private final int width;
 	private final int height;
-
-	public IntDimension() {
-		this(0, 0);
-	}
 	
 	public IntDimension(int width, int height){
 		this.width = width;
