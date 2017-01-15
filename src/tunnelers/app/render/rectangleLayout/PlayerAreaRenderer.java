@@ -165,7 +165,7 @@ public class PlayerAreaRenderer {
 			y = center.getY() - (int) halfHeight;
 		}
 		
-		return new IntRectangle(x, x + source.getWidth(), y, y + source.getHeight());
+		return new IntRectangle(x, y, source.getWidth(), source.getHeight());
 	}
 
 	private Dimension2D calcBlockSize(Rectangle2D viewWindow, int minimumBlocksOnAxis) {
@@ -193,8 +193,8 @@ public class PlayerAreaRenderer {
 
 	private IntDimension calcSourceSize(Rectangle2D viewWindow, Dimension2D blockSize) {
 		return new IntDimension(
-				(int)Math.floor(viewWindow.getWidth() / blockSize.getWidth()),
-				(int)Math.floor(viewWindow.getHeight() / blockSize.getHeight())
+				(int)Math.floor(viewWindow.getWidth() / blockSize.getWidth() - 1),
+				(int)Math.floor(viewWindow.getHeight() / blockSize.getHeight() - 1)
 		);
 	}
 
