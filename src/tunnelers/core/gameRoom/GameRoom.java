@@ -1,7 +1,6 @@
 package tunnelers.core.gameRoom;
 
 import tunnelers.core.player.Player;
-import java.util.Arrays;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.map.Map;
@@ -11,23 +10,23 @@ import tunnelers.network.NetClient;
 public class GameRoom {
 
 	private GameRoomState state;
-	
+
 	private final NetClient[] clients;
 	private final Player[] players;
 
 	private final Chat chat;
 
 	private Warzone warzone;
-	
+
 	private final int projectileCapacity;
 
 	public GameRoom(int capacity, int chatCapacity, int projectilesCapacity) {
 		this.state = GameRoomState.Idle;
-		
+
 		this.clients = new NetClient[capacity];
 		this.players = new Player[capacity];
 		this.chat = new Chat(chatCapacity);
-		
+
 		this.projectileCapacity = projectilesCapacity;
 	}
 
@@ -71,11 +70,17 @@ public class GameRoom {
 	}
 
 	public NetClient getClient(int roomId) {
-		return this.clients[roomId];
+		if (roomId < 1 || roomId > clients.length) {
+			throw new GameRoomIndexException(1, clients.length, roomId);
+		}
+		return this.clients[roomId - 1];
 	}
 
 	public void setClient(int roomId, NetClient client) {
-		this.clients[roomId] = client;
+		if (roomId < 1 || roomId > clients.length) {
+			throw new GameRoomIndexException(1, clients.length, roomId);
+		}
+		this.clients[roomId - 1] = client;
 	}
 
 	public NetClient removeClient(int roomId) {
@@ -86,11 +91,26 @@ public class GameRoom {
 	}
 
 	public Player getPlayer(int roomId) {
+		if (roomId < 1 || roomId > clients.length) {
+			throw new GameRoomIndexException(1, clients.length, roomId);
+		}
+		
 		return this.players[roomId - 1];
 	}
 
 	public void setPlayer(int roomId, Player player) {
+		if (roomId < 1 || roomId > clients.length) {
+			throw new GameRoomIndexException(1, clients.length, roomId);
+		}
+		
 		this.players[roomId - 1] = player;
+	}
+	
+	public Player removePlayer(int roomId){
+		Player p = this.getPlayer(roomId);
+		this.setPlayer(roomId, null);
+		
+		return p;
 	}
 
 	public Warzone getWarzone() {
@@ -98,7 +118,7 @@ public class GameRoom {
 	}
 
 	public Player[] getPlayers() {
-		return Arrays.copyOf(this.players, this.players.length);
+		return this.players;
 	}
 
 	public Chat getChat() {
