@@ -1,6 +1,5 @@
 package tunnelers.core.engine.stage;
 
-import temp.Mock;
 import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.Warzone;
 import tunnelers.core.player.controls.Controls;
@@ -10,6 +9,7 @@ import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
+import tunnelers.core.player.controls.InputAction;
 
 /**
  *
@@ -44,16 +44,13 @@ public class WarzoneStage extends AEngineStage {
 			}
 
 		}
-		if (tick % 15 == 0) {
-			Mock.controls(tick);
-		}
 
 		this.updateProjectiles(this.warzone.getProjectiles(), tick);
 	}
 
 	private void updateTank(Tank tank, Controls c) {
 		tank.cooldown(COOLDOWN_RATE);
-		if (true && c.isShooting()) { // TODO: omezeni poctu strel
+		if (true && c.get(InputAction.actShoot)) { // TODO: omezeni poctu strel
 			IntPoint location = tank.tryShoot();
 			if (location != null) {
 				int projectilePosition = findFreeProjectileSlot(this.warzone.getProjectiles());
@@ -63,7 +60,23 @@ public class WarzoneStage extends AEngineStage {
 			}
 		}
 
-		moveTank(tank, c.getDirection());
+		moveTank(tank, getDirection(c));
+	}
+	
+	public Direction getDirection(Controls c) {
+		int x = getDir(c, InputAction.movLeft, InputAction.movRight),
+				y = getDir(c, InputAction.movUp, InputAction.movDown);
+		return Direction.getDirection(x, y);
+	}
+
+	private int getDir(Controls c, InputAction sub, InputAction add) {
+		if (c.get(sub) && !c.get(add)) {
+			return -1;
+		}
+		if (c.get(add) && !c.get(sub)) {
+			return 1;
+		}
+		return 0;
 	}
 
 	private int findFreeProjectileSlot(Projectile[] projectiles) {
