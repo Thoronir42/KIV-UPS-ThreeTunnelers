@@ -70,7 +70,7 @@ public class EngineUserInterface {
 		Command cmd = engine.netadapter.createCommand(CommandType.MsgPlain);
 		cmd.setData(text);
 		
-		engine.netadapter.issueCommand(cmd);
+		engine.netadapter.send(cmd);
 	}
 	
 	public GameRoom getGameRoom(){

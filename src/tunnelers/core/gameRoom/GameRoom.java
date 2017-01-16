@@ -12,6 +12,7 @@ public class GameRoom {
 
 	private GameRoomState state;
 
+	private int leaderClientRID;
 	private final NetClient[] clients;
 	private final Player[] players;
 
@@ -21,7 +22,7 @@ public class GameRoom {
 
 	private final int projectileCapacity;
 
-	public GameRoom(int capacity, int chatCapacity, int projectilesCapacity) {
+	public GameRoom(int leaderRID, int capacity, int chatCapacity, int projectilesCapacity) {
 		this.state = GameRoomState.Idle;
 
 		this.clients = new NetClient[capacity];
@@ -29,6 +30,7 @@ public class GameRoom {
 		this.chat = new Chat(chatCapacity);
 
 		this.projectileCapacity = projectilesCapacity;
+		this.leaderClientRID = leaderRID;
 	}
 
 	public void initWarzone(Map map) {
@@ -70,6 +72,10 @@ public class GameRoom {
 		return count;
 	}
 
+	public NetClient getLeaderClient(){
+		return this.getClient(this.leaderClientRID);
+	}
+	
 	public NetClient getClient(int roomId) {
 		if (roomId < 1 || roomId > clients.length) {
 			throw new GameRoomIndexException(1, clients.length, roomId);
@@ -137,4 +143,14 @@ public class GameRoom {
 	public Tank[] getTanks() {
 		return this.warzone.getTanks();
 	}
+
+	public int getLeaderClientRID() {
+		return leaderClientRID;
+	}
+
+	public void setLeaderClientRID(int leaderClientRID) {
+		this.leaderClientRID = leaderClientRID;
+	}
+	
+	
 }

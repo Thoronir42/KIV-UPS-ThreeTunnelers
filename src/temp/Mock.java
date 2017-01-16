@@ -32,21 +32,20 @@ public class Mock {
 			new NetClient("Obama"),};
 
 		Controls[] playerControls = csmgr.getAllSchemes();
-		
+
 		Player[] players = new Player[]{
 			new Player(colors.useRandomColor().intValue(), clients[0], playerControls[0]),
 			null,
 			new Player(colors.useRandomColor().intValue(), clients[1], MOCKED_CONTROLS[0]),
 			new Player(colors.useRandomColor().intValue(), clients[2], MOCKED_CONTROLS[1])
 		};
-		
+
 		int playerCapacity = 4;
 		int chatCapacity = 20;
 		int projectileCapacity = playerCapacity * 20;
 
-		GameRoom c = new GameRoom(playerCapacity, chatCapacity, projectileCapacity);
+		GameRoom c = new GameRoom(3, playerCapacity, chatCapacity, projectileCapacity);
 
-		
 		for (int i = 1; i <= 4; i++) {
 			c.setPlayer(i, players[i - 1]);
 		}
@@ -64,13 +63,9 @@ public class Mock {
 			}
 		}
 	}
-	
-	public static String serverListString(int n){
-		return serverListString(n, 0);
-	}
 
-	public static String serverListString(int n, int remaining) {
-		StringBuilder sb = new StringBuilder(String.format("%02X%02X", n, remaining));
+	public static String serverListString(int n) {
+		StringBuilder sb = new StringBuilder(String.format("%02X", n));
 		for (byte i = 0; i < n; i++) {
 			int players = RNG.getRandInt(Settings.MAX_PLAYERS) + 1;
 			int difficulty = RNG.getRandInt(4);
@@ -81,11 +76,11 @@ public class Mock {
 			if (i % 3 == 1) {
 				flags |= IGameRoomInfo.FLAG_SPECTATABLE;
 			}
-			
+
 			String s = String.format("%04X%02X%02X%02X%02X", i, Settings.MAX_PLAYERS, players, difficulty, flags);
 			sb.append(s);
 		}
-		
+
 		return sb.toString();
 	}
 }

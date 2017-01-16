@@ -16,6 +16,7 @@ public class NetClient {
 	private String name;
 	private final Player[] players;
 	private int activePlayers;
+	private boolean ready;
 
 	public NetClient() {
 		this("");
@@ -25,6 +26,7 @@ public class NetClient {
 		this.setName(name);
 		this.players = new Player[PLAYER_CAPACITY];
 		this.activePlayers = 0;
+		this.ready = false;
 	}
 
 	public String getName() {
@@ -94,6 +96,14 @@ public class NetClient {
 
 	public void setConnected(boolean connected) {
 		this.connected = connected;
+	}
+
+	public boolean isReady() {
+		return ready;
+	}
+
+	public void setReady(boolean ready) {
+		this.ready = ready;
 	}
 
 }

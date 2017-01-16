@@ -76,7 +76,7 @@ public final class NetAdapter extends Thread implements IUpdatable {
 		}
 	}
 
-	public boolean issueCommand(Command cmd) {
+	public boolean send(Command cmd) {
 		String message = parser.parse(cmd);
 		try {
 			if (this.connection == null) {
@@ -169,7 +169,7 @@ public final class NetAdapter extends Thread implements IUpdatable {
 					introduction.append((byte) 0);
 				}
 
-				this.issueCommand(introduction);
+				this.send(introduction);
 			} catch (UnknownHostException e) {
 				this.handler.signal(new Signal(Signal.Type.UnknownHost, e.getMessage()));
 				this.connection = null;
