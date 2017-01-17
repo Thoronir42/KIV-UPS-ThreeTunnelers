@@ -8,8 +8,9 @@ import tunnelers.core.player.Player;
  * @author Stepan
  */
 public class Chunk {
+
 	private final int chunkSize;
-	
+
 	protected Block[] chunkData;
 	protected Player assignedPlayer;
 
@@ -29,20 +30,23 @@ public class Chunk {
 		this.assignedPlayer = p;
 	}
 
-	protected int applyData(byte[] chunkData) {
+	protected int applyData(Block[] chunkData) {
 		int errors = 0;
+		if (chunkData.length != this.chunkData.length) {
+			return -1;
+		}
+
 		for (int i = 0; i < chunkData.length; i++) {
-			int row = i % chunkSize;
-			int col = i / chunkSize;
-			Block b = Block.fromByteValue(chunkData[col]);
-			if (b.equals(Block.Undefined)) {
+			if ((this.chunkData[i] = chunkData[i]) == Block.Undefined) {
 				errors++;
-				continue;
-			}
-			this.chunkData[row * chunkSize + col] = b;
+			};
 		}
 
 		return errors;
+	}
+
+	public int getSize() {
+		return this.chunkSize;
 	}
 
 	public Block getBlock(int x, int y) {

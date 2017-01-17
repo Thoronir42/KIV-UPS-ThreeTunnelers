@@ -19,10 +19,16 @@ public class GameRoomParser {
 		this.singleScanner = new SimpleScanner(SimpleScanner.RADIX_HEXADECIMAL);
 	}
 
-	public GameRoomFacade[] parse(int n, String lobbies) {
+	public GameRoomFacade[] parse(String lobbies) {
 		this.wholeScanner.setSourceString(lobbies);
+		int n = wholeScanner.nextByte();
+		
 		GameRoomFacade[] facades = new GameRoomFacade[n];
 		for (int i = 0; i < n; i++) {
+			if(wholeScanner.remainingLength() < LOBBY_STRING_LENGTH){
+				System.err.format("Lobby string invalid (%s)\n", wholeScanner.readToEnd());
+				break;
+			}
 			facades[i] = this.parseOne(this.wholeScanner.read(LOBBY_STRING_LENGTH));
 		}
 

@@ -1,11 +1,7 @@
 package tunnelers.core.engine;
 
-import generic.SimpleScanner;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import temp.Mock;
 import tunnelers.core.gameRoom.GameRoomFacade;
 
 /**
@@ -14,8 +10,8 @@ import tunnelers.core.gameRoom.GameRoomFacade;
  */
 public class GameRoomParserTest {
 
-	private GameRoomParser parser;
-
+	private final GameRoomParser parser;
+	
 	public GameRoomParserTest() {
 		parser = new GameRoomParser();
 	}
@@ -25,20 +21,18 @@ public class GameRoomParserTest {
 	 */
 	@Test
 	public void testParseOne() {
-		int n = 1;
-		String lobbies = "001004020103";
+		String lobbies = "01001004020103";
 
 		GameRoomFacade[] expResult = new GameRoomFacade[]{
 			new GameRoomFacade((short) 16, (byte) 4, (byte) 2, (byte) 1, (byte) 3),};
 
-		GameRoomFacade[] result = parser.parse(n, lobbies);
+		GameRoomFacade[] result = parser.parse(lobbies);
 		assertArrayEquals(expResult, result);
 	}
 
 	@Test
 	public void testParseMultiple() {
-		int n = 3;
-		String lobbies = 
+		String lobbies = "03" +
 				"001004020103" +
 				"001104010202" +
 				"001204030301"
@@ -50,7 +44,7 @@ public class GameRoomParserTest {
 			new GameRoomFacade((short) 18, (byte) 4, (byte) 3, (byte) 3, (byte) 1),
 		};
 
-		GameRoomFacade[] result = parser.parse(n, lobbies);
+		GameRoomFacade[] result = parser.parse(lobbies);
 		assertArrayEquals(expResult, result);
 	}
 }
