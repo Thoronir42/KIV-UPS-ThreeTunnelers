@@ -72,10 +72,10 @@ public class GameRoom {
 		return count;
 	}
 
-	public NetClient getLeaderClient(){
+	public NetClient getLeaderClient() {
 		return this.getClient(this.leaderClientRID);
 	}
-	
+
 	public NetClient getClient(int roomId) {
 		if (roomId < 1 || roomId > clients.length) {
 			throw new GameRoomIndexException(1, clients.length, roomId);
@@ -97,11 +97,23 @@ public class GameRoom {
 		return client;
 	}
 
+	public void removePlayersOfClient(NetClient client) {
+		if (client == null) {
+			return;
+		}
+		
+		for (int i = 0; i < this.getCapacity(); i++) {
+			if (this.players[i] != null && this.players[i].getClient() == client) {
+				this.removePlayer(i);
+			}
+		}
+	}
+
 	public Player getPlayer(int roomId) {
 		if (roomId < 1 || roomId > clients.length) {
 			throw new GameRoomIndexException(1, clients.length, roomId);
 		}
-		
+
 		return this.players[roomId - 1];
 	}
 
@@ -109,14 +121,14 @@ public class GameRoom {
 		if (roomId < 1 || roomId > clients.length) {
 			throw new GameRoomIndexException(1, clients.length, roomId);
 		}
-		
+
 		this.players[roomId - 1] = player;
 	}
-	
-	public Player removePlayer(int roomId){
+
+	public Player removePlayer(int roomId) {
 		Player p = this.getPlayer(roomId);
 		this.setPlayer(roomId, null);
-		
+
 		return p;
 	}
 
@@ -151,6 +163,4 @@ public class GameRoom {
 	public void setLeaderClientRID(int leaderClientRID) {
 		this.leaderClientRID = leaderClientRID;
 	}
-	
-	
 }

@@ -50,7 +50,7 @@ public class AssetsRenderer extends ARenderer {
 		int[] rotations = new int[Direction.values().length];
 		
 		for(Direction d : Direction.values()){
-			int intVal = d.intVal();
+			int intVal = d.byteValue();
 			rotations[intVal] = (intVal - 1) / 2;
 		}
 		
@@ -170,6 +170,6 @@ public class AssetsRenderer extends ARenderer {
 		if(direction == null){
 			direction = Direction.Undefined;
 		}
-		return this.directionRotations[direction.intVal()];
+		return this.directionRotations[direction.byteValue()];
 	}
 }

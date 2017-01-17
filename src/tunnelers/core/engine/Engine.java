@@ -11,7 +11,11 @@ import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;
 import tunnelers.core.engine.stage.WarzoneStage;
 import tunnelers.core.gameRoom.GameRoom;
+import tunnelers.core.model.entities.Direction;
+import tunnelers.core.model.entities.Tank;
+import tunnelers.core.model.map.Block;
 import tunnelers.core.model.map.Map;
+import tunnelers.core.player.Player;
 import tunnelers.core.player.controls.AControlsManager;
 import tunnelers.core.settings.Settings;
 import tunnelers.network.NetClient;
@@ -33,9 +37,12 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 
 	protected final EngineUserInterface guiInterface;
 
+	protected NetClient localClient;
 	protected final NetAdapter netadapter;
 	protected final PersistentString connectionSecret;
+
 	protected final GameRoomParser gameRoomParser;
+	protected final MapChunkParser mapChunkParser;
 
 	protected final SimpleScanner commandScanner;
 	protected final HashMap<CommandType, IAction> commandActions;
@@ -49,6 +56,7 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		this.version = version;
 		this.netadapter = new NetAdapter(this);
 		this.gameRoomParser = new GameRoomParser();
+		this.mapChunkParser = new MapChunkParser();
 
 		this.setStage(Stage.Menu);
 		this.tickRate = settings.getTickRate();
@@ -66,10 +74,11 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 			}
 			if (!this.commandActions.containsKey(type)) {
 				missing += type.toString() + ", ";
+				if (++n % 8 == 0) {
+					missing += "\n";
+				}
 			}
-			if (++n % 10 == 0) {
-				missing += "\n";
-			}
+
 		}
 
 		if (missing.length() > 0) {
@@ -131,9 +140,9 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		System.out.format("Engine processing command '%s': [%s]\n", cmd.getType().toString(), cmd.getData());
 		commandScanner.setSourceString(cmd.getData());
 		IAction action = this.commandActions.get(cmd.getType());
-		
+
 		if (action == null) {
-			System.err.format("Action for %s not implemented\n", cmd.getType());
+			System.err.format("Engine: No action for %s\n", cmd.getType());
 			return false;
 		}
 		return action.execute(commandScanner);
@@ -144,6 +153,7 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		view.setConnectEnabled(true);
 		switch (signal.getType()) {
 			case ConnectionEstabilished:
+				this.localClient = new NetClient();
 				view.showScene(IView.Scene.GameRoomList);
 				break;
 			case UnknownHost:
@@ -153,26 +163,11 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 				System.err.println("Čas pro navázání spojení vypršel: " + signal.getMessage());
 				break;
 			case ConnectionReset:
+				this.localClient = null;
 				view.alert("Spojení bylo ukončeno: " + signal.getMessage());
 				view.showScene(IView.Scene.MainMenu);
 				break;
 		}
-	}
-
-	private void prepareMap(int chunkSize, int xChunks, int yChunks) {
-		Map map = new Map(chunkSize, xChunks, yChunks, currentGameRoom.getPlayerCount());
-		// todo remove mocking
-		map = (new MapGenerator()).generate(chunkSize, xChunks, yChunks, this.currentGameRoom.getPlayerCount());
-		this.currentGameRoom.initWarzone(map);
-	}
-
-	public void beginGame() {
-		this.prepareMap(20, 12, 8);
-
-		this.view.setGameData(this.currentGameRoom.getMap(), this.currentGameRoom.getPlayers());
-
-		this.setStage(Engine.Stage.Warzone);
-		this.view.showScene(IView.Scene.Game);
 	}
 
 	public static enum Stage {
@@ -183,7 +178,8 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 	private HashMap<CommandType, IAction> prepareActions() {
 		HashMap<CommandType, IAction> map = new HashMap<>();
 		this.putSoloCommands(map);
-		this.putRoomCommands(map);
+		this.putRoomPreparationCommands(map);
+		this.putRoomGameplayCommands(map);
 
 		return map;
 	}
@@ -205,7 +201,19 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 
 		map.put(CommandType.LeadMarco, sc -> {
 			Command polo = netadapter.createCommand(CommandType.LeadPolo);
+			int n = sc.nextByte();
 			polo.append(sc.nextLong());
+			this.netadapter.send(polo);
+
+			return true;
+		});
+
+		map.put(CommandType.LeadPolo, sc -> {
+			long now = System.currentTimeMillis();
+			long stamp = sc.nextLong();
+			long d = now - stamp;
+			System.out.format("Polo: %d - %d = %d\n", now, stamp, d);
+
 			return true;
 		});
 
@@ -215,14 +223,37 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 			return true;
 		});
 
-		map.put(CommandType.MsgRcon, sc -> {
-			System.err.println("Rcon messages not implemented");
+		map.put(CommandType.ClientSetName, sc -> {
+			this.localClient.setName(sc.readToEnd());
+			return true;
+		});
+
+		map.put(CommandType.RoomsList, sc -> {
+			this.view.appendGameRoomsToList(gameRoomParser.parse(sc.readToEnd()));
+
+			return true;
+		});
+
+		map.put(CommandType.RoomsJoin, sc -> {
+			int gameRoomId = sc.nextByte();
+			int localClientRID = sc.nextByte();
+			int leaderClientRID = sc.nextByte();
+
+			this.currentGameRoom = new GameRoom(leaderClientRID, 4, 12, 4 * 20);
+			this.currentGameRoom.setClient(localClientRID, this.localClient);
+
+			return true;
+		});
+
+		map.put(CommandType.RoomsLeave, sc -> {
+			this.view.showScene(IView.Scene.GameRoomList);
+			this.currentGameRoom = null;
 			return false;
 		});
 
 	}
 
-	private void putRoomCommands(HashMap<CommandType, IAction> map) {
+	private void putRoomPreparationCommands(HashMap<CommandType, IAction> map) {
 		map.put(CommandType.MsgPlain, sc -> {
 			int id = sc.nextByte();
 			String message = sc.readToEnd();
@@ -233,15 +264,189 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 			IChatParticipant p = client.getAnyPlayer();
 			this.getChat().addMessage(p != null ? p : Chat.error(), message);
 			view.updateChat();
+
 			return true;
 		});
 
+		map.put(CommandType.RoomSyncPhase, sc -> {
+			int phaseNumber = sc.nextByte();
+			System.out.println("Change room phase to " + phaseNumber);
+
+			return false;
+		});
+
+		map.put(CommandType.RoomReadyState, sc -> {
+			int readyState = sc.nextByte();
+			int clientRID = sc.nextByte();
+
+			NetClient c = this.currentGameRoom.getClient(clientRID);
+			c.setReady(readyState != 0);
+			// todo: notify view
+			return false;
+		});
+
+		map.put(CommandType.RoomClientInfo, sc -> {
+			int clientRID = sc.nextByte();
+			String name = sc.readToEnd();
+
+			NetClient c = this.currentGameRoom.getClient(clientRID);
+			if (c == null) {
+				c = new NetClient();
+			}
+
+			c.setName(name);
+
+			this.view.updateClients();
+			return true;
+		});
+
+		map.put(CommandType.RoomClientLatency, sc -> {
+			NetClient c = this.currentGameRoom.getClient(sc.nextByte());
+			c.setLatency(sc.nextShort());
+
+			this.view.updateClients();
+			return true;
+		});
+
+		map.put(CommandType.RoomClientRemove, sc -> {
+			int roomId = sc.nextByte();
+			String reason = sc.readToEnd();
+
+			NetClient c = this.currentGameRoom.getClient(roomId);
+
+			if (c == localClient) {
+				return (map.get(CommandType.RoomsLeave)).execute(sc);
+			}
+
+			this.currentGameRoom.removeClient(roomId);
+			this.currentGameRoom.removePlayersOfClient(c);
+
+			this.view.updateClients();
+			this.view.updatePlayers();
+			return true;
+		});
+
+		map.put(CommandType.RoomSetLeader, sc -> {
+			int roomId = sc.nextByte();
+			NetClient c = this.currentGameRoom.getClient(roomId);
+			System.out.println("New room leader is " + c.getName());
+			// todo actually change room leadership
+
+			this.view.updateClients();
+			return true;
+		});
+
+		map.put(CommandType.RoomPlayerAttach, sc -> {
+			int playerRoomId = sc.nextByte();
+			int playerColor = sc.nextByte();
+			int clientRoomId = sc.nextByte();
+
+			NetClient c = this.currentGameRoom.getClient(clientRoomId);
+			Player p = new Player(c, playerColor);
+
+			this.currentGameRoom.setPlayer(playerRoomId, p);
+
+			this.view.updatePlayers();
+			return true;
+		});
+
+		map.put(CommandType.RoomPlayerDetach, sc -> {
+			int roomId = sc.nextByte();
+
+			this.currentGameRoom.removePlayer(roomId);
+			return true;
+		});
+
+		map.put(CommandType.RoomPlayerSetColor, sc -> {
+			int roomId = sc.nextByte();
+			int playerColor = sc.nextByte();
+
+			this.currentGameRoom.getPlayer(roomId).setColor(playerColor);
+			return true;
+		});
+
+	}
+
+	private void putRoomGameplayCommands(HashMap<CommandType, IAction> map) {
 		map.put(CommandType.MapSpecification, sc -> {
 			int chunkSize = sc.nextByte();
 			int xChunks = sc.nextByte();
 			int yChunks = sc.nextByte();
-			prepareMap(chunkSize, xChunks, yChunks);
 
+			Map tunnelerMap = new Map(chunkSize, xChunks, yChunks, currentGameRoom.getPlayerCount());
+			// todo remove mocking
+			tunnelerMap = (new MapGenerator()).generate(chunkSize, xChunks, yChunks, this.currentGameRoom.getPlayerCount());
+			this.currentGameRoom.initWarzone(tunnelerMap);
+
+			return true;
+		});
+
+		map.put(CommandType.MapChunkData, sc -> {
+			int chunkX = sc.nextByte();
+			int chunkY = sc.nextByte();
+			int checkSum = sc.nextByte();
+			Block[] chunkData = this.mapChunkParser.parseData(sc.readToEnd());
+
+			return this.currentGameRoom.getWarzone().getMap()
+					.updateChunk(chunkX, chunkY, chunkData);
+		});
+
+		map.put(CommandType.MapBlocksChanges, sc -> {
+			int n = sc.nextByte();
+			Map tunnelerMap = this.currentGameRoom.getWarzone().getMap();
+			for (int i = 0; i < n; i++) {
+				int blockX = sc.nextShort();
+				int blockY = sc.nextShort();
+				Block newValue = Block.fromByteValue(Byte.parseByte(sc.read(1), 16));
+
+				tunnelerMap.setBlock(blockX, blockY, newValue);
+			}
+			return true;
+		});
+
+		map.put(CommandType.GameControlsSet, sc -> {
+			int roomId = sc.nextByte();
+			int newState = sc.nextByte();
+
+			Player p = this.currentGameRoom.getPlayer(roomId);
+			p.getControls().setState(newState);
+
+			return true;
+		});
+
+		map.put(CommandType.GameTankInfo, sc -> {
+			int roomId = sc.nextByte();
+			int x = sc.nextShort();
+			int y = sc.nextShort();
+			Direction direction = Direction.fromByteValue((byte) sc.nextByte());
+			int hitPoints = sc.nextByte();
+			int energy = sc.nextByte();
+
+			Tank t = this.currentGameRoom.getWarzone().getTank(roomId);
+			t.setLocation(x, y);
+			t.setDirection(direction);
+			t.setHitPoints(hitPoints);
+			t.setEnergy(energy);
+
+			return true;
+		});
+
+		map.put(CommandType.GameProjAdd, sc -> {
+			int n = sc.nextByte();
+			int playerRoomId = sc.nextByte();
+			Direction direction = Direction.fromByteValue((byte) sc.nextByte());
+
+			Player p = this.currentGameRoom.getPlayer(playerRoomId);
+			Tank t = this.currentGameRoom.getWarzone().getTank(playerRoomId);
+
+			this.currentGameRoom.getWarzone().setProjectile(n, t.getLocation(), direction, p);
+
+			return true;
+		});
+
+		map.put(CommandType.GameProjRem, sc -> {
+			int n = sc.nextByte();
+			this.currentGameRoom.getWarzone().removeProjectile(n);
 			return true;
 		});
 	}

@@ -189,8 +189,9 @@ Zpráva od klienta MUSÍ obsahovat požadované jméno. Zpráva od serveru MUSÍ
 \item[14 Výpis místností] (XX)(M)*n [počet místností (n) ve zprávě, n popisů místnosti] \\
 Zpráva od klienta NESMÍ obsahovat tělo. Zpráva od Serveru MUSÍ určit kolik místností nese a MUSÍ obsahovat tolik popisů místností. \\
 Popis místnosti je tohoto formátu: (XXXX)(XX)(XX)(C)(C) [id místnosti, maximální počet hráčů, aktuální počet hráčů, stav místnosti, nastavená obtížnost]
-\item[16 Vytvořit místnost] - \\
-\item[17 Vstoupit do místnosti] (XX) [Číslo místnosti]
+\item[16 Vytvořit místnost] -
+\item[17 Vstoupit do místnosti] (XX)(XX)(XX) [Číslo místnosti, klientské číslo v místnosti lokálního klienta, číslo klienta] \\ 
+Klient MUSÍ poslat pouze číslo místnosti, do které se chce připojit.
 \item[18 Opustit místnost] -
 \end{description}
 \subsubsection*{Mimo-herní zprávy v rámci místnost}
@@ -200,18 +201,23 @@ Klient NESMÍ zahrnovat identifikátor odesílatele. Identifikátor odesílatele
 \item[42 Zpráva - vzdálený příkaz](text) [Příkaz k vykonání] \\
 Umožňuje vzdálené vykonávání příkazů pro ovládání serveru jako z příkazové řádky.
 
-\item[60 Synchronizace fáze] (C) [stav místnosti]
+\item[60 Synchronizace fáze] (XX) [stav místnosti]
+
 \item[61 Stav připravení] (XX)(XX) [nová připravenost (nulová / nenulová hodnota), identifikátor klienta v místnosti]
 Klient NESMÍ poslat identifikátor klienta.
-\item[65 Informace o klientovi] (XX)(XX)(text)[identifikátor klienta v místnosti, délka jména, jméno] \\
+
+\item[65 Informace o klientovi] (XX)(text)[identifikátor klienta v místnosti, jméno] \\
 Klient MUSÍ poslat pouze identifikátor klienta. Server MUSÍ poskytnout k identifikátoru i kompletní popis klienta.
+
 \item[66 Odezva klienta] (XX)(XXXX) [identifikátor klienta v místnosti, doba odezvy v milisekundách] \\
 Klient NESMÍ poslat tuto zprávu.
-\item[67 Odebrání klienta] (XX) [identifikátor klienta v místnosti]
+
+\item[67 Odebrání klienta] (XX)(text) [identifikátor klienta v místnosti, důvod odebrání klienta]
+
 \item[68 Předat vedení klientovi] (XX) [číslo klienta v místnosti]
 \end{description}
 
-\subsubsection*{Herní zprávy}
+\subsubsection*{Herní zprávy místnosti}
 \begin{description}
 \item[80 Přidání hráče] (XX)(XX)(XX) [slot v místnosti, barva, číslo klienta v místnosti] \\
 Klient NESMÍ zahrnout ve zprávě číslo klienta. Klient NEMUSÍ zahrnout ve zprávě barvu.

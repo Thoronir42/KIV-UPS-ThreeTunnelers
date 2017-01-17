@@ -14,7 +14,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import tunnelers.app.ATunnelersScene;
-import tunnelers.core.gameRoom.GameRoomFacade;
 import tunnelers.core.engine.IView;
 
 /**
@@ -46,9 +45,6 @@ public class MainMenuScene extends ATunnelersScene {
 		MainMenuScene scene = new MainMenuScene(content, settings.getWindowWidth(), settings.getWindowHeight());
 
 		Button[] buttons = new Button[]{
-			createButton("TEST-do lobby", (ActionEvent event) -> {
-				scene.getEngine().joinGame(new GameRoomFacade((short) 0, (byte) 4, (byte) 0, (byte) 0, (byte) 0));
-			}),
 			createButton("Nastavení", (ActionEvent event) -> {
 				scene.getStage().showScene(IView.Scene.Settings);
 			}),
@@ -83,13 +79,14 @@ public class MainMenuScene extends ATunnelersScene {
 			scene.flashClear();
 		});
 
+		/*
 		GridPane flashTester = new GridPane();
 		flashTester.add(txt_flash, 0, 0, 2, 1);
 		flashTester.add(but_flashDisplay, 0, 1);
 		flashTester.add(but_flashClear, 1, 1);
 
 		content.add(flashTester, 1, 0, 1, 3);
-
+		 */
 		return scene;
 
 	}
@@ -100,7 +97,7 @@ public class MainMenuScene extends ATunnelersScene {
 		btn.setPrefSize(BTN_PREF_WIDTH, BTN_PREF_HEIGHT);
 		return btn;
 	}
-	
+
 	private final ServerSelectControl serverSelect;
 
 	public MainMenuScene(Parent root, double width, double height) {
@@ -109,14 +106,14 @@ public class MainMenuScene extends ATunnelersScene {
 		serverSelectControl.setHostname(settings.getServerAddress());
 		serverSelectControl.setPort(settings.getServerPort());
 		serverSelectControl.setName("Karel");
-		
+
 		serverSelectControl.setOnSelected((ServerSelectEvent e) -> {
 			this.getEngine().connect(e.getUsername(), e.getHostname(), e.getPort());
 		});
-		
+
 		this.serverSelect = serverSelectControl;
 	}
-	
+
 	public void setConnectEnabled(boolean value) {
 		serverSelect.setDisable(!value);
 		serverSelect.setCursor(value ? Cursor.DEFAULT : Cursor.WAIT);

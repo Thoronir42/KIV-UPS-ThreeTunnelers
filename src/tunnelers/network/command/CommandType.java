@@ -27,10 +27,10 @@ public enum CommandType {
 	RoomClientRemove(67),
 	RoomSetLeader(68),
 	//    PLAYER CONTROLLING COMMANDS
-	PlayerAttach(80),
-	PlayerDetach(81),
-	PlayerMove(82),
-	PlayerSetColor(83),
+	RoomPlayerAttach(80),
+	RoomPlayerDetach(81),
+	RoomPlayerMove(82),
+	RoomPlayerSetColor(83),
 	//    MAP COMMANDS
 	MapSpecification(90),
 	MapChunkData(91),
