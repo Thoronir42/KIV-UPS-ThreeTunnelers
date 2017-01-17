@@ -12,7 +12,7 @@ public class Map {
 
 	protected final IntDimension chunksSize;
 	protected final IntDimension blockSize;
-	
+
 	private final Chunk[] chunks;
 	private Chunk[] playerBaseChunks;
 	protected final int chunkSize;
@@ -29,7 +29,7 @@ public class Map {
 		}
 
 		this.playerBaseChunks = new Chunk[playerCount];
-		
+
 		this.blockSize = new IntDimension(width * chunkSize, height * chunkSize);
 	}
 
@@ -45,7 +45,7 @@ public class Map {
 
 	public Chunk getChunk(int x, int y) throws ChunkException {
 		int width = this.getWidth(), height = this.getHeight();
-		
+
 		if ((x < 0 || x >= width) || (y < 0 || y >= height)) {
 			throw new ChunkException(x, y, width, height);
 		}
@@ -62,8 +62,15 @@ public class Map {
 		return null;
 	}
 
-	public void updateChunk(int x, int y, byte[] chunkData) throws ChunkException {
-		this.getChunk(x, y).applyData(chunkData);
+	public boolean setBlock(int x, int y, Block block) {
+		Chunk chunk = this.getChunk(x / chunkSize, y / chunkSize);
+		chunk.setBlock(x % chunkSize, y % chunkSize, block);
+		
+		return true;
+	}
+
+	public boolean updateChunk(int x, int y, Block[] chunkData) throws ChunkException {
+		return this.getChunk(x, y).applyData(chunkData) == 0;
 	}
 
 	public IntPoint assignBase(int i, Player p) throws IllegalStateException, IndexOutOfBoundsException {
@@ -82,7 +89,7 @@ public class Map {
 		}
 		chunkPosition.multiply(chunkSize);
 		chunkPosition.add(new IntPoint(chunkSize / 2, chunkSize / 2));
-		
+
 		System.out.format("PlayerBase Chunk %d assigned to %s\n", i, p.getName());
 		return chunkPosition;
 	}
@@ -110,8 +117,8 @@ public class Map {
 	public int getPlayerCount() {
 		return this.playerBaseChunks.length;
 	}
-	
-	public IntDimension getBlockSize(){
+
+	public IntDimension getBlockSize() {
 		return this.blockSize;
 	}
 

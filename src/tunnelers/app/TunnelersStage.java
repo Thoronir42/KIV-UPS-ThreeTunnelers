@@ -161,7 +161,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 			this.currentScene.flashDisplay(message);
 		});
 	}
-	
+
 	@Override
 	public PlayerColorManager getPlayerColorManager() {
 		return colorScheme.getPlayerColorManager();
@@ -182,12 +182,17 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	}
 
 	@Override
-	public void updatePlayerList(Player[] players) {
+	public void updatePlayers() {
 		if (!(this.currentScene instanceof LobbyScene)) {
 			System.err.println("Can't update player list, wrong scene");
 			return;
 		}
-		((LobbyScene) this.currentScene).setPlayers(players);
+		((LobbyScene) this.currentScene).setPlayers(this.engine.getGameRoom().getPlayers());
+	}
+
+	@Override
+	public void updateClients() {
+
 	}
 
 	@Override

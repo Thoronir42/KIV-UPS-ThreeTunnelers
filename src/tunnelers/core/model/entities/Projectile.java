@@ -12,7 +12,7 @@ public class Projectile extends GameEntity {
 			SHOT_DIAGONAL = new IntDimension(3, 3);
 
 	public Projectile(IntPoint location, Direction direction, Player player) {
-		super(direction, location, player);
+		super(location, direction, player);
 	}
 
 	@Override

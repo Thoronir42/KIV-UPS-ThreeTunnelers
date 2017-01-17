@@ -5,6 +5,7 @@ import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 import tunnelers.core.player.controls.AControlsManager;
+import tunnelers.network.NetClient;
 
 /**
  *
@@ -31,5 +32,6 @@ public interface IView {
 	
 	public void appendGameRoomsToList(IGameRoomInfo[] rooms);
 	
-	public void updatePlayerList(Player[] players);
+	public void updateClients();
+	public void updatePlayers();
 }

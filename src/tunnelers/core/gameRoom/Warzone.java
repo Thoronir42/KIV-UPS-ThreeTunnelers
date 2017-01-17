@@ -36,9 +36,18 @@ public class Warzone {
 	public void setProjectile(int id, IntPoint location, Direction direction, Player player) {
 		this.projectiles[id] = new Projectile(location, direction, player);
 	}
-	
-	public void removeProjectile(int id){
+
+	public void removeProjectile(int id) {
 		this.projectiles[id] = null;
+	}
+
+	public Tank getTank(int roomId) {
+		if (roomId < 1 || roomId > tanks.length) {
+			throw new GameRoomIndexException(1, tanks.length, roomId);
+		}
+		
+		return this.tanks[roomId - 1];
+		
 	}
 
 	public Tank[] getTanks() {

@@ -34,7 +34,7 @@ public class PlayerListView extends VBox {
 		return views;
 	}
 
-	public void setPlayer(int i, Player p) {
+	public void renderPlayer(int i, Player p) {
 		if (p != null) {
 			playerViews[i].set(p.getName(), this.colors.get(p));
 		} else {

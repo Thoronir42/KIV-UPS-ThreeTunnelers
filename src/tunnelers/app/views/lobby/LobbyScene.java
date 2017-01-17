@@ -126,7 +126,7 @@ public class LobbyScene extends ATunnelersScene {
 	public void setPlayers(Player[] players){
 		System.out.println("Setting players to lobby list view");
 		for(int i = 0; i < players.length; i++){
-			this.playerListView.setPlayer(i, players[i]);
+			this.playerListView.renderPlayer(i, players[i]);
 		}
 	}
 }

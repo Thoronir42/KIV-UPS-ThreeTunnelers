@@ -103,7 +103,7 @@ public class WarzoneStage extends AEngineStage {
 				&& (newX - tank.getWidth() / 2 > 0)
 				&& (newX + tank.getWidth() / 2 < map.getBlockWidth())
 				&& (newY + tank.getHeight() / 2 < map.getBlockHeight())) {
-			tank.setLocation(new IntPoint(newX, newY));
+			tank.setLocation(newX, newY);
 			tank.setDirection(d);
 		}
 

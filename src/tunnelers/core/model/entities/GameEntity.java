@@ -12,7 +12,7 @@ public abstract class GameEntity  implements IColorable{
 	protected IntPoint location;
 	protected Player player;
 
-	public GameEntity(Direction direction, IntPoint location, Player player) {
+	public GameEntity(IntPoint location, Direction direction, Player player) {
 		this.direction = direction;
 		this.player = player;
 		this.setLocation(location);
@@ -24,6 +24,10 @@ public abstract class GameEntity  implements IColorable{
 		return this.location;
 	}
 
+	public void setLocation(int x, int y){
+		this.setLocation(new IntPoint(x, y));
+	}
+	
 	public void setLocation(IntPoint loc) {
 		this.location = loc;
 	}

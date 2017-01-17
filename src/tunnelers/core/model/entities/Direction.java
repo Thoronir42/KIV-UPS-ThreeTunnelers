@@ -1,5 +1,7 @@
 package tunnelers.core.model.entities;
 
+import java.util.HashMap;
+
 /**
  *
  * @author Stepan
@@ -16,6 +18,19 @@ public enum Direction {
 		{West, null, East},
 		{SouthWest, South, SouthEast}
 	};
+	
+	private static final HashMap<Byte, Direction> typeMap;
+	
+	public static Direction fromByteValue(byte c) {
+		return typeMap.getOrDefault(c, Undefined);
+	}
+
+	static{
+		typeMap = new HashMap<>();
+		for(Direction type : Direction.values()){
+			typeMap.put(type.byteValue(), type);
+		}
+	}
 
 	public static Direction getDirection(int X, int Y) {
 		X = (int) Math.signum(X);
@@ -23,12 +38,12 @@ public enum Direction {
 		return alignMent[Y + 1][X + 1];
 	}
 
-	private final int intval;
+	private final byte byteVal;
 	private final IntPoint direction;
 	private final boolean diagonal;
 
-	private Direction(int intval, int x, int y, boolean diagonal) {
-		this.intval = intval;
+	private Direction(int byteVal, int x, int y, boolean diagonal) {
+		this.byteVal = (byte)byteVal;
 		this.direction = new IntPoint(x, y);
 		this.diagonal = diagonal;
 	}
@@ -37,8 +52,8 @@ public enum Direction {
 		return this.diagonal;
 	}
 
-	public int intVal() {
-		return this.intval;
+	public byte byteValue() {
+		return this.byteVal;
 	}
 
 	public IntPoint asPoint() {

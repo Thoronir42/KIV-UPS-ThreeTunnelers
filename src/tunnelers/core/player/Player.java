@@ -9,20 +9,23 @@ import tunnelers.network.NetClient;
  *
  * @author Stepan
  */
-public final class Player implements IChatParticipant, IColorable{
+public final class Player implements IChatParticipant, IColorable {
 
 	private final NetClient client;
 	private final Controls controls;
 	private int color;
-	
-	public Player(int colorID, NetClient client, Controls controls) {
-		this.color = colorID;
+
+	public Player(NetClient client, int colorID) {
+		this(client, colorID, new Controls((byte) -1));
+	}
+
+	public Player(NetClient client, int colorID, Controls controls) {
 		this.client = client;
+		this.color = colorID;
 
 		this.controls = controls;
 	}
 
-	
 	@Override
 	public int getColor() {
 		return this.color;
@@ -35,6 +38,10 @@ public final class Player implements IChatParticipant, IColorable{
 	@Override
 	public String getName() {
 		return this.client.getName(this);
+	}
+	
+	public NetClient getClient(){
+		return this.client;
 	}
 
 	public Controls getControls() {

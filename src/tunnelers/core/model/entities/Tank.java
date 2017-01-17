@@ -19,7 +19,7 @@ public class Tank extends GameEntity {
 	protected int cannonCooldown;
 
 	public Tank(Player player, IntPoint initialLocation) {
-		super(Direction.North, initialLocation, player);
+		super(initialLocation, Direction.North, player);
 		this.hitpoints = MAX_HITPOINTS;
 		this.energy = MAX_ENERGY;
 		this.cannonCooldown = 0;
