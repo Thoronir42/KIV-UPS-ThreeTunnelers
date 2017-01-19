@@ -42,11 +42,6 @@ public class GameRoomListScene extends ATunnelersScene {
 		
 		scene.gameRoomList.setPrefWidth(640);
 
-		scene.but_getLobbies = new Button("Obnovit seznam her");
-		scene.but_getLobbies.setOnAction((ActionEvent event) -> {
-			scene.refreshServerList();
-		});
-
 		
 
 		Button but_goBack = new Button("Zpět..");
@@ -85,20 +80,29 @@ public class GameRoomListScene extends ATunnelersScene {
 
 		topLabels.getChildren().addAll(new Label(host));
 
-		topButtons.getChildren().add(scene.but_getLobbies);
+		topButtons.getChildren().addAll(scene.but_refreshList, scene.but_createRoom);
 
 		top.getChildren().addAll(topLabels, topButtons);
 
 		return top;
 	}
 
-	protected Button but_getLobbies,
-			but_join;
+	protected Button but_refreshList, but_createRoom;
 
 	protected GameRoomTreeTableView gameRoomList;
 
 	public GameRoomListScene(Parent root, double width, double height) {
 		super(root, width, height, "Výpis serverů");
+		
+		this.but_refreshList = new Button("Obnovit seznam her");
+		this.but_refreshList.setOnAction((ActionEvent event) -> {
+			this.refreshServerList();
+		});
+		
+		this.but_createRoom = new Button("Vytvořit novou místnost");
+		this.but_createRoom.setOnAction((event) -> {
+			this.getEngine().createRoom();
+		});
 	}
 
 	private void refreshServerList() {
