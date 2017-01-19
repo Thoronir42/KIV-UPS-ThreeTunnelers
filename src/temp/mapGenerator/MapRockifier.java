@@ -27,7 +27,7 @@ public class MapRockifier implements IMapGeneratorStep {
 		
 		for (int i = 0; i < width; i++) {
 			applyTopLine(map.getChunk(i, 0), l1, chunkSize);
-			applyBottomLine(map.getChunk(i, height - 1), l1, chunkSize);
+			applyBottomLine(map.getChunk(i, height - 1), l2, chunkSize);
 		}
 		
 		l1 = new AvgLine(this.borderSmoothness, chunkSize / 2);

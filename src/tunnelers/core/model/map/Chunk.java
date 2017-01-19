@@ -8,15 +8,17 @@ import tunnelers.core.player.Player;
  * @author Stepan
  */
 public class Chunk {
-
+	
 	private final int chunkSize;
 
 	protected Block[] chunkData;
 	protected Player assignedPlayer;
+	protected Type type;
 
 	public Chunk(int chunkSize) {
 		this.chunkSize = chunkSize;
 		this.chunkData = this.createBlockArray(chunkSize);
+		this.type = Type.Regular;
 	}
 
 	private Block[] createBlockArray(int chunkSize) {
@@ -28,6 +30,7 @@ public class Chunk {
 
 	void assignPlayer(Player p) {
 		this.assignedPlayer = p;
+		this.type = Type.PlayerBase;
 	}
 
 	protected int applyData(Block[] chunkData) {
@@ -66,6 +69,8 @@ public class Chunk {
 	}
 
 	public boolean isBase() {
-		return this.assignedPlayer != null;
+		return this.type == Type.PlayerBase;
 	}
+	
+	public static enum Type { Regular, PlayerBase };
 }
