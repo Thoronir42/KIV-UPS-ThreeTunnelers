@@ -27,15 +27,22 @@ public class PlayerView extends GridPane {
 
 	private final Label lblName;
 	private final Label lblColor;
+	private final Label lblReady;
+	
+	private final Color colorReady;
+	private final Color colorNotReady;
 
 	public PlayerView() {
 		this.setPadding(new Insets(4));
 
 		this.add(lblName = new Label(), 0, 0);
 		this.add(lblColor = new Label(), 0, 1);
+		this.add(lblReady = new Label("Připraven"), 2, 0, 1, 2);
+		
+		this.colorReady = Color.GREENYELLOW;
+		this.colorNotReady = new Color(0.2, 0.2, 0.2, 0.4);
 		
 		this.clear();
-		
 	}
 
 	public void setName(String name) {
@@ -64,13 +71,18 @@ public class PlayerView extends GridPane {
 		this.lblName.setTextFill(labelColor);
 	}
 
-	public void set(String name, FxPlayerColor color) {
+	public void set(String name, FxPlayerColor color, boolean ready) {
 		this.setName(name);
 		this.setColor(color);
+		
+		this.lblReady.setVisible(true);
+		this.lblReady.textFillProperty().set(ready ? colorReady : colorNotReady);
 	}
 
 	public void clear() {
 		this.setName("- - -");
 		this.setColor(null);
+		
+		this.lblReady.setVisible(false);
 	}
 }

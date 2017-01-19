@@ -39,8 +39,8 @@ public final class Player implements IChatParticipant, IColorable {
 	public String getName() {
 		return this.client.getName(this);
 	}
-	
-	public NetClient getClient(){
+
+	public NetClient getClient() {
 		return this.client;
 	}
 
@@ -51,6 +51,10 @@ public final class Player implements IChatParticipant, IColorable {
 	@Override
 	public String toString() {
 		return String.format("Player %16s (color=%02d)", this.getName(), this.color);
+	}
+
+	public boolean isReady() {
+		return client.isReady();
 	}
 
 }

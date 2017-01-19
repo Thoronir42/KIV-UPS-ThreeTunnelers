@@ -69,34 +69,21 @@ public class LobbyScene extends ATunnelersScene {
 		center.setAlignment(Pos.CENTER);
 
 		SimpleChat chat = scene.chatView;
-		chat.box().setPrefSize(400, 260);
+		chat.setPrefSize(400, 280);
 
 		chat.setOnMessageSend(event -> {
 			scene.flashDisplay(event.getMessage());
 			scene.getEngine().sendPlainText(event.getMessage());
 		});
+		center.add(chat, 0, 0, 2, 1);
 
-		center.add(chat.box(), 0, 0, 2, 1);
-		center.add(chat.input(), 0, 1);
-
-		Button but_send = new Button("Smazat flash");
-		but_send.setOnAction((ActionEvent event) -> {
-			scene.flashClear();
-			//scene.chatView.sendMessage();
-		});
-		center.add(but_send, 1, 1);
-
-		Button but_start = new Button("Vyzkoušet");
-		but_start.setOnAction((ActionEvent event) -> {
-			scene.getEngine().beginGame();
-		});
-		center.add(but_start, 1, 2);
-
+		center.add(scene.btn_ready, 1, 1);
+		
 		Button but_back = new Button("Odejít do menu");
 		but_back.setOnAction((ActionEvent event) -> {
 			scene.getStage().prevScene();
 		});
-		center.add(but_back, 1, 3);
+		center.add(but_back, 1, 2);
 
 		return center;
 	}
@@ -106,14 +93,33 @@ public class LobbyScene extends ATunnelersScene {
 	protected final SimpleChat chatView;
 	private final Label caption;
 	private final PlayerListView playerListView;
+	
+	private final Button btn_ready;
 
 	public LobbyScene(Parent root, double width, double height, Chat chat, FxDefaultColorScheme colors, int capacity) {
 		super(root, width, height, "Join Game");
 		this.caption = new Label("GAME ROM 6");
-		this.chatView = new SimpleChat(colors.getPlayerColorManager());
+		this.chatView = new SimpleChat(colors.getPlayerColorManager(), true);
 		this.playerListView = new PlayerListView(colors.getPlayerColorManager(), capacity);
 		
 		this.chat = chat;
+		
+		this.btn_ready = new Button();
+		this.setLocalClientReady(false);
+	}
+	
+	public void setLocalClientReady(boolean newValue){
+		if(!newValue){
+			btn_ready.setText("Jsem ready");
+			btn_ready.setOnAction((evt) -> {
+				this.getEngine().setReady(true);
+			});
+		} else {
+			btn_ready.setText("Nejsem ready");
+			btn_ready.setOnAction((evt) -> {
+				this.getEngine().setReady(false);
+			});
+		}
 	}
 
 	public void updateChatbox() {
