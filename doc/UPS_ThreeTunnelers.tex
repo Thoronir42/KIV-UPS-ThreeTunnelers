@@ -141,10 +141,18 @@ Zdrojové soubory serveru jsou tříděny do modulů podle jejich významu...
 Zdrojové soubory serveru jsou tříděny do balíků podle jejich významu...
 \section{Uživatelská dokumentace}
 
+\section{Závěr}
+Díky této semestrální práci jsem si vyzkoušel, co obnáší proces návrhu a implementace síťové aplikace skládající se ze serveru z klienta a aplikačního protokolu, pomocí kterého tyto aplikační části komunikují.
+Procvičil jsem si vytváření uživatelského rozhraní a připomenul si důležitost očividné reakce na uživatelské vstupy.
 
+Práci mi značně zjednodušily jednotkové testy, které jsem implementoval na straně klienta pomocí testovacího frameworku JUnit a na straně serveru, které jsou realizovány debugovacími výpisy. Obě aplikace nejsou ani zdaleka otestovány celé ale klíčové prvky lze testy ověřit.
+
+V průběhu implementace protokolu na straně serveru v jazyce C jsem narazil na zvláštní chování při formátování proměnných typu \texttt{long int}, kde po předání této proměnné jako parametr do funkce a po vykonání dané funkce zmizela proměnná z paměti, čímž byla způsobena chyba typu SIGSEGF. Ještě pro jistotu se toto chování při několikanásobném spouštění testů občas neprojevila. Z toho důvodu jsem neimplementoval příkazy typu MARCO a POLO, které tento typ proměnné používají pro počítání latence.
+
+Hra má veliký potenciál pro rozšířitelnost: například při implementaci přiřazování hráčských barev mě napadla možnost herních týmů, kde by určití hráči spolupracovali proti ostatním týmům.
 \section{Přílohy}
 \subsection{Aplikační protokol TTP}
-Protokol STTP (Three Tunnelers Protocol) definuje rozhraní mezi dvěma účastníky komunikace po síti. Komunikace je asynchronní, což znamená že účastníci nemají stejné role, zde mají mezi sebou vztah Klient-Server.
+Protokol TTP (Three Tunnelers Protocol) definuje rozhraní mezi dvěma účastníky komunikace po síti. Komunikace je asynchronní, což znamená že účastníci nemají stejné role, zde mají mezi sebou vztah Klient-Server.
 Aplikační protokol STTP je realizován nad transportním protokolem TCP. Zprávy nemusí mít jednotnou délku ale vždy musí odpovídat následujícímu formátu:
 \begin{center}
 \texttt{<hlavička><tělo><LF>}
@@ -173,12 +181,11 @@ Server MUSÍ poslat jako první segment těla číselné pořadí, jako klient. 
 Pokud se jedná o opětovné připojení klienta, server BY MĚL následovně poslat zprávu typu "Nastavení jména".
 \item[2 Odpojení] (text)[důvod odpojení]\\
 Pokud je to možné, klient i server BY MĚLI před ukončením spojení poslat zprávu o ukončení spojení. Zpráva MŮŽE obsahovat segment důvod odpojení.
-\item[3 Marco] (XX)(XXXXXXXX)(XXXXXXXX) [počet předcházejících zpráv, časový otisk odesílající strany, časový otisk přijímající strany] \\
+\item[3 Marco] (XX)(XXXXXXXXXXXXXXXX)(XXXXXXXXXXXXXXXX) [počet předcházejících zpráv, časový otisk odesílající strany, časový otisk přijímající strany] \\
 Zpráva vyžadující odpověď protistrany. Zpráva MUSÍ obsahovat časový otisk odesílající strany. Pokud je počet předcházejících zpráv nenulový, zpráva MUSÍ obsahovat i časový otisk přijímající strany. V opačném případě NESMÍ časový otisk přijímající strany. \\
 Zpráva MŮŽE být použita jako odpověď, pokud přijímající strana také požaduje synchronizaci. V takovém případě MUSÍ být počet předcházejících zpráv nenulový.
-\item[4 Polo] (XXXXXXXX) [Časový otisk přijímající strany]\\
+\item[4 Polo] (XXXXXXXXXXXXXXXX) [Časový otisk přijímající strany]\\
 Odpovídající zpráva na zprávu "Marco". Zpráva MUSÍ obsahovat časový otisk přijímající strany.
-Zpráva odpovídající
 \item[5 Neplatný příkaz] (text) [přijatá neplatná zpráva]\\
 Zpráva sloužící k informaci protistrany o neplatném formátu přijaté zprávy. Zpráva MUSÍ obsahovat neplatnou příchozí zprávu v podobě, v jaké byla přijata.
 \item[10 Nastavení jména] (text) [Jméno klienta] \\
@@ -188,7 +195,7 @@ Zpráva od klienta MUSÍ obsahovat požadované jméno. Zpráva od serveru MUSÍ
 \begin{description}
 \item[14 Výpis místností] (XX)(M)*n [počet místností (n) ve zprávě, n popisů místnosti] \\
 Zpráva od klienta NESMÍ obsahovat tělo. Zpráva od Serveru MUSÍ určit kolik místností nese a MUSÍ obsahovat tolik popisů místností. \\
-Popis místnosti je tohoto formátu: (XXXX)(XX)(XX)(C)(C) [id místnosti, maximální počet hráčů, aktuální počet hráčů, stav místnosti, nastavená obtížnost]
+Popis místnosti je tohoto formátu: (XXXX)(XX)(XX)(XX)(XX) [id místnosti, maximální počet hráčů, aktuální počet hráčů, stav místnosti, nastavená obtížnost]
 \item[16 Vytvořit místnost] -
 \item[17 Vstoupit do místnosti] (XX)(XX)(XX) [Číslo místnosti, klientské číslo v místnosti lokálního klienta, číslo klienta] \\ 
 Klient MUSÍ poslat pouze číslo místnosti, do které se chce připojit.
@@ -196,8 +203,10 @@ Klient MUSÍ poslat pouze číslo místnosti, do které se chce připojit.
 \end{description}
 \subsubsection*{Mimo-herní zprávy v rámci místnost}
 \begin{description}
-\item[40 Zpráva - prostý text](XX)(text) [identifikátor odesílatele] \\
-Klient NESMÍ zahrnovat identifikátor odesílatele. Identifikátor odesílatele označuje pořadí klienta v místnosti číslovaně od 1. Nula představuje systémem odeslané zprávy.
+\item[40 Zpráva - prostý text](XX)(text) [identifikátor odesílatele, tělo zprávy] \\
+Klient NESMÍ zahrnovat identifikátor odesílatele.
+\item[41 Systémová zpráva](text) [tělo zprávy] \\
+Klient NESMÍ odesílat zprávy tohoto typu.
 \item[42 Zpráva - vzdálený příkaz](text) [Příkaz k vykonání] \\
 Umožňuje vzdálené vykonávání příkazů pro ovládání serveru jako z příkazové řádky.
 
@@ -226,6 +235,7 @@ Klient NESMÍ zahrnout ve zprávě číslo klienta. Klient NEMUSÍ zahrnout ve z
 \item[83 Nastavení barvy hráče] (XX)(XX) [slot hráče, barva]
 
 \item[90 Specifikace mapy] (XX)(XX)(XX) [velikost chunku, šířka v chuncích, výška v chuncích]
+\item[91 Specifikace základnových bloků na mapě] (XX)((XX)(XX)(XX)) * N [N - počet specifikací základen, N specifikací: (X chunku, Y chunku, číslo hráče v mínstnosti)]
 \item[91 Chunková data] (XX)(XX)(XX)(text) [X chunku, Y chunku, checksum chunku, <domluvená velikost chunku> * X]\\
 Klient NESMÍ posílat chunková data na server.
 \item[92 Seznam změn bloků] (XX)(změna) * N [Počet změn bloků N, N změn bloků]\\ 
