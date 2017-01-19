@@ -53,7 +53,7 @@ public final class NetAdapter extends Thread implements IUpdatable {
 	 * @param hostname
 	 * @param port
 	 */
-	public void connectTo(PersistentString connectionSecret, String clientName, String hostname, int port) {
+	public void connectTo(PersistentString connectionSecret, String hostname, int port) {
 		this.connectionSecret = connectionSecret;
 		if (this.connectionSecret == null) {
 			throw new IllegalArgumentException("Connection secret must be specified");

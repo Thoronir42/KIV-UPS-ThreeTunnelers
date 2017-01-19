@@ -77,17 +77,17 @@ public class GameRoom {
 	}
 
 	public NetClient getClient(int roomId) {
-		if (roomId < 1 || roomId > clients.length) {
-			throw new GameRoomIndexException(1, clients.length, roomId);
+		if (roomId < 0 || roomId >= clients.length) {
+			throw new GameRoomIndexException(0, clients.length - 1, roomId);
 		}
-		return this.clients[roomId - 1];
+		return this.clients[roomId];
 	}
 
 	public void setClient(int roomId, NetClient client) {
-		if (roomId < 1 || roomId > clients.length) {
-			throw new GameRoomIndexException(1, clients.length, roomId);
+		if (roomId < 0 || roomId >= clients.length) {
+			throw new GameRoomIndexException(0, clients.length - 1, roomId);
 		}
-		this.clients[roomId - 1] = client;
+		this.clients[roomId] = client;
 	}
 
 	public NetClient removeClient(int roomId) {

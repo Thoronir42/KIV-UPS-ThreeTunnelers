@@ -92,8 +92,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	protected void changeScene(ATunnelersScene scene) {
 		if (scene == null) {
 			return;
-		}
-
+	}
 		this.setScene(this.currentScene = scene);
 		this.renderer.setGraphicsContext(scene.getGraphicsContext());
 		this.setTitle(String.format("%s %s %s", GAME_NAME, TITLE_SEPARATOR, scene.getName()));

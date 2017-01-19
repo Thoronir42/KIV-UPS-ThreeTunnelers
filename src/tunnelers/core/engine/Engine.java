@@ -2,11 +2,11 @@ package tunnelers.core.engine;
 
 import generic.SimpleScanner;
 import java.util.HashMap;
-import temp.mapGenerator.MapGenerator;
 import tunnelers.common.IUpdatable;
 import tunnelers.network.NetAdapter;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.chat.IChatParticipant;
+import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;
 import tunnelers.core.engine.stage.WarzoneStage;
@@ -51,6 +51,7 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 
 	protected IView view;
 	protected AControlsManager controls;
+	protected String preferredName;
 
 	public Engine(int version, Settings settings) {
 		this.version = version;
@@ -65,6 +66,8 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		this.guiInterface = new EngineUserInterface(this);
 		this.commandScanner = new SimpleScanner(SimpleScanner.RADIX_HEXADECIMAL);
 		this.commandActions = this.prepareActions();
+
+		this.preferredName = "";
 
 		String missing = "";
 		int n = 0;
@@ -191,6 +194,11 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 			System.out.println(n + "=" + secret);
 			this.connectionSecret.set(secret);
 
+			Command setName = this.netadapter.createCommand(CommandType.ClientSetName)
+					.append(this.preferredName);
+
+			this.netadapter.send(setName);
+
 			return true;
 		}));
 
@@ -242,13 +250,20 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 			this.currentGameRoom = new GameRoom(leaderClientRID, 4, 12, 4 * 20);
 			this.currentGameRoom.setClient(localClientRID, this.localClient);
 
+			PlayerColorManager playerColorManager = this.view.getPlayerColorManager();
+			playerColorManager.resetColorUsage();
+
+			this.view.showScene(IView.Scene.Lobby);
+
 			return true;
 		});
 
 		map.put(CommandType.RoomsLeave, sc -> {
 			this.view.showScene(IView.Scene.GameRoomList);
+			this.view.alert(sc.readToEnd());
 			this.currentGameRoom = null;
-			return false;
+
+			return true;
 		});
 
 	}
@@ -280,9 +295,13 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 			int clientRID = sc.nextByte();
 
 			NetClient c = this.currentGameRoom.getClient(clientRID);
+			if (c == null) {
+				return false;
+			}
 			c.setReady(readyState != 0);
-			// todo: notify view
-			return false;
+
+			System.out.println("TODO: notify view");
+			return true;
 		});
 
 		map.put(CommandType.RoomClientInfo, sc -> {
@@ -374,8 +393,6 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 			int yChunks = sc.nextByte();
 
 			Map tunnelerMap = new Map(chunkSize, xChunks, yChunks, currentGameRoom.getPlayerCount());
-			// todo remove mocking
-			tunnelerMap = (new MapGenerator()).generate(chunkSize, xChunks, yChunks, this.currentGameRoom.getPlayerCount());
 			this.currentGameRoom.initWarzone(tunnelerMap);
 
 			return true;
