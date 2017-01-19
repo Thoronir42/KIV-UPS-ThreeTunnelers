@@ -1,7 +1,5 @@
 package tunnelers.core.engine;
 
-import temp.Mock;
-import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.player.controls.Controls;
@@ -23,7 +21,9 @@ public class EngineUserInterface {
 
 	public void connect(String name, String addr, int port) {
 		engine.view.setConnectEnabled(false);
-		engine.netadapter.connectTo(engine.connectionSecret, name, addr, port);
+		engine.netadapter.connectTo(engine.connectionSecret, addr, port);
+		
+		engine.preferredName = name;
 	}
 
 	public void disconnect() {
@@ -33,10 +33,12 @@ public class EngineUserInterface {
 
 	public void refreshServerList() {
 		Command lobbyList = engine.netadapter.createCommand(CommandType.RoomsList);
-		lobbyList.setData(Mock.serverListString(16));
-		engine.handle(lobbyList);
+		engine.netadapter.send(lobbyList);
+	}
 
-		// todo: sent request instead of building lobby list
+	public void createRoom() {
+		Command createRoom = engine.netadapter.createCommand(CommandType.RoomsCreate);
+		engine.netadapter.send(createRoom);
 	}
 
 	public void joinGame(IGameRoomInfo gameRoom) {
@@ -44,47 +46,22 @@ public class EngineUserInterface {
 			engine.view.alert("Hra je již plná");
 			return;
 		}
-		PlayerColorManager playerColorManager = engine.view.getPlayerColorManager();
-		playerColorManager.resetColorUsage();
 
-		// TODO: link this through network events
-		// TODO: move to integration test 
-		Command cmd = engine.netadapter.createCommand(CommandType.RoomsJoin)
-				.append((byte) gameRoom.getId())
-				.append((byte) 1) // localClientRID
-				.append((byte) 1);// leaderClientRID
-		engine.handle(cmd);
-		cmd = engine.netadapter.createCommand(CommandType.RoomPlayerAttach)
-				.append((byte) 1) // playerRID
-				.append((byte) playerColorManager.useRandomColor().intValue())
-				.append((byte) 1);// clientRID
-		engine.handle(cmd);
-
-		// client 2
-		cmd = engine.netadapter.createCommand(CommandType.RoomClientInfo)
-				.append((byte) 2)
-				.append("John");
-		engine.handle(cmd);
-		cmd = engine.netadapter.createCommand(CommandType.RoomPlayerAttach)
-				.append((byte) 2)
-				.append((byte) playerColorManager.useRandomColor().intValue())
-				.append((byte) 2);
-		engine.handle(cmd);
-
-		// client 3
-		cmd = engine.netadapter.createCommand(CommandType.RoomClientInfo)
-				.append((byte) 3)
-				.append("Rakett");
-		engine.handle(cmd);
-		cmd = engine.netadapter.createCommand(CommandType.RoomPlayerAttach)
-				.append((byte) 3)
-				.append((byte) playerColorManager.useRandomColor().intValue())
-				.append((byte) 3);
-		engine.handle(cmd);
+		Command cmd = engine.netadapter.createCommand(CommandType.RoomsJoin);
+		cmd.append((byte) gameRoom.getId());
+		engine.netadapter.send(cmd);
 
 		engine.view.alert("Probíhá připojování");
 
 		engine.view.showScene(IView.Scene.Lobby);
+	}
+	
+	public void setReady(boolean value){
+		Command readyState = engine.netadapter
+				.createCommand(CommandType.RoomReadyState)
+				.append((byte)(value ? 1 : 0));
+		
+		engine.netadapter.send(readyState);
 	}
 
 	public void beginGame() {
