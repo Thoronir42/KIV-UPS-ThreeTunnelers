@@ -160,10 +160,10 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 				view.showScene(IView.Scene.GameRoomList);
 				break;
 			case UnknownHost:
-				System.err.println("Adresa nebyla rozpoznána: " + signal.getMessage());
+				view.alert("Adresa nebyla rozpoznána: " + signal.getMessage());
 				break;
 			case ConnectingTimedOut:
-				System.err.println("Čas pro navázání spojení vypršel: " + signal.getMessage());
+				view.alert("Čas pro navázání spojení vypršel: " + signal.getMessage());
 				break;
 			case ConnectionReset:
 				this.localClient = null;
