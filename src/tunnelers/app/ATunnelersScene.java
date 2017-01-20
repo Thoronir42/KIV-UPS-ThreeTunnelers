@@ -4,20 +4,18 @@ import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import tunnelers.core.settings.Settings;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.render.AfterFX;
 import tunnelers.app.views.components.flash.FlashAreaControl;
-import tunnelers.app.views.components.flash.FlashContainer;
 import tunnelers.common.IUpdatable;
-import tunnelers.core.engine.Engine;
 import tunnelers.core.engine.EngineUserInterface;
 
 /**
@@ -27,26 +25,20 @@ import tunnelers.core.engine.EngineUserInterface;
 public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlasher {
 
 	protected static Assets ASSETS;
-	private static int sceneCount = 0;
 
 	protected static Settings settings = Settings.getInstance();
 
 	protected String sceneName;
 
-	protected Canvas canvas;
-
 	protected FlashAreaControl flash;
 
+	protected Canvas canvas;
+
 	private AfterFX afterFx;
+	private final Rectangle2D canvasTarget;
+	private final Dimension2D blockSize;
 
-	private Rectangle2D canvasTarget;
-	private Dimension2D blockSize;
-
-	public ATunnelersScene(Parent root, double width, double height) {
-		this(root, width, height, "scene " + (++sceneCount));
-	}
-
-	public ATunnelersScene(Parent content, double width, double height, String name) {
+	public ATunnelersScene(Region content, double width, double height, String name) {
 		super(new StackPane(), width, height);
 		this.sceneName = name;
 
@@ -54,26 +46,28 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 			handleKeyPressed(event.getCode());
 		});
 
-		canvas = new Canvas();
-		canvas.widthProperty().bind(this.widthProperty());
-		canvas.heightProperty().bind(this.heightProperty());
-		
-		FlashContainer flashContainer = FlashContainer.getInstance();
-		flash = new FlashAreaControl(flashContainer);
-		System.out.format("New flash area control created for %s with %s\n", this.getClass().getSimpleName(), flashContainer.getMessage());
+		flash = FlashAreaControl.getInstance();
 
 		StackPane root = ((StackPane) this.getRoot());
+		
+		canvas = new Canvas();
+		canvas.widthProperty().bind(root.widthProperty());
+		canvas.heightProperty().bind(root.heightProperty());
 
-		AnchorPane anchor = new AnchorPane(flash);
-		anchor.prefWidthProperty().bind(root.widthProperty());
-		flash.prefWidthProperty().bind(anchor.widthProperty());
+		AnchorPane anchor = new AnchorPane(content, flash);
+//		anchor.prefWidthProperty().bind(root.widthProperty());
+		flash.prefWidthProperty().bind(root.widthProperty());
+		
+		content.prefWidthProperty().bind(root.widthProperty());
+		content.prefHeightProperty().bind(root.heightProperty());
+
 		flash.visibilityProperty().addListener((observable, oldValue, newValue) -> {
-			AnchorPane.setTopAnchor(flash, (newValue.floatValue() - 1) * flash.getHeight());
+			this.setFlashVisibility(newValue.floatValue());
 		});
 
-		flash.clear();
-
-		root.getChildren().addAll(canvas, anchor, content);
+		
+		
+		root.getChildren().addAll(canvas, anchor);
 
 		canvasTarget = new Rectangle2D(0, 0, canvas.getWidth(), canvas.getHeight());
 		blockSize = new Dimension2D(40, 40);
@@ -97,9 +91,7 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 
 	@Override
 	public void update(long tick) {
-		if (this.flash.updateVisibility()) {
-			//this.reanchorFlash();
-		}
+		this.flash.updateVisibility();
 
 		if (this.afterFx != null) {
 			Platform.runLater(() -> {
@@ -129,12 +121,24 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 
 	@Override
 	public void flashDisplay(String message) {
+		this.flashDisplay(message, 10);
+	}
+	
+	public void flashDisplay(String message, int seconds){
 		System.out.println(this.getClass().getSimpleName() + " displays flash " + message);
-		this.flash.display(message);
+		this.flash.display(message, seconds);
 	}
 
 	@Override
 	public void flashClear() {
 		this.flash.clear();
+	}
+	
+	public void flashClear(boolean immediately){
+		this.flash.clear(immediately);
+	}
+
+	private void setFlashVisibility(float value) {
+		AnchorPane.setTopAnchor(flash, (value - 1) * flash.getHeight());
 	}
 }

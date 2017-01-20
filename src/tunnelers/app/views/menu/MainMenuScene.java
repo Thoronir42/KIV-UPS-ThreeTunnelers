@@ -5,13 +5,13 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.core.engine.IView;
@@ -25,13 +25,8 @@ public class MainMenuScene extends ATunnelersScene {
 	private static final double BTN_PREF_WIDTH = 180,
 			BTN_PREF_HEIGHT = 42;
 
-	static MainMenuScene instance;
-
 	public static MainMenuScene getInstance() {
-		if (instance == null) {
-			instance = createInstance();
-		}
-		return instance;
+			return createInstance();
 	}
 
 	private static MainMenuScene createInstance() {
@@ -79,14 +74,14 @@ public class MainMenuScene extends ATunnelersScene {
 			scene.flashClear();
 		});
 
-		/*
+		
 		GridPane flashTester = new GridPane();
 		flashTester.add(txt_flash, 0, 0, 2, 1);
 		flashTester.add(but_flashDisplay, 0, 1);
 		flashTester.add(but_flashClear, 1, 1);
 
 		content.add(flashTester, 1, 0, 1, 3);
-		 */
+		 
 		return scene;
 
 	}
@@ -100,7 +95,7 @@ public class MainMenuScene extends ATunnelersScene {
 
 	private final ServerSelectControl serverSelect;
 
-	public MainMenuScene(Parent root, double width, double height) {
+	public MainMenuScene(Region root, double width, double height) {
 		super(root, width, height, "Hlavní menu");
 		ServerSelectControl serverSelectControl = new ServerSelectControl(8, new NameManager(420));
 		serverSelectControl.setHostname(settings.getServerAddress());

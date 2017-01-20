@@ -52,12 +52,13 @@ public final class TunnelersApplication extends Application {
 		});
 
 		currentStage.setResizable(false);
-		currentStage.showScene(IView.Scene.MainMenu);
+		currentStage.showSceneNow(IView.Scene.MainMenu);
 
 		this.imp.start();
 		e.start();
 		this.currentStage.show();
 		
+		currentStage.currentScene.flashClear(true);
 		
 	}
 

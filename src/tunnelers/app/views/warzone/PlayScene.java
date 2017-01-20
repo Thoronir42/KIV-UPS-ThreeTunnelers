@@ -2,11 +2,11 @@ package tunnelers.app.views.warzone;
 
 import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
-import javafx.scene.Parent;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.render.ARenderLayout;
@@ -52,15 +52,16 @@ public class PlayScene extends ATunnelersScene {
 	
 	private final FxControlsManager csmgr;
 
-	public PlayScene(Parent root, double width, double height, FxControlsManager csmgr) {
+	public PlayScene(Region root, double width, double height, FxControlsManager csmgr) {
 		super(root, width, height, "Bitevní zóna");
 		this.csmgr = csmgr;
 	}
 
-	public void initLayout(int playerCount, FxRenderContainer renderer) {
+	public PlayScene initLayout(int playerCount, FxRenderContainer renderer) {
 		Dimension2D availableArea = new Dimension2D(canvas.getWidth(), canvas.getHeight());
 		layout = ARenderLayout.choseIdeal(renderer, playerCount, availableArea);
-
+		
+		return this;
 	}
 
 	@Override

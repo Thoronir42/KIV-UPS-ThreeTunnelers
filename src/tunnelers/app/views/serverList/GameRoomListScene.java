@@ -4,13 +4,13 @@ import tunnelers.app.views.serverList.GameRoomView.GameRoomViewWrapper;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import tunnelers.app.views.serverList.GameRoomView.GameRoomTreeTableView;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.views.serverList.GameRoomView.IGameRoomTreeViewItem;
@@ -91,7 +91,7 @@ public class GameRoomListScene extends ATunnelersScene {
 
 	protected GameRoomTreeTableView gameRoomList;
 
-	public GameRoomListScene(Parent root, double width, double height) {
+	public GameRoomListScene(Region root, double width, double height) {
 		super(root, width, height, "Výpis serverů");
 		
 		this.but_refreshList = new Button("Obnovit seznam her");

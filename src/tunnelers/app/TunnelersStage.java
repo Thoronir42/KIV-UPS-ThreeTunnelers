@@ -92,7 +92,8 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	protected void changeScene(ATunnelersScene scene) {
 		if (scene == null) {
 			return;
-	}
+		}
+
 		this.setScene(this.currentScene = scene);
 		this.renderer.setGraphicsContext(scene.getGraphicsContext());
 		this.setTitle(String.format("%s %s %s", GAME_NAME, TITLE_SEPARATOR, scene.getName()));
@@ -116,42 +117,49 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 		this.renderer.prepareGame(map, players);
 	}
 
+	/**
+	 * JavaFX thread transition wrapper
+	 * @param scene Identifier of scecne to be shown
+	 */
 	@Override
 	public void showScene(Scene scene) {
 		Platform.runLater(() -> {
-			GameRoom gr;
-			Runnable afterChange = null;
-			ATunnelersScene newScene = null;
-			switch (scene) {
-				case MainMenu:
-					newScene = MainMenuScene.getInstance();
-					break;
-				case Settings:
-					newScene = SettingsScene.getInstance(controlsManager);
-					break;
-				case GameRoomList:
-					newScene = GameRoomListScene.getInstance(engine.getHostLocator());
-					break;
-				case Lobby:
-					gr = this.engine.getGameRoom();
-					newScene = LobbyScene.getInstance(gr.getChat(), this.renderer.getColorScheme(), gr.getCapacity());
-					break;
-				case Game:
-					PlayScene sc = PlayScene.getInstance(controlsManager);
-					sc.initLayout(engine.getGameRoom().getPlayerCount(), this.renderer);
-					newScene = sc;
-					break;
-			}
-			if (newScene == null) {
-				System.err.println("Error switching scene to " + scene.toString());
-				return;
-			}
-			newScene.setAfterFX(renderer.getAfterFX());
-			this.changeScene(newScene);
-			if (afterChange != null) {
-				afterChange.run();
-			}
+			this.showSceneNow(scene);
 		});
+	}
+
+	public void showSceneNow(Scene scene) {
+		GameRoom gr;
+		Runnable afterChange = null;
+		ATunnelersScene newScene = null;
+		switch (scene) {
+			case MainMenu:
+				newScene = MainMenuScene.getInstance();
+				break;
+			case Settings:
+				newScene = SettingsScene.getInstance(controlsManager);
+				break;
+			case GameRoomList:
+				newScene = GameRoomListScene.getInstance(engine.getHostLocator());
+				break;
+			case Lobby:
+				gr = this.engine.getGameRoom();
+				newScene = LobbyScene.getInstance(gr.getChat(), this.renderer.getColorScheme(), gr.getCapacity());
+				break;
+			case Game:
+				newScene = PlayScene.getInstance(controlsManager)
+						.initLayout(engine.getGameRoom().getPlayerCount(), this.renderer);
+				break;
+		}
+		if (newScene == null) {
+			System.err.println("Error switching scene to " + scene.toString());
+			return;
+		}
+		newScene.setAfterFX(renderer.getAfterFX());
+		this.changeScene(newScene);
+		if (afterChange != null) {
+			afterChange.run();
+		}
 	}
 
 	@Override

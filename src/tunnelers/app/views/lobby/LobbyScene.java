@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
@@ -12,6 +11,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.render.colors.FxDefaultColorScheme;
@@ -96,7 +96,7 @@ public class LobbyScene extends ATunnelersScene {
 	
 	private final Button btn_ready;
 
-	public LobbyScene(Parent root, double width, double height, Chat chat, FxDefaultColorScheme colors, int capacity) {
+	public LobbyScene(Region root, double width, double height, Chat chat, FxDefaultColorScheme colors, int capacity) {
 		super(root, width, height, "Join Game");
 		this.caption = new Label("GAME ROM 6");
 		this.chatView = new SimpleChat(colors.getPlayerColorManager(), true);
