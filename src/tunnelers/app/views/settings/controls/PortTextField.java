@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
  * @author Stepan
  */
 public class PortTextField extends TextField{ 
-	public final SimpleIntegerProperty Port;
+	protected final SimpleIntegerProperty Port;
 	
 	public void setPort(int port){
 		this.Port.set(port);

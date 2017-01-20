@@ -34,13 +34,13 @@ public class SettingsScene extends ATunnelersScene {
 			RESOLVE_BUTTON_PREF_HEIGHT = 40;
 
 	public static SettingsScene getInstance(FxControlsManager controls) {
-		
+
 		GridPane content = new GridPane();
 		content.setBackground(new Background(new BackgroundFill(new Color(0.42, 0.87, 0.93, 0.25), CornerRadii.EMPTY, Insets.EMPTY)));
 
 		SettingsScene scene = new SettingsScene(content, settings.getWindowWidth(), settings.getWindowHeight(), controls);
 		addComponents(content, scene, settings);
-		
+
 		return scene;
 	}
 
@@ -62,7 +62,7 @@ public class SettingsScene extends ATunnelersScene {
 			scene.testServer();
 		});
 		scene.btn_testServer.setDisable(true);
-		
+
 		Button btn_serverDefaults = new Button("Reset");
 		btn_serverDefaults.setOnAction((ActionEvent e) -> {
 			scene.tf_adress.setText(settings.getServerAddress());
@@ -116,7 +116,7 @@ public class SettingsScene extends ATunnelersScene {
 
 	private boolean testServer() {
 		String address = tf_adress.getText();
-		int port = tf_port.Port.get();
+		int port = tf_port.getPort();
 //		NetWorks nw = this.getNetworks();
 //		
 //		if (nw.serverPresent(address, port)) {
@@ -129,14 +129,16 @@ public class SettingsScene extends ATunnelersScene {
 
 	private void saveSettings() {
 		try {
-			String address = this.tf_adress.getText();
-			InetAddress.getAllByName(address);
-			int port = tf_port.Port.get();
+			String hostname = this.tf_adress.getText();
+			InetAddress.getByName(hostname);
+			int port = tf_port.getPort();
 
-			settings.setServerAddress(address);
+			settings.setServerAddress(hostname);
 			settings.setServerPort(port);
-		} catch (UnknownHostException | NumberFormatException e) {
-			System.err.format("%s : %s\n", e.getClass().getSimpleName(), e.getMessage());
+
+			this.flashDisplay(String.format("Adresa serveru %s:%d byla uložena.", hostname, port));
+		} catch (UnknownHostException e) {
+			System.err.format("Adresa serveru nemohla být ověřena");
 		}
 	}
 }
