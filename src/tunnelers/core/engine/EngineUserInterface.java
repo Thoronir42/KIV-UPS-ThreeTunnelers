@@ -41,7 +41,7 @@ public class EngineUserInterface {
 		engine.netadapter.send(createRoom);
 	}
 
-	public void joinGame(IGameRoomInfo gameRoom) {
+	public void joinRoom(IGameRoomInfo gameRoom) {
 		if (gameRoom.isFull()) {
 			engine.view.alert("Hra je již plná");
 			return;
@@ -54,6 +54,13 @@ public class EngineUserInterface {
 		engine.view.alert("Probíhá připojování");
 
 		engine.view.showScene(IView.Scene.Lobby);
+	}
+	
+	public void leaveRoom() {
+		engine.setStage(Engine.Stage.Menu);
+		engine.currentGameRoom = null;
+		
+		engine.view.showScene(IView.Scene.GameRoomList);
 	}
 	
 	public void setReady(boolean value){
@@ -95,6 +102,8 @@ public class EngineUserInterface {
 
 		engine.netadapter.send(cmd);
 	}
+	
+	//    ACCESSORS
 
 	public GameRoom getGameRoom() {
 		return engine.getGameRoom();

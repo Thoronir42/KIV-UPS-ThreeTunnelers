@@ -2,7 +2,6 @@ package tunnelers.app;
 
 import tunnelers.common.IUpdatable;
 import tunnelers.core.engine.IView;
-import java.util.HashMap;
 import tunnelers.core.settings.Settings;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -29,8 +28,6 @@ import tunnelers.core.player.controls.AControlsManager;
  * @author Stepan
  */
 public class TunnelersStage extends Stage implements IView, IUpdatable {
-
-	private final HashMap<Class, IView.Scene> ROUTER;
 
 	public static final String GAME_NAME = "Three Tunnelers",
 			TITLE_SEPARATOR = "|";
@@ -70,23 +67,6 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 		});
 
 		this.renderer = new FxRenderContainer(engine, colorScheme, assets);
-
-		this.ROUTER = this.getRouter();
-	}
-
-	private HashMap<Class, IView.Scene> getRouter() {
-		HashMap<Class, IView.Scene> r = new HashMap<>();
-
-		r.put(SettingsScene.class, IView.Scene.MainMenu);
-		r.put(GameRoomListScene.class, IView.Scene.MainMenu);
-		r.put(LobbyScene.class, IView.Scene.GameRoomList);
-
-		return r;
-	}
-
-	public void prevScene() {
-		Scene scene = this.ROUTER.getOrDefault(this.getScene().getClass(), null);
-		this.showScene(scene);
 	}
 
 	protected void changeScene(ATunnelersScene scene) {

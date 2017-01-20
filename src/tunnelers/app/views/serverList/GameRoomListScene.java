@@ -126,7 +126,7 @@ public class GameRoomListScene extends ATunnelersScene {
 			return;
 		}
 		if (e.getClickCount() == 2) {
-			this.getEngine().joinGame(selected);
+			this.getEngine().joinRoom(selected);
 		}
 	}
 }

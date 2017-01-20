@@ -79,11 +79,11 @@ public class LobbyScene extends ATunnelersScene {
 
 		center.add(scene.btn_ready, 1, 1);
 		
-		Button but_back = new Button("Odejít do menu");
-		but_back.setOnAction((ActionEvent event) -> {
-			scene.getStage().prevScene();
+		Button btnBAck = new Button("Odejít do menu");
+		btnBAck.setOnAction((ActionEvent event) -> {
+			scene.getEngine().leaveRoom();
 		});
-		center.add(but_back, 1, 2);
+		center.add(btnBAck, 1, 2);
 
 		return center;
 	}

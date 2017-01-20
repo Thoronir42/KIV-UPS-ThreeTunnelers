@@ -10,10 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -53,7 +49,6 @@ public class FlashAreaControl extends HBox {
 		
 		Button btnClose = new Button("x");
 		btnClose.setOnAction(e -> {
-			System.out.println("Clearing flash");
 			this.clear();
 		});
 		btnClose.setCursor(Cursor.HAND);

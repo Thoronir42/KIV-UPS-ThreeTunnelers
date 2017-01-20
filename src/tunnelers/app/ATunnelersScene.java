@@ -49,7 +49,7 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 		flash = FlashAreaControl.getInstance();
 
 		StackPane root = ((StackPane) this.getRoot());
-		
+
 		canvas = new Canvas();
 		canvas.widthProperty().bind(root.widthProperty());
 		canvas.heightProperty().bind(root.heightProperty());
@@ -57,7 +57,7 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 		AnchorPane anchor = new AnchorPane(content, flash);
 //		anchor.prefWidthProperty().bind(root.widthProperty());
 		flash.prefWidthProperty().bind(root.widthProperty());
-		
+
 		content.prefWidthProperty().bind(root.widthProperty());
 		content.prefHeightProperty().bind(root.heightProperty());
 
@@ -65,8 +65,6 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 			this.setFlashVisibility(newValue.floatValue());
 		});
 
-		
-		
 		root.getChildren().addAll(canvas, anchor);
 
 		canvasTarget = new Rectangle2D(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -83,9 +81,8 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 
 	public void handleKeyPressed(KeyCode code) {
 		switch (code) {
-			case ESCAPE:
-				this.getStage().prevScene();
-				break;
+			default:
+				System.out.println("Key pressed not handled");
 		}
 	}
 
@@ -123,8 +120,8 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 	public void flashDisplay(String message) {
 		this.flashDisplay(message, 10);
 	}
-	
-	public void flashDisplay(String message, int seconds){
+
+	public void flashDisplay(String message, int seconds) {
 		System.out.println(this.getClass().getSimpleName() + " displays flash " + message);
 		this.flash.display(message, seconds);
 	}
@@ -133,8 +130,8 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 	public void flashClear() {
 		this.flash.clear();
 	}
-	
-	public void flashClear(boolean immediately){
+
+	public void flashClear(boolean immediately) {
 		this.flash.clear(immediately);
 	}
 
