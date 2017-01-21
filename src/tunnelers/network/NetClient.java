@@ -50,9 +50,6 @@ public class NetClient {
 	}
 
 	public void setName(String name) throws IllegalArgumentException {
-		if (name.length() > MAX_NAME_LENGTH) {
-			throw new IllegalArgumentException("Name length must be less or equal to " + MAX_NAME_LENGTH);
-		}
 		this.name = name;
 	}
 

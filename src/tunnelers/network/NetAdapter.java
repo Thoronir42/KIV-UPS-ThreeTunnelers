@@ -1,6 +1,8 @@
 package tunnelers.network;
 
 import java.io.IOException;
+import java.net.NoRouteToHostException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import tunnelers.common.IUpdatable;
 import tunnelers.core.engine.PersistentString;
@@ -49,7 +51,6 @@ public final class NetAdapter extends Thread implements IUpdatable {
 	 * Non-blocking Schedules connection creation.
 	 *
 	 * @param connectionSecret
-	 * @param clientName
 	 * @param hostname
 	 * @param port
 	 */
@@ -72,7 +73,7 @@ public final class NetAdapter extends Thread implements IUpdatable {
 		long d = now - this.connection.lastActive;
 		int timeout = 60000;
 		if (d > timeout) {
-			this.disconnect("Server failed to communicate for " + (timeout / 1000) + " seconds.");
+//			this.disconnect("Server failed to communicate for " + (timeout / 1000) + " seconds.");
 		}
 	}
 
@@ -100,10 +101,9 @@ public final class NetAdapter extends Thread implements IUpdatable {
 				if (!ensureConnectionValid(connection)) {
 					continue;
 				}
-				this.processIncommingMessage();
+				this.waitAndProcessMessage();
 			} catch (InterruptedException e) {
 				this.logError("Network: waiting interrupted");
-				break;
 			} catch (IOException e) {
 				this.logError("Connection error: " + e.toString());
 				connection = null;
@@ -111,7 +111,7 @@ public final class NetAdapter extends Thread implements IUpdatable {
 		}
 	}
 
-	private void processIncommingMessage() throws IOException, InterruptedException {
+	private void waitAndProcessMessage() throws IOException, InterruptedException {
 		// and now we wait...
 		String message = this.connection.receive();
 		this.log("Connection received: " + message);
@@ -134,9 +134,10 @@ public final class NetAdapter extends Thread implements IUpdatable {
 			this.connection.invalidCounterReset();
 
 		} catch (CommandException e) {
-			this.logError(e.toString());
+			this.logError("waitAndProcess: " + e.getClass().getSimpleName() + ": " + e.getMessage());
 			this.connection.invalidCounterIncrease();
 		}
+		
 		if (this.connection.getInvalidCounter() > 2) {
 			this.disconnect("Received too many invallid messages");
 		}
