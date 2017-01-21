@@ -171,18 +171,22 @@ public final class NetAdapter extends Thread implements IUpdatable {
 				}
 
 				this.send(introduction);
+				
+				return true;
 			} catch (UnknownHostException e) {
 				this.handler.signal(new Signal(Signal.Type.UnknownHost, e.getMessage()));
-				this.connection = null;
-				return false;
+			} catch (SocketTimeoutException e) {
+				this.handler.signal(new Signal(Signal.Type.ConnectingTimedOut));
+			}catch(NoRouteToHostException e) {
+				this.handler.signal(new Signal(Signal.Type.ConnectionNoRouteToHost));
 			} catch (IOException e) {
-				this.handler.signal(new Signal(Signal.Type.ConnectingTimedOut, e.getMessage()));
-				this.connection = null;
-				return false;
+				System.err.println(e.toString());
+				this.handler.signal(new Signal(Signal.Type.ConnectingFailedUnexpectedError, e.getMessage()));
 			}
 		}
 
-		return true;
+		this.connection = null;
+		return false;
 	}
 
 	synchronized public void disconnect() {

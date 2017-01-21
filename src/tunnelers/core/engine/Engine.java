@@ -169,7 +169,13 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 				view.alert("Adresa nebyla rozpoznána: " + signal.getMessage());
 				break;
 			case ConnectingTimedOut:
-				view.alert("Čas pro navázání spojení vypršel: " + signal.getMessage());
+				view.alert("Čas pro navázání spojení vypršel");
+				break;
+			case ConnectionNoRouteToHost:
+				view.alert("Připojení k internetu není k dispozici");
+				break;
+			case ConnectingFailedUnexpectedError:
+				view.alert("Neznámá chyba navazování spojení: " + signal.getMessage());
 				break;
 			case ConnectionReset:
 				this.localClient = null;

@@ -28,6 +28,9 @@ public class Signal {
 
 	public static enum Type {
 		ConnectingTimedOut,
+		ConnectionNoRouteToHost,
+		ConnectingFailedUnexpectedError,
+		
 		ConnectionEstabilished,
 		ConnectionReset,
 		UnknownHost,
