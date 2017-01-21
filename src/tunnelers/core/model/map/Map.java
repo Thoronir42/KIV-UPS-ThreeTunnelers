@@ -69,6 +69,15 @@ public class Map {
 		return true;
 	}
 
+	/**
+	 * Injects blocks into the chunk. Counts undefined blocks and returns true
+	 * if there were none
+	 * @param x
+	 * @param y
+	 * @param chunkData
+	 * @return
+	 * @throws ChunkException 
+	 */
 	public boolean updateChunk(int x, int y, Block[] chunkData) throws ChunkException {
 		return this.getChunk(x, y).applyData(chunkData) == 0;
 	}

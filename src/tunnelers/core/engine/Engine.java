@@ -1,6 +1,7 @@
 package tunnelers.core.engine;
 
 import generic.SimpleScanner;
+import generic.SimpleScannerException;
 import java.util.HashMap;
 import tunnelers.common.IUpdatable;
 import tunnelers.network.NetAdapter;
@@ -14,6 +15,7 @@ import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.Tank;
 import tunnelers.core.model.map.Block;
+import tunnelers.core.model.map.ChunkException;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 import tunnelers.core.player.controls.AControlsManager;
@@ -298,7 +300,7 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		map.put(CommandType.RoomSyncPhase, sc -> {
 			int phaseNumber = sc.nextByte();
 			System.out.println("Change room phase to " + phaseNumber);
-
+			
 			return false;
 		});
 
@@ -414,10 +416,18 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 			int chunkX = sc.nextByte();
 			int chunkY = sc.nextByte();
 			int checkSum = sc.nextByte();
-			Block[] chunkData = this.mapChunkParser.parseData(sc.readToEnd());
-
-			return this.currentGameRoom.getWarzone().getMap()
-					.updateChunk(chunkX, chunkY, chunkData);
+			Block[] chunkData = this.mapChunkParser.parseData(sc);
+			try{
+				if(!this.currentGameRoom.getWarzone().getMap()
+					.updateChunk(chunkX, chunkY, chunkData)){
+					System.err.format("Errors occured while updating chunk x=%d, y=%d\n", chunkX, chunkY);	
+				}
+				return true;
+			} catch (ChunkException ex){
+				System.err.println("Chunk data error: " + ex);
+				return false;
+			}
+			
 		});
 
 		map.put(CommandType.MapBlocksChanges, sc -> {
