@@ -159,6 +159,7 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 
 	@Override
 	public void signal(Signal signal) {
+		System.out.println("Engine: processing signal " + signal.getType());
 		view.setConnectEnabled(true);
 		switch (signal.getType()) {
 			case ConnectionEstabilished:
@@ -203,7 +204,6 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		map.put(CommandType.LeadIntroduce, ((sc) -> {
 			int n = sc.nextByte();
 			String secret = sc.readToEnd();
-			System.out.println(n + "=" + secret);
 			this.connectionSecret.set(secret);
 
 			Command setName = this.netadapter.createCommand(CommandType.ClientSetName)

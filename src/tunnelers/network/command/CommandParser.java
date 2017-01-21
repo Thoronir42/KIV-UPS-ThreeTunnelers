@@ -26,7 +26,7 @@ public class CommandParser {
 		return String.format("%04X%s\n", cmd.getType().value(), cmd.getData());
 	}
 
-	public Command parse(String str) throws CommandNotRecognisedException {
+	public Command parse(String str) throws CommandNotRecognisedException, CommandTooShortException {
 		//short id;
 		short type;
 		//short length;

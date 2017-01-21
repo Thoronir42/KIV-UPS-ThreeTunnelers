@@ -122,7 +122,6 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 	}
 
 	public void flashDisplay(String message, int seconds) {
-		System.out.println(this.getClass().getSimpleName() + " displays flash " + message);
 		this.flash.display(message, seconds);
 	}
 

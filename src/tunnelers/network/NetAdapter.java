@@ -95,52 +95,50 @@ public final class NetAdapter extends Thread implements IUpdatable {
 	@Override
 	public void run() {
 		this.log("Starting");
-
+		
 		while (this.keepRunning) {
 			try {
 				if (!ensureConnectionValid(connection)) {
+					sleep(200); // TODO? optimize
 					continue;
 				}
-				this.waitAndProcessMessage();
+				try {
+					Command cmd = this.receiveCommand();
+					if (!this.handler.handle(cmd)) {
+						throw new CommandNotHandledException(cmd);
+					}
+					if (this.connection == null) {
+						continue;
+					}
+					this.connection.invalidCounterReset();
+				} catch (CommandException e) {
+					this.logError("Command error: " + e.getClass().getSimpleName() + ": " + e.getMessage());
+					this.connection.invalidCounterIncrease();
+				}
+
+				if (this.connection.getInvalidCounter() > 2) {
+					this.disconnect("Received too many invallid messages");
+				}
+
 			} catch (InterruptedException e) {
 				this.logError("Network: waiting interrupted");
 			} catch (IOException e) {
 				this.logError("Connection error: " + e.toString());
+				this.handler.signal(new Signal(Signal.Type.ConnectionReset));
 				connection = null;
 			}
 		}
 	}
 
-	private void waitAndProcessMessage() throws IOException, InterruptedException {
-		// and now we wait...
+	private Command receiveCommand() throws IOException, InterruptedException, CommandException {
 		String message = this.connection.receive();
-		this.log("Connection received: " + message);
 
 		if (message == null || message.length() == 0) {
-			this.log("Connection reset");
-			this.handler.signal(new Signal(Signal.Type.ConnectingTimedOut));
-			connection = null;
-			return;
+			throw new IOException("Connection reset");
 		}
 
-		try {
-			Command cmd = this.parser.parse(message);
-			if (!this.handler.handle(cmd)) {
-				throw new CommandNotHandledException(cmd);
-			}
-			if (this.connection == null) {
-				return;
-			}
-			this.connection.invalidCounterReset();
+		return this.parser.parse(message);
 
-		} catch (CommandException e) {
-			this.logError("waitAndProcess: " + e.getClass().getSimpleName() + ": " + e.getMessage());
-			this.connection.invalidCounterIncrease();
-		}
-		
-		if (this.connection.getInvalidCounter() > 2) {
-			this.disconnect("Received too many invallid messages");
-		}
 	}
 
 	/**
@@ -151,13 +149,13 @@ public final class NetAdapter extends Thread implements IUpdatable {
 	 * @param connection
 	 * @return
 	 */
-	private boolean ensureConnectionValid(Connection connection) throws InterruptedException {
+	private boolean ensureConnectionValid(Connection connection) {
 		if (connection == null) {
-			sleep(200);
 			return false;
 		}
-
-		if (!connection.isOpen()) {
+		if (connection.isOpen()) {
+			return true;
+		} else {
 			try {
 				connection.open(5000);
 				this.handler.signal(new Signal(Signal.Type.ConnectionEstabilished));
@@ -171,22 +169,23 @@ public final class NetAdapter extends Thread implements IUpdatable {
 				}
 
 				this.send(introduction);
-				
+
 				return true;
 			} catch (UnknownHostException e) {
 				this.handler.signal(new Signal(Signal.Type.UnknownHost, e.getMessage()));
 			} catch (SocketTimeoutException e) {
 				this.handler.signal(new Signal(Signal.Type.ConnectingTimedOut));
-			}catch(NoRouteToHostException e) {
+			} catch (NoRouteToHostException e) {
 				this.handler.signal(new Signal(Signal.Type.ConnectionNoRouteToHost));
 			} catch (IOException e) {
 				System.err.println(e.toString());
 				this.handler.signal(new Signal(Signal.Type.ConnectingFailedUnexpectedError, e.getMessage()));
 			}
+			this.log("Closing connection");
+			this.connection = null;
 		}
-
-		this.connection = null;
 		return false;
+
 	}
 
 	synchronized public void disconnect() {
