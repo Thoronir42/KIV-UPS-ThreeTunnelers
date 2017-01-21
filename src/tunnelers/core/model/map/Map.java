@@ -14,7 +14,7 @@ public class Map {
 	protected final IntDimension blockSize;
 
 	private final Chunk[] chunks;
-	private Chunk[] playerBaseChunks;
+	private IntPoint[] playerBaseChunks;
 	protected final int chunkSize;
 
 	public Map(int chunkSize, int width, int height, int playerCount) {
@@ -28,12 +28,12 @@ public class Map {
 			}
 		}
 
-		this.playerBaseChunks = new Chunk[playerCount];
+		this.playerBaseChunks = new IntPoint[playerCount];
 
 		this.blockSize = new IntDimension(width * chunkSize, height * chunkSize);
 	}
 
-	public void setPlayerBaseChunks(Chunk[] baseChunks) {
+	public void setPlayerBaseChunks(IntPoint[] baseChunks) {
 		if (this.playerBaseChunks.length != baseChunks.length) {
 			throw new IllegalArgumentException(String.format(
 					"Invalid player base chunk arary size. Required: %02d, got: %02d",
@@ -88,7 +88,8 @@ public class Map {
 	}
 
 	public IntPoint assignBase(int i, Player p) throws IllegalStateException, IndexOutOfBoundsException {
-		Chunk c = this.playerBaseChunks[i];
+		IntPoint base = this.playerBaseChunks[i];
+		Chunk c = this.getChunk(base.getX(), base.getY());
 
 		if (c.isAssigned()) {
 			throw new IllegalStateException("Player base " + i + " chunk is already assigned.");

@@ -1,6 +1,7 @@
 package temp.mapGenerator;
 
 import generic.RNG;
+import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.map.Block;
 import tunnelers.core.model.map.Chunk;
 import tunnelers.core.model.map.Map;
@@ -17,24 +18,24 @@ public class MapBasePlanter implements IMapGeneratorStep {
 	@Override
 	public void applyOn(Map map) {
 		int playerCount = map.getPlayerCount();
-		Chunk[] chunks = new Chunk[playerCount];
+		IntPoint[] bases = new IntPoint[playerCount];
 		int mapWidth = map.getWidth(), mapHeight = map.getHeight();
 
 		// TODO: base distance
-		// TODO: terrain editing
 		for (int i = 0; i < playerCount; i++) {
 			Chunk currentChunk;
-
+			int x, y;
 			do {
-				int x = RNG.getRandInt(mapWidth - 2) + 1,
-						y = RNG.getRandInt(mapHeight - 2) + 1;
+				x = RNG.getRandInt(mapWidth - 2) + 1;
+				y = RNG.getRandInt(mapHeight - 2) + 1;
 				currentChunk = map.getChunk(x, y);
 			} while (currentChunk.isBase());
-
-			chunks[i] = this.plantBaseOn(currentChunk, map.getChunkSize());
+			
+			this.plantBaseOn(currentChunk, map.getChunkSize());
+			bases[i] = new IntPoint(x, y);
 		}
 
-		map.setPlayerBaseChunks(chunks);
+		map.setPlayerBaseChunks(bases);
 
 	}
 

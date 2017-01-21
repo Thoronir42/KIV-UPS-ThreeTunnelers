@@ -1,5 +1,7 @@
 package tunnelers.core.engine;
 
+import generic.SimpleScanner;
+import generic.SimpleScannerException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import tunnelers.core.model.map.Block;
@@ -14,11 +16,8 @@ public class MapChunkParserTest {
 	public MapChunkParserTest() {
 	}
 
-	/**
-	 * Test of parseData method, of class MapChunkParser.
-	 */
 	@Test
-	public void testParseData() {
+	public void testParseData() throws SimpleScannerException {
 		MapChunkParser instance = new MapChunkParser();
 		
 		String source = "01237";
@@ -26,8 +25,8 @@ public class MapChunkParserTest {
 		Block[] expResult = new Block[]{
 			Block.Empty, Block.Breakable, Block.Tough, Block.BaseWall, Block.Undefined,
 		};
-		
-		assertArrayEquals(expResult, instance.parseData(source));
+		Block[] actual = instance.parseData(new SimpleScanner(SimpleScanner.RADIX_HEXADECIMAL, source));
+		assertArrayEquals(expResult, actual);
 	}
 
 	/**
