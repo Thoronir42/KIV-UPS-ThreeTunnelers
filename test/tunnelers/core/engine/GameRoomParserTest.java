@@ -1,5 +1,6 @@
 package tunnelers.core.engine;
 
+import generic.SimpleScannerException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import tunnelers.core.gameRoom.GameRoomFacade;
@@ -16,11 +17,16 @@ public class GameRoomParserTest {
 		parser = new GameRoomParser();
 	}
 
-	/**
-	 * Test of parse method, of class GameRoomParser.
-	 */
+	@Test(expected = SimpleScannerException.class)
+	public void testParseException() throws NumberFormatException, SimpleScannerException{
+		String lobbies = "0";
+		
+		parser.parse(lobbies);
+		fail("Exception should have been thrown");
+	}
+	
 	@Test
-	public void testParseOne() {
+	public void testParseOne() throws NumberFormatException, SimpleScannerException {
 		String lobbies = "01001004020103";
 
 		GameRoomFacade[] expResult = new GameRoomFacade[]{
@@ -31,7 +37,7 @@ public class GameRoomParserTest {
 	}
 
 	@Test
-	public void testParseMultiple() {
+	public void testParseMultiple() throws NumberFormatException, SimpleScannerException {
 		String lobbies = "03" +
 				"001004020103" +
 				"001104010202" +

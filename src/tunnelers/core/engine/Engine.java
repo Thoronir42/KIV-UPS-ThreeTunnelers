@@ -150,7 +150,7 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		}
 		try{
 			return action.execute(commandScanner);
-		} catch (StringIndexOutOfBoundsException ex){
+		} catch (SimpleScannerException ex){
 			System.err.println(ex);
 			return false;
 		}

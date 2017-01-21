@@ -1,6 +1,7 @@
 package tunnelers.core.engine;
 
 import generic.SimpleScanner;
+import generic.SimpleScannerException;
 import tunnelers.core.gameRoom.GameRoomFacade;
 
 /**
@@ -19,7 +20,7 @@ public class GameRoomParser {
 		this.singleScanner = new SimpleScanner(SimpleScanner.RADIX_HEXADECIMAL);
 	}
 
-	public GameRoomFacade[] parse(String lobbies) {
+	public GameRoomFacade[] parse(String lobbies) throws NumberFormatException, SimpleScannerException {
 		this.wholeScanner.setSourceString(lobbies);
 		int n = wholeScanner.nextByte();
 		
@@ -35,7 +36,7 @@ public class GameRoomParser {
 		return facades;
 	}
 
-	private GameRoomFacade parseOne(String gameRoomString) {
+	private GameRoomFacade parseOne(String gameRoomString) throws SimpleScannerException{
 		this.singleScanner.setSourceString(gameRoomString);
 
 		short id = this.singleScanner.nextShort();

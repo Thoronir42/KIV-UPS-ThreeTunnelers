@@ -16,7 +16,7 @@ public class SimpleScannerTest {
 	}
 
 	@Test
-	public void testSetSourceString() {
+	public void testSetSourceString() throws SimpleScannerException {
 		SimpleScanner sc = new SimpleScanner(TESTED_RADIX, TESTED_STRING);
 		
 		sc.nextShort();
@@ -34,7 +34,7 @@ public class SimpleScannerTest {
 	}
 
 	@Test
-	public void testNextByte() {
+	public void testNextByte() throws SimpleScannerException {
 		SimpleScanner sc = new SimpleScanner(TESTED_RADIX, TESTED_STRING);
 		short[] tests = {0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0};
 
@@ -44,7 +44,7 @@ public class SimpleScannerTest {
 	}
 
 	@Test
-	public void testNextShort() {
+	public void testNextShort() throws SimpleScannerException {
 		SimpleScanner sc = new SimpleScanner(TESTED_RADIX, TESTED_STRING);
 		
 		// , 0x9ABC, 0xDEF0 is out of range
@@ -56,7 +56,7 @@ public class SimpleScannerTest {
 	}
 
 	@Test(expected = NumberFormatException.class)
-	public void testNextShortRangeException() {
+	public void testNextShortRangeException() throws SimpleScannerException {
 		SimpleScanner sc = new SimpleScanner(TESTED_RADIX, TESTED_STRING);
 		
 		sc.setSourceString("8000");
@@ -64,7 +64,7 @@ public class SimpleScannerTest {
 	}
 
 	@Test
-	public void testNextInt() {
+	public void testNextInt() throws SimpleScannerException {
 		SimpleScanner sc = new SimpleScanner(TESTED_RADIX, TESTED_STRING);
 		
 		//  0x9ABCDEF0 is out of range
@@ -76,7 +76,7 @@ public class SimpleScannerTest {
 	}
 
 	@Test(expected = NumberFormatException.class)
-	public void testNextIntRangeException() {
+	public void testNextIntRangeException() throws SimpleScannerException {
 		SimpleScanner sc = new SimpleScanner(TESTED_RADIX, TESTED_STRING);
 		
 		sc.setSourceString("80000000");
@@ -84,7 +84,7 @@ public class SimpleScannerTest {
 	}
 
 	@Test
-	public void testNextLong() {
+	public void testNextLong() throws SimpleScannerException {
 		SimpleScanner sc = new SimpleScanner(TESTED_RADIX, TESTED_STRING);
 		
 		sc.setSourceString("0000000002DA2A67");
@@ -93,7 +93,7 @@ public class SimpleScannerTest {
 	}
 
 	@Test(expected = NumberFormatException.class)
-	public void testNextLongRangeException() {
+	public void testNextLongRangeException() throws SimpleScannerException {
 		SimpleScanner sc = new SimpleScanner(TESTED_RADIX, TESTED_STRING);
 		
 		sc.setSourceString("8000000000000000");
@@ -102,7 +102,7 @@ public class SimpleScannerTest {
 	}
 
 	@Test
-	public void testRead() {
+	public void testRead() throws SimpleScannerException {
 		SimpleScanner sc = new SimpleScanner(TESTED_RADIX, TESTED_STRING);
 		
 		assertEquals("12", sc.read(2));
@@ -121,7 +121,7 @@ public class SimpleScannerTest {
 	}
 	
 	@Test
-	public void testAhojMessage() {
+	public void testAhojMessage() throws SimpleScannerException {
 		String ahoj = "0028Ahoj";
 		SimpleScanner sc = new SimpleScanner(TESTED_RADIX, ahoj);
 

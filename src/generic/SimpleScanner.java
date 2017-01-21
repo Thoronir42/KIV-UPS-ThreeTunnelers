@@ -36,25 +36,25 @@ public class SimpleScanner {
 		return source.length() - pointer;
 	}
 
-	public short nextByte() throws NumberFormatException, StringIndexOutOfBoundsException {
+	public short nextByte() throws NumberFormatException, SimpleScannerException {
 		return Short.parseShort(read(2), parse_radix);
 	}
 
-	public short nextShort() throws NumberFormatException, StringIndexOutOfBoundsException {
+	public short nextShort() throws NumberFormatException, SimpleScannerException {
 		return Short.parseShort(read(4), parse_radix);
 	}
 
-	public int nextInt() throws NumberFormatException, StringIndexOutOfBoundsException {
+	public int nextInt() throws NumberFormatException, SimpleScannerException {
 		return Integer.parseInt(read(8), parse_radix);
 	}
 
-	public long nextLong() throws NumberFormatException, StringIndexOutOfBoundsException {
+	public long nextLong() throws NumberFormatException, SimpleScannerException {
 		return Long.parseLong(read(16), parse_radix);
 	}
 
-	public String read(int n) throws StringIndexOutOfBoundsException {
-		if (remainingLength() <= 0) {
-			throw new StringIndexOutOfBoundsException(String.format("Attemoted to read %d chars from processed data", n));
+	public String read(int n) throws SimpleScannerException {
+		if (remainingLength() < n) {
+			throw new SimpleScannerException(String.format("Attemoted to read %d chars from processed data", n));
 		}
 
 		String data = source.substring(pointer, pointer + n);

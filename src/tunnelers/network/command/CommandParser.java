@@ -1,6 +1,7 @@
 package tunnelers.network.command;
 
 import generic.SimpleScanner;
+import generic.SimpleScannerException;
 import java.util.HashMap;
 import tunnelers.network.CommandNotRecognisedException;
 import tunnelers.network.CommandTooShortException;
@@ -41,9 +42,8 @@ public class CommandParser {
 			body = sc.readToEnd();
 		} catch (NumberFormatException ex) {
 			throw new CommandNotRecognisedException(str, ex.getMessage());
-		} catch (StringIndexOutOfBoundsException ex){
+		} catch (SimpleScannerException ex){
 			throw new CommandTooShortException("");
-			// asdf
 		}
 
 		CommandType cmdType = TYPE_MAP.getOrDefault(type, CommandType.Undefined);
