@@ -61,6 +61,11 @@ public class Map {
 
 		return null;
 	}
+	
+	public Block getBlock(int x, int y) {
+		Chunk chunk = this.getChunk(x / chunkSize, y / chunkSize);
+		return chunk.getBlock(x % chunkSize, y % chunkSize);
+	}
 
 	public boolean setBlock(int x, int y, Block block) {
 		Chunk chunk = this.getChunk(x / chunkSize, y / chunkSize);

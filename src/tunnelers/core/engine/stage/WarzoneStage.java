@@ -7,6 +7,7 @@ import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
+import tunnelers.core.model.map.Block;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 import tunnelers.core.player.controls.InputAction;
@@ -122,6 +123,16 @@ public class WarzoneStage extends AEngineStage {
 			IntPoint newLocation = p.getLocation().copy();
 			newLocation.add(p.getDirection().asPoint());
 
+			Block b = map.getBlock(newLocation.getX(), newLocation.getY());
+			switch(b){
+				case Breakable:
+					map.setBlock(newLocation.getX(), newLocation.getY(), Block.Empty);
+				case BaseWall:
+				case Tough:
+					projectiles[i] = null;
+					continue;
+			}
+			
 			if (newLocation.getX() < 0 || newLocation.getX() > map.getBlockWidth()
 					|| newLocation.getY() < 0 || newLocation.getY() > map.getBlockHeight()) {
 				projectiles[i] = null;
