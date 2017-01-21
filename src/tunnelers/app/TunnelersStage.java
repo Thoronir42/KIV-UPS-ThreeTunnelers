@@ -190,4 +190,16 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 		((MainMenuScene) this.currentScene).setConnectEnabled(value);
 	}
 
+	@Override
+	public void setLocalReadyState(boolean ready) {
+		if ((this.currentScene instanceof LobbyScene)) {
+			Platform.runLater(()->{
+				((LobbyScene) this.currentScene).setLocalClientReady(ready);
+			});
+			
+		}
+	}
+	
+	
+
 }

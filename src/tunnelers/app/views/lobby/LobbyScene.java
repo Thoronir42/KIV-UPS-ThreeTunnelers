@@ -108,8 +108,8 @@ public class LobbyScene extends ATunnelersScene {
 		this.setLocalClientReady(false);
 	}
 	
-	public void setLocalClientReady(boolean newValue){
-		if(!newValue){
+	public void setLocalClientReady(boolean ready){
+		if(!ready){
 			btn_ready.setText("Jsem ready");
 			btn_ready.setOnAction((evt) -> {
 				this.getEngine().setReady(true);

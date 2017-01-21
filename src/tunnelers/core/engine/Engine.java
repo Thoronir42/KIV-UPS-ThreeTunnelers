@@ -312,7 +312,7 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 			}
 			c.setReady(readyState != 0);
 
-			System.out.println("TODO: notify view");
+			view.setLocalReadyState(readyState != 0);
 			return true;
 		});
 
@@ -324,8 +324,8 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 			if (c == null) {
 				c = new NetClient();
 			}
-
 			c.setName(name);
+			this.currentGameRoom.setClient(clientRID, c);
 
 			this.view.updateClients();
 			return true;

@@ -26,12 +26,14 @@ public interface IView {
 	public AControlsManager getControlsManager();
 	public PlayerColorManager getPlayerColorManager();
 	
+	public void appendGameRoomsToList(IGameRoomInfo[] rooms);
+	
 	public void setConnectEnabled(boolean value);
 	
 	public void setGameData(Map map, Player[] players);
 	
-	public void appendGameRoomsToList(IGameRoomInfo[] rooms);
-	
 	public void updateClients();
 	public void updatePlayers();
+	
+	public void setLocalReadyState(boolean b);
 }
