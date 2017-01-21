@@ -35,24 +35,24 @@ public class SimpleScanner {
 	public int remainingLength() {
 		return source.length() - pointer;
 	}
-	
-	public short nextByte() {
+
+	public short nextByte() throws NumberFormatException, StringIndexOutOfBoundsException {
 		return Short.parseShort(read(2), parse_radix);
 	}
 
-	public short nextShort() {
+	public short nextShort() throws NumberFormatException, StringIndexOutOfBoundsException {
 		return Short.parseShort(read(4), parse_radix);
 	}
 
-	public int nextInt() {
+	public int nextInt() throws NumberFormatException, StringIndexOutOfBoundsException {
 		return Integer.parseInt(read(8), parse_radix);
 	}
 
-	public long nextLong() {
+	public long nextLong() throws NumberFormatException, StringIndexOutOfBoundsException {
 		return Long.parseLong(read(16), parse_radix);
 	}
 
-	public String read(int n) {
+	public String read(int n) throws StringIndexOutOfBoundsException {
 		if (remainingLength() <= 0) {
 			throw new StringIndexOutOfBoundsException(String.format("Attemoted to read %d chars from processed data", n));
 		}

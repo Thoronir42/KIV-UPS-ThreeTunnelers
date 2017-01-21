@@ -148,7 +148,13 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 			System.err.format("Engine: No action for %s\n", cmd.getType());
 			return false;
 		}
-		return action.execute(commandScanner);
+		try{
+			return action.execute(commandScanner);
+		} catch (StringIndexOutOfBoundsException ex){
+			System.err.println(ex);
+			return false;
+		}
+		
 	}
 
 	@Override

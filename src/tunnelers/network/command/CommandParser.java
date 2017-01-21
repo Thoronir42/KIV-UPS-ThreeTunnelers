@@ -3,6 +3,7 @@ package tunnelers.network.command;
 import generic.SimpleScanner;
 import java.util.HashMap;
 import tunnelers.network.CommandNotRecognisedException;
+import tunnelers.network.CommandTooShortException;
 
 /**
  *
@@ -41,7 +42,7 @@ public class CommandParser {
 		} catch (NumberFormatException ex) {
 			throw new CommandNotRecognisedException(str, ex.getMessage());
 		} catch (StringIndexOutOfBoundsException ex){
-			throw new CommandNotRecognisedException(str, ex.getMessage());
+			throw new CommandTooShortException("");
 			// asdf
 		}
 

@@ -9,6 +9,6 @@ import tunnelers.network.command.Command;
 public class CommandNotHandledException extends CommandException {
 
 	public CommandNotHandledException(Command command) {
-		super("Command could not be handled: " + command.toString());
+		super(command.getType() + ": " + command.getData());
 	}
 }

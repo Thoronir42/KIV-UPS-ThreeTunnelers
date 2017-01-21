@@ -42,14 +42,14 @@ public class Command {
 	public Command append(int n) {
 		return this.append(String.format("%08X", n));
 	}
-	
-	public Command append(long n){
+
+	public Command append(long n) {
 		return this.append(String.format("%016X", n));
 	}
-	
-	public Command append(String s){
+
+	public Command append(String s) {
 		this.data += s;
-		
+
 		return this;
 	}
 
@@ -63,6 +63,6 @@ public class Command {
 
 	@Override
 	public String toString() {
-		return String.format(getClass().getSimpleName() + ": %05d %05d: %s ", this.type.value(), this.getLength(), this.data);
+		return String.format("%s<%s>: %s ", getClass().getSimpleName(), this.type.toString(), this.data);
 	}
 }

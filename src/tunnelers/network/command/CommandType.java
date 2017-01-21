@@ -33,8 +33,9 @@ public enum CommandType {
 	RoomPlayerSetColor(83),
 	//    MAP COMMANDS
 	MapSpecification(90),
-	MapChunkData(91),
-	MapBlocksChanges(92),
+	MapBases(91),
+	MapChunkData(92),
+	MapBlocksChanges(93),
 	//    GAME-ENTITY CONTROLS
 	GameControlsSet(120),
 	GameTankInfo(130),
