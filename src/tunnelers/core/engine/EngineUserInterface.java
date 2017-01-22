@@ -85,7 +85,7 @@ public class EngineUserInterface {
 		engine.view.setGameData(engine.currentGameRoom.getMap(), engine.currentGameRoom.getPlayers());
 
 		engine.setStage(Engine.Stage.Warzone);
-		engine.view.showScene(IView.Scene.Game);
+		engine.view.showScene(IView.Scene.Warzone);
 	}
 
 	public void handleInput(InputAction inp, int controlsID, boolean pressed) {

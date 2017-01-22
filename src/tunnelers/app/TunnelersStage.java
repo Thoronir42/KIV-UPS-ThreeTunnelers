@@ -6,7 +6,7 @@ import tunnelers.core.settings.Settings;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import tunnelers.app.controls.FxControlsManager;
-import tunnelers.app.views.warzone.PlayScene;
+import tunnelers.app.views.warzone.WarzoneScene;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.render.FxRenderContainer;
 import tunnelers.app.render.colors.FxDefaultColorScheme;
@@ -127,8 +127,8 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 				gr = this.engine.getGameRoom();
 				newScene = LobbyScene.getInstance(gr.getChat(), this.renderer.getColorScheme(), gr.getCapacity());
 				break;
-			case Game:
-				newScene = PlayScene.getInstance(controlsManager)
+			case Warzone:
+				newScene = WarzoneScene.getInstance(controlsManager)
 						.initLayout(engine.getGameRoom().getPlayerCount(), this.renderer);
 				break;
 		}

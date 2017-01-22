@@ -14,7 +14,7 @@ import tunnelers.network.NetClient;
 public interface IView {
 
 	public static enum Scene{
-		MainMenu, Settings, GameRoomList, Lobby, Game
+		MainMenu, Settings, GameRoomList, Lobby, Warzone
 	}
 	
 	public void showScene(Scene scene);

@@ -17,18 +17,18 @@ import tunnelers.app.render.FxRenderContainer;
  *
  * @author Stepan
  */
-public class PlayScene extends ATunnelersScene {
+public class WarzoneScene extends ATunnelersScene {
 
-	public static PlayScene getInstance(FxControlsManager csmgr) {
+	public static WarzoneScene getInstance(FxControlsManager csmgr) {
 		return createInstance(csmgr);
 	}
 
-	private static PlayScene createInstance(FxControlsManager csmgr) {
+	private static WarzoneScene createInstance(FxControlsManager csmgr) {
 		BorderPane root = new BorderPane();
 
 		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.DIMGRAY.hashCode()));
 		
-		PlayScene scene = new PlayScene(root, settings.getWindowWidth(), settings.getWindowHeight(), csmgr);
+		WarzoneScene scene = new WarzoneScene(root, settings.getWindowWidth(), settings.getWindowHeight(), csmgr);
 
 		addComponents(root, scene);
 
@@ -42,7 +42,7 @@ public class PlayScene extends ATunnelersScene {
 		return scene;
 	}
 
-	private static void addComponents(BorderPane root, PlayScene scene) {
+	private static void addComponents(BorderPane root, WarzoneScene scene) {
 		root.setCenter(scene.canvas);
 	}
 
@@ -52,12 +52,12 @@ public class PlayScene extends ATunnelersScene {
 	
 	private final FxControlsManager csmgr;
 
-	public PlayScene(Region root, double width, double height, FxControlsManager csmgr) {
+	public WarzoneScene(Region root, double width, double height, FxControlsManager csmgr) {
 		super(root, width, height, "Bitevní zóna");
 		this.csmgr = csmgr;
 	}
 
-	public PlayScene initLayout(int playerCount, FxRenderContainer renderer) {
+	public WarzoneScene initLayout(int playerCount, FxRenderContainer renderer) {
 		Dimension2D availableArea = new Dimension2D(canvas.getWidth(), canvas.getHeight());
 		layout = ARenderLayout.choseIdeal(renderer, playerCount, availableArea);
 		
