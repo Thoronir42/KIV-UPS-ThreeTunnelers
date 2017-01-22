@@ -27,6 +27,8 @@ public class EngineNetworksInterface {
 
 	private final GameRoomParser gameRoomParser;
 	private final MapChunkParser mapChunkParser;
+	
+	private int remainingChunks;
 
 	public EngineNetworksInterface(Engine engine) {
 		this(engine, false);
@@ -260,8 +262,9 @@ public class EngineNetworksInterface {
 
 		map.put(CommandType.RoomPlayerDetach, sc -> {
 			int roomId = sc.nextByte();
-
-			this.engine.currentGameRoom.removePlayer(roomId);
+			if(this.engine.currentGameRoom != null){
+				this.engine.currentGameRoom.removePlayer(roomId);
+			}
 			return true;
 		});
 

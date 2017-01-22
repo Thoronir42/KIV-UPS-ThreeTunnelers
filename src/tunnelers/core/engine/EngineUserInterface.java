@@ -60,7 +60,8 @@ public class EngineUserInterface {
 		engine.setStage(Engine.Stage.Menu);
 		engine.currentGameRoom = null;
 		
-		engine.view.showScene(IView.Scene.GameRoomList);
+		Command leaver = engine.netadapter.createCommand(CommandType.RoomsLeave);
+		engine.netadapter.send(leaver);
 	}
 	
 	public void setReady(boolean value){
