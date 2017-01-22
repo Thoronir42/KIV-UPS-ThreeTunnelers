@@ -13,7 +13,7 @@ public class Map {
 	protected final IntDimension chunksSize;
 	protected final IntDimension blockSize;
 	protected final int chunkSize;
-	
+
 	private final Chunk[] chunks;
 	private final IntPoint[] playerBaseChunks;
 
@@ -34,19 +34,27 @@ public class Map {
 		this.blockSize = new IntDimension(width * chunkSize, height * chunkSize);
 	}
 
-	public void setPlayerBaseChunk(int n, IntPoint baseChunk, Player p) {
+	public IntPoint setPlayerBaseChunk(int n, IntPoint base, Player p) {
 		if (n < 0 || n >= this.playerBaseChunks.length) {
 			String message = String.format("Invalid player base index");
 			throw new IllegalArgumentException(message);
 		}
-		if(!this.chunksSize.contains(baseChunk)){
-			throw new ChunkException(baseChunk.getX(), baseChunk.getY(),
+		if (!this.chunksSize.contains(base)) {
+			throw new ChunkException(base.getX(), base.getY(),
 					this.chunksSize.getWidth(), this.chunksSize.getHeight());
 		}
-		
-		this.playerBaseChunks[n] = baseChunk;
 
-		this.assignBase(n, p);
+		this.playerBaseChunks[n] = base;
+
+		Chunk c = this.getChunk(base.getX(), base.getY());
+		if (c.isAssigned()) {
+			throw new IllegalStateException("Player base " + n + " chunk is already assigned.");
+		}
+		c.assignPlayer(p);
+
+		return base.copy()
+				.multiply(chunkSize)
+				.add(chunkSize / 2, chunkSize / 2);
 	}
 
 	public Chunk getChunk(int x, int y) throws ChunkException {
@@ -93,7 +101,7 @@ public class Map {
 	public boolean updateChunk(int x, int y, Block[] chunkData) throws ChunkException {
 		int errors = 0;
 		Chunk chunk = this.getChunk(x, y);
-		
+
 		if (chunkData.length != chunk.chunkData.length) {
 			return false;
 		}
@@ -105,27 +113,6 @@ public class Map {
 
 		chunk.setStaleness(0);
 		return errors == 0;
-	}
-
-	public IntPoint assignBase(int i, Player p) throws IllegalStateException, IndexOutOfBoundsException {
-		IntPoint base = this.playerBaseChunks[i];
-		Chunk c = this.getChunk(base.getX(), base.getY());
-
-		if (c.isAssigned()) {
-			throw new IllegalStateException("Player base " + i + " chunk is already assigned.");
-		}
-
-		c.assignPlayer(p);
-
-		IntPoint chunkPosition = this.findChunk(c);
-		if (chunkPosition == null) {
-			System.err.println("Chunk was not found");
-			return new IntPoint(-1, -1);
-		}
-		chunkPosition.multiply(chunkSize);
-		chunkPosition.add(new IntPoint(chunkSize / 2, chunkSize / 2));
-
-		return chunkPosition;
 	}
 
 	public int getWidth() {

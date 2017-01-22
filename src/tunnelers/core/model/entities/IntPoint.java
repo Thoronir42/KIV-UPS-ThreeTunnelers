@@ -15,14 +15,22 @@ public class IntPoint {
 		this.y = y;
 	}
 
-	public void add(IntPoint other) {
-		this.x += other.x;
-		this.y += other.y;
+	public IntPoint add(int x, int y){
+		this.x += x;
+		this.y += y;
+		
+		return this;
+	}
+	
+	public IntPoint add(IntPoint other) {
+		return this.add(other.x, other.y);
 	}
 
-	public void multiply(int n) {
+	public IntPoint multiply(int n) {
 		this.x *= n;
 		this.y *= n;
+		
+		return this;
 	}
 
 	public int getX() {
