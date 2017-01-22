@@ -125,6 +125,10 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 				break;
 			case Lobby:
 				gr = this.engine.getGameRoom();
+				if(gr == null){
+					System.err.println("Can't show Lobby scene, GameRoom is null");
+					return;
+				}
 				newScene = LobbyScene.getInstance(gr.getChat(), this.renderer.getColorScheme(), gr.getCapacity());
 				break;
 			case Warzone:

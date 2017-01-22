@@ -186,14 +186,14 @@ public class EngineNetworksInterface {
 		map.put(CommandType.RoomSyncState, sc -> {
 			byte stateValue = (byte) sc.nextByte();
 			GameRoomState state = GameRoomState.getByValue(stateValue);
-			switch(state){
+			switch (state) {
 				case Lobby:
 					this.engine.setStage(Engine.Stage.Menu);
 					this.engine.view.showScene(IView.Scene.Lobby);
 					return true;
 				case BattleStarting:
 					this.engine.view.alert("Wait for other players thx");
-					break;
+					return true;
 				case Battle:
 					Map tMap = this.engine.currentGameRoom.getWarzone().getMap();
 					Player[] players = this.engine.currentGameRoom.getPlayers();
@@ -203,7 +203,7 @@ public class EngineNetworksInterface {
 					return true;
 			}
 
-			System.err.println("Attempted to change room phase to " + stateValue);
+			System.err.format("Attempted to change room phase to %s(%d)", state, stateValue);
 			return false;
 		});
 
@@ -313,8 +313,11 @@ public class EngineNetworksInterface {
 			int chunkSize = sc.nextByte();
 			int xChunks = sc.nextByte();
 			int yChunks = sc.nextByte();
-
-			Map tunnelerMap = new Map(chunkSize, xChunks, yChunks, this.engine.currentGameRoom.getPlayerCount());
+			int playerCount = this.engine.currentGameRoom.getPlayerCount();
+			
+			System.out.format("Initializing map for %d players\n", playerCount);
+			
+			Map tunnelerMap = new Map(chunkSize, xChunks, yChunks, playerCount);
 			this.engine.currentGameRoom.setMap(tunnelerMap);
 
 			this.remainingChunks = xChunks * yChunks;
