@@ -134,6 +134,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 			case Warzone:
 				newScene = WarzoneScene.getInstance(controlsManager)
 						.initLayout(engine.getGameRoom().getPlayerCount(), this.renderer);
+				newScene.flashClear(true);
 				break;
 		}
 		if (newScene == null) {

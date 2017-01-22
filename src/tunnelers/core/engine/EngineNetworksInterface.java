@@ -216,8 +216,10 @@ public class EngineNetworksInterface {
 				return false;
 			}
 			c.setReady(readyState != 0);
+			if (c == this.engine.localClient) {
+				this.engine.view.setLocalReadyState(readyState != 0);
+			}
 
-			this.engine.view.setLocalReadyState(readyState != 0);
 			return true;
 		});
 
@@ -293,7 +295,7 @@ public class EngineNetworksInterface {
 			if (this.engine.currentGameRoom == null) {
 				return false;
 			}
-			
+
 			Player p = this.engine.currentGameRoom.removePlayer(playerRID);
 			p.getClient().removePlayer(p);
 			return true;
@@ -314,9 +316,9 @@ public class EngineNetworksInterface {
 			int xChunks = sc.nextByte();
 			int yChunks = sc.nextByte();
 			int playerCount = this.engine.currentGameRoom.getPlayerCount();
-			
+
 			System.out.format("Initializing map for %d players\n", playerCount);
-			
+
 			Map tunnelerMap = new Map(chunkSize, xChunks, yChunks, playerCount);
 			this.engine.currentGameRoom.setMap(tunnelerMap);
 
