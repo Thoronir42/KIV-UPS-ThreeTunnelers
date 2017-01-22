@@ -1,5 +1,7 @@
 package tunnelers.app.render.rectangleLayout;
 
+import com.sun.javafx.tk.FontLoader;
+import com.sun.javafx.tk.Toolkit;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -9,6 +11,7 @@ import javafx.scene.transform.Affine;
 import tunnelers.app.render.FxRenderContainer;
 import tunnelers.app.render.MapRenderer;
 import tunnelers.app.render.colors.AColorScheme;
+import tunnelers.core.gameRoom.WarzoneRules;
 import tunnelers.core.model.entities.IntDimension;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.IntRectangle;
@@ -16,8 +19,9 @@ import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
 
 /**
- * TODO: This class is owed some refactorisation love. Unused arguments are 
+ * TODO: This class is owed some refactorisation love. Unused arguments are
  * passed only to be passed more, etc...
+ *
  * @author Stepan
  */
 public class PlayerAreaRenderer {
@@ -30,6 +34,8 @@ public class PlayerAreaRenderer {
 	private final IntDimension sourceWindowSize;
 
 	private final FxRenderContainer renderer;
+	
+	private final FontLoader fontLoader;
 
 	PlayerAreaRenderer(Dimension2D bounds, FxRenderContainer renderer) {
 		this.bounds = bounds;
@@ -38,6 +44,8 @@ public class PlayerAreaRenderer {
 		this.sourceWindowSize = calcSourceSize(this.renderWindow, this.blockSize);
 		this.renderer = renderer;
 		
+		this.fontLoader = Toolkit.getToolkit().getFontLoader();
+
 		renderer.setBlockSize(blockSize);
 	}
 
@@ -45,44 +53,51 @@ public class PlayerAreaRenderer {
 		return this.bounds;
 	}
 
-	protected void draw(GraphicsContext g, Dimension2D bounds, Tank currentTank) {
+	protected void draw(GraphicsContext g, Dimension2D bounds, Tank tank) {
 		if (this.renderer == null) {
 			System.err.println("Renderer was not previously set");
 			return;
 		}
-
 		Affine defTransform = g.getTransform();
-
 		AColorScheme colors = renderer.getColorScheme();
+		WarzoneRules rules = renderer.getWarzoneRules();
 
-		g.setFill(colors.playerColors().get(currentTank).color());
+		g.setFill(colors.playerColors().get(tank).color());
 		g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
 
 		g.translate(renderWindow.getMinX(), renderWindow.getMinY());
-		drawViewWindow(g, currentTank.getLocation(), renderer.getTanks(), renderer.getProjectiles());
+		drawViewWindow(g, tank.getLocation(), renderer.getTanks(), renderer.getProjectiles());
 		g.setTransform(defTransform);
 
 		Rectangle inBounds = new Rectangle(bounds.getWidth() * 0.8, bounds.getHeight() * 0.1);
 		inBounds.setX(bounds.getWidth() * 0.1);
 		inBounds.setY(bounds.getHeight() * 0.7);
-		fillStatusBar(g, inBounds, colors.getUiHitpoints());
+		fillStatusBar(g, inBounds, colors.getUiHitpoints(), tank.getHitpoints(), rules.getTankMaxHP());
 
 		inBounds.setY(bounds.getHeight() * 0.85);
-		fillStatusBar(g, inBounds, colors.getUiEnergy());
+		fillStatusBar(g, inBounds, colors.getUiEnergy(), tank.getEnergy(), rules.getTankMaxEP());
 	}
 
-	private void fillStatusBar(GraphicsContext g, Rectangle r, Color c) {
+	private void fillStatusBar(GraphicsContext g, Rectangle r, Color c, int value, int maxValue) {
+		float pct = Math.max(0, Math.min(1.0f * value / maxValue, 1));
+
 		g.setFill(Color.DIMGREY);
-		g.setLineWidth(4);
-		g.strokeRect(r.getX(), r.getY(), r.getWidth(), r.getHeight());
+		g.fillRect(r.getX() - 2, r.getY() - 2, r.getWidth() + 4, r.getHeight() + 4);
 		g.setFill(c);
-		g.fillRect(r.getX(), r.getY(), r.getWidth(), r.getHeight());
+		g.fillRect(r.getX(), r.getY(), r.getWidth() * pct, r.getHeight());
+		g.setFill(c.invert());
+		
+		String text = String.format("%3d / %3d", value, maxValue);
+		double width = fontLoader.computeStringWidth(text, g.getFont());
+		double height = fontLoader.getFontMetrics(g.getFont()).getLineHeight();
+		
+		g.fillText(text, (r.getWidth() - width) / 2, (r.getHeight() - height) / 2);
 	}
 
 	private void drawViewWindow(GraphicsContext g, IntPoint center, Tank[] tanks, Projectile[] projectiles) {
 		Affine defTransform = g.getTransform();
 		MapRenderer mr = renderer.getMapRenderer();
-		
+
 		g.setFill(Color.BLACK);
 		g.fillRect(0 - 2, 0 - 2, renderWindow.getWidth() + 6, renderWindow.getHeight() + 4);
 		IntRectangle source = alignSourceWindow(sourceWindowSize, center, mr.getMapSize());
@@ -108,7 +123,7 @@ public class PlayerAreaRenderer {
 		Affine defTransform = g.getTransform();
 		int n = 0;
 		for (Projectile projectile : projectiles) {
-			if(projectile == null){
+			if (projectile == null) {
 				continue;
 			}
 			if (!render.contains(projectile.getLocation())) {
@@ -128,7 +143,7 @@ public class PlayerAreaRenderer {
 		Affine defTransform = g.getTransform();
 
 		for (Tank tank : tanks) {
-			if(tank == null){
+			if (tank == null) {
 				continue;
 			}
 			if (!render.contains(tank.getLocation())) {
@@ -147,8 +162,8 @@ public class PlayerAreaRenderer {
 		int mapWidth = mapSize.getWidth(),
 				mapHeight = mapSize.getHeight();
 
-		int x,y;
-		
+		int x, y;
+
 		if (center.getX() - halfWidth < 0) {
 			x = 0;
 		} else if (center.getX() + halfWidth > mapWidth) {
@@ -164,7 +179,7 @@ public class PlayerAreaRenderer {
 		} else {
 			y = center.getY() - (int) halfHeight;
 		}
-		
+
 		return new IntRectangle(x, y, source.getWidth(), source.getHeight());
 	}
 
@@ -193,8 +208,8 @@ public class PlayerAreaRenderer {
 
 	private IntDimension calcSourceSize(Rectangle2D viewWindow, Dimension2D blockSize) {
 		return new IntDimension(
-				(int)Math.floor(viewWindow.getWidth() / blockSize.getWidth() - 1),
-				(int)Math.floor(viewWindow.getHeight() / blockSize.getHeight() - 1)
+				(int) Math.floor(viewWindow.getWidth() / blockSize.getWidth() - 1),
+				(int) Math.floor(viewWindow.getHeight() / blockSize.getHeight() - 1)
 		);
 	}
 
