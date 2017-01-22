@@ -11,7 +11,7 @@ public enum Block {
 	Breakable(1),
 	Tough(2),
 	BaseWall(3),
-	Undefined(16);
+	Undefined(15);
 	
 	private static final HashMap<Byte, Block> typeMap;
 	

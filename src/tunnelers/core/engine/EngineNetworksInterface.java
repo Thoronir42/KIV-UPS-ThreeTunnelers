@@ -24,7 +24,7 @@ public class EngineNetworksInterface {
 
 	protected final HashMap<CommandType, IAction> actions;
 	protected final Engine engine;
-	
+
 	private final GameRoomParser gameRoomParser;
 	private final MapChunkParser mapChunkParser;
 
@@ -35,7 +35,7 @@ public class EngineNetworksInterface {
 	public EngineNetworksInterface(Engine engine, boolean printUnimplementedActions) {
 		this.engine = engine;
 		this.actions = this.prepareActions();
-		
+
 		this.gameRoomParser = new GameRoomParser();
 		this.mapChunkParser = new MapChunkParser();
 
@@ -67,7 +67,7 @@ public class EngineNetworksInterface {
 	IAction getAction(CommandType type) {
 		return this.actions.get(type);
 	}
-	
+
 	private HashMap<CommandType, IAction> prepareActions() {
 		HashMap<CommandType, IAction> map = new HashMap<>();
 		putSoloCommands(map);
@@ -175,7 +175,7 @@ public class EngineNetworksInterface {
 		map.put(CommandType.RoomSyncPhase, sc -> {
 			int phaseNumber = sc.nextByte();
 			System.out.println("Change room phase to " + phaseNumber);
-			
+
 			return false;
 		});
 
@@ -309,17 +309,17 @@ public class EngineNetworksInterface {
 			int chunkY = sc.nextByte();
 			int checkSum = sc.nextByte();
 			Block[] chunkData = this.mapChunkParser.parseData(sc);
-			try{
-				if(!this.engine.currentGameRoom.getWarzone().getMap()
-					.updateChunk(chunkX, chunkY, chunkData)){
-					System.err.format("Errors occured while updating chunk x=%d, y=%d\n", chunkX, chunkY);	
+			try {
+				if (!this.engine.currentGameRoom.getWarzone().getMap()
+						.updateChunk(chunkX, chunkY, chunkData)) {
+					System.out.format("Errors occured while updating chunk x=%d, y=%d\n", chunkX, chunkY);
 				}
 				return true;
-			} catch (ChunkException ex){
+			} catch (ChunkException ex) {
 				System.err.println("Chunk data error: " + ex);
 				return false;
 			}
-			
+
 		});
 
 		map.put(CommandType.MapBlocksChanges, sc -> {

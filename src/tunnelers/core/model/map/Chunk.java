@@ -38,7 +38,6 @@ public class Chunk {
 		if (chunkData.length != this.chunkData.length) {
 			return -1;
 		}
-
 		for (int i = 0; i < chunkData.length; i++) {
 			if ((this.chunkData[i] = chunkData[i]) == Block.Undefined) {
 				errors++;
