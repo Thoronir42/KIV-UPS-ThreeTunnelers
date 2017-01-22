@@ -8,47 +8,24 @@ import tunnelers.core.player.Player;
  * @author Stepan
  */
 public class Chunk {
-	
+
 	private final int chunkSize;
 
 	protected Block[] chunkData;
 	protected Player assignedPlayer;
 	protected Type type;
 
+	protected int staleness;
+
 	public Chunk(int chunkSize) {
 		this.chunkSize = chunkSize;
-		this.chunkData = this.createBlockArray(chunkSize);
 		this.type = Type.Regular;
-	}
 
-	private Block[] createBlockArray(int chunkSize) {
 		int blockInChunk = chunkSize * chunkSize;
 		Block[] array = new Block[blockInChunk];
 		Arrays.fill(array, 0, blockInChunk, Block.Breakable);
-		return array;
-	}
 
-	void assignPlayer(Player p) {
-		this.assignedPlayer = p;
-		this.type = Type.PlayerBase;
-	}
-
-	protected int applyData(Block[] chunkData) {
-		int errors = 0;
-		if (chunkData.length != this.chunkData.length) {
-			return -1;
-		}
-		for (int i = 0; i < chunkData.length; i++) {
-			if ((this.chunkData[i] = chunkData[i]) == Block.Undefined) {
-				errors++;
-			};
-		}
-
-		return errors;
-	}
-
-	public int getSize() {
-		return this.chunkSize;
+		this.chunkData = array;
 	}
 
 	public Block getBlock(int x, int y) {
@@ -59,6 +36,11 @@ public class Chunk {
 		this.chunkData[y * chunkSize + x] = block;
 	}
 
+	void assignPlayer(Player p) {
+		this.assignedPlayer = p;
+		this.type = Type.PlayerBase;
+	}
+
 	public Player getAssignedPlayer() {
 		return this.assignedPlayer;
 	}
@@ -67,9 +49,23 @@ public class Chunk {
 		return this.assignedPlayer != null;
 	}
 
+	public int getSize() {
+		return this.chunkSize;
+	}
+
 	public boolean isBase() {
 		return this.type == Type.PlayerBase;
 	}
-	
-	public static enum Type { Regular, PlayerBase };
+
+	public int getStaleness() {
+		return staleness;
+	}
+
+	public void setStaleness(int staleness) {
+		this.staleness = staleness;
+	}
+
+	public static enum Type {
+		Regular, PlayerBase
+	};
 }

@@ -24,7 +24,8 @@ public class Map {
 
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				this.chunks[y * width + x] = new Chunk(chunkSize);
+				Chunk ch = this.chunks[y * width + x] = new Chunk(chunkSize);
+				ch.setStaleness(1);
 			}
 		}
 
@@ -90,7 +91,20 @@ public class Map {
 	 * @throws ChunkException
 	 */
 	public boolean updateChunk(int x, int y, Block[] chunkData) throws ChunkException {
-		return this.getChunk(x, y).applyData(chunkData) == 0;
+		int errors = 0;
+		Chunk chunk = this.getChunk(x, y);
+		
+		if (chunkData.length != chunk.chunkData.length) {
+			return false;
+		}
+		for (int i = 0; i < chunkData.length; i++) {
+			if ((chunk.chunkData[i] = chunkData[i]) == Block.Undefined) {
+				errors++;
+			};
+		}
+
+		chunk.setStaleness(0);
+		return errors == 0;
 	}
 
 	public IntPoint assignBase(int i, Player p) throws IllegalStateException, IndexOutOfBoundsException {
