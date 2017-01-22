@@ -5,6 +5,7 @@ import tunnelers.core.chat.Chat;
 import tunnelers.core.chat.IChatParticipant;
 import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.gameRoom.GameRoom;
+import tunnelers.core.gameRoom.GameRoomState;
 import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.Tank;
@@ -27,7 +28,7 @@ public class EngineNetworksInterface {
 
 	private final GameRoomParser gameRoomParser;
 	private final MapChunkParser mapChunkParser;
-	
+
 	private int remainingChunks;
 
 	public EngineNetworksInterface(Engine engine) {
@@ -262,7 +263,7 @@ public class EngineNetworksInterface {
 
 		map.put(CommandType.RoomPlayerDetach, sc -> {
 			int roomId = sc.nextByte();
-			if(this.engine.currentGameRoom != null){
+			if (this.engine.currentGameRoom != null) {
 				this.engine.currentGameRoom.removePlayer(roomId);
 			}
 			return true;
@@ -275,7 +276,6 @@ public class EngineNetworksInterface {
 			this.engine.currentGameRoom.getPlayer(roomId).setColor(playerColor);
 			return true;
 		});
-
 	}
 
 	private void putRoomGameplayCommands(HashMap<CommandType, IAction> map) {
@@ -300,10 +300,12 @@ public class EngineNetworksInterface {
 			for (int i = 0; i < n; i++) {
 				int x = sc.nextByte();
 				int y = sc.nextByte();
-				Player p = this.engine.currentGameRoom.getPlayer(sc.nextByte());
-				tunnelerMap.setPlayerBaseChunk(i, new IntPoint(x, y), p);
+				short playerRID = sc.nextByte();
+				Player p = this.engine.currentGameRoom.getPlayer(playerRID);
+				IntPoint location = tunnelerMap.setPlayerBaseChunk(i, new IntPoint(x, y), p);
+				this.engine.currentGameRoom.getWarzone().initTank(playerRID, p, location);
 			}
-			
+
 			return true;
 		});
 

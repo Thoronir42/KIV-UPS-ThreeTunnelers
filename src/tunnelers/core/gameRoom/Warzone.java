@@ -12,27 +12,27 @@ import tunnelers.core.player.Player;
  * @author Stepan
  */
 public class Warzone {
+
 	private final WarzoneRules rules;
 	private Map map;
 
-	private Tank[] tanks;
-	private Projectile[] projectiles;
+	private final Tank[] tanks;
+	private final Projectile[] projectiles;
 
-	public Warzone(WarzoneRules rules) {
+	public Warzone(WarzoneRules rules, int playerCapacity) {
 		this.rules = rules;
+		this.tanks = new Tank[playerCapacity];
+		this.projectiles = new Projectile[tanks.length * rules.getProjectilesPerTank()];
 	}
-	protected void setMap(Map map){
+
+	protected void setMap(Map map) {
 		this.map = map;
 	}
-	protected void setTanks(Tank[] tanks){
-		this.tanks = tanks;
-		this.projectiles = new Projectile[tanks.length * this.rules.getProjectilesPerTank()];
-	}
 
-	public WarzoneRules getRules(){
+	public WarzoneRules getRules() {
 		return this.rules;
 	}
-	
+
 	public Projectile[] getProjectiles() {
 		return projectiles;
 	}
@@ -53,12 +53,17 @@ public class Warzone {
 		if (roomId < 1 || roomId > tanks.length) {
 			throw new GameRoomIndexException(1, tanks.length, roomId);
 		}
-		
+
 		return this.tanks[roomId - 1];
-		
+
 	}
 
 	public Tank[] getTanks() {
 		return this.tanks;
+	}
+
+	public void initTank(int playerRID, Player p, IntPoint location) {
+		this.tanks[playerRID] = new Tank(p, location,
+				rules.getTankMaxHP(), rules.getTankMaxEP());
 	}
 }

@@ -34,27 +34,8 @@ public class GameRoom {
 	}
 
 	public void setMap(Map map) {
-		this.warzone = new Warzone(new WarzoneRules());
+		this.warzone = new Warzone(new WarzoneRules(), this.players.length);
 		this.warzone.setMap(map);
-	}
-
-	public void initWarzone() {
-		Tank[] tanks = new Tank[players.length];
-		WarzoneRules warzoneRules = this.getWarzone().getRules();
-		int baseIndex = 0;
-		for (int i = 0; i < players.length; i++) {
-			Player p = players[i];
-			if (p == null) {
-				continue;
-			}
-			IntPoint baseCenter = this.warzone.getMap().assignBase(baseIndex++, p);
-			Tank tank = new Tank(p, baseCenter,
-					warzoneRules.getTankMaxHP(), warzoneRules.getTankMaxEP());
-			tanks[i] = tank;
-		}
-		
-
-		this.warzone.setTanks(tanks);
 	}
 
 	public GameRoomState getState() {
