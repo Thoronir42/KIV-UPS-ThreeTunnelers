@@ -99,6 +99,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 
 	/**
 	 * JavaFX thread transition wrapper
+	 *
 	 * @param scene Identifier of scecne to be shown
 	 */
 	@Override
@@ -170,11 +171,13 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 
 	@Override
 	public void updatePlayers() {
-		if (!(this.currentScene instanceof LobbyScene)) {
-			System.err.println("Can't update player list, wrong scene");
-			return;
-		}
-		((LobbyScene) this.currentScene).setPlayers(this.engine.getGameRoom().getPlayers());
+		Platform.runLater(() -> {
+			if ((this.currentScene instanceof LobbyScene)) {
+				((LobbyScene) this.currentScene).setPlayers(this.engine.getGameRoom().getPlayers());
+				return;
+			}
+			System.err.println("Can't update player list, current scene is " + this.currentScene.getClass());
+		});
 	}
 
 	@Override
@@ -193,13 +196,11 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	@Override
 	public void setLocalReadyState(boolean ready) {
 		if ((this.currentScene instanceof LobbyScene)) {
-			Platform.runLater(()->{
+			Platform.runLater(() -> {
 				((LobbyScene) this.currentScene).setLocalClientReady(ready);
 			});
-			
+
 		}
 	}
-	
-	
 
 }

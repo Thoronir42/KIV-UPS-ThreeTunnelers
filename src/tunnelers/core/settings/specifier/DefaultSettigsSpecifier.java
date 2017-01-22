@@ -14,7 +14,7 @@ public class DefaultSettigsSpecifier implements ISettingsSpecifier {
 		s.setTickRate(32);
 		s.setChatMessageCapacity(32);
 		s.setServerPort(4200);
-		s.setServerAddress("192.168.99.2");
+		s.setServerAddress("192.168.56.2");
 		s.setConnectionLogRelativePath("files/connection.txt");
 	}
 

@@ -25,18 +25,8 @@ import tunnelers.core.player.Player;
  */
 public class LobbyScene extends ATunnelersScene {
 
-	private static LobbyScene instance;
-
 	public static LobbyScene getInstance(Chat chat, FxDefaultColorScheme colors, int capacity) throws IllegalStateException {
-		if (instance == null) {
-			instance = createInstance(chat, colors, capacity);
-		}
-
-		return instance;
-	}
-
-	public static void clearInstance() {
-		instance = null;
+		return createInstance(chat, colors, capacity);
 	}
 
 	private static LobbyScene createInstance(Chat chat, FxDefaultColorScheme colors, int capacity) {

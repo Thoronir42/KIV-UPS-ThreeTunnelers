@@ -52,7 +52,7 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 
 		this.guiInterface = new EngineUserInterface(this);
 		this.commandScanner = new SimpleScanner(SimpleScanner.RADIX_HEXADECIMAL);
-		this.networksInterface = new EngineNetworksInterface(this);
+		this.networksInterface = new EngineNetworksInterface(this, true);
 
 		this.preferredName = "";
 	}
@@ -120,6 +120,10 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		} catch (SimpleScannerException ex){
 			System.err.println(ex);
 			return false;
+		} catch (Exception ex){
+			ex.printStackTrace();
+			this.netadapter.disconnect("Unhandled exception");
+			return true;
 		}
 	}
 
