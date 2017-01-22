@@ -17,6 +17,7 @@ public enum CommandType {
 	RoomsLeave(18),
 	//    MESSAGE
 	MsgPlain(40),
+	MsgSystem(41),
 	MsgRcon(42),
 	//    ROOM CONTROLS
 	RoomSyncState(60),

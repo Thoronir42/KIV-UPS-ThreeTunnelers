@@ -175,6 +175,14 @@ public class EngineNetworksInterface {
 			return true;
 		});
 
+		map.put(CommandType.MsgSystem, sc -> {
+			String message = sc.readToEnd();
+			System.out.println(message);
+			this.engine.view.alert(message);
+
+			return true;
+		});
+
 		map.put(CommandType.RoomSyncState, sc -> {
 			byte stateValue = (byte) sc.nextByte();
 			GameRoomState state = GameRoomState.getByValue(stateValue);
