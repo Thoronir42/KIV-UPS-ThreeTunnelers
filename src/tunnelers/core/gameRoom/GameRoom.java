@@ -151,4 +151,13 @@ public class GameRoom {
 	public void setLeaderClientRID(int leaderClientRID) {
 		this.leaderClientRID = leaderClientRID;
 	}
+
+	public int getPlayerRID(Player p) {
+		for (int i = 0; i < this.players.length; i++) {
+			if (this.players[i] == p) {
+				return i;
+			}
+		}
+		return -1;
+	}
 }

@@ -266,9 +266,11 @@ public class EngineNetworksInterface {
 			int playerRoomId = sc.nextByte();
 			int playerColor = sc.nextByte();
 			int clientRoomId = sc.nextByte();
+			int playerClientId = sc.nextByte();
 
 			NetClient c = this.engine.currentGameRoom.getClient(clientRoomId);
 			Player p = new Player(c, playerColor);
+			c.setPlayer(playerClientId, p);
 
 			this.engine.currentGameRoom.setPlayer(playerRoomId, p);
 
@@ -277,10 +279,13 @@ public class EngineNetworksInterface {
 		});
 
 		map.put(CommandType.RoomPlayerDetach, sc -> {
-			int roomId = sc.nextByte();
-			if (this.engine.currentGameRoom != null) {
-				this.engine.currentGameRoom.removePlayer(roomId);
+			int playerRID = sc.nextByte();
+			if (this.engine.currentGameRoom == null) {
+				return false;
 			}
+			
+			Player p = this.engine.currentGameRoom.removePlayer(playerRID);
+			p.getClient().removePlayer(p);
 			return true;
 		});
 

@@ -2,6 +2,7 @@ package tunnelers.core.engine;
 
 import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.IGameRoomInfo;
+import tunnelers.core.player.Player;
 import tunnelers.core.player.controls.Controls;
 import tunnelers.core.player.controls.InputAction;
 import tunnelers.network.command.Command;
@@ -89,11 +90,14 @@ public class EngineUserInterface {
 	}
 
 	public void handleInput(InputAction inp, int controlsID, boolean pressed) {
-		Controls controlsScheme = engine.controls.getScheme((byte) controlsID);
-
-		if (controlsScheme.set(inp, pressed)) {
-			Command cmd = engine.netadapter.createCommand(CommandType.GameControlsSet);
-
+		Player p = engine.localClient.getPlayer(controlsID);
+		int playerRID = engine.currentGameRoom.getPlayerRID(p);
+		
+		if (p.getControls().set(inp, pressed)) {
+			Command cmd = engine.netadapter.createCommand(CommandType.GameControlsSet)
+					.append((byte)playerRID)
+					.append((byte)p.getControls().getState());
+			this.engine.netadapter.send(cmd);
 		}
 	}
 

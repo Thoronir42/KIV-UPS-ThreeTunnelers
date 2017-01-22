@@ -31,7 +31,6 @@ public class NetClient {
 
 	public String getName() {
 		return name;
-
 	}
 
 	public String getName(Player p) {
@@ -49,13 +48,40 @@ public class NetClient {
 		return name + "[?]";
 	}
 
-	public void setName(String name) throws IllegalArgumentException {
+	public void setName(String name) {
 		this.name = name;
 	}
 
 	public void setPlayer(int n, Player p) {
 		this.players[n] = p;
 
+		this.recountPlayers();
+	}
+
+	public Player getAnyPlayer() {
+		for (Player p : this.players) {
+			if (p != null) {
+				return p;
+			}
+		}
+
+		return null;
+	}
+
+	public Player getPlayer(int n) {
+		return this.players[n];
+	}
+
+	public void removePlayer(Player p) {
+		for (int i = 0; i < this.players.length; i++) {
+			if(this.players[i] == p){
+				this.setPlayer(i, null);
+				return;
+			}
+		}
+	}
+
+	private void recountPlayers() {
 		int count = 0;
 		for (Player player : this.players) {
 			if (player != null) {
@@ -63,20 +89,6 @@ public class NetClient {
 			}
 		}
 		this.activePlayers = count;
-	}
-
-	public Player getAnyPlayer() {
-		for(Player p : this.players){
-			if(p != null){
-				return p;
-			}
-		}
-		
-		return null;
-	}
-	
-	public Player getPlayer(int n) {
-		return this.players[n];
 	}
 
 	public int getLatency() {

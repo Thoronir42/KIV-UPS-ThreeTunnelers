@@ -22,7 +22,6 @@ public final class Player implements IChatParticipant, IColorable {
 	public Player(NetClient client, int colorID, Controls controls) {
 		this.client = client;
 		this.color = colorID;
-
 		this.controls = controls;
 	}
 
