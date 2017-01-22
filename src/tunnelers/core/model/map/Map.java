@@ -1,5 +1,6 @@
 package tunnelers.core.model.map;
 
+import tunnelers.core.gameRoom.IndexNotInRangeException;
 import tunnelers.core.model.entities.IntDimension;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.player.Player;
@@ -36,8 +37,7 @@ public class Map {
 
 	public IntPoint setPlayerBaseChunk(int n, IntPoint base, Player p) {
 		if (n < 0 || n >= this.playerBaseChunks.length) {
-			String message = String.format("Invalid player base index");
-			throw new IllegalArgumentException(message);
+			throw new IndexNotInRangeException(0, this.playerBaseChunks.length - 1, n);
 		}
 		if (!this.chunksSize.contains(base)) {
 			throw new ChunkException(base.getX(), base.getY(),

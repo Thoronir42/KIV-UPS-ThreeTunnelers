@@ -66,14 +66,14 @@ public class GameRoom {
 
 	public NetClient getClient(int roomId) {
 		if (roomId < 0 || roomId >= clients.length) {
-			throw new GameRoomIndexException(0, clients.length - 1, roomId);
+			throw new IndexNotInRangeException(0, clients.length - 1, roomId);
 		}
 		return this.clients[roomId];
 	}
 
 	public void setClient(int roomId, NetClient client) {
 		if (roomId < 0 || roomId >= clients.length) {
-			throw new GameRoomIndexException(0, clients.length - 1, roomId);
+			throw new IndexNotInRangeException(0, clients.length - 1, roomId);
 		}
 		this.clients[roomId] = client;
 	}
@@ -99,7 +99,7 @@ public class GameRoom {
 
 	public Player getPlayer(int roomId) {
 		if (roomId < 0 || roomId >= clients.length) {
-			throw new GameRoomIndexException(0, clients.length - 1, roomId);
+			throw new IndexNotInRangeException(0, clients.length - 1, roomId);
 		}
 
 		return this.players[roomId];
@@ -107,7 +107,7 @@ public class GameRoom {
 
 	public void setPlayer(int roomId, Player player) {
 		if (roomId < 0 || roomId >= clients.length) {
-			throw new GameRoomIndexException(0, clients.length - 1, roomId);
+			throw new IndexNotInRangeException(0, clients.length - 1, roomId);
 		}
 
 		this.players[roomId] = player;
