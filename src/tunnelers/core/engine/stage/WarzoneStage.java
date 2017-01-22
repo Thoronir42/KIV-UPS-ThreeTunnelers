@@ -2,6 +2,7 @@ package tunnelers.core.engine.stage;
 
 import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.Warzone;
+import tunnelers.core.gameRoom.WarzoneRules;
 import tunnelers.core.player.controls.Controls;
 import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.IntPoint;
@@ -18,14 +19,14 @@ import tunnelers.core.player.controls.InputAction;
  */
 public class WarzoneStage extends AEngineStage {
 
-	private static final int COOLDOWN_RATE = 1;
-
 	private final GameRoom gameRoom;
 	private final Warzone warzone;
+	private final WarzoneRules warzoneRules;
 
 	public WarzoneStage(GameRoom gameRoom) {
 		this.gameRoom = gameRoom;
 		this.warzone = gameRoom.getWarzone();
+		this.warzoneRules = warzone.getRules();
 	}
 
 	@Override
@@ -50,14 +51,14 @@ public class WarzoneStage extends AEngineStage {
 	}
 
 	private void updateTank(Tank tank, Controls c) {
-		tank.cooldown(COOLDOWN_RATE);
+		boolean readyToShoot = tank.cooldown(warzoneRules.getCooldownRate());
 		if (true && c.get(InputAction.actShoot)) { // TODO: omezeni poctu strel
-			IntPoint location = tank.tryShoot();
-			if (location != null) {
+			if (readyToShoot) {
 				int projectilePosition = findFreeProjectileSlot(this.warzone.getProjectiles());
 				if (projectilePosition >= 0) {
-					warzone.setProjectile(projectilePosition, location, tank.getDirection(), tank.getPlayer());
+					warzone.setProjectile(projectilePosition, tank.getLocation(), tank.getDirection(), tank.getPlayer());
 				}
+				tank.setCooldown(warzoneRules.getTankCannonCooldown());
 			}
 		}
 

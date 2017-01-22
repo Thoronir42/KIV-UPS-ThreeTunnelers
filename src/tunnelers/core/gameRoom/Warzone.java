@@ -12,19 +12,27 @@ import tunnelers.core.player.Player;
  * @author Stepan
  */
 public class Warzone {
+	private final WarzoneRules rules;
+	private Map map;
 
-	private final Map map;
+	private Tank[] tanks;
+	private Projectile[] projectiles;
 
-	private final Tank[] tanks;
-	private final Projectile[] projectiles;
-
-	public Warzone(Tank[] tanks, Map map, int projectileCapacity) {
-		this.tanks = tanks;
+	public Warzone(WarzoneRules rules) {
+		this.rules = rules;
+	}
+	protected void setMap(Map map){
 		this.map = map;
-
-		this.projectiles = new Projectile[projectileCapacity];
+	}
+	protected void setTanks(Tank[] tanks){
+		this.tanks = tanks;
+		this.projectiles = new Projectile[tanks.length * this.rules.getProjectilesPerTank()];
 	}
 
+	public WarzoneRules getRules(){
+		return this.rules;
+	}
+	
 	public Projectile[] getProjectiles() {
 		return projectiles;
 	}

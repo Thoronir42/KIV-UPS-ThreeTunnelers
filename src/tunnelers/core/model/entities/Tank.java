@@ -10,18 +10,14 @@ public class Tank extends GameEntity {
 
 	public static final IntDimension SIZE = new IntDimension(7, 7);
 
-	public static final int MAX_HITPOINTS = 20,
-			MAX_ENERGY = 250,
-			CANNON_COOLDOWN = 5;
-
 	protected int hitpoints, energy;
 
 	protected int cannonCooldown;
 
-	public Tank(Player player, IntPoint initialLocation) {
+	public Tank(Player player, IntPoint initialLocation, int hitpoints, int energy) {
 		super(initialLocation, Direction.North, player);
-		this.hitpoints = MAX_HITPOINTS;
-		this.energy = MAX_ENERGY;
+		this.hitpoints = hitpoints;
+		this.energy = energy;
 		this.cannonCooldown = 0;
 	}
 
@@ -34,20 +30,17 @@ public class Tank extends GameEntity {
 		this.direction = d;
 	}
 
-	public void cooldown(int cooldown) {
-		int newValue = this.cannonCooldown - cooldown;
+	public void setCooldown(int cooldown){
+		this.cannonCooldown = cooldown;
+	}
+	
+	public boolean cooldown(int cooldownRate) {
+		int newValue = this.cannonCooldown - cooldownRate;
 		this.cannonCooldown = newValue < 0 ? 0 : newValue;
+		return this.cannonCooldown == 0;
 	}
 
-	public IntPoint tryShoot() {
-		if (this.cannonCooldown <= 0) {
-			this.cannonCooldown = CANNON_COOLDOWN;
-			return this.location;
-		}
-		return null;
-	}
-
-	public double getHitpoints() {
+	public int getHitpoints() {
 		return hitpoints;
 	}
 
@@ -61,13 +54,5 @@ public class Tank extends GameEntity {
 
 	public void setEnergy(int energy) {
 		this.energy = energy;
-	}
-
-	public double getHitpointsPct() {
-		return 1.0 * this.hitpoints / MAX_HITPOINTS;
-	}
-
-	public double getEnergyPct() {
-		return 1.0 * energy / MAX_ENERGY;
 	}
 }
