@@ -175,11 +175,12 @@ public class EngineNetworksInterface {
 			return true;
 		});
 
-		map.put(CommandType.RoomSyncPhase, sc -> {
+		map.put(CommandType.RoomSyncState, sc -> {
 			byte stateValue = (byte) sc.nextByte();
 			GameRoomState state = GameRoomState.getByValue(stateValue);
 			switch(state){
 				case Lobby:
+					this.engine.setStage(Engine.Stage.Menu);
 					this.engine.view.showScene(IView.Scene.Lobby);
 					return true;
 				case BattleStarting:
@@ -189,6 +190,7 @@ public class EngineNetworksInterface {
 					Map tMap = this.engine.currentGameRoom.getWarzone().getMap();
 					Player[] players = this.engine.currentGameRoom.getPlayers();
 					this.engine.view.setGameData(tMap, players);
+					this.engine.setStage(Engine.Stage.Warzone);
 					this.engine.view.showScene(IView.Scene.Warzone);
 					return true;
 			}

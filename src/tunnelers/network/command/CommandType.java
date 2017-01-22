@@ -19,7 +19,7 @@ public enum CommandType {
 	MsgPlain(40),
 	MsgRcon(42),
 	//    ROOM CONTROLS
-	RoomSyncPhase(60),
+	RoomSyncState(60),
 	RoomReadyState(61),
 	//    CLIENT RELATED COMMANDS
 	RoomClientInfo(65),

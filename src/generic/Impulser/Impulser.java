@@ -18,6 +18,7 @@ public class Impulser extends Thread {
 	private final List<EventHandler<TickEvent>> hooks;
 
 	public Impulser(int tickRate) {
+		super(Impulser.class.getSimpleName());
 		this.tickCount = 0;
 		this.stop = false;
 		this.tickDelay = 1000 / tickRate;
