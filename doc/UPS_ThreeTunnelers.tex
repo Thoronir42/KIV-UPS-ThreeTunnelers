@@ -218,7 +218,7 @@ Klient NESMÍ poslat identifikátor klienta.
 \item[65 Informace o klientovi] (XX)(text)[identifikátor klienta v místnosti, jméno] \\
 Klient MUSÍ poslat pouze identifikátor klienta. Server MUSÍ poskytnout k identifikátoru i kompletní popis klienta.
 
-\item[66 Odezva klienta] (XX)(XXXX) [identifikátor klienta v místnosti, doba odezvy v milisekundách] \\
+\item[66 Stav klienta] (XX)(XX)(XXXX) [identifikátor klienta v místnosti, stav klienta, doba odezvy v milisekundách] \\
 Klient NESMÍ poslat tuto zprávu.
 
 \item[67 Odebrání klienta] (XX)(text) [identifikátor klienta v místnosti, důvod odebrání klienta]
@@ -228,8 +228,8 @@ Klient NESMÍ poslat tuto zprávu.
 
 \subsubsection*{Herní zprávy místnosti}
 \begin{description}
-\item[80 Přidání hráče] (XX)(XX)(XX) [slot v místnosti, barva, číslo klienta v místnosti] \\
-Klient NESMÍ zahrnout ve zprávě číslo klienta. Klient NEMUSÍ zahrnout ve zprávě barvu.
+\item[80 Přidání hráče] (XX)(XX)(XX)(XX) [slot v místnosti, barva, číslo klienta v místnosti, číslo hráče klienta] \\
+Klient NESMÍ zahrnout ve zprávě číslo klienta ani číslo hráče klienta. Klient NEMUSÍ zahrnout ve zprávě barvu.
 \item[81 Odebrání hráče] (XX) [slot v místnosti]
 \item[82 Přesunutí hráče mezi sloty] (XX)(XX) [slot odkud, slot kam]
 \item[83 Nastavení barvy hráče] (XX)(XX) [slot hráče, barva]
