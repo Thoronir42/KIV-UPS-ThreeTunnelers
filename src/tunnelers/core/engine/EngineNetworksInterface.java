@@ -6,6 +6,7 @@ import tunnelers.core.chat.IChatParticipant;
 import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.model.entities.Direction;
+import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.Tank;
 import tunnelers.core.model.map.Block;
 import tunnelers.core.model.map.ChunkException;
@@ -281,8 +282,25 @@ public class EngineNetworksInterface {
 			int yChunks = sc.nextByte();
 
 			Map tunnelerMap = new Map(chunkSize, xChunks, yChunks, this.engine.currentGameRoom.getPlayerCount());
-			this.engine.currentGameRoom.initWarzone(tunnelerMap);
+			this.engine.currentGameRoom.setMap(tunnelerMap);
 
+			return true;
+		});
+
+		map.put(CommandType.MapBases, sc -> {
+			Map tunnelerMap = this.engine.currentGameRoom.getMap();
+			IntPoint[] bases;
+
+			int n = sc.nextByte();
+			bases = new IntPoint[n];
+
+			for (int i = 0; i < n; i++) {
+				int x = sc.nextByte();
+				int y = sc.nextByte();
+				Player p = this.engine.currentGameRoom.getPlayer(sc.nextByte());
+				tunnelerMap.setPlayerBaseChunk(i, new IntPoint(x, y), p);
+			}
+			
 			return true;
 		});
 

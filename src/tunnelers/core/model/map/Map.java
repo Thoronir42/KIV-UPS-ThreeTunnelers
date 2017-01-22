@@ -12,10 +12,10 @@ public class Map {
 
 	protected final IntDimension chunksSize;
 	protected final IntDimension blockSize;
-
-	private final Chunk[] chunks;
-	private IntPoint[] playerBaseChunks;
 	protected final int chunkSize;
+	
+	private final Chunk[] chunks;
+	private final IntPoint[] playerBaseChunks;
 
 	public Map(int chunkSize, int width, int height, int playerCount) {
 		this.chunksSize = new IntDimension(width, height);
@@ -33,14 +33,19 @@ public class Map {
 		this.blockSize = new IntDimension(width * chunkSize, height * chunkSize);
 	}
 
-	public void setPlayerBaseChunks(IntPoint[] baseChunks) {
-		if (this.playerBaseChunks.length != baseChunks.length) {
-			throw new IllegalArgumentException(String.format(
-					"Invalid player base chunk arary size. Required: %02d, got: %02d",
-					this.playerBaseChunks.length, baseChunks.length));
+	public void setPlayerBaseChunk(int n, IntPoint baseChunk, Player p) {
+		if (n < 0 || n >= this.playerBaseChunks.length) {
+			String message = String.format("Invalid player base index");
+			throw new IllegalArgumentException(message);
 		}
+		if(!this.chunksSize.contains(baseChunk)){
+			throw new ChunkException(baseChunk.getX(), baseChunk.getY(),
+					this.chunksSize.getWidth(), this.chunksSize.getHeight());
+		}
+		
+		this.playerBaseChunks[n] = baseChunk;
 
-		this.playerBaseChunks = baseChunks;
+		this.assignBase(n, p);
 	}
 
 	public Chunk getChunk(int x, int y) throws ChunkException {
@@ -61,7 +66,7 @@ public class Map {
 
 		return null;
 	}
-	
+
 	public Block getBlock(int x, int y) {
 		Chunk chunk = this.getChunk(x / chunkSize, y / chunkSize);
 		return chunk.getBlock(x % chunkSize, y % chunkSize);
@@ -70,18 +75,19 @@ public class Map {
 	public boolean setBlock(int x, int y, Block block) {
 		Chunk chunk = this.getChunk(x / chunkSize, y / chunkSize);
 		chunk.setBlock(x % chunkSize, y % chunkSize, block);
-		
+
 		return true;
 	}
 
 	/**
 	 * Injects blocks into the chunk. Counts undefined blocks and returns true
 	 * if there were none
+	 *
 	 * @param x
 	 * @param y
 	 * @param chunkData
 	 * @return
-	 * @throws ChunkException 
+	 * @throws ChunkException
 	 */
 	public boolean updateChunk(int x, int y, Block[] chunkData) throws ChunkException {
 		return this.getChunk(x, y).applyData(chunkData) == 0;
@@ -105,7 +111,6 @@ public class Map {
 		chunkPosition.multiply(chunkSize);
 		chunkPosition.add(new IntPoint(chunkSize / 2, chunkSize / 2));
 
-		System.out.format("PlayerBase Chunk %d assigned to %s\n", i, p.getName());
 		return chunkPosition;
 	}
 

@@ -18,7 +18,6 @@ public class MapBasePlanter implements IMapGeneratorStep {
 	@Override
 	public void applyOn(Map map) {
 		int playerCount = map.getPlayerCount();
-		IntPoint[] bases = new IntPoint[playerCount];
 		int mapWidth = map.getWidth(), mapHeight = map.getHeight();
 
 		// TODO: base distance
@@ -30,12 +29,10 @@ public class MapBasePlanter implements IMapGeneratorStep {
 				y = RNG.getRandInt(mapHeight - 2) + 1;
 				currentChunk = map.getChunk(x, y);
 			} while (currentChunk.isBase());
-			
-			this.plantBaseOn(currentChunk, map.getChunkSize());
-			bases[i] = new IntPoint(x, y);
-		}
 
-		map.setPlayerBaseChunks(bases);
+			this.plantBaseOn(currentChunk, map.getChunkSize());
+			map.setPlayerBaseChunk(i, new IntPoint(x, y), null);
+		}
 
 	}
 
@@ -58,7 +55,7 @@ public class MapBasePlanter implements IMapGeneratorStep {
 				chunk.setBlock(col, row, Block.Empty);
 			}
 		}
-		
+
 		int width = (chunkSize % 2) == 1 ? 7 : 6;
 
 		int start = (chunkSize - width) / 2, end = (chunkSize + width) / 2;

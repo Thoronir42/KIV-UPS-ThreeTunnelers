@@ -33,25 +33,26 @@ public class GameRoom {
 		this.leaderClientRID = leaderRID;
 	}
 
-	public void initWarzone(Map map) {
-		WarzoneRules warzoneRules = new WarzoneRules();
-
-		this.warzone = new Warzone(warzoneRules);
+	public void setMap(Map map) {
+		this.warzone = new Warzone(new WarzoneRules());
 		this.warzone.setMap(map);
+	}
 
+	public void initWarzone() {
 		Tank[] tanks = new Tank[players.length];
-
+		WarzoneRules warzoneRules = this.getWarzone().getRules();
 		int baseIndex = 0;
 		for (int i = 0; i < players.length; i++) {
 			Player p = players[i];
 			if (p == null) {
 				continue;
 			}
-			IntPoint baseCenter = map.assignBase(baseIndex++, p);
+			IntPoint baseCenter = this.warzone.getMap().assignBase(baseIndex++, p);
 			Tank tank = new Tank(p, baseCenter,
 					warzoneRules.getTankMaxHP(), warzoneRules.getTankMaxEP());
 			tanks[i] = tank;
 		}
+		
 
 		this.warzone.setTanks(tanks);
 	}
@@ -116,19 +117,19 @@ public class GameRoom {
 	}
 
 	public Player getPlayer(int roomId) {
-		if (roomId < 1 || roomId > clients.length) {
-			throw new GameRoomIndexException(1, clients.length, roomId);
+		if (roomId < 0 || roomId >= clients.length) {
+			throw new GameRoomIndexException(0, clients.length - 1, roomId);
 		}
 
-		return this.players[roomId - 1];
+		return this.players[roomId];
 	}
 
 	public void setPlayer(int roomId, Player player) {
-		if (roomId < 1 || roomId > clients.length) {
-			throw new GameRoomIndexException(1, clients.length, roomId);
+		if (roomId < 0 || roomId >= clients.length) {
+			throw new GameRoomIndexException(0, clients.length - 1, roomId);
 		}
 
-		this.players[roomId - 1] = player;
+		this.players[roomId] = player;
 	}
 
 	public Player removePlayer(int roomId) {
