@@ -5,9 +5,6 @@
  */
 package integration;
 
-import tunnelers.network.command.Command;
-import tunnelers.network.command.CommandType;
-
 /**
  *
  * @author Skoro

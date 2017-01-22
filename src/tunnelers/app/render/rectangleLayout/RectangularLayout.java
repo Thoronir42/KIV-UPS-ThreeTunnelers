@@ -7,7 +7,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
 import tunnelers.app.render.FxRenderContainer;
 import tunnelers.core.model.entities.Tank;
-import tunnelers.core.player.Player;
 
 /**
  *

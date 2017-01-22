@@ -176,9 +176,24 @@ public class EngineNetworksInterface {
 		});
 
 		map.put(CommandType.RoomSyncPhase, sc -> {
-			int phaseNumber = sc.nextByte();
-			System.out.println("Change room phase to " + phaseNumber);
+			byte stateValue = (byte) sc.nextByte();
+			GameRoomState state = GameRoomState.getByValue(stateValue);
+			switch(state){
+				case Lobby:
+					this.engine.view.showScene(IView.Scene.Lobby);
+					return true;
+				case BattleStarting:
+					this.engine.view.alert("Wait for other players thx");
+					break;
+				case Battle:
+					Map tMap = this.engine.currentGameRoom.getWarzone().getMap();
+					Player[] players = this.engine.currentGameRoom.getPlayers();
+					this.engine.view.setGameData(tMap, players);
+					this.engine.view.showScene(IView.Scene.Warzone);
+					return true;
+			}
 
+			System.err.println("Attempted to change room phase to " + stateValue);
 			return false;
 		});
 
@@ -287,6 +302,7 @@ public class EngineNetworksInterface {
 			Map tunnelerMap = new Map(chunkSize, xChunks, yChunks, this.engine.currentGameRoom.getPlayerCount());
 			this.engine.currentGameRoom.setMap(tunnelerMap);
 
+			this.remainingChunks = xChunks * yChunks;
 			return true;
 		});
 
@@ -318,6 +334,14 @@ public class EngineNetworksInterface {
 				if (!this.engine.currentGameRoom.getWarzone().getMap()
 						.updateChunk(chunkX, chunkY, chunkData)) {
 					System.out.format("Errors occured while updating chunk x=%d, y=%d\n", chunkX, chunkY);
+				}
+				this.remainingChunks--;
+				if (this.remainingChunks == 0) {
+					Command rdyCommand = this.engine.netadapter.createCommand(CommandType.RoomReadyState);
+					rdyCommand.append((byte) 1);
+					this.engine.netadapter.send(rdyCommand);
+				} else if (this.remainingChunks < 0) {
+					System.err.format("Received %d too many chunks\n", -this.remainingChunks);
 				}
 				return true;
 			} catch (ChunkException ex) {

@@ -7,13 +7,33 @@ package tunnelers.core.gameRoom;
 public enum GameRoomState {
 	Idle(0), Lobby(1), BattleStarting(2), Battle(3), Summarization(4);
 
-	private final int intValue;
+	private final byte byteValue;
 
-	private GameRoomState(int intValue) {
-		this.intValue = intValue;
+	private GameRoomState(int byteValue) {
+		this((byte) byteValue);
 	}
-	
-	public int intValue(){
-		return this.intValue;
+
+	private GameRoomState(byte byteValue) {
+		this.byteValue = byteValue;
+	}
+
+	public int byteValue() {
+		return this.byteValue;
+	}
+
+	public static GameRoomState getByValue(byte value) {
+		switch (value) {
+			case 0:
+				return Idle;
+			case 1:
+				return Lobby;
+			case 2:
+				return BattleStarting;
+			case 3:
+				return Battle;
+			case 4:
+				return Summarization;
+		}
+		return null;
 	}
 }
