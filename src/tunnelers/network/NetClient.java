@@ -34,18 +34,17 @@ public class NetClient {
 	}
 
 	public String getName(Player p) {
-		String name = this.getName();
 		if (this.activePlayers < 2) {
-			return name;
+			return this.name;
 		}
 		int i = 0;
 		for (Player check : this.players) {
 			i++;
 			if (check.equals(p)) {
-				return String.format("%s[%d]", name, i);
+				return String.format("%s[%d]", this.name, i);
 			}
 		}
-		return name + "[?]";
+		return this.name + "[?]";
 	}
 
 	public void setName(String name) {
