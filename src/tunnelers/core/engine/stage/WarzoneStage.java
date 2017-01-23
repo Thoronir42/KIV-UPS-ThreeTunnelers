@@ -1,5 +1,6 @@
 package tunnelers.core.engine.stage;
 
+import generic.RNG;
 import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.Warzone;
 import tunnelers.core.gameRoom.WarzoneRules;
@@ -63,6 +64,8 @@ public class WarzoneStage extends AEngineStage {
 		}
 
 		moveTank(tank, getDirection(c));
+		tank.setHitPoints(RNG.getRandInt(warzoneRules.getTankMaxHP()));
+		tank.setEnergy(RNG.getRandInt(warzoneRules.getTankMaxEP()));
 	}
 	
 	public Direction getDirection(Controls c) {

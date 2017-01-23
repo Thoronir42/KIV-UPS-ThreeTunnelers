@@ -7,6 +7,9 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Affine;
 import tunnelers.app.render.FxRenderContainer;
 import tunnelers.app.render.MapRenderer;
@@ -34,8 +37,10 @@ public class PlayerAreaRenderer {
 	private final IntDimension sourceWindowSize;
 
 	private final FxRenderContainer renderer;
-	
+
 	private final FontLoader fontLoader;
+
+	private final Font statusBarFont;
 
 	PlayerAreaRenderer(Dimension2D bounds, FxRenderContainer renderer) {
 		this.bounds = bounds;
@@ -43,8 +48,20 @@ public class PlayerAreaRenderer {
 		this.blockSize = calcBlockSize(this.renderWindow, MIN_RENDERED_BLOCKS_ON_DIMENSION);
 		this.sourceWindowSize = calcSourceSize(this.renderWindow, this.blockSize);
 		this.renderer = renderer;
-		
+
 		this.fontLoader = Toolkit.getToolkit().getFontLoader();
+
+		int fontSize = 32;
+		Font font = Font.font("Courier New", FontWeight.BOLD, FontPosture.REGULAR, fontSize);
+		if (font == null) {
+			font = Font.font("Consolas", FontWeight.BOLD, FontPosture.REGULAR, fontSize);
+		}
+		if (font == null) {
+			font = Font.font(fontSize);
+		}
+
+		this.statusBarFont = font;
+		System.out.println("Player area renderer initialized with font " + font.getName());
 
 		renderer.setBlockSize(blockSize);
 	}
@@ -72,26 +89,41 @@ public class PlayerAreaRenderer {
 		Rectangle inBounds = new Rectangle(bounds.getWidth() * 0.8, bounds.getHeight() * 0.1);
 		inBounds.setX(bounds.getWidth() * 0.1);
 		inBounds.setY(bounds.getHeight() * 0.7);
-		fillStatusBar(g, inBounds, colors.getUiHitpoints(), tank.getHitpoints(), rules.getTankMaxHP());
+		renderStatusBar(g, inBounds, colors.getUiHitpoints(), tank.getHitpoints(), rules.getTankMaxHP());
 
 		inBounds.setY(bounds.getHeight() * 0.85);
-		fillStatusBar(g, inBounds, colors.getUiEnergy(), tank.getEnergy(), rules.getTankMaxEP());
+		renderStatusBar(g, inBounds, colors.getUiEnergy(), tank.getEnergy(), rules.getTankMaxEP());
 	}
 
-	private void fillStatusBar(GraphicsContext g, Rectangle r, Color c, int value, int maxValue) {
+	private void renderStatusBar(GraphicsContext g, Rectangle r, Color c, int value, int maxValue) {
 		float pct = Math.max(0, Math.min(1.0f * value / maxValue, 1));
-
+		int decimals = (int) Math.log10(maxValue) + 1;
+		String textFormat = String.format("%%0%dd/%%%dd", decimals, decimals);
+		
 		g.setFill(Color.DIMGREY);
 		g.fillRect(r.getX() - 2, r.getY() - 2, r.getWidth() + 4, r.getHeight() + 4);
 		g.setFill(c);
 		g.fillRect(r.getX(), r.getY(), r.getWidth() * pct, r.getHeight());
-		g.setFill(c.invert());
+
+		String text = String.format(textFormat, value, maxValue);
+
+		double width = fontLoader.computeStringWidth(text, this.statusBarFont);
+		double height = fontLoader.getFontMetrics(this.statusBarFont).getLineHeight();
+
+		double textX = r.getX() + (r.getWidth() - width) / 2;
+		double textY = r.getY() + (r.getHeight() - height) / 2;
+
+		g.setFont(this.statusBarFont);
+
+		g.setFill(Color.BLACK);
+		g.fillRoundRect(textX - 10, textY, width + 20, height, 15, 15);
+		g.setStroke(c);
+		g.strokeRoundRect(textX - 10, textY, width + 20, height, 15, 15);
 		
-		String text = String.format("%3d / %3d", value, maxValue);
-		double width = fontLoader.computeStringWidth(text, g.getFont());
-		double height = fontLoader.getFontMetrics(g.getFont()).getLineHeight();
-		
-		g.fillText(text, (r.getWidth() - width) / 2, (r.getHeight() - height) / 2);
+
+		g.setFill(c);
+		g.fillText(text, textX, textY + height * 7 / 9); // fixme: I'M SO SORRY
+
 	}
 
 	private void drawViewWindow(GraphicsContext g, IntPoint center, Tank[] tanks, Projectile[] projectiles) {
