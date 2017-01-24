@@ -52,22 +52,22 @@ public class WarzoneStage extends AEngineStage {
 	}
 
 	private void updateTank(Tank tank, Controls c) {
-		boolean readyToShoot = tank.cooldown(warzoneRules.getCooldownRate());
-		if (true && c.get(InputAction.actShoot)) { // TODO: omezeni poctu strel
-			if (readyToShoot) {
-				int projectilePosition = findFreeProjectileSlot(this.warzone.getProjectiles());
-				if (projectilePosition >= 0) {
-					warzone.setProjectile(projectilePosition, tank.getLocation(), tank.getDirection(), tank.getPlayer());
-				}
-				tank.setCooldown(warzoneRules.getTankCannonCooldown());
-			}
-		}
+//		boolean readyToShoot = tank.cooldown(warzoneRules.getCooldownRate());
+//		if (true && c.get(InputAction.actShoot)) { // TODO: omezeni poctu strel
+//			if (readyToShoot) {
+//				int projectilePosition = findFreeProjectileSlot(this.warzone.getProjectiles());
+//				if (projectilePosition >= 0) {
+//					warzone.setProjectile(projectilePosition, tank.getLocation(), tank.getDirection(), tank.getPlayer());
+//				}
+//				tank.setCooldown(warzoneRules.getTankCannonCooldown());
+//			}
+//		}
 
 		moveTank(tank, getDirection(c));
 		tank.setHitPoints(RNG.getRandInt(warzoneRules.getTankMaxHP()));
 		tank.setEnergy(RNG.getRandInt(warzoneRules.getTankMaxEP()));
 	}
-	
+
 	public Direction getDirection(Controls c) {
 		int x = getDir(c, InputAction.movLeft, InputAction.movRight),
 				y = getDir(c, InputAction.movUp, InputAction.movDown);

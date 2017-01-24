@@ -50,11 +50,11 @@ public class Warzone {
 	}
 
 	public Tank getTank(int roomId) {
-		if (roomId < 1 || roomId > tanks.length) {
-			throw new IndexNotInRangeException(1, tanks.length, roomId);
+		if (roomId < 0 || roomId >= tanks.length) {
+			throw new IndexNotInRangeException(0, tanks.length - 1, roomId);
 		}
 
-		return this.tanks[roomId - 1];
+		return this.tanks[roomId];
 
 	}
 
