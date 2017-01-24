@@ -83,7 +83,7 @@ public class PlayerAreaRenderer {
 		g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
 
 		g.translate(renderWindow.getMinX(), renderWindow.getMinY());
-		drawViewWindow(g, tank.getLocation(), renderer.getTanks(), renderer.getProjectiles());
+		drawViewWindow(g, tank.getLocation(), renderer.getTanks(), renderer.getProjectiles(), tank);
 		g.setTransform(defTransform);
 
 		Rectangle inBounds = new Rectangle(bounds.getWidth() * 0.8, bounds.getHeight() * 0.1);
@@ -99,7 +99,7 @@ public class PlayerAreaRenderer {
 		float pct = Math.max(0, Math.min(1.0f * value / maxValue, 1));
 		int decimals = (int) Math.log10(maxValue) + 1;
 		String textFormat = String.format("%%0%dd/%%%dd", decimals, decimals);
-		
+
 		g.setFill(Color.DIMGREY);
 		g.fillRect(r.getX() - 2, r.getY() - 2, r.getWidth() + 4, r.getHeight() + 4);
 		g.setFill(c);
@@ -119,14 +119,13 @@ public class PlayerAreaRenderer {
 		g.fillRoundRect(textX - 10, textY, width + 20, height, 15, 15);
 		g.setStroke(c);
 		g.strokeRoundRect(textX - 10, textY, width + 20, height, 15, 15);
-		
 
 		g.setFill(c);
 		g.fillText(text, textX, textY + height * 7 / 9); // fixme: I'M SO SORRY
 
 	}
 
-	private void drawViewWindow(GraphicsContext g, IntPoint center, Tank[] tanks, Projectile[] projectiles) {
+	private void drawViewWindow(GraphicsContext g, IntPoint center, Tank[] tanks, Projectile[] projectiles, Tank currentTank) {
 		Affine defTransform = g.getTransform();
 		MapRenderer mr = renderer.getMapRenderer();
 
@@ -146,8 +145,10 @@ public class PlayerAreaRenderer {
 			throw e;
 		}
 
-		//this.renderStatic(g, render, curPlayer.getTank().getEnergyPct());
-		this.renderer.getAfterFX().renderStaticNoise(g, renderWindow, 1 - 0.95, this.blockSize);
+		float staticPct = currentTank.getStatus() == Tank.Status.Destroyed ? 1
+				: 0.8f * (1 - currentTank.getEnergy() / this.renderer.getWarzoneRules().getTankMaxEP());
+
+		this.renderer.getAfterFX().renderStaticNoise(g, renderWindow, 0.8f * staticPct, this.blockSize);
 
 	}
 

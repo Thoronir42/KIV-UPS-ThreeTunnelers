@@ -20,8 +20,11 @@ public class EngineUserInterface {
 		this.engine = engine;
 	}
 
-	public void connect(String name, String addr, int port) {
+	public void connect(String name, String addr, int port, boolean useSecret) {
 		engine.view.setConnectEnabled(false);
+		if(!useSecret){
+			engine.connectionSecret.set("");
+		}
 		engine.netadapter.connectTo(engine.connectionSecret, addr, port);
 		
 		engine.preferredName = name;

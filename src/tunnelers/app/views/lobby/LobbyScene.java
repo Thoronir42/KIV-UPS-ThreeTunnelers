@@ -35,17 +35,15 @@ public class LobbyScene extends ATunnelersScene {
 		content.setBackground(new Background(new BackgroundFill(new Color(0.11, 0.17, 0.69, 0.2), CornerRadii.EMPTY, Insets.EMPTY)));
 
 		LobbyScene scene = new LobbyScene(content, settings.getWindowWidth(), settings.getWindowHeight(), chat, colors, capacity);
-		
+
 		scene.caption.prefWidthProperty().bind(scene.widthProperty());
 		scene.caption.setAlignment(Pos.TOP_RIGHT);
-		
-		
+
 		scene.playerListView.setPrefWidth(200);
 		scene.playerListView.setAlignment(Pos.CENTER);
-		
+
 		content.setTop(scene.caption);
-		
-		
+
 		content.setCenter(buildCenter(scene));
 		content.setLeft(scene.playerListView);
 
@@ -62,13 +60,12 @@ public class LobbyScene extends ATunnelersScene {
 		chat.setPrefSize(400, 280);
 
 		chat.setOnMessageSend(event -> {
-			scene.flashDisplay(event.getMessage());
 			scene.getEngine().sendPlainText(event.getMessage());
 		});
 		center.add(chat, 0, 0, 2, 1);
 
 		center.add(scene.btn_ready, 1, 1);
-		
+
 		Button btnBAck = new Button("Opustit místnost");
 		btnBAck.setOnAction(event -> {
 			scene.getEngine().leaveRoom();
@@ -79,33 +76,33 @@ public class LobbyScene extends ATunnelersScene {
 	}
 
 	private final Chat chat;
-	
+
 	protected final SimpleChat chatView;
 	private final Label caption;
 	private final PlayerListView playerListView;
-	
+
 	private final Button btn_ready;
 
 	public LobbyScene(Region root, double width, double height, Chat chat, FxDefaultColorScheme colors, int capacity) {
-		super(root, width, height, "Join Game");
-		this.caption = new Label("GAME ROM 6");
+		super(root, width, height, "Příprava");
+		this.caption = new Label("");
 		this.chatView = new SimpleChat(colors.getPlayerColorManager(), true);
 		this.playerListView = new PlayerListView(colors.getPlayerColorManager(), capacity);
-		
+
 		this.chat = chat;
-		
+
 		this.btn_ready = new Button();
 		this.setLocalClientReady(false);
 	}
-	
-	public void setLocalClientReady(boolean ready){
-		if(!ready){
-			btn_ready.setText("Jsem ready");
+
+	public void setLocalClientReady(boolean ready) {
+		if (!ready) {
+			btn_ready.setText("Tak jdem na to");
 			btn_ready.setOnAction((evt) -> {
 				this.getEngine().setReady(true);
 			});
 		} else {
-			btn_ready.setText("Nejsem ready");
+			btn_ready.setText("Vydržte chviličku");
 			btn_ready.setOnAction((evt) -> {
 				this.getEngine().setReady(false);
 			});
@@ -118,10 +115,10 @@ public class LobbyScene extends ATunnelersScene {
 			System.out.println("Chat updated");
 		});
 	}
-	
-	public void setPlayers(Player[] players){
+
+	public void setPlayers(Player[] players) {
 		System.out.println("Setting players to lobby list view");
-		for(int i = 0; i < players.length; i++){
+		for (int i = 0; i < players.length; i++) {
 			this.playerListView.renderPlayer(i, players[i]);
 		}
 	}

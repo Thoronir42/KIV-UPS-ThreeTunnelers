@@ -10,13 +10,15 @@ public class ServerSelectEvent extends Event{
 	private final String hostname;
 	private final int port;
 	private final String username;
+	private final boolean useReconnect;
 	
-	public ServerSelectEvent(String hostname, int port, String username) {
+	public ServerSelectEvent(String hostname, int port, String username, boolean useReconnect) {
 		super(EVENT_TYPE);
 		
 		this.hostname = hostname;
 		this.port = port;
 		this.username = username;
+		this.useReconnect = useReconnect;
 	}
 
 	public String getHostname() {
@@ -29,6 +31,10 @@ public class ServerSelectEvent extends Event{
 
 	public String getUsername() {
 		return username;
+	}
+
+	public boolean useReconnect() {
+		return this.useReconnect;
 	}
 	
 }

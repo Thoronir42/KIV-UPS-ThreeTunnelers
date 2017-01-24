@@ -103,7 +103,7 @@ public class MainMenuScene extends ATunnelersScene {
 		serverSelectControl.setName("Karel");
 
 		serverSelectControl.setOnSelected((ServerSelectEvent e) -> {
-			this.getEngine().connect(e.getUsername(), e.getHostname(), e.getPort());
+			this.getEngine().connect(e.getUsername(), e.getHostname(), e.getPort(), e.useReconnect());
 		});
 
 		this.serverSelect = serverSelectControl;

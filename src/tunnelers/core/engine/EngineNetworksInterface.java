@@ -373,7 +373,7 @@ public class EngineNetworksInterface {
 
 		map.put(CommandType.MapBlocksChanges, sc -> {
 			Map tunnelerMap = this.engine.currentGameRoom.getWarzone().getMap();
-			
+
 			int n = sc.nextByte();
 			for (int i = 0; i < n; i++) {
 				int blockX = sc.nextShort();
@@ -395,7 +395,7 @@ public class EngineNetworksInterface {
 		});
 
 		map.put(CommandType.GameTankInfo, sc -> {
-			if(this.engine.currentGameRoom == null){
+			if (this.engine.currentGameRoom == null) {
 				return false;
 			}
 			int roomId = sc.nextByte();
