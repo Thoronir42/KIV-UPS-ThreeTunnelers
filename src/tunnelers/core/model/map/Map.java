@@ -77,6 +77,10 @@ public class Map {
 	}
 
 	public Block getBlock(int x, int y) {
+		if(x < 0 || x >= this.blockSize.getWidth() ||
+				y < 0 || y > this.blockSize.getHeight()){
+			return Block.Undefined;
+		}
 		Chunk chunk = this.getChunk(x / chunkSize, y / chunkSize);
 		return chunk.getBlock(x % chunkSize, y % chunkSize);
 	}

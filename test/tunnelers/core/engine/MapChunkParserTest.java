@@ -23,7 +23,7 @@ public class MapChunkParserTest {
 		String source = "01237";
 		
 		Block[] expResult = new Block[]{
-			Block.Empty, Block.Breakable, Block.Tough, Block.BaseWall, Block.Undefined,
+			Block.Empty, Block.Dirt, Block.Rock, Block.BaseWall, Block.Undefined,
 		};
 		Block[] actual = instance.parseData(new SimpleScanner(SimpleScanner.RADIX_HEXADECIMAL, source));
 		assertArrayEquals(expResult, actual);
@@ -39,7 +39,7 @@ public class MapChunkParserTest {
 		Chunk chunk = new Chunk(3);
 		chunk.setBlock(0, 1, Block.Empty);
 		chunk.setBlock(1, 1, Block.BaseWall);
-		chunk.setBlock(2, 1, Block.Tough);
+		chunk.setBlock(2, 1, Block.Rock);
 		
 		String expResult = "111032111";
 		assertEquals(expResult, instance.parse(chunk));

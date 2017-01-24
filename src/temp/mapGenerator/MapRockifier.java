@@ -44,7 +44,7 @@ public class MapRockifier implements IMapGeneratorStep {
 		for(int i = 0; i < chunkSize; i++){
 			int padding = line.put(this.rng.getInt(chunkSize));
 			for(int offset = 0; offset < padding; offset++){
-				chunk.setBlock(i, offset, Block.Tough);
+				chunk.setBlock(i, offset, Block.Rock);
 			}
 		}
 	}
@@ -53,7 +53,7 @@ public class MapRockifier implements IMapGeneratorStep {
 		for(int i = 0; i < chunkSize; i++){
 			int padding = line.put(this.rng.getInt(chunkSize));
 			for(int offset = 0; offset < padding; offset++){
-				chunk.setBlock(i, chunkSize - offset - 1, Block.Tough);
+				chunk.setBlock(i, chunkSize - offset - 1, Block.Rock);
 			}
 		}
 	}
@@ -63,7 +63,7 @@ public class MapRockifier implements IMapGeneratorStep {
 		for(int i = 0; i < chunkSize; i++){
 			int padding = line.put(this.rng.getInt(chunkSize));
 			for(int offset = 0; offset < padding; offset++){
-				chunk.setBlock(offset, i, Block.Tough);
+				chunk.setBlock(offset, i, Block.Rock);
 			}
 		}
 	}
@@ -72,7 +72,7 @@ public class MapRockifier implements IMapGeneratorStep {
 		for(int i = 0; i < chunkSize; i++){
 			int padding = line.put(this.rng.getInt(chunkSize));
 			for(int offset = 0; offset < padding; offset++){
-				chunk.setBlock(chunkSize - offset - 1, i, Block.Tough);
+				chunk.setBlock(chunkSize - offset - 1, i, Block.Rock);
 			}
 		}
 	}

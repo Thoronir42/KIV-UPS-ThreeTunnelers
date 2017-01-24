@@ -8,8 +8,8 @@ import java.util.HashMap;
  */
 public enum Block {
 	Empty(0),
-	Breakable(1),
-	Tough(2),
+	Dirt(1),
+	Rock(2),
 	BaseWall(3),
 	Undefined(15);
 	
@@ -37,7 +37,11 @@ public enum Block {
 	}
 
 	public boolean isBreakable() {
-		return this.typeValue == Breakable.typeValue;
+		return this == Dirt;
+	}
+	
+	public boolean isObstacle(){
+		return this == BaseWall || this == Rock || this == Undefined;
 	}
 	
 	public byte byteValue(){

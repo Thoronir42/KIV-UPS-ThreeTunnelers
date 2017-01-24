@@ -48,9 +48,9 @@ public class FxDefaultColorScheme extends AColorScheme {
 
 	private Color[] getColGroup(Block b) {
 		switch (b) {
-			case Breakable:
+			case Dirt:
 				return breakable;
-			case Tough:
+			case Rock:
 				return tough;
 			case Empty:
 				return empty;

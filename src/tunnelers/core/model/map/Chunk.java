@@ -23,7 +23,7 @@ public class Chunk {
 
 		int blockInChunk = chunkSize * chunkSize;
 		Block[] array = new Block[blockInChunk];
-		Arrays.fill(array, 0, blockInChunk, Block.Breakable);
+		Arrays.fill(array, 0, blockInChunk, Block.Dirt);
 
 		this.chunkData = array;
 	}
