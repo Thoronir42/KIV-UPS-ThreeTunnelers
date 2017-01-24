@@ -8,6 +8,8 @@ import tunnelers.core.player.controls.Controls;
 import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.Projectile;
+import tunnelers.core.model.entities.Shape;
+import tunnelers.core.model.entities.ShapeFactory;
 import tunnelers.core.model.entities.Tank;
 import tunnelers.core.model.map.Block;
 import tunnelers.core.model.map.Map;
@@ -94,20 +96,39 @@ public class WarzoneStage extends AEngineStage {
 		return -1;
 	}
 
+	protected boolean locationOccupable(int newX, int newY, Shape body, Shape belt) {
+		IntPoint min = belt.getMin();
+		IntPoint max = belt.getMax();
+		for (int sy = min.getY(); sy <= max.getY(); sy++) {
+			for (int sx = min.getX(); sx <= max.getX(); sx++) {
+				if (!body.isPixelSolidRelative(sx, sy) || !belt.isPixelSolidRelative(sx, sy)) {
+					continue;
+				}
+				Block b = this.warzone.getMap().getBlock(newX + sx, newY + sy);
+				if (b.isObstacle()) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
 	protected IntPoint moveTank(Tank tank, Direction d) {
 		Map map = this.warzone.getMap();
 
 		if (d == null || d == Direction.Undefined) {
 			return null;
 		}
+
+		Shape shapeBody = ShapeFactory.get(d, ShapeFactory.Type.TankBody);
+		Shape shapeBelt = ShapeFactory.get(d, ShapeFactory.Type.TankBelt);
+
 		IntPoint plr_loc = tank.getLocation();
 		int newX = plr_loc.getX() + d.getX(),
 				newY = plr_loc.getY() + d.getY();
 
-		if ((newY - tank.getHeight() / 2 > 0)
-				&& (newX - tank.getWidth() / 2 > 0)
-				&& (newX + tank.getWidth() / 2 < map.getBlockWidth())
-				&& (newY + tank.getHeight() / 2 < map.getBlockHeight())) {
+		if (locationOccupable(newX, newY, shapeBody, shapeBelt)) {
 			tank.setLocation(newX, newY);
 			tank.setDirection(d);
 		}
@@ -128,15 +149,15 @@ public class WarzoneStage extends AEngineStage {
 			newLocation.add(p.getDirection().asPoint());
 
 			Block b = map.getBlock(newLocation.getX(), newLocation.getY());
-			switch(b){
-				case Breakable:
+			switch (b) {
+				case Dirt:
 					map.setBlock(newLocation.getX(), newLocation.getY(), Block.Empty);
 				case BaseWall:
-				case Tough:
+				case Rock:
 					projectiles[i] = null;
 					continue;
 			}
-			
+
 			if (newLocation.getX() < 0 || newLocation.getX() > map.getBlockWidth()
 					|| newLocation.getY() < 0 || newLocation.getY() > map.getBlockHeight()) {
 				projectiles[i] = null;

@@ -10,6 +10,7 @@ import tunnelers.app.assets.IAssetImagesProvider;
 import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.IntDimension;
 import tunnelers.core.model.entities.Projectile;
+import tunnelers.core.model.entities.ShapeFactory;
 import tunnelers.core.model.entities.Tank;
 import tunnelers.core.player.Player;
 
@@ -109,7 +110,7 @@ public class AssetsRenderer extends ARenderer {
 		Image iv_body = this.getTankBodyImage(t.getPlayer(), this.isDiagonal(t.getDirection()));
 		Image iv_cannon = this.getTankCannonImage(this.isDiagonal(t.getDirection()));
 
-		IntDimension size = Tank.SIZE;
+		IntDimension size = ShapeFactory.get(Direction.NorthEast, ShapeFactory.Type.TankBelt).getSize();
 		double bw = blockSize.getWidth(), bh = blockSize.getHeight();
 
 		int rotation = this.getRotation(t.getDirection());

@@ -8,14 +8,16 @@ import tunnelers.core.player.Player;
  */
 public class Tank extends GameEntity {
 
-	public static final IntDimension SIZE = new IntDimension(7, 7);
-
+	protected Status status;
+	
 	protected int hitpoints, energy;
 
 	protected int cannonCooldown;
 
 	public Tank(Player player, IntPoint initialLocation, int hitpoints, int energy) {
 		super(initialLocation, Direction.North, player);
+		
+		this.status = Status.Operative;
 		this.hitpoints = hitpoints;
 		this.energy = energy;
 		this.cannonCooldown = 0;
@@ -23,17 +25,17 @@ public class Tank extends GameEntity {
 
 	@Override
 	public IntDimension getSize() {
-		return SIZE;
+		return ShapeFactory.get(direction, ShapeFactory.Type.TankBelt).getSize();
 	}
 
 	public void changeDirection(Direction d) {
 		this.direction = d;
 	}
 
-	public void setCooldown(int cooldown){
+	public void setCooldown(int cooldown) {
 		this.cannonCooldown = cooldown;
 	}
-	
+
 	public boolean cooldown(int cooldownRate) {
 		int newValue = this.cannonCooldown - cooldownRate;
 		this.cannonCooldown = newValue < 0 ? 0 : newValue;
@@ -54,5 +56,9 @@ public class Tank extends GameEntity {
 
 	public void setEnergy(int energy) {
 		this.energy = energy;
+	}
+
+	public static enum Status {
+		Operative, Destroyed
 	}
 }
