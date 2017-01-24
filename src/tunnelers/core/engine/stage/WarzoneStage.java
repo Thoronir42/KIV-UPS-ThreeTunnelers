@@ -41,7 +41,17 @@ public class WarzoneStage extends AEngineStage {
 			for (int i = 0; i < players.length; i++) {
 				Player p = players[i];
 				Tank t = tanks[i];
+				if (t == null) {
+					continue;
+				}
 				if (p == null) {
+					System.err.println("No player assigned to tank " + i);
+					continue;
+				}
+				if (t.getStatus() != Tank.Status.Operative) {
+					if (t.getEnergy() > 0) {
+						t.setEnergy(t.getEnergy() * 5 / 6);
+					}
 					continue;
 				}
 
@@ -66,8 +76,6 @@ public class WarzoneStage extends AEngineStage {
 //		}
 
 		moveTank(tank, getDirection(c));
-		tank.setHitPoints(RNG.getRandInt(warzoneRules.getTankMaxHP()));
-		tank.setEnergy(RNG.getRandInt(warzoneRules.getTankMaxEP()));
 	}
 
 	public Direction getDirection(Controls c) {

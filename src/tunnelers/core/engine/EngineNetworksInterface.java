@@ -372,13 +372,13 @@ public class EngineNetworksInterface {
 		});
 
 		map.put(CommandType.MapBlocksChanges, sc -> {
-			int n = sc.nextByte();
 			Map tunnelerMap = this.engine.currentGameRoom.getWarzone().getMap();
+			
+			int n = sc.nextByte();
 			for (int i = 0; i < n; i++) {
 				int blockX = sc.nextShort();
 				int blockY = sc.nextShort();
 				Block newValue = Block.fromByteValue(Byte.parseByte(sc.read(1), 16));
-
 				tunnelerMap.setBlock(blockX, blockY, newValue);
 			}
 			return true;
@@ -395,7 +395,11 @@ public class EngineNetworksInterface {
 		});
 
 		map.put(CommandType.GameTankInfo, sc -> {
+			if(this.engine.currentGameRoom == null){
+				return false;
+			}
 			int roomId = sc.nextByte();
+			Tank.Status status = Tank.Status.get(sc.nextByte());
 			int x = sc.nextShort();
 			int y = sc.nextShort();
 			Direction direction = Direction.fromByteValue((byte) sc.nextByte());
@@ -403,6 +407,7 @@ public class EngineNetworksInterface {
 			int energy = sc.nextByte();
 
 			Tank t = this.engine.currentGameRoom.getWarzone().getTank(roomId);
+			t.setStatus(status);
 			t.setLocation(x, y);
 			t.setDirection(direction);
 			t.setHitPoints(hitPoints);
@@ -414,12 +419,15 @@ public class EngineNetworksInterface {
 		map.put(CommandType.GameProjAdd, sc -> {
 			int n = sc.nextByte();
 			int playerRoomId = sc.nextByte();
+			int x = sc.nextShort();
+			int y = sc.nextShort();
 			Direction direction = Direction.fromByteValue((byte) sc.nextByte());
 
 			Player p = this.engine.currentGameRoom.getPlayer(playerRoomId);
 			Tank t = this.engine.currentGameRoom.getWarzone().getTank(playerRoomId);
 
-			this.engine.currentGameRoom.getWarzone().setProjectile(n, t.getLocation(), direction, p);
+			this.engine.currentGameRoom.getWarzone().setProjectile(n, new IntPoint(x, y), direction, p);
+			t.setCooldown(this.engine.currentGameRoom.getWarzone().getRules().getTankCannonCooldown());
 
 			return true;
 		});

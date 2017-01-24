@@ -9,14 +9,14 @@ import tunnelers.core.player.Player;
 public class Tank extends GameEntity {
 
 	protected Status status;
-	
+
 	protected int hitpoints, energy;
 
 	protected int cannonCooldown;
 
 	public Tank(Player player, IntPoint initialLocation, int hitpoints, int energy) {
 		super(initialLocation, Direction.North, player);
-		
+
 		this.status = Status.Operative;
 		this.hitpoints = hitpoints;
 		this.energy = energy;
@@ -58,7 +58,22 @@ public class Tank extends GameEntity {
 		this.energy = energy;
 	}
 
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
 	public static enum Status {
-		Operative, Destroyed
+		Operative, Destroyed;
+
+		public static Status get(int n) {
+			if (n == 1) {
+				return Operative;
+			}
+			return Destroyed;
+		}
 	}
 }

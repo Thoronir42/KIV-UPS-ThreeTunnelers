@@ -125,7 +125,7 @@ Hráč je skupina informací o účastníkovi boje o oblast. Tato struktura je o
 \subsubsection*{Směr}
 Směr je výčet identifikující jeden z 8 světových směrů reprezentovaný celočíselnou hodnotou. Možné hodnoty jsou: 0 = Žádný směr, 1 = Sever, 2 = Severovýchod, 3 = Východ, 4 = Jihovýchod, 5 = Jih, 6 = Jihozápad, 7 = Západ, 8 = Severozápad.
 \subsubsection*{Tank}
-Tank, rozlehlý 7*7 bloků, je struktura definující hráčem ovládaný prvek v oblasti. Tank je definován hráčem, kterému přísluší, svojí polohou na mapě a směrem, kam je natočen. Dále stav tanku definují jeho aktuální počet bodů zásahů, které zbývají do jeho zničení, zbývající energií a časem zbývajícím do možností vystřelení dalšího projektilu.
+Tank, rozlehlý až 7*7 bloků, je struktura definující hráčem ovládaný prvek v oblasti. Tank je definován hráčem, kterému přísluší, svojí polohou na mapě a směrem, kam je natočen. Dále stav tanku definují jeho aktuální počet bodů zásahů, které zbývají do jeho zničení, zbývající energií a časem zbývajícím do možností vystřelení dalšího projektilu.
 \subsubsection*{Projektil}
 Projektil zabírající oblast pouze 3 bloky je stejně jako Tank definován hráčem, kterému náleží, svojí polohou na mapě a směrem kam je natočen a kam letí.
 \subsubsection{Herní místnost}
@@ -242,9 +242,9 @@ Klient NESMÍ posílat chunková data na server.
 Změna bloku je následujícího formátu: (XXXX)(XXXX)(X) [X souřadnice bloku, Y souřadnice bloku, nový blok]
 
 \item[120 Nastavení ovládání] (XX)(XX) - [číslo hráče v místnosti, bitová mapa stisklých kláves]
-\item[130 Informace o tanku] (XX)(XXXX)(XXXX)(XX)(XX)(XX) [číslo hráče v místnosti, pozice X, pozice Y, směr, body zásahu, energie tanku] \\
+\item[130 Informace o tanku] (XX)(XX)(XXXX)(XXXX)(XX)(XX)(XX) [číslo hráče v místnosti, stav tanku, pozice X, pozice Y, směr, body zásahu, energie tanku] \\
 Klient MUSÍ poslat pouze číslo hráče v místnosti.
-\item[140 Vytvoření projektilu] (XX)(XX)(XX) [identifikátor projektilu, číslo hráče, počáteční směr]
+\item[140 Vytvoření projektilu] (XX)(XX)(XXXX)(XXXX)(XX) [identifikátor projektilu, číslo hráče, X na mapě, Y na mapě, počáteční směr]
 \item[141 Odebrání projektilu] (XX) [identifikátor projektilu]
 \end{description}
 

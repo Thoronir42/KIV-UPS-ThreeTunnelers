@@ -1,7 +1,5 @@
 package tunnelers.core.player.controls;
 
-import tunnelers.core.model.entities.Direction;
-
 /**
  *
  * @author Stepan
