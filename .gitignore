@@ -2,7 +2,6 @@ nbproject/
 /build/
 /dist/
 nbbuild.xml
-build.xml
 /files/connection.txt
 
 doc/*
