@@ -148,6 +148,7 @@ public class EngineNetworksInterface {
 			this.engine.view.showScene(IView.Scene.GameRoomList);
 			this.engine.view.alert(sc.readToEnd());
 			this.engine.currentGameRoom = null;
+			this.engine.localClient.clearPlayers();
 
 			return true;
 		});
@@ -180,6 +181,7 @@ public class EngineNetworksInterface {
 		map.put(CommandType.RoomSyncState, sc -> {
 			byte stateValue = (byte) sc.nextByte();
 			GameRoomState state = GameRoomState.getByValue(stateValue);
+			this.engine.setCurrentGameRoomState(state);
 			switch (state) {
 				case Lobby:
 					this.engine.setStage(Engine.Stage.Menu);
@@ -399,6 +401,11 @@ public class EngineNetworksInterface {
 			Direction direction = Direction.fromByteValue((byte) sc.nextByte());
 			int hitPoints = sc.nextByte();
 			int energy = sc.nextByte();
+			
+			if(this.engine.currentGameRoom.getState() != GameRoomState.Battle){
+				System.err.println("Attempted to set tank info while state is not Battle");
+				return false;
+			}
 
 			Tank t = this.engine.currentGameRoom.getWarzone().getTank(roomId);
 			t.setStatus(status);

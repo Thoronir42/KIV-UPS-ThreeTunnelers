@@ -9,6 +9,7 @@ import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;
 import tunnelers.core.engine.stage.WarzoneStage;
 import tunnelers.core.gameRoom.GameRoom;
+import tunnelers.core.gameRoom.GameRoomState;
 import tunnelers.core.player.controls.AControlsManager;
 import tunnelers.core.settings.Settings;
 import tunnelers.network.NetClient;
@@ -79,6 +80,16 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 			case Warzone:
 				this.currentStage = new WarzoneStage(currentGameRoom);
 				break;
+		}
+	}
+
+	public void setCurrentGameRoomState(GameRoomState state) {
+		this.currentGameRoom.setState(state);
+		for (NetClient c : currentGameRoom.getClients()) {
+			if (c == null) {
+				continue;
+			}
+			c.setReady(false);
 		}
 	}
 

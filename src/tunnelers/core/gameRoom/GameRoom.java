@@ -2,7 +2,6 @@ package tunnelers.core.gameRoom;
 
 import tunnelers.core.player.Player;
 import tunnelers.core.chat.Chat;
-import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.model.entities.Tank;
@@ -159,5 +158,9 @@ public class GameRoom {
 			}
 		}
 		return -1;
+	}
+
+	public NetClient[] getClients() {
+		return this.clients;
 	}
 }

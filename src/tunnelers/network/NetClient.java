@@ -73,10 +73,16 @@ public class NetClient {
 
 	public void removePlayer(Player p) {
 		for (int i = 0; i < this.players.length; i++) {
-			if(this.players[i] == p){
+			if (this.players[i] == p) {
 				this.setPlayer(i, null);
 				return;
 			}
+		}
+	}
+
+	public void clearPlayers() {
+		for (int i = 0; i < this.players.length; i++) {
+			this.setPlayer(i, null);
 		}
 	}
 
