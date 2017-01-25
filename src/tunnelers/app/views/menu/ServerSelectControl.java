@@ -77,7 +77,8 @@ public final class ServerSelectControl extends GridPane {
 		lbl_name.setOnMouseClicked(e -> {
 			this.setName(this.names.generateNext());
 		});
-
+		lbl_name.getOnMouseClicked().handle(null);
+		
 		this.addColumn(0, lbl_hostname, lbl_port, lbl_name);
 		this.addColumn(1, this.tf_hostname, this.tf_port, this.tf_username);
 

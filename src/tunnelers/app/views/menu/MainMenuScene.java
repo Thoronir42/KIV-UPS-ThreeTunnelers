@@ -59,26 +59,26 @@ public class MainMenuScene extends ATunnelersScene {
 			content.add(buttons[i], 0, 1 + i);
 		}
 
-		TextField txt_flash = new TextField();
-		txt_flash.setPromptText("Zpráva k zobrazení");
-		Button but_flashDisplay = new Button("Zobrazit");
-		Button but_flashClear = new Button("Schovat");
-
-		but_flashDisplay.setOnAction(e -> {
-			if (!"".equals(txt_flash.getText().trim())) {
-				scene.flashDisplay(txt_flash.getText());
-				txt_flash.setText("");
-			}
-		});
-		but_flashClear.setOnAction(e -> {
-			scene.flashClear();
-		});
+//		TextField txt_flash = new TextField();
+//		txt_flash.setPromptText("Zpráva k zobrazení");
+//		Button but_flashDisplay = new Button("Zobrazit");
+//		Button but_flashClear = new Button("Schovat");
+//
+//		but_flashDisplay.setOnAction(e -> {
+//			if (!"".equals(txt_flash.getText().trim())) {
+//				scene.flashDisplay(txt_flash.getText());
+//				txt_flash.setText("");
+//			}
+//		});
+//		but_flashClear.setOnAction(e -> {
+//			scene.flashClear();
+//		});
 
 		
 		GridPane flashTester = new GridPane();
-		flashTester.add(txt_flash, 0, 0, 2, 1);
-		flashTester.add(but_flashDisplay, 0, 1);
-		flashTester.add(but_flashClear, 1, 1);
+//		flashTester.add(txt_flash, 0, 0, 2, 1);
+//		flashTester.add(but_flashDisplay, 0, 1);
+//		flashTester.add(but_flashClear, 1, 1);
 
 		content.add(flashTester, 1, 0, 1, 3);
 		 
@@ -97,10 +97,9 @@ public class MainMenuScene extends ATunnelersScene {
 
 	public MainMenuScene(Region root, double width, double height) {
 		super(root, width, height, "Hlavní menu");
-		ServerSelectControl serverSelectControl = new ServerSelectControl(8, new NameManager(420));
+		ServerSelectControl serverSelectControl = new ServerSelectControl(8, new NameManager(System.currentTimeMillis()));
 		serverSelectControl.setHostname(settings.getServerAddress());
 		serverSelectControl.setPort(settings.getServerPort());
-		serverSelectControl.setName("Karel");
 
 		serverSelectControl.setOnSelected((ServerSelectEvent e) -> {
 			this.getEngine().connect(e.getUsername(), e.getHostname(), e.getPort(), e.useReconnect());

@@ -117,12 +117,6 @@ public class EngineNetworksInterface {
 			return true;
 		});
 
-		map.put(CommandType.LeadBadFormat, sc -> {
-			System.err.println("Server did not recognise folliwing command: " + sc.readToEnd());
-
-			return true;
-		});
-
 		map.put(CommandType.ClientSetName, sc -> {
 			this.engine.localClient.setName(sc.readToEnd());
 			return true;

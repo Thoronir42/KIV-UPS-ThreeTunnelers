@@ -115,12 +115,12 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 			System.err.format("Engine: No action for %s\n", cmd.getType());
 			return false;
 		}
-		try{
+		try {
 			return action.execute(commandScanner);
-		} catch (SimpleScannerException ex){
+		} catch (SimpleScannerException ex) {
 			System.err.println(ex);
 			return false;
-		} catch (Exception ex){
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			this.netadapter.disconnect("Unhandled exception");
 			return true;

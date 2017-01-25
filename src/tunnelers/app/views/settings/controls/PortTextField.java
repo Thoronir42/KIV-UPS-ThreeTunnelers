@@ -3,24 +3,29 @@ package tunnelers.app.views.settings.controls;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
+import tunnelers.core.settings.Settings;
 
 /**
  *
  * @author Stepan
  */
-public class PortTextField extends TextField{ 
+public class PortTextField extends TextField {
+
+	public static final int MAX_PORT = 65535;
+	public static final int MIN_PORT = 0;
+
 	protected final SimpleIntegerProperty Port;
-	
-	public void setPort(int port){
+
+	public void setPort(int port) {
 		this.Port.set(port);
 	}
-	
-	public int getPort(){
+
+	public int getPort() {
 		return this.Port.get();
 	}
 
 	public PortTextField() {
-		this(generic.Port.TUNNELER_DEFAULT_PORT);
+		this(Settings.TUNNELER_DEFAULT_PORT);
 	}
 
 	public PortTextField(int serverPort) {
@@ -32,11 +37,11 @@ public class PortTextField extends TextField{
 				setText(newValue.replaceAll("[^\\d]", ""));
 				return;
 			}
-			if(newValue.length() < 1){
-				setText(generic.Port.MIN_PORT + "");
+			if (newValue.length() < 1) {
+				setText(MIN_PORT + "");
 				return;
 			}
-			
+
 			try {
 				int n = Integer.parseInt(newValue);
 				Port.set(n);
@@ -51,12 +56,12 @@ public class PortTextField extends TextField{
 		SimpleIntegerProperty port = new SimpleIntegerProperty();
 
 		port.addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-			if (newValue.intValue() > generic.Port.MAX_PORT) {
-				port.set(generic.Port.MAX_PORT);
+			if (newValue.intValue() > MAX_PORT) {
+				port.set(MAX_PORT);
 				return;
 			}
-			if (newValue.intValue() < generic.Port.MIN_PORT) {
-				port.set((oldValue.intValue() < generic.Port.MIN_PORT) ? generic.Port.MIN_PORT : oldValue.intValue());
+			if (newValue.intValue() < MIN_PORT) {
+				port.set((oldValue.intValue() < MIN_PORT) ? MIN_PORT : oldValue.intValue());
 				return;
 			}
 			setText(newValue.intValue() + "");

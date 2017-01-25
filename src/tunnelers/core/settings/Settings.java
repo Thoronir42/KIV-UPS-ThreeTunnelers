@@ -14,6 +14,7 @@ import tunnelers.core.settings.specifier.ISettingsSpecifier;
 public final class Settings {
 
 	public static final int MAX_PLAYERS = 4;
+	public static final int TUNNELER_DEFAULT_PORT = 4200;
 
 	private static Settings instance;
 

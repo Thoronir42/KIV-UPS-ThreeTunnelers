@@ -130,6 +130,10 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 					return;
 				}
 				newScene = LobbyScene.getInstance(gr.getChat(), this.renderer.getColorScheme(), gr.getCapacity());
+				afterChange = () -> {
+					updateChat();
+					updateClients();
+				};
 				break;
 			case Warzone:
 				newScene = WarzoneScene.getInstance(controlsManager)
@@ -187,7 +191,8 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 
 	@Override
 	public void updateClients() {
-
+		// todo: client updating
+		updatePlayers();
 	}
 
 	@Override
