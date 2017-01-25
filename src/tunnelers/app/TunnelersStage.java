@@ -122,6 +122,9 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 				break;
 			case GameRoomList:
 				newScene = GameRoomListScene.getInstance(engine.getHostLocator());
+				afterChange = () -> {
+					engine.refreshServerList();
+				};
 				break;
 			case Lobby:
 				gr = this.engine.getGameRoom();
