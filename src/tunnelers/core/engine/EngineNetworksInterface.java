@@ -14,6 +14,7 @@ import tunnelers.core.model.map.ChunkException;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 import tunnelers.network.NetClient;
+import tunnelers.network.NetClientStatus;
 import tunnelers.network.command.Command;
 import tunnelers.network.command.CommandType;
 
@@ -234,8 +235,9 @@ public class EngineNetworksInterface {
 			return true;
 		});
 
-		map.put(CommandType.RoomClientLatency, sc -> {
+		map.put(CommandType.RoomClientStatus, sc -> {
 			NetClient c = this.engine.currentGameRoom.getClient(sc.nextByte());
+			c.setStatus(NetClientStatus.getByNumber(sc.nextByte()));
 			c.setLatency(sc.nextShort());
 
 			this.engine.view.updateClients();
@@ -401,8 +403,8 @@ public class EngineNetworksInterface {
 			Direction direction = Direction.fromByteValue((byte) sc.nextByte());
 			int hitPoints = sc.nextByte();
 			int energy = sc.nextByte();
-			
-			if(this.engine.currentGameRoom.getState() != GameRoomState.Battle){
+
+			if (this.engine.currentGameRoom.getState() != GameRoomState.Battle) {
 				System.err.println("Attempted to set tank info while state is not Battle");
 				return false;
 			}

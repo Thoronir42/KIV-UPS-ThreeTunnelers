@@ -12,11 +12,11 @@ public class NetClient {
 	public static int PLAYER_CAPACITY = 2;
 
 	private int latency;
-	private boolean connected;
 	private String name;
 	private final Player[] players;
 	private int activePlayers;
 	private boolean ready;
+	private NetClientStatus status;
 
 	public NetClient() {
 		this("");
@@ -27,6 +27,7 @@ public class NetClient {
 		this.players = new Player[PLAYER_CAPACITY];
 		this.activePlayers = 0;
 		this.ready = false;
+		this.status = NetClientStatus.Connected;
 	}
 
 	public String getName() {
@@ -104,12 +105,12 @@ public class NetClient {
 		this.latency = latency;
 	}
 
-	public boolean isConnected() {
-		return connected;
+	public NetClientStatus getStatus() {
+		return status;
 	}
 
-	public void setConnected(boolean connected) {
-		this.connected = connected;
+	public void setStatus(NetClientStatus status) {
+		this.status = status;
 	}
 
 	public boolean isReady() {

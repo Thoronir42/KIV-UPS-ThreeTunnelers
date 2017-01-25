@@ -22,7 +22,7 @@ public enum CommandType {
 	RoomReadyState(0x41),
 	//    CLIENT RELATED COMMANDS
 	RoomClientInfo(0x42),
-	RoomClientLatency(0x43),
+	RoomClientStatus(0x43),
 	RoomClientRemove(0x44),
 	RoomSetLeader(0x45),
 	//    PLAYER CONTROLLING COMMANDS
