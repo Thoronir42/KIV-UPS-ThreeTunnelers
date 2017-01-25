@@ -184,6 +184,7 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	@Override
 	public void updatePlayers() {
 		Platform.runLater(() -> {
+			
 			if ((this.currentScene instanceof LobbyScene)) {
 				((LobbyScene) this.currentScene).setPlayers(this.engine.getGameRoom().getPlayers());
 				return;
@@ -194,7 +195,6 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 
 	@Override
 	public void updateClients() {
-		// todo: client updating
 		updatePlayers();
 	}
 

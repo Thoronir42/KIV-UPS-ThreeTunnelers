@@ -25,17 +25,13 @@ public abstract class AColorScheme{
 		return this.playerColors;
 	}
 
-	protected Color opacify(Color c, double opacity) {
-		return Color.color(c.getRed(), c.getGreen(), c.getBlue(), opacity);
-	}
-
 	public Color getRandColor() {
 		return this.playerColors.getRandom().color();
 	}
 
 	public Color getRandStatic(int col, int row, double pct) {
-
-		return opacify(this.playerColors.getRandom().color(), pct);
+		Color c = this.playerColors.getRandom().color();
+		return Color.color(c.getRed(), c.getGreen(), c.getBlue(), pct);
 	}
 
 	public abstract Color getUiHitpoints();

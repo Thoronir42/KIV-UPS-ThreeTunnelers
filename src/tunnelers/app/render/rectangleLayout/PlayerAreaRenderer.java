@@ -29,10 +29,10 @@ import tunnelers.core.model.entities.Tank;
  */
 public class PlayerAreaRenderer {
 
-	public static final int MIN_RENDERED_BLOCKS_ON_DIMENSION = 27;
+	public static final int MIN_RENDERED_BLOCKS_ON_DIMENSION = 43;
 
 	private final Dimension2D bounds;
-	private final Rectangle2D renderWindow;
+	private final Rectangle2D gameViewWindow;
 	private final Dimension2D blockSize;
 	private final IntDimension sourceWindowSize;
 
@@ -44,9 +44,9 @@ public class PlayerAreaRenderer {
 
 	PlayerAreaRenderer(Dimension2D bounds, FxRenderContainer renderer) {
 		this.bounds = bounds;
-		this.renderWindow = new Rectangle2D(bounds.getWidth() * 0.05, bounds.getHeight() * 0.05, bounds.getWidth() * 0.9, bounds.getHeight() * 0.6);
-		this.blockSize = calcBlockSize(this.renderWindow, MIN_RENDERED_BLOCKS_ON_DIMENSION);
-		this.sourceWindowSize = calcSourceSize(this.renderWindow, this.blockSize);
+		this.gameViewWindow = new Rectangle2D(bounds.getWidth() * 0.05, bounds.getHeight() * 0.05, bounds.getWidth() * 0.9, bounds.getHeight() * 0.6);
+		this.blockSize = calcBlockSize(this.gameViewWindow, MIN_RENDERED_BLOCKS_ON_DIMENSION);
+		this.sourceWindowSize = calcSourceSize(this.gameViewWindow, this.blockSize);
 		this.renderer = renderer;
 
 		this.fontLoader = Toolkit.getToolkit().getFontLoader();
@@ -82,7 +82,7 @@ public class PlayerAreaRenderer {
 		g.setFill(colors.playerColors().get(tank).color());
 		g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());
 
-		g.translate(renderWindow.getMinX(), renderWindow.getMinY());
+		g.translate(gameViewWindow.getMinX(), gameViewWindow.getMinY());
 		drawViewWindow(g, tank.getLocation(), renderer.getTanks(), renderer.getProjectiles(), tank);
 		g.setTransform(defTransform);
 
@@ -130,7 +130,7 @@ public class PlayerAreaRenderer {
 		MapRenderer mr = renderer.getMapRenderer();
 
 		g.setFill(Color.BLACK);
-		g.fillRect(0 - 2, 0 - 2, renderWindow.getWidth() + 6, renderWindow.getHeight() + 4);
+		g.fillRect(0 - 2, 0 - 2, gameViewWindow.getWidth() + 4, gameViewWindow.getHeight() + 4);
 		IntRectangle source = alignSourceWindow(sourceWindowSize, center, mr.getMapSize());
 		try {
 			this.renderer.offsetBlocks(g, -source.getMinX(), -source.getMinY());
@@ -139,17 +139,19 @@ public class PlayerAreaRenderer {
 			this.drawTanks(g, source, tanks);
 
 			g.setTransform(defTransform);
+
+			g.translate(-this.gameViewWindow.getMinX(), -this.gameViewWindow.getMinY());
+
+			float staticPct = currentTank.getStatus() == Tank.Status.Destroyed ? 1
+					: 0.8f * this.renderer.getAfterFX().calculateStatic(currentTank.getEnergy(), this.renderer.getWarzoneRules().getTankMaxEP());
+			System.out.format("Static pct for %d / %d is %.2f\n", currentTank.getEnergy(), renderer.getWarzoneRules().getTankMaxEP(), staticPct);
+			this.renderer.getAfterFX().renderStaticNoise(g, this.blockSize, 0.8f * staticPct, gameViewWindow);
+			g.setTransform(defTransform);
 		} catch (Exception e) {
 			System.err.println("Error with drawViewWindow: " + e.getMessage());
 			g.setTransform(defTransform);
 			throw e;
 		}
-
-		float staticPct = currentTank.getStatus() == Tank.Status.Destroyed ? 1
-				: 0.8f * (1 - currentTank.getEnergy() / this.renderer.getWarzoneRules().getTankMaxEP());
-
-		this.renderer.getAfterFX().renderStaticNoise(g, renderWindow, 0.8f * staticPct, this.blockSize);
-
 	}
 
 	private int drawProjectiles(GraphicsContext g, IntRectangle render, Projectile[] projectiles) {

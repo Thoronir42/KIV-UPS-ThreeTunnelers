@@ -93,7 +93,7 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 		if (this.afterFx != null) {
 			Platform.runLater(() -> {
 				GraphicsContext g = this.getGraphicsContext();
-				this.afterFx.renderStaticNoise(g, canvasTarget, 0.12, blockSize);
+				this.afterFx.renderStaticNoise(g, blockSize, 0.12, canvasTarget);
 			});
 
 		}

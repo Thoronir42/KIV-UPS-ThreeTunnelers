@@ -12,18 +12,25 @@ import tunnelers.app.render.colors.FxDefaultColorScheme;
 public class AfterFX {
 
 	private final FxDefaultColorScheme colorScheme;
-	
-	public AfterFX(FxDefaultColorScheme colorScheme){
+
+	public AfterFX(FxDefaultColorScheme colorScheme) {
 		this.colorScheme = colorScheme;
 	}
-	
-	
-	public void renderStaticNoise(GraphicsContext g, Rectangle2D render, double opacity, Dimension2D blockSize) {
-		for (int col = (int) render.getMinX(); col * blockSize.getWidth() < render.getWidth(); col++) {
-			for (int row = (int) render.getMinY(); row * blockSize.getHeight() < render.getHeight(); row++) {
+
+	public void renderStaticNoise(GraphicsContext g, Dimension2D blockSize, double opacity, Rectangle2D render) {
+		g.strokeRect(render.getMinX(), render.getMinY(), render.getWidth(), render.getHeight());
+
+		for (int col = 0; col * blockSize.getWidth() < render.getWidth(); col++) {
+			for (int row = 0; row * blockSize.getHeight() < render.getHeight(); row++) {
 				g.setFill(colorScheme.getRandStatic(col, row, opacity));
-				g.fillRect(col * blockSize.getWidth(), row * blockSize.getHeight(), blockSize.getWidth(), blockSize.getHeight());
+				g.fillRect(render.getMinX() + col * blockSize.getWidth(),
+						render.getMinY() + row * blockSize.getHeight(),
+						blockSize.getWidth(), blockSize.getHeight());
 			}
 		}
+	}
+
+	public float calculateStatic(int value, int maxValue) {
+		return 1 - ( 1.0f * value / maxValue);
 	}
 }
