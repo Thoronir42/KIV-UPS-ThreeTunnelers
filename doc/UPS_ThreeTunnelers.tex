@@ -113,7 +113,7 @@ Hlavní vlastností hry Tunnelers je, že si hráči musejí postupně získat p
 \subsection{Datové struktury}
 Pro zjednodušení popisu funkcí systémů jsou předpokládány následující struktury:
 \subsubsection*{Mapa}
-Mapa představuje oblast, o kterou se bojuje. Oblast se skládá z (W * H) sekcí, takzvaných chunků, stejné velikosti N. V oblasti je několik sekcí, které představují základnu.
+Mapa představuje oblast, o kterou se bojuje. Oblast se skládá z (W * H) sekcí, takzvaných chunků, stejné velikosti N * N bloků. V oblasti je několik sekcí, které představují základny hráčů.
 \subsubsection*{Chunk}
 Chunk je malý útvar skládající se z bloků, který reprezentuje terén oblasti. Některé chunky obsahují seskupení bloků představující hráčskou základnu, u těchto chunků je nastaven identifikátor odpovídajícího hráče.
 \subsubsection*{Blok}
@@ -128,15 +128,40 @@ Směr je výčet identifikující jeden z 8 světových směrů reprezentovaný 
 Tank, rozlehlý až 7*7 bloků, je struktura definující hráčem ovládaný prvek v oblasti. Tank je definován hráčem, kterému přísluší, svojí polohou na mapě a směrem, kam je natočen. Dále stav tanku definují jeho aktuální počet bodů zásahů, které zbývají do jeho zničení, zbývající energií a časem zbývajícím do možností vystřelení dalšího projektilu.
 \subsubsection*{Projektil}
 Projektil zabírající oblast pouze 3 bloky je stejně jako Tank definován hráčem, kterému náleží, svojí polohou na mapě a směrem kam je natočen a kam letí.
-\subsubsection{Herní místnost}
+\subsubsection*{Herní místnost}
 Herní místnost je kontejner nesoucí informace aktuálním stavu místnosti, informace klientech, kteří se účastní dění v místnosti a identifikátor klienta, který má místnost "na starost". Dále místnost nese informace o hráčích účastnících se hry a v určitém stavu i o bitevní zóně.
 Stavy místností jsou reprezentovány celočíselnými hodnotami 0 = Čeká, 1 = Lobby, 2 = Bitva začíná, 3 = Bitva, 4 = Souhrny.
 \subsubsection*{Bitevní zóna}
-Bitevní zóna je střed dění a zde se uchovávají informace o mapě definující oblast, o tancích v oblasti a o projektilech létajících oblastí.
+Bitevní zóna je střed dění a zde se uchovávají informace o mapě definující oblast, o tancích v oblasti a o projektilech létajících oblastí a případně další doplňující informace o průběhu hry.
 
-
+\newpage
 \subsection{Herní server}
-Zdrojové soubory serveru jsou tříděny do modulů podle jejich významu...
+Server je sestaven z co nejmenších funkčních celků, které se dají seskupit do následujících kategorií: 
+\begin{enumerate}
+\item \textbf{Jádro}
+Zde se vyskytuje převážná většina výkonného kódu a páteřní struktury, které vše takzvaně drží pohromadě
+\item \textbf{Hra, model a mapa}
+Do této kategorie patří struktury zachycující stavy různých prvků hry a funkce usnadňující práci s nimi
+\item \textbf{Síť}
+V této části je funkcionalita obstarávající síťovou komunikaci s klienty.
+\end{enumerate}
+\subsubsection{Spouštění serveru}
+Po spuštění programu proběhne načtení parametrů a inicializace globálních proměnných, jako jsou směrové proměnné nebo tvarové definice.
+Dále se zpracují a ověří zadané běhové parametry portu pro naslouchání a počtu místností. Podle požadovaného počtu místností se alokuje paměť pro připojení, klienty a herní místnosti.
+Dalším krokem v pořadí je běh programu, ve kterém jsou inicializovány páteřní struktury jádra a síťového adaptéru a spuštěna vlákna pro aktualizaci jádra, pro síťový adaptér a pro rozhraní příkazové řádky.
+Po dokončení běhu všech vláken jsou prostředky uvolněny a běhové statistiky vypsány.
+\subsubsection{Běh síťového rozhraní}
+Vlákno síťového rozhraní hlídá serverový socket a sockety připojených klientů pomocí funkce select(). Pokud nastane aktivita na serverovém socketu, vlákno přijme spojení a přiřadí jej struktuře spojení.
+Pokud aktivita nastane na socketu, ověří že se nejedná o chybu spojení. Pokud nastane chyba, spojení uzavře a označí jej jako neplatné. V opačném případě uloží příchozí znaky do vyrovnávací paměti, přeformátuje je do struktury představující příkaz a ten předá jádru do fronty příkazů pro zpracování.
+\subsubsection{Běh jádra}
+Běh jádra se skládá z pravidelných "tiků", což jsou obnovovací cykly. V každém cyklu je prováděno několik kroků, které jsou obaleny časomírou. Díky tomu je možné ovlivňovat dobu, jakou bude vlákno spát než spustí další obnovovací cyklus.
+
+V prvním kroku jsou kontrolováni připojení klienti - pokud je některý z klientů označen jako odpojený, je spuštěna uklízecí procedura. V případě, že je klient v herní místnosti, vyšle ostatním klientům místnosti aktualizaci stavu. Pokud v místnosti nezůstal žádný další klient připojený, místnost je uklizena a připravena pro další použití. Pokud klient nebyl v místnosti, informace o jeho připojení jsou odstraněny, čímž je vytvořeno místo pro následující klienty.
+
+V dalším kroku jsou zpracovány příkazy klientů. První příkaz klienta vždy musí být autorizace, dále viz protokol. Po úspěšné autorizaci jsou všechny příkazy zpracovávány stejným způsobem - jejich obsah je předán skenovací struktuře s ukazatelem na do zpracovávaného textu, podle čísla typu příkazu je vybrán odkaz na funkci zpracování a tato funkce je spuštěna. Její výsledek představuje úspěch vykonání funkce. Pokud jádro zaznamená příliš mnoho neúspěšných příkazů, klienta odpojí.
+
+V posledním kroku obnovovací smyčky je prováděna aktualizace jednotlivých místností. Aktualizace místností jsou spouštěny pouze pro stavy "Příprava bitvy", kdy jsou kontrolováni klienti - spuštění totiž nemůže proběhnout dokud nejsou všichni připraveni a pokud by některý z klientů v tomto stavu nečekaně ukončil svoji činnost, ostatní klienti by zůstali čekat na ostatní. Další aktualizovaný stav hry je "Bitva", kde jsou zpracovány uživatelské vstupy a výsledky jsou synchronizovány s klienty.
+
 \subsection{Herní klient}
 Zdrojové soubory serveru jsou tříděny do balíků podle jejich významu...
 \section{Uživatelská dokumentace}
@@ -147,9 +172,10 @@ Procvičil jsem si vytváření uživatelského rozhraní a připomenul si důle
 
 Práci mi značně zjednodušily jednotkové testy, které jsem implementoval na straně klienta pomocí testovacího frameworku JUnit a na straně serveru, které jsou realizovány debugovacími výpisy. Obě aplikace nejsou ani zdaleka otestovány celé ale klíčové prvky lze testy ověřit.
 
-V průběhu implementace protokolu na straně serveru v jazyce C jsem narazil na zvláštní chování při formátování proměnných typu \texttt{long int}, kde po předání této proměnné jako parametr do funkce a po vykonání dané funkce zmizela proměnná z paměti, čímž byla způsobena chyba typu SIGSEGF. Ještě pro jistotu se toto chování při několikanásobném spouštění testů občas neprojevila. Z toho důvodu jsem neimplementoval příkazy typu MARCO a POLO, které tento typ proměnné používají pro počítání latence.
-
+%V průběhu implementace protokolu na straně serveru v jazyce C jsem narazil na zvláštní chování při formátování proměnných typu \texttt{long int}, kde po předání této proměnné jako parametr do funkce a po vykonání dané funkce zmizela proměnná z paměti, čímž byla způsobena chyba typu SIGSEGF. Ještě pro jistotu se toto chování při několikanásobném spouštění testů občas neprojevila. Z toho důvodu jsem neimplementoval příkazy typu MARCO a POLO, které tento typ proměnné používají pro počítání latence.
+\subsection{Vize do budoucna}
 Hra má veliký potenciál pro rozšířitelnost: například při implementaci přiřazování hráčských barev mě napadla možnost herních týmů, kde by určití hráči spolupracovali proti ostatním týmům.
+
 \section{Přílohy}
 \subsection{Aplikační protokol TTP}
 Protokol TTP (Three Tunnelers Protocol) definuje rozhraní mezi dvěma účastníky komunikace po síti. Komunikace je asynchronní, což znamená že účastníci nemají stejné role, zde mají mezi sebou vztah Klient-Server. Označení Klient označuje roli účastníka komunikace, klient potom označuje konkrétní reprezentaci připojeného uživatele.
