@@ -152,100 +152,123 @@ V průběhu implementace protokolu na straně serveru v jazyce C jsem narazil na
 Hra má veliký potenciál pro rozšířitelnost: například při implementaci přiřazování hráčských barev mě napadla možnost herních týmů, kde by určití hráči spolupracovali proti ostatním týmům.
 \section{Přílohy}
 \subsection{Aplikační protokol TTP}
-Protokol TTP (Three Tunnelers Protocol) definuje rozhraní mezi dvěma účastníky komunikace po síti. Komunikace je asynchronní, což znamená že účastníci nemají stejné role, zde mají mezi sebou vztah Klient-Server.
-Aplikační protokol STTP je realizován nad transportním protokolem TCP. Zprávy nemusí mít jednotnou délku ale vždy musí odpovídat následujícímu formátu:
+Protokol TTP (Three Tunnelers Protocol) definuje rozhraní mezi dvěma účastníky komunikace po síti. Komunikace je asynchronní, což znamená že účastníci nemají stejné role, zde mají mezi sebou vztah Klient-Server. Označení Klient označuje roli účastníka komunikace, klient potom označuje konkrétní reprezentaci připojeného uživatele.
+Aplikační protokol TTP je realizován nad transportním protokolem TCP. Zprávy nemusí mít jednotnou délku ale vždy musí odpovídat následujícímu formátu:
 \begin{center}
 \texttt{<hlavička><tělo><LF>}
 \end{center}
 \begin{itemize}
 \setlength\itemsep{0em}
-\item \textbf{hlavička} zprávy se skládá ze 2 hexadecimálních znaků, které představují typ zprávy
-\item \textbf{tělo} zprávy se odvíjí podle typu zprávy, čísla jsou přenášena v hexadecimální podobě a jsou vycpávána nulami na začátku do konstantní délky
+\item \textbf{hlavička} zprávy se skládá ze 4 hexadecimálních znaků, které představují číselný typ zprávy
+\item \textbf{tělo} zprávy se odvíjí podle typu zprávy, čísla jsou přenášena v hexadecimální podobě s nevýznamovými nulami na začátku pro zachování jednotné délky bloků
 \item \textbf{LF} představuje znak "Line Feed" a je vyžadován na konci každé zprávy
 \end{itemize}
 
 Protokol je bezestavový, což znamená, že žádná ze zpráv nevyžaduje okamžitou odpověď. Většina druhů zpráv však významově předpokládá návaznost jiných zpráv.
+Komunikace tedy probíhá stylem Požadavek (P) - Odpověď (O) s možností vyvolání delších komunikačních řetězů některými zprávami a s možností signalizací změny stavu (S).
 
 Definice zpráv protokolu podle hlaviček určují formát těla. V definici je možné se setkat s následujícími symboly:
 \begin{itemize}
-\item[C] = Znak
 \item[X] = Znak představující hexadecimální hodnotu
-\item[text]
+\item[text] = Neformátovaný text proměnlivé délky. Obvykle se tento blok vyskytuje na konci těla a jeho délku lze určit jako počet znaků od posledního bloku do konce zprávy.
 \end{itemize}
+Následuje výčet definic skládající se z čísla a názvu typu zprávy na prvním řádku a popisu těla zprávy v kontextu požadavku (P) nebo v kontextu odpovědi (O).
 
 \subsubsection*{Organizační zprávy mezi klientem a serverem}
 \begin{description}
-\item[1 Představení klienta] (XX)(text) [pořadí připojení, tajný kód] \\
-Klient MUSÍ poslat jako první segment těla číselné pořadí určující, po kolikáté se klient přihlašuje. Rozpoznávané hodnoty jsou: nulová hodnota - klient se přihlašuje poprvé, nenulová hodnota - klient se snaží připojit znovu. Pokud se klient přihlašuje znovu, MUSÍ zahrnout druhý segment zprávy - tajný kód. \\
-Server MUSÍ poslat jako první segment těla číselné pořadí, jako klient. V obou případech server MUSÍ zahrnout druhý segment - tajný kód.
-Pokud se jedná o opětovné připojení klienta, server BY MĚL následovně poslat zprávu typu "Nastavení jména".
-\item[2 Odpojení] (text)[důvod odpojení]\\
-Pokud je to možné, klient i server BY MĚLI před ukončením spojení poslat zprávu o ukončení spojení. Zpráva MŮŽE obsahovat segment důvod odpojení.
-\item[3 Marco] (XX)(XXXXXXXXXXXXXXXX)(XXXXXXXXXXXXXXXX) [počet předcházejících zpráv, časový otisk odesílající strany, časový otisk přijímající strany] \\
-Zpráva vyžadující odpověď protistrany. Zpráva MUSÍ obsahovat časový otisk odesílající strany. Pokud je počet předcházejících zpráv nenulový, zpráva MUSÍ obsahovat i časový otisk přijímající strany. V opačném případě NESMÍ časový otisk přijímající strany. \\
-Zpráva MŮŽE být použita jako odpověď, pokud přijímající strana také požaduje synchronizaci. V takovém případě MUSÍ být počet předcházejících zpráv nenulový.
-\item[4 Polo] (XXXXXXXXXXXXXXXX) [Časový otisk přijímající strany]\\
-Odpovídající zpráva na zprávu "Marco". Zpráva MUSÍ obsahovat časový otisk přijímající strany.
-\item[5 Neplatný příkaz] (text) [přijatá neplatná zpráva]\\
-Zpráva sloužící k informaci protistrany o neplatném formátu přijaté zprávy. Zpráva MUSÍ obsahovat neplatnou příchozí zprávu v podobě, v jaké byla přijata.
-\item[10 Nastavení jména] (text) [Jméno klienta] \\
-Zpráva od klienta MUSÍ obsahovat požadované jméno. Zpráva od serveru MUSÍ obsahovat jméno v takové podobě, v jaké je přijata.
+\item[0x01] Představení klienta \\
+P: (XX)(text) [indikátor znovupřipojení, tajný kód], pokud indikátor znovupřipojení nabývá nulové hodnoty, zpráva nemusí obsahovat blok tajný kód \\
+O: (XX)(text) [indikátor znovupřipojení, tajný kód], Server vždy posílá oba bloky. \\
+Na požadavek Představení klienta Server odpovídá potvrzením Představení (0x01) nebo Odpojením klienta (0x02).
+\item[0x02] Odpojení\\
+S: (text)[důvod odpojení], po přijetí zprávy Klientem nebo Serverem lze očekávat ukončení spojení.
+\item[0x03] Nastavení jména \\
+P: (text) [Jméno klienta], Klient posílá jméno, kterým chce být reprezentovaný \\
+O: (text) [Jméno klienta], Server posílá ošetřené jméno, které klient skutečně získal \\
+Na požadavek lze očekávat odpověď Nastavení jména (0x03).
+
+\item[0x04] Marco \\ 
+P: (XX)(XXXXXXXXXXXXXXXX) [počet předcházejících zpráv - nulová hodnota, časový otisk odesílající strany] \\
+O: (XX)(XXXXXXXXXXXXXXXX)(XXXXXXXXXXXXXXXX) [počet předcházejících zpráv - nenulová hodnota, časový otisk odesílající strany, časový otisk přijímající strany] \\
+Na požadavek lze očekávat odpověď typu Marco (0x04) nebo odpověď typu Polo (0x05)
+\item[0x05] Polo\\
+O: (XXXXXXXXXXXXXXXX) [Časový otisk přijímající strany]
 \end{description}
 \subsubsection*{Zprávy spravující místnosti}
 \begin{description}
-\item[14 Výpis místností] (XX)(M)*n [počet místností (n) ve zprávě, n popisů místnosti] \\
-Zpráva od klienta NESMÍ obsahovat tělo. Zpráva od Serveru MUSÍ určit kolik místností nese a MUSÍ obsahovat tolik popisů místností. \\
-Popis místnosti je tohoto formátu: (XXXX)(XX)(XX)(XX)(XX) [id místnosti, maximální počet hráčů, aktuální počet hráčů, stav místnosti, nastavená obtížnost]
-\item[16 Vytvořit místnost] -
-\item[17 Vstoupit do místnosti] (XX)(XX)(XX) [Číslo místnosti, klientské číslo v místnosti lokálního klienta, číslo klienta] \\ 
-Klient MUSÍ poslat pouze číslo místnosti, do které se chce připojit.
-\item[18 Opustit místnost] -
+\item[0x10] Výpis místností \\
+P: - \\
+O: (XX)(M)*n [počet místností ve zprávě (N), N popisů místnosti] \\
+Popis místnosti M je tohoto formátu: (XXXX)(XX)(XX)(XX)(XX) [id místnosti, maximální počet hráčů, aktuální počet hráčů, stav místnosti, herní mód] \\
+Požadavek je vždy prázdný a lze na něj očekávat odpověď typu Výpis místností (0x10)
+\item[0x12] Vytvořit místnost \\
+P: - \\
+Požadavek je vždy prázdný a lze na něj očekávat odpověď typu Vstoupit do místnosti (0x13) nebo Opuštění místnosti (0x14)
+\item[0x13] Vstoupit do místnosti\\
+P: (XX) [Číslo místnosti] \\
+O: (XX)(XX)(XX) [Číslo místnosti, číslo lokálního klienta, číslo klienta leadera místnosti] \\
+Na požadavek lze očekávat odpověď typu Vstoupit do místnosti (0x13) nebo Opustit místnost (0x14).
+\item[0x14] Opustit místnost
+S: -
 \end{description}
 \subsubsection*{Mimo-herní zprávy v rámci místnost}
 \begin{description}
-\item[40 Zpráva - prostý text](XX)(text) [identifikátor odesílatele, tělo zprávy] \\
-Klient NESMÍ zahrnovat identifikátor odesílatele.
-\item[41 Systémová zpráva](text) [tělo zprávy] \\
-Klient NESMÍ odesílat zprávy tohoto typu.
-\item[42 Zpráva - vzdálený příkaz](text) [Příkaz k vykonání] \\
-Umožňuje vzdálené vykonávání příkazů pro ovládání serveru jako z příkazové řádky.
-
-\item[60 Synchronizace fáze] (XX) [stav místnosti]
-
-\item[61 Stav připravení] (XX)(XX) [nová připravenost (nulová / nenulová hodnota), identifikátor klienta v místnosti]
-Klient NESMÍ poslat identifikátor klienta.
-
-\item[65 Informace o klientovi] (XX)(text)[identifikátor klienta v místnosti, jméno] \\
-Klient MUSÍ poslat pouze identifikátor klienta. Server MUSÍ poskytnout k identifikátoru i kompletní popis klienta.
-
-\item[66 Stav klienta] (XX)(XX)(XXXX) [identifikátor klienta v místnosti, stav klienta, doba odezvy v milisekundách] \\
+\item[0x20] Zpráva - prostý text \\
+P: (text) [tělo zprávy] \\
+S: (XX)(text) [číslo klienta místnosti, tělo zprávy]
+Na požadavek lze očekávat signál typu Zpráva - prostý text (0x20).
+\item[0x21] Systémová zpráva \\
+S: (text) [tělo zprávy]
+\item[0x22]Zpráva - vzdálený příkaz \\
+P: (text) [Příkaz ovládání serveru jako z příkazové řádky] \\
+Na požadavek lze očekávat signál typu Systémová zpráva (0x21)
+\item[0x40] Synchronizace fáze \\
+S: (XX) [stav místnosti]
+\item[0x41] Stav připravení \\
+P: (XX) [signalizace připravenosti (nulová / nenulová hodnota)] \\
+S: (XX)(XX) [signalizace připravenosti, číslo klienta v místnosti]
+\item[0x42] Informace o klientovi \\
+S: (XX)(text)[číslo klienta v místnosti, jméno]
+\item[0x43] Stav klienta \\
+S: (XX)(XX)(XXXX) [číslo klienta v místnosti, stav klienta, doba odezvy v milisekundách] \\ 
 Klient NESMÍ poslat tuto zprávu.
-
-\item[67 Odebrání klienta] (XX)(text) [identifikátor klienta v místnosti, důvod odebrání klienta]
-
-\item[68 Předat vedení klientovi] (XX) [číslo klienta v místnosti]
+\item[0x44] Odebrání klienta \\
+S: (XX)(text) [identifikátor klienta v místnosti, důvod odebrání klienta]
+\item[0x45] Předat vedení klientovi \\
+P: (XX) [číslo klienta v místnosti \\
+S: (XX) [číslo klienta v místnosti] \\
+Na požadavek lze očekávat signál typu Předat vedení klientovi.
 \end{description}
 
 \subsubsection*{Herní zprávy místnosti}
 \begin{description}
-\item[80 Přidání hráče] (XX)(XX)(XX)(XX) [slot v místnosti, barva, číslo klienta v místnosti, číslo hráče klienta] \\
-Klient NESMÍ zahrnout ve zprávě číslo klienta ani číslo hráče klienta. Klient NEMUSÍ zahrnout ve zprávě barvu.
-\item[81 Odebrání hráče] (XX) [slot v místnosti]
-\item[82 Přesunutí hráče mezi sloty] (XX)(XX) [slot odkud, slot kam]
-\item[83 Nastavení barvy hráče] (XX)(XX) [slot hráče, barva]
-
-\item[90 Specifikace mapy] (XX)(XX)(XX) [velikost chunku, šířka v chuncích, výška v chuncích]
-\item[91 Specifikace základnových bloků na mapě] (XX)((XX)(XX)(XX)) * N [N - počet specifikací základen, N specifikací: (X chunku, Y chunku, číslo hráče v mínstnosti)]
-\item[91 Chunková data] (XX)(XX)(XX)(text) [X chunku, Y chunku, checksum chunku, <domluvená velikost chunku> * X]\\
-Klient NESMÍ posílat chunková data na server.
-\item[92 Seznam změn bloků] (XX)(změna) * N [Počet změn bloků N, N změn bloků]\\ 
+\item[0x50] Přidání hráče \\
+S: (XX)(XX)(XX)(XX) [slot v místnosti, barva, číslo klienta v místnosti, číslo hráče klienta] \\
+\item[0x51] Odebrání hráče \\
+S: (XX) [slot v místnosti]
+\item[0x52] Přesunutí hráče mezi sloty \\
+S: (XX)(XX) [slot odkud, slot kam]
+\item[0x53] Nastavení barvy hráče \\
+S: (XX)(XX) [slot hráče, barva]
+\item[0x60] Specifikace mapy \\
+S: (XX)(XX)(XX) [velikost chunku, šířka v chuncích, výška v chuncích]
+\item[0x61] Specifikace základnových bloků na mapě \\
+S: (XX)((XX)(XX)(XX)) * N [N - počet specifikací základen, N specifikací: (X chunku, Y chunku, číslo hráče v mínstnosti)]
+\item[0x62] Chunková data \\
+S: (XX)(XX)(XX)(text) [X chunku, Y chunku, checksum chunku, <domluvená velikost chunku> * X] \\
+\item[0x63] Seznam změn bloků \\
+S: (XX)(změna) * N [Počet změn bloků N, N změn bloků]\\ 
 Změna bloku je následujícího formátu: (XXXX)(XXXX)(X) [X souřadnice bloku, Y souřadnice bloku, nový blok]
-
-\item[120 Nastavení ovládání] (XX)(XX) - [číslo hráče v místnosti, bitová mapa stisklých kláves]
-\item[130 Informace o tanku] (XX)(XX)(XXXX)(XXXX)(XX)(XX)(XX) [číslo hráče v místnosti, stav tanku, pozice X, pozice Y, směr, body zásahu, energie tanku] \\
-Klient MUSÍ poslat pouze číslo hráče v místnosti.
-\item[140 Vytvoření projektilu] (XX)(XX)(XXXX)(XXXX)(XX) [identifikátor projektilu, číslo hráče, X na mapě, Y na mapě, počáteční směr]
-\item[141 Odebrání projektilu] (XX) [identifikátor projektilu]
+\item[0x70] Nastavení ovládání \\
+P: (XX)(XX) [číslo hráče v místnosti, bitová mapa stisklých kláves] \\
+S: (XX)(XX) [číslo hráče v místnosti, bitová mapa stisklých kláves] \\
+Na požadavek lze očekávat signál typu Nastavení ovládání 0x70
+\item[0x74] Informace o tanku \\
+S: (XX)(XX)(XXXX)(XXXX)(XX)(XX)(XX) [číslo hráče v místnosti, stav tanku, pozice X, pozice Y, směr, body zásahu, energie tanku] \\
+\item[0x7A] Vytvoření projektilu \\
+S: (XX)(XX)(XXXX)(XXXX)(XX) [identifikátor projektilu, číslo hráče, X na mapě, Y na mapě, počáteční směr]
+\item[0x7B] Odebrání projektilu \\
+S: (XX) [identifikátor projektilu]
 \end{description}
 
 
