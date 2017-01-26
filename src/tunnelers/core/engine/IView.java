@@ -5,13 +5,14 @@ import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 import tunnelers.core.player.controls.AControlsManager;
-import tunnelers.network.NetClient;
 
 /**
  *
  * @author Stepan
  */
 public interface IView {
+
+	
 
 	public static enum Scene{
 		MainMenu, Settings, GameRoomList, Lobby, Warzone
@@ -36,4 +37,7 @@ public interface IView {
 	public void updatePlayers();
 	
 	public void setLocalReadyState(boolean b);
+	
+	public void update(long currentTick);
+	public void exit();
 }

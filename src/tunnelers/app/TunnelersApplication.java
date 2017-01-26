@@ -1,7 +1,6 @@
 package tunnelers.app;
 
 import tunnelers.core.engine.IView;
-import generic.Impulser.Impulser;
 import tunnelers.core.settings.Settings;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -19,8 +18,6 @@ public final class TunnelersApplication extends Application {
 
 	TunnelersStage currentStage;
 
-	Impulser imp;
-
 	@Override
 	public void start(Stage primaryStage) {
 		Settings settings = Settings.getInstance();
@@ -33,8 +30,6 @@ public final class TunnelersApplication extends Application {
 //		Assets assets = new Assets(userDir + "\\resources\\");
 		
 		assets.init();
-
-		this.imp = new Impulser(settings.getTickRate());
 		
 		Engine e = new Engine(VERSION, settings);
 
@@ -43,18 +38,11 @@ public final class TunnelersApplication extends Application {
 
 		currentStage.setOnHidden((WindowEvent event) -> {
 			e.exit();
-			this.imp.stopRun();
-		});
-
-		this.imp.addHook((event) -> {
-			e.update(event.getTick());
-			currentStage.update(event.getTick());
 		});
 
 		currentStage.setResizable(false);
 		currentStage.showSceneNow(IView.Scene.MainMenu);
 
-		this.imp.start();
 		e.start();
 		this.currentStage.show();
 		

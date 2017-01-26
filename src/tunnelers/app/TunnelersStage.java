@@ -1,6 +1,5 @@
 package tunnelers.app;
 
-import tunnelers.common.IUpdatable;
 import tunnelers.core.engine.IView;
 import tunnelers.core.settings.Settings;
 import javafx.application.Platform;
@@ -27,7 +26,7 @@ import tunnelers.core.player.controls.AControlsManager;
  *
  * @author Stepan
  */
-public class TunnelersStage extends Stage implements IView, IUpdatable {
+public class TunnelersStage extends Stage implements IView {
 
 	public static final String GAME_NAME = "Three Tunnelers",
 			TITLE_SEPARATOR = "|";
@@ -43,7 +42,6 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	protected final EngineUserInterface engine;
 	protected final Assets assets;
 
-	@Override
 	public final void update(long tick) {
 		if (this.currentScene != null) {
 			this.currentScene.update(tick);
@@ -184,7 +182,6 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 	@Override
 	public void updatePlayers() {
 		Platform.runLater(() -> {
-			
 			if ((this.currentScene instanceof LobbyScene)) {
 				((LobbyScene) this.currentScene).setPlayers(this.engine.getGameRoom().getPlayers());
 				return;
@@ -216,4 +213,10 @@ public class TunnelersStage extends Stage implements IView, IUpdatable {
 		}
 	}
 
+	@Override
+	public void exit() {
+//		Platform.exit();
+	}
+
+	
 }

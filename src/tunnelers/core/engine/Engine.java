@@ -2,7 +2,6 @@ package tunnelers.core.engine;
 
 import generic.SimpleScanner;
 import generic.SimpleScannerException;
-import tunnelers.common.IUpdatable;
 import tunnelers.network.NetAdapter;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.engine.stage.AEngineStage;
@@ -21,7 +20,7 @@ import tunnelers.network.command.Signal;
  *
  * @author Stepan
  */
-public final class Engine implements INetworkProcessor, IUpdatable {
+public final class Engine extends Thread implements INetworkProcessor {
 
 	private final int version;
 
@@ -43,6 +42,10 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 	protected AControlsManager controls;
 	protected String preferredName;
 
+	private final int tickDelay;
+	private long currentTick;
+	private boolean keepRunning;
+
 	public Engine(int version, Settings settings) {
 		this.version = version;
 		this.netadapter = new NetAdapter(this);
@@ -56,6 +59,8 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		this.networksInterface = new EngineNetworksInterface(this, true);
 
 		this.preferredName = "";
+		
+		this.tickDelay = 1000 / settings.getTickRate();
 	}
 
 	public EngineUserInterface intefrace() {
@@ -68,7 +73,9 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 
 	}
 
+	@Override
 	public void start() {
+		super.start();
 		this.netadapter.start();
 	}
 
@@ -97,16 +104,33 @@ public final class Engine implements INetworkProcessor, IUpdatable {
 		return currentGameRoom;
 	}
 
-	@Override
-	public void update(long tick) {
-		this.currentStage.update(tick);
-		if (tick % (tickRate / 2) == 0) {
-			netadapter.update(tick);
+	public void run() {
+		this.currentTick = 0;
+		this.keepRunning = true;
+
+		try {
+			while (this.keepRunning) {
+				this.currentTick++;
+				this.currentStage.update(this.currentTick);
+				if (this.currentTick % (tickRate / 2) == 0) {
+					this.netadapter.update(this.currentTick);
+				}
+				this.view.update(this.currentTick);
+
+				sleep(tickDelay);
+			}
+		} catch (InterruptedException e) {
+			System.err.println("Engine has been interrupted. Shutting everything down");
+			this.exit();
 		}
+
 	}
 
 	public void exit() {
+		this.keepRunning = false;
 		this.netadapter.shutdown();
+		this.view.exit();
+		
 	}
 
 	public Chat getChat() {

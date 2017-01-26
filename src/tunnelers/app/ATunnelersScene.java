@@ -15,14 +15,13 @@ import javafx.scene.layout.StackPane;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.render.AfterFX;
 import tunnelers.app.views.components.flash.FlashAreaControl;
-import tunnelers.common.IUpdatable;
 import tunnelers.core.engine.EngineUserInterface;
 
 /**
  *
  * @author Stepan
  */
-public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlasher {
+public abstract class ATunnelersScene extends Scene implements IFlasher {
 
 	protected static Assets ASSETS;
 
@@ -86,7 +85,6 @@ public abstract class ATunnelersScene extends Scene implements IUpdatable, IFlas
 		}
 	}
 
-	@Override
 	public void update(long tick) {
 		this.flash.updateVisibility();
 

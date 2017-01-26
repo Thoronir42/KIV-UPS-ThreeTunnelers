@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import tunnelers.common.IUpdatable;
 import tunnelers.core.engine.PersistentString;
 import tunnelers.network.command.Command;
 import tunnelers.network.command.CommandParser;
@@ -16,7 +15,7 @@ import tunnelers.network.command.Signal;
  *
  * @author Stepan
  */
-public final class NetAdapter extends Thread implements IUpdatable {
+public final class NetAdapter extends Thread {
 
 	private static final int BUFFER_SIZE = 512;
 
@@ -63,7 +62,6 @@ public final class NetAdapter extends Thread implements IUpdatable {
 		this.connection = new Connection(hostname, port, BUFFER_SIZE);
 	}
 
-	@Override
 	public void update(long tick) {
 		if (this.connection == null || !this.connection.isOpen()) {
 			return;

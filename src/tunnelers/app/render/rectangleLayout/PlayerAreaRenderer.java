@@ -144,7 +144,6 @@ public class PlayerAreaRenderer {
 
 			float staticPct = currentTank.getStatus() == Tank.Status.Destroyed ? 1
 					: 0.8f * this.renderer.getAfterFX().calculateStatic(currentTank.getEnergy(), this.renderer.getWarzoneRules().getTankMaxEP());
-			System.out.format("Static pct for %d / %d is %.2f\n", currentTank.getEnergy(), renderer.getWarzoneRules().getTankMaxEP(), staticPct);
 			this.renderer.getAfterFX().renderStaticNoise(g, this.blockSize, 0.8f * staticPct, gameViewWindow);
 			g.setTransform(defTransform);
 		} catch (Exception e) {
