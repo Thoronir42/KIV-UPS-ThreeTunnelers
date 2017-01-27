@@ -111,7 +111,7 @@ Hlavní vlastností hry Tunnelers je, že si hráči musejí postupně získat p
 
 \section{Programátorská dokumentace}
 \subsection{Datové struktury}
-Pro zjednodušení popisu funkcí systémů jsou předpokládány následující struktury:
+Pro zjednodušení popisu funkcí systémů jsou předpokládány následující struktury u klienta i u serveru:
 \subsubsection*{Mapa}
 Mapa představuje oblast, o kterou se bojuje. Oblast se skládá z (W * H) sekcí, takzvaných chunků, stejné velikosti N * N bloků. V oblasti je několik sekcí, které představují základny hráčů.
 \subsubsection*{Chunk}
@@ -163,9 +163,76 @@ V dalším kroku jsou zpracovány příkazy klientů. První příkaz klienta v�
 V posledním kroku obnovovací smyčky je prováděna aktualizace jednotlivých místností. Aktualizace místností jsou spouštěny pouze pro stavy "Příprava bitvy", kdy jsou kontrolováni klienti - spuštění totiž nemůže proběhnout dokud nejsou všichni připraveni a pokud by některý z klientů v tomto stavu nečekaně ukončil svoji činnost, ostatní klienti by zůstali čekat na ostatní. Další aktualizovaný stav hry je "Bitva", kde jsou zpracovány uživatelské vstupy a výsledky jsou synchronizovány s klienty.
 
 \subsection{Herní klient}
-Zdrojové soubory serveru jsou tříděny do balíků podle jejich významu...
-\section{Uživatelská dokumentace}
+Klient je obdobně typově rozdělen do částí, nebo do takzvaných vrstev.
+Nejvyšší vrstvou je pohled, což je uživatelské rozhraní. O vrstvu níže se nachází jádro, které se dále dělí na model a funkční logiku. Pohled s jádrem a jádro s pohledem komunikují prostřednictvím rozhraní. Pod jádrem se nachází rozhraní pro komunikaci se sítí, která je přímo využívána jádrem. Vrstva síťového rozhraní je obdobně implementována jako na serveru - vláknem, které čeká na zprávy od serveru, formátuje je do příkazů a předává je pro zpracování jádru.
 
+Pohledová vrstva je postavená na platformě JavaFX, která nabízí bohatou množinu komponent. V této aplikaci pohledová vrstva také slouží jako spouštěč jádra.
+
+Přepínání pohledů má na starost třída \texttt{TunnelersStage}, která přímo implementuje pohledové rozhraní jádra. Jednotlivé pohledy jsou potom realizovány jako samostatné třídy rozšiřující třídu \texttt{ATunnelersScene}. Scény jsou složeny z kořene \texttt{AnchorPane} komponenty, která umožňuje "ukotvit" pod-komponenty na libovolné místo. V této komponentě jsou potom umístěny komponenty \texttt{Canvas}, do které je vykreslován obsah, \texttt{FlashArea}, pomocí které se zobrazují upozornění a ve většině případů i samotný obsah, jež je složený z dalších pod-komponent.
+
+\section{Uživatelská dokumentace}
+\subsection{Server}
+Pro vytvoření spustitelného souboru serveru je třeba zdrojové soubory\footnote{https://github.com/Thoronir42/ThreeTunnelers\_Server/} přeložit spuštěním příkazu \texttt{make} z adresáře se zdrojovými soubory.
+Zkompilovaný soubor se spouští s parametry:
+\texttt{TT\_Server <port> <počet místností>}
+Za běhu serveru lze do textového rozhraní zadávat následující příkazy:
+\begin{itemize}
+\item \textbf{clients} - výpis klientů
+\item \textbf{connections} - výpis existujících spojení
+\item \textbf{rooms} - výpis místností
+\item \textbf{status} - aktuální statistiky
+\item \textbf{exit} - ukončení serveru
+\end{itemize}
+\subsection{Klient}
+K zkompilování zdrojových souborů\footnote{https://github.com/Thoronir42/ThreeTunnelers/} klienta je použit nástroj Ant. Získání spustitelného souboru lze docílit těmito příkazy: \texttt{ant compile} a \texttt{ant jar}.
+Klienta lze spustit "otevřením" souboru .jar nebo spuštěním z konzole příkazem \texttt{java -jar ThreeTunnelers.jar}. Pokud je klient spuštěn z konzole, lze vidět několik vývojářských výpisů.
+\newpage
+\subsection{Průvodce uživatelským rozhraním}
+\subsubsection*{Pohledy nevyžadující spojení se serverem}
+Po spuštění aplikace se uživatel ocitá v hlavním menu viz Obrázek \ref{fig:main_menu}. Uživatel má možnost možnost z hlavního menu přejít do pohledu nastavení viz Obrázek \ref{fig:main_menu}. V nastavení může uživatel změnit konfiguraci kláves, kterými bude ovládat svůj tank. Později bude možno ukládat i výchozí konfiguraci serveru. \\
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \includegraphics[width=1\textwidth]{img/01_main_menu.png}
+    	\caption{Hlavní menu}
+		\label{fig:main_menu}
+    \end{minipage}\hfill
+    \begin{minipage}{0.45\textwidth}
+        \includegraphics[width=1\textwidth]{img/02_settings.png}
+        \caption{Nastavení}
+		\label{fig:settings}
+    \end{minipage}
+\end{figure}
+
+Z hlavního menu se může také klient připojit na server zadáním adresy a portu cíleného serveru. Před stiskem tlačítka má klient možnost zvolit si vlastní jméno, které je jinak pseudonáhodně generováno.
+Pokud při navazování spojení se serverem nastane chyba, uživatel je o tom informován v liště na vrcholu okna viz Obrázek \ref{fig:main_menu}.
+Po úspěšném připojení na server se uživateli zobrazí výpis místností viz Obrázek \ref{fig:rooms_list}, odkud může dvojklikem na řádek s požadovanou místností vstoupit do dané místnosti nebo příslušným tlačítkem vytvořit novou místnosti.
+\newpage
+\subsubsection*{Pohledy vyžadující spojení se serverem}
+Při úspěšném vytvoření místnosti nebo připojení se do místnosti je přepnut pohled na lobby viz Obrázek \ref{fig:lobby}. Zde je pro členy místnosti k dispozici chat a tlačítko, kterým signalizují, že jsou připraveni na hru.
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \includegraphics[width=1\textwidth]{img/03_rooms_list.png}
+    	\caption{Výpis místností}
+		\label{fig:rooms_list}
+    \end{minipage}\hfill
+    \begin{minipage}{0.45\textwidth}
+        \includegraphics[width=1\textwidth]{img/04_lobby.png}
+        \caption{Lobby}
+		\label{fig:lobby}
+    \end{minipage}
+\end{figure}
+V momentě, kdy jsou všichni účastníci místnosti připravení hrát a server připraví bitevní zónu, členům místnosti se přepne pohled na bitevní zónu, viz Obrázek \ref{fig:battle}. Zde každý hráč ovládá svůj tank pomocí nastavených kláves. Každý hráč má na obrazovce vyhrazenou část, kde má "kukátko" do bitevní zóny a indikátory zbývajících bodů zásahů a zbývající energie. Po zničení jednoho z tanků je bitva ukončena a členové místnosti jsou zpět v Lobby.
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.60\textwidth}
+        \includegraphics[width=1\textwidth]{img/05_battle.png}
+    	\caption{Bitevní zóna}
+		\label{fig:battle}
+    \end{minipage}\hfill
+\end{figure}
 \section{Závěr}
 Díky této semestrální práci jsem si vyzkoušel, co obnáší proces návrhu a implementace síťové aplikace skládající se ze serveru z klienta a aplikačního protokolu, pomocí kterého tyto aplikační části komunikují.
 Procvičil jsem si vytváření uživatelského rozhraní a připomenul si důležitost očividné reakce na uživatelské vstupy.
@@ -174,7 +241,7 @@ Práci mi značně zjednodušily jednotkové testy, které jsem implementoval na
 
 %V průběhu implementace protokolu na straně serveru v jazyce C jsem narazil na zvláštní chování při formátování proměnných typu \texttt{long int}, kde po předání této proměnné jako parametr do funkce a po vykonání dané funkce zmizela proměnná z paměti, čímž byla způsobena chyba typu SIGSEGF. Ještě pro jistotu se toto chování při několikanásobném spouštění testů občas neprojevila. Z toho důvodu jsem neimplementoval příkazy typu MARCO a POLO, které tento typ proměnné používají pro počítání latence.
 \subsection{Vize do budoucna}
-Hra má veliký potenciál pro rozšířitelnost: například při implementaci přiřazování hráčských barev mě napadla možnost herních týmů, kde by určití hráči spolupracovali proti ostatním týmům.
+Hra má veliký potenciál pro rozšířitelnost díky návrhu, který klade důraz na všeobecnost.
 
 \section{Přílohy}
 \subsection{Aplikační protokol TTP}
@@ -198,7 +265,8 @@ Definice zpráv protokolu podle hlaviček určují formát těla. V definici je 
 \item[X] = Znak představující hexadecimální hodnotu
 \item[text] = Neformátovaný text proměnlivé délky. Obvykle se tento blok vyskytuje na konci těla a jeho délku lze určit jako počet znaků od posledního bloku do konce zprávy.
 \end{itemize}
-Následuje výčet definic skládající se z čísla a názvu typu zprávy na prvním řádku a popisu těla zprávy v kontextu požadavku (P) nebo v kontextu odpovědi (O).
+Následuje výčet definic skládající se z čísla a názvu typu zprávy na prvním řádku a popisu těla zprávy v kontextu požadavku (P), odpovědi (O) nebo signálu (S).
+\newpage
 
 \subsubsection*{Organizační zprávy mezi klientem a serverem}
 \begin{description}
