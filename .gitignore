@@ -6,4 +6,5 @@ nbbuild.xml
 
 doc/*
 !doc/*.tex
+!doc/*.pdf
 !doc/img

@@ -234,14 +234,16 @@ V momentě, kdy jsou všichni účastníci místnosti připravení hrát a serve
     \end{minipage}\hfill
 \end{figure}
 \section{Závěr}
+Vypracované aplikace splňují zadání ačkoliv neobsahují některé neklíčové funkce z důvodu tísnivého času.
+
 Díky této semestrální práci jsem si vyzkoušel, co obnáší proces návrhu a implementace síťové aplikace skládající se ze serveru z klienta a aplikačního protokolu, pomocí kterého tyto aplikační části komunikují.
 Procvičil jsem si vytváření uživatelského rozhraní a připomenul si důležitost očividné reakce na uživatelské vstupy.
 
 Práci mi značně zjednodušily jednotkové testy, které jsem implementoval na straně klienta pomocí testovacího frameworku JUnit a na straně serveru, které jsou realizovány debugovacími výpisy. Obě aplikace nejsou ani zdaleka otestovány celé ale klíčové prvky lze testy ověřit.
 
 %V průběhu implementace protokolu na straně serveru v jazyce C jsem narazil na zvláštní chování při formátování proměnných typu \texttt{long int}, kde po předání této proměnné jako parametr do funkce a po vykonání dané funkce zmizela proměnná z paměti, čímž byla způsobena chyba typu SIGSEGF. Ještě pro jistotu se toto chování při několikanásobném spouštění testů občas neprojevila. Z toho důvodu jsem neimplementoval příkazy typu MARCO a POLO, které tento typ proměnné používají pro počítání latence.
-\subsection{Vize do budoucna}
-Hra má veliký potenciál pro rozšířitelnost díky návrhu, který klade důraz na všeobecnost.
+
+Hra má veliký potenciál pro rozšířitelnost díky návrhu, který klade důraz na všeobecnost. Mezi jednodušší rozšíření patří navýšení maximálního počtu hráčů v místnosti, podpory více hráčů na jednom počítači nebo i přidání možnosti různých herních módů.
 
 \section{Přílohy}
 \subsection{Aplikační protokol TTP}
@@ -302,7 +304,8 @@ Požadavek je vždy prázdný a lze na něj očekávat odpověď typu Vstoupit d
 P: (XX) [Číslo místnosti] \\
 O: (XX)(XX)(XX) [Číslo místnosti, číslo lokálního klienta, číslo klienta leadera místnosti] \\
 Na požadavek lze očekávat odpověď typu Vstoupit do místnosti (0x13) nebo Opustit místnost (0x14).
-\item[0x14] Opustit místnost
+\item[0x14] Opustit místnost \\
+P: - \\
 S: -
 \end{description}
 \subsubsection*{Mimo-herní zprávy v rámci místnost}
