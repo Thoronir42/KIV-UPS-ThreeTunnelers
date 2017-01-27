@@ -1,15 +1,10 @@
 package temp;
 
 import generic.RNG;
-import tunnelers.core.colors.PlayerColorManager;
-import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.player.controls.Controls;
-import tunnelers.core.player.controls.InputAction;
 import tunnelers.core.player.Player;
-import tunnelers.core.player.controls.AControlsManager;
 import tunnelers.core.settings.Settings;
-import tunnelers.network.NetClient;
 
 /**
  *
@@ -68,7 +63,7 @@ public class Mock {
 		StringBuilder sb = new StringBuilder(String.format("%02X", n));
 		for (byte i = 0; i < n; i++) {
 			int players = RNG.getRandInt(Settings.MAX_PLAYERS) + 1;
-			int difficulty = RNG.getRandInt(4);
+			int gamemode = IGameRoomInfo.GAMEMODE_FFA;
 			byte flags = 0;
 			if (i % 2 == 0) {
 				flags |= IGameRoomInfo.FLAG_RUNNING;
@@ -77,7 +72,7 @@ public class Mock {
 				flags |= IGameRoomInfo.FLAG_SPECTATABLE;
 			}
 
-			String s = String.format("%04X%02X%02X%02X%02X", i, Settings.MAX_PLAYERS, players, difficulty, flags);
+			String s = String.format("%04X%02X%02X%02X%02X", i, Settings.MAX_PLAYERS, players, gamemode, flags);
 			sb.append(s);
 		}
 

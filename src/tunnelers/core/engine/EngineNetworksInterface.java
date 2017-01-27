@@ -27,7 +27,7 @@ public class EngineNetworksInterface {
 	protected final HashMap<CommandType, IAction> actions;
 	protected final Engine engine;
 
-	private final GameRoomParser gameRoomParser;
+	protected final GameRoomParser gameRoomParser;
 	private final MapChunkParser mapChunkParser;
 
 	private int remainingChunks;

@@ -1,42 +1,43 @@
-package tunnelers.app.views.serverList.GameRoomView;
+package tunnelers.app.views.components.gameRoomTreeView;
 
-import tunnelers.app.views.serverList.GameRoomDifficulty;
+import tunnelers.app.views.serverList.GameMode;
 import tunnelers.core.gameRoom.IGameRoomInfo;
+import tunnelers.app.views.components.roomListing.IGameRoomListItem;
 
 /**
  *
  * @author Stepan
  */
-public class GameRoomViewWrapper implements IGameRoomTreeViewItem {
+public class GameRoomViewWrapper implements IGameRoomListItem {
 
-	private Type type;
+	private final Type type;
 
 	private short roomID;
 	private byte curPlayers;
 	private byte maxPlayers;
 	private byte flags;
-	private GameRoomDifficulty difficulty;
+	private GameMode gameMode;
 
 	public GameRoomViewWrapper(IGameRoomInfo gri) {
 		this.roomID = gri.getId();
 		this.curPlayers = gri.getCurrentPlayers();
 		this.maxPlayers = gri.getMaxPlayers();
 		this.flags = gri.getFlags();
-		this.setDifficulty(gri.getDifficulty());
+		this.setGameMode(gri.getGameMode());
 
 		this.type = Type.GameRoom;
 	}
 
-	public GameRoomViewWrapper(GameRoomDifficulty difficulty) {
-		this.setDifficulty(difficulty);
-		this.type = Type.Difficulty;
+	public GameRoomViewWrapper(GameMode difficulty) {
+		this.setGameMode(difficulty);
+		this.type = Type.GameMode;
 	}
 
 	@Override
 	public String toString() {
 		switch (this.type) {
-			case Difficulty:
-				return this.difficulty.toString();
+			case GameMode:
+				return this.gameMode.toString();
 			case GameRoom:
 				return String.format("GameRoom#%d {PlrMax=%d, PlrCur=%d, flags=%d}", roomID, maxPlayers, curPlayers, flags);
 			default:
@@ -44,33 +45,27 @@ public class GameRoomViewWrapper implements IGameRoomTreeViewItem {
 		}
 	}
 
-	private void setDifficulty(GameRoomDifficulty difficulty) {
+	private void setGameMode(GameMode difficulty) {
 		if(difficulty == null){
 			throw new IllegalArgumentException();
 		}
-		this.difficulty = difficulty;
+		this.gameMode = difficulty;
 	}
 
-	private void setDifficulty(byte difficulty) {
+	private void setGameMode(byte difficulty) {
 		switch (difficulty) {
-			case DIFFICULTY_EASY:
-				this.setDifficulty(GameRoomDifficulty.Easy);
-				break;
-			case DIFFICULTY_MEDIUM:
-				this.setDifficulty(GameRoomDifficulty.Medium);
-				break;
-			case DIFFICULTY_HARD:
-				this.setDifficulty(GameRoomDifficulty.Hard);
+			case GAMEMODE_FFA:
+				this.setGameMode(GameMode.FFA);
 				break;
 			default:
-				this.setDifficulty(GameRoomDifficulty.Unspecified);
+				this.setGameMode(GameMode.Unspecified);
 				break;
 		}
 	}
 
 	@Override
-	public GameRoomDifficulty getDifficultyView() {
-		return this.difficulty;
+	public GameMode getGameModeView() {
+		return this.gameMode;
 	}
 
 	@Override
@@ -89,13 +84,14 @@ public class GameRoomViewWrapper implements IGameRoomTreeViewItem {
 		switch (this.type) {
 			case GameRoom:
 				return "Místnost #" + this.roomID;
-			case Difficulty:
-				return this.difficulty.toString();
+			case GameMode:
+				return this.gameMode.toString();
 			default:
 				return "???";
 		}
 	}
 
+	@Override
 	public String describeFlags() {
 		if (this.type != Type.GameRoom) {
 			return "";
@@ -112,6 +108,7 @@ public class GameRoomViewWrapper implements IGameRoomTreeViewItem {
 				result += ", ";
 			}
 			result += "Právě běží";
+			first = false;
 		}
 		if (this.isSpectacable()) {
 			if (!first) {
@@ -144,8 +141,8 @@ public class GameRoomViewWrapper implements IGameRoomTreeViewItem {
 	}
 
 	@Override
-	public byte getDifficulty() {
-		return (byte) this.difficulty.intValue();
+	public byte getGameMode() {
+		return (byte) this.gameMode.intValue();
 	}
 
 	@Override
@@ -163,12 +160,12 @@ public class GameRoomViewWrapper implements IGameRoomTreeViewItem {
 		return (this.flags & FLAG_RUNNING) > 0;
 	}
 	
-	public boolean isGameRoom(){
+	public boolean isGame(){
 		return this.type == Type.GameRoom;
 	}
 
 	private enum Type {
-		GameRoom, Difficulty
+		GameRoom, GameMode
 	};
 	
 	

@@ -16,7 +16,7 @@ public class GameRoomParser {
 	private final SimpleScanner singleScanner;
 
 	public GameRoomParser() {
-		this.wholeScanner = new SimpleScanner();
+		this.wholeScanner = new SimpleScanner(SimpleScanner.RADIX_HEXADECIMAL);
 		this.singleScanner = new SimpleScanner(SimpleScanner.RADIX_HEXADECIMAL);
 	}
 

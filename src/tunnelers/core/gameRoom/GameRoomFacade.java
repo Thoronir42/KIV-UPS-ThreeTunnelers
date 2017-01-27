@@ -6,14 +6,14 @@ public class GameRoomFacade implements IGameRoomInfo {
 	private final byte maxPlayers;
 	private final byte curPlayers;
 	private final byte flags;
-	private final byte difficulty;
+	private final byte gameMode;
 
-	public GameRoomFacade(short id, byte maxPlayers, byte curPlayers, byte difficulty, byte flags) {
+	public GameRoomFacade(short id, byte maxPlayers, byte curPlayers, byte gameMode, byte flags) {
 		this.id = id;
 		this.maxPlayers = maxPlayers;
 		this.curPlayers = curPlayers;
 		this.flags = flags;
-		this.difficulty = difficulty;
+		this.gameMode = gameMode;
 	}
 
 	@Override
@@ -37,8 +37,8 @@ public class GameRoomFacade implements IGameRoomInfo {
 	}
 
 	@Override
-	public byte getDifficulty() {
-		return difficulty;
+	public byte getGameMode() {
+		return gameMode;
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class GameRoomFacade implements IGameRoomInfo {
 		hash = 53 * hash + this.maxPlayers;
 		hash = 53 * hash + this.curPlayers;
 		hash = 53 * hash + this.flags;
-		hash = 53 * hash + this.difficulty;
+		hash = 53 * hash + this.gameMode;
 		return hash;
 	}
 
@@ -91,7 +91,7 @@ public class GameRoomFacade implements IGameRoomInfo {
 		if (this.flags != other.flags) {
 			return false;
 		}
-		if (this.difficulty != other.difficulty) {
+		if (this.gameMode != other.gameMode) {
 			return false;
 		}
 		return true;

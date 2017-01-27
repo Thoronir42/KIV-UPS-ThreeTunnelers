@@ -1,19 +1,17 @@
 package tunnelers.app.views.serverList;
 
-import tunnelers.app.views.serverList.GameRoomView.GameRoomViewWrapper;
+import tunnelers.app.views.components.gameRoomTreeView.GameRoomViewWrapper;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import tunnelers.app.views.serverList.GameRoomView.GameRoomTreeTableView;
 import tunnelers.app.ATunnelersScene;
-import tunnelers.app.views.serverList.GameRoomView.IGameRoomTreeViewItem;
+import tunnelers.app.views.components.gameRoomTableView.GameRoomTableView;
 import tunnelers.core.gameRoom.IGameRoomInfo;
 
 /**
@@ -35,12 +33,12 @@ public class GameRoomListScene extends ATunnelersScene {
 		GridPane center = new GridPane();
 		center.setAlignment(Pos.CENTER);
 		
-		scene.gameRoomList = new GameRoomTreeTableView();
-		scene.gameRoomList.setOnMouseClicked((MouseEvent e) -> {
-			scene.gameRoomListClicked(e);
+		scene.gameRooms = new GameRoomTableView();
+		scene.gameRooms.setOnRoomSelected((event) -> {
+			scene.getEngine().joinRoom(event.getGameRoom());
 		});
 		
-		scene.gameRoomList.setPrefWidth(640);
+		scene.gameRooms.setPrefWidth(640);
 
 		
 
@@ -57,7 +55,7 @@ public class GameRoomListScene extends ATunnelersScene {
 //		HBox top = new HBox(hugeWarning);
 //		top.setAlignment(Pos.CENTER);
 		center.add(createTopBar(scene, host), 0, 0);
-		center.add(scene.gameRoomList, 0, 1);
+		center.add(scene.gameRooms, 0, 1);
 		center.add(but_goBack, 0, 2);
 
 		root.setCenter(center);
@@ -89,7 +87,7 @@ public class GameRoomListScene extends ATunnelersScene {
 
 	protected Button but_refreshList, but_createRoom;
 
-	protected GameRoomTreeTableView gameRoomList;
+	protected GameRoomTableView gameRooms;
 
 	public GameRoomListScene(Region root, double width, double height) {
 		super(root, width, height, "Výpis serverů");
@@ -106,7 +104,7 @@ public class GameRoomListScene extends ATunnelersScene {
 	}
 
 	private void refreshServerList() {
-		gameRoomList.clearItems();
+		gameRooms.clearItems();
 		this.getEngine().refreshServerList();
 	}
 
@@ -115,18 +113,7 @@ public class GameRoomListScene extends ATunnelersScene {
 			if (gri == null) {
 				continue;
 			}
-			gameRoomList.add(new GameRoomViewWrapper(gri));
-		}
-	}
-
-	private void gameRoomListClicked(MouseEvent e) {
-		IGameRoomTreeViewItem selected = this.gameRoomList.getSelectedItem();
-
-		if (selected == null || !selected.isGameRoom()) {
-			return;
-		}
-		if (e.getClickCount() == 2) {
-			this.getEngine().joinRoom(selected);
+			this.gameRooms.getItems().add(new GameRoomViewWrapper(gri));
 		}
 	}
 }

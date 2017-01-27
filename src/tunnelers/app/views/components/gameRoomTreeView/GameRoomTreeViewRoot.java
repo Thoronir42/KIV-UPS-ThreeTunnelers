@@ -1,16 +1,17 @@
-package tunnelers.app.views.serverList.GameRoomView;
+package tunnelers.app.views.components.gameRoomTreeView;
 
-import tunnelers.app.views.serverList.GameRoomDifficulty;
+import tunnelers.app.views.serverList.GameMode;
+import tunnelers.app.views.components.roomListing.IGameRoomListItem;
 
 /**
  *
  * @author Skoro
  */
-public class GameRoomTreeViewRoot implements IGameRoomTreeViewItem{
+public class GameRoomTreeViewRoot implements IGameRoomListItem{
 	private final static String TITLE = "Seznam aktivních her";
 	
 	@Override
-	public GameRoomDifficulty getDifficultyView() {
+	public GameMode getGameModeView() {
 		return null;
 	}
 	
@@ -55,7 +56,7 @@ public class GameRoomTreeViewRoot implements IGameRoomTreeViewItem{
 	}
 
 	@Override
-	public byte getDifficulty() {
+	public byte getGameMode() {
 		return -1;
 	}
 
@@ -71,11 +72,6 @@ public class GameRoomTreeViewRoot implements IGameRoomTreeViewItem{
 
 	@Override
 	public boolean isFull() {
-		return false;
-	}
-	
-	@Override
-	public boolean isGameRoom(){
 		return false;
 	}
 }

@@ -1,6 +1,9 @@
 package tunnelers.core.engine;
 
+import generic.SimpleScannerException;
+import temp.Mock;
 import tunnelers.core.gameRoom.GameRoom;
+import tunnelers.core.gameRoom.GameRoomFacade;
 import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.player.Player;
 import tunnelers.core.player.controls.InputAction;
@@ -21,11 +24,11 @@ public class EngineUserInterface {
 
 	public void connect(String name, String addr, int port, boolean useSecret) {
 		engine.view.setConnectEnabled(false);
-		if(!useSecret){
+		if (!useSecret) {
 			engine.connectionSecret.set("");
 		}
 		engine.netadapter.connectTo(engine.connectionSecret, addr, port);
-		
+
 		engine.preferredName = name;
 	}
 
@@ -35,8 +38,18 @@ public class EngineUserInterface {
 	}
 
 	public void refreshServerList() {
-		Command lobbyList = engine.netadapter.createCommand(CommandType.RoomsList);
-		engine.netadapter.send(lobbyList);
+		boolean mock = false;
+		if (mock) {
+			try {
+				GameRoomFacade[] rooms = this.engine.networksInterface.gameRoomParser.parse(Mock.serverListString(12));
+				this.engine.view.appendGameRoomsToList(rooms);
+			} catch (NumberFormatException | SimpleScannerException ex) {
+				ex.printStackTrace();
+			}
+		} else {
+			Command lobbyList = engine.netadapter.createCommand(CommandType.RoomsList);
+			engine.netadapter.send(lobbyList);
+		}
 	}
 
 	public void createRoom() {
@@ -58,20 +71,20 @@ public class EngineUserInterface {
 
 		engine.view.showScene(IView.Scene.Lobby);
 	}
-	
+
 	public void leaveRoom() {
 		engine.setStage(Engine.Stage.Menu);
 		engine.currentGameRoom = null;
-		
+
 		Command leaver = engine.netadapter.createCommand(CommandType.RoomsLeave);
 		engine.netadapter.send(leaver);
 	}
-	
-	public void setReady(boolean value){
+
+	public void setReady(boolean value) {
 		Command readyState = engine.netadapter
 				.createCommand(CommandType.RoomReadyState)
-				.append((byte)(value ? 1 : 0));
-		
+				.append((byte) (value ? 1 : 0));
+
 		engine.netadapter.send(readyState);
 	}
 
@@ -94,11 +107,11 @@ public class EngineUserInterface {
 	public void handleInput(InputAction inp, int controlsID, boolean pressed) {
 		Player p = engine.localClient.getPlayer(controlsID);
 		int playerRID = engine.currentGameRoom.getPlayerRID(p);
-		
+
 		if (p.getControls().set(inp, pressed)) {
 			Command cmd = engine.netadapter.createCommand(CommandType.GameControlsSet)
-					.append((byte)playerRID)
-					.append((byte)p.getControls().getState());
+					.append((byte) playerRID)
+					.append((byte) p.getControls().getState());
 			this.engine.netadapter.send(cmd);
 		}
 	}
@@ -109,9 +122,8 @@ public class EngineUserInterface {
 
 		engine.netadapter.send(cmd);
 	}
-	
-	//    ACCESSORS
 
+	//    ACCESSORS
 	public GameRoom getGameRoom() {
 		return engine.getGameRoom();
 	}
