@@ -1,4 +1,4 @@
-package tunnelers.app.views.settings.controls;
+package tunnelers.app.views.components.inputs;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

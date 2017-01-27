@@ -12,6 +12,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.render.AfterFX;
 import tunnelers.app.views.components.flash.FlashAreaControl;
@@ -23,6 +24,8 @@ import tunnelers.core.engine.EngineUserInterface;
  */
 public abstract class ATunnelersScene extends Scene implements IFlasher {
 
+	private static final Color NOISE_TINT = new Color(0.98, 0.98, 0.98, 0.1);
+	
 	protected static Assets ASSETS;
 
 	protected static Settings settings = Settings.getInstance();
@@ -34,7 +37,6 @@ public abstract class ATunnelersScene extends Scene implements IFlasher {
 	protected Canvas canvas;
 
 	private AfterFX afterFx;
-	private final Rectangle2D canvasTarget;
 	private final Dimension2D blockSize;
 
 	public ATunnelersScene(Region content, double width, double height, String name) {
@@ -66,7 +68,6 @@ public abstract class ATunnelersScene extends Scene implements IFlasher {
 
 		root.getChildren().addAll(canvas, anchor);
 
-		canvasTarget = new Rectangle2D(0, 0, canvas.getWidth(), canvas.getHeight());
 		blockSize = new Dimension2D(40, 40);
 	}
 
@@ -91,7 +92,9 @@ public abstract class ATunnelersScene extends Scene implements IFlasher {
 		if (this.afterFx != null) {
 			Platform.runLater(() -> {
 				GraphicsContext g = this.getGraphicsContext();
-				this.afterFx.renderStaticNoise(g, blockSize, 0.12, canvasTarget);
+				this.afterFx.renderStaticNoise(g, blockSize, 0.12, canvas.getWidth(), canvas.getHeight());
+				g.setFill(NOISE_TINT);
+				g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 			});
 
 		}

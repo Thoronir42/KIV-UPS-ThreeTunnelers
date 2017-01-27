@@ -14,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import tunnelers.app.ATunnelersScene;
+import tunnelers.app.views.StyleHelper;
 import tunnelers.core.engine.IView;
 
 /**
@@ -88,6 +89,7 @@ public class MainMenuScene extends ATunnelersScene {
 
 	private static Button createButton(String caption, EventHandler<ActionEvent> callback) {
 		Button btn = new Button(caption);
+		StyleHelper.inject(btn);
 		btn.setOnAction(callback);
 		btn.setPrefSize(BTN_PREF_WIDTH, BTN_PREF_HEIGHT);
 		return btn;

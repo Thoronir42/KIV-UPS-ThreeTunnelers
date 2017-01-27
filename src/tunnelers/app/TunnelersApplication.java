@@ -40,11 +40,11 @@ public final class TunnelersApplication extends Application {
 			e.exit();
 		});
 
-		currentStage.setResizable(false);
-		currentStage.showSceneNow(IView.Scene.MainMenu);
-
 		e.start();
+		currentStage.setResizable(false);
 		this.currentStage.show();
+		
+		currentStage.showSceneNow(IView.Scene.MainMenu);
 		
 		currentStage.currentScene.flashClear(true);
 		

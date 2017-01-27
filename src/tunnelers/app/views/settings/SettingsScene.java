@@ -1,24 +1,20 @@
 package tunnelers.app.views.settings;
 
-import tunnelers.app.views.settings.controls.PortTextField;
-import tunnelers.app.views.settings.controls.KeyConfigPane;
+import tunnelers.app.views.components.keybinding.KeyConfigPane;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import tunnelers.app.controls.FxControlsManager;
-import tunnelers.app.views.settings.controls.IpTextfield;
 import tunnelers.core.settings.Settings;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.core.engine.IView;
@@ -29,9 +25,10 @@ import tunnelers.core.engine.IView;
  */
 public class SettingsScene extends ATunnelersScene {
 
-	private static final double GRID_SPACING = 4;
-	private static final double RESOLVE_BUTTON_PREF_WIDTH = 160,
+	protected static final double RESOLVE_BUTTON_PREF_WIDTH = 160,
 			RESOLVE_BUTTON_PREF_HEIGHT = 40;
+	
+	private static final double GRID_SPACING = 4;
 
 	public static SettingsScene getInstance(FxControlsManager controls) {
 
@@ -48,39 +45,31 @@ public class SettingsScene extends ATunnelersScene {
 		root.setAlignment(Pos.CENTER);
 		root.setVgap(GRID_SPACING);
 		root.setHgap(GRID_SPACING);
-		root.add(makeServerSettingPane(scene, settings), 0, 0);
+		root.add(scene.serverSelectSetterControl, 0, 0);
 		root.add(KeyConfigPane.create(scene.controlSchemeManager), 0, 1);
 		root.add(makeResolveButtonRack(scene), 0, 2);
 	}
 
-	private static GridPane makeServerSettingPane(SettingsScene scene, Settings settings) {
-		GridPane root = new GridPane();
-		root.setVgap(GRID_SPACING);
-		root.setHgap(GRID_SPACING);
-		scene.btn_testServer = new Button("Test serveru");
-		scene.btn_testServer.setOnAction((ActionEvent e) -> {
-			scene.testServer();
+	private static ServerSelectSetterControl makeServerSettingPane(SettingsScene scene, Settings settings) {
+		ServerSelectSetterControl control = new ServerSelectSetterControl(GRID_SPACING);
+		control.setOnTestAction((event) -> {
+			scene.testServer(control.getAddress(), control.getPort());
 		});
-		scene.btn_testServer.setDisable(true);
-
-		Button btn_serverDefaults = new Button("Reset");
-		btn_serverDefaults.setOnAction((ActionEvent e) -> {
-			scene.tf_adress.setText(settings.getServerAddress());
-			scene.tf_port.setText("" + settings.getServerPort());
+		control.setOnSetDefaultsAction((event) -> {
+			// todo: use actual default values
+			control.setAddress(settings.getServerAddress());
+			control.setPort(settings.getServerPort());
 		});
-		Label lblAdr = new Label("Adresa:"),
-				lblPort = new Label("Port:");
+		
+		control.setStyle("-fx-background-color: rgba(245,245,245,0.95);"
+				+ " -fx-border-size: 2px;"
+				+ " -fx-border-style: solid;"
+				+ " -fx-border-color: black;"
+				+ " -fx-padding: 20px;");
+		
+		control.setDisable(true);
 
-		scene.tf_adress = new IpTextfield(settings.getServerAddress());
-		scene.tf_port = new PortTextField(settings.getServerPort());
-
-		root.add(lblAdr, 0, 0);
-		root.add(scene.tf_adress, 1, 0);
-		root.add(lblPort, 0, 1);
-		root.add(scene.tf_port, 1, 1);
-		root.add(new VBox(scene.btn_testServer, btn_serverDefaults), 2, 0, 1, 2);
-
-		return root;
+		return control;
 	}
 
 	private static HBox makeResolveButtonRack(SettingsScene scene) {
@@ -102,21 +91,16 @@ public class SettingsScene extends ATunnelersScene {
 		return buttonRack;
 	}
 
-	protected IpTextfield tf_adress;
-	protected PortTextField tf_port;
-
-	protected Button btn_testServer;
-
+	private final ServerSelectSetterControl serverSelectSetterControl;
 	private final FxControlsManager controlSchemeManager;
 
 	public SettingsScene(Region root, double width, double height, FxControlsManager controls) {
 		super(root, width, height, "Nastavení");
 		this.controlSchemeManager = controls;
+		this.serverSelectSetterControl = makeServerSettingPane(this, settings);
 	}
 
-	private boolean testServer() {
-		String address = tf_adress.getText();
-		int port = tf_port.getPort();
+	private boolean testServer(String address, int port) {
 //		NetWorks nw = this.getNetworks();
 //		
 //		if (nw.serverPresent(address, port)) {
@@ -129,9 +113,9 @@ public class SettingsScene extends ATunnelersScene {
 
 	private void saveSettings() {
 		try {
-			String hostname = this.tf_adress.getText();
+			String hostname = this.serverSelectSetterControl.getAddress();
 			InetAddress.getByName(hostname);
-			int port = tf_port.getPort();
+			int port = this.serverSelectSetterControl.getPort();
 
 			settings.setServerAddress(hostname);
 			settings.setServerPort(port);

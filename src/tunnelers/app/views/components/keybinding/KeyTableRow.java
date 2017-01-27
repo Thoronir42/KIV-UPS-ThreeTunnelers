@@ -1,4 +1,4 @@
-package tunnelers.app.views.settings.controls;
+package tunnelers.app.views.components.keybinding;
 
 import javafx.scene.control.TableColumn;
 import javafx.scene.input.KeyCode;

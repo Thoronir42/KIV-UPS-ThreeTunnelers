@@ -12,7 +12,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import tunnelers.app.views.settings.controls.PortTextField;
+import tunnelers.app.views.StyleHelper;
+import tunnelers.app.views.components.inputs.PortTextField;
 
 /**
  *
@@ -25,7 +26,7 @@ public final class ServerSelectControl extends GridPane {
 	private final PortTextField tf_port;
 	private final CheckBox cb_startAnew;
 
-	private final Button but_connect;
+	private final Button btn_connect;
 
 	private EventHandler<ServerSelectEvent> onSelected;
 
@@ -41,12 +42,15 @@ public final class ServerSelectControl extends GridPane {
 		this.tf_hostname = new TextField();
 		this.tf_port = new PortTextField();
 		this.tf_username = new TextField();
-		this.but_connect = new Button("Připojit se!");
+		this.btn_connect = new Button("Připojit se!");
+		StyleHelper.inject(btn_connect);
 		this.cb_startAnew = new CheckBox("Zaćít nanovo");
 		this.cb_startAnew.setTooltip(new Tooltip("Je možné, že si Vás server pamatuje"
 				+ " díky uloženému klíči. Pokud se rozhodnete začít nanovo, nebude"
 				+ " možné stávající klíč znovu použít."));
 
+		StyleHelper.inject(cb_startAnew);
+				
 		Label lbl_hostname = new Label("Adresa");
 		Label lbl_port = new Label("Port");
 		Label lbl_name = new Label("Jméno");
@@ -63,8 +67,8 @@ public final class ServerSelectControl extends GridPane {
 		lbl_port.prefWidthProperty().bind(prefLabelWidth);
 		lbl_name.prefWidthProperty().bind(prefLabelWidth);
 
-		but_connect.prefWidthProperty().bind(prefControlWidth.add(prefLabelWidth));
-		but_connect.setOnAction(e -> {
+		btn_connect.prefWidthProperty().bind(prefControlWidth.add(prefLabelWidth));
+		btn_connect.setOnAction(e -> {
 			if (onSelected == null) {
 				return;
 			}
@@ -82,7 +86,7 @@ public final class ServerSelectControl extends GridPane {
 		this.addColumn(0, lbl_hostname, lbl_port, lbl_name);
 		this.addColumn(1, this.tf_hostname, this.tf_port, this.tf_username);
 
-		this.add(but_connect, 0, 3, 2, 1);
+		this.add(btn_connect, 0, 3, 2, 1);
 		this.add(this.cb_startAnew, 0, 4, 2, 1);
 
 	}

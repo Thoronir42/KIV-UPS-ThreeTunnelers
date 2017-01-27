@@ -1,4 +1,4 @@
-package tunnelers.app.views.settings.controls;
+package tunnelers.app.views.components.keybinding;
 
 import java.util.ArrayList;
 import javafx.beans.binding.Bindings;

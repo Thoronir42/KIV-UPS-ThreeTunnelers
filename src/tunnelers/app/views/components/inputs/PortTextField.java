@@ -1,4 +1,4 @@
-package tunnelers.app.views.settings.controls;
+package tunnelers.app.views.components.inputs;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
