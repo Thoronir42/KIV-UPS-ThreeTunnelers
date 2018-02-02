@@ -4,14 +4,10 @@ import generic.SimpleScanner;
 import generic.SimpleScannerException;
 import tunnelers.core.gameRoom.GameRoomFacade;
 
-/**
- *
- * @author Skoro
- */
 public class GameRoomParser {
 
 	public static final int LOBBY_STRING_LENGTH = 12;
-	
+
 	private final SimpleScanner wholeScanner;
 	private final SimpleScanner singleScanner;
 
@@ -23,10 +19,10 @@ public class GameRoomParser {
 	public GameRoomFacade[] parse(String lobbies) throws NumberFormatException, SimpleScannerException {
 		this.wholeScanner.setSourceString(lobbies);
 		int n = wholeScanner.nextByte();
-		
+
 		GameRoomFacade[] facades = new GameRoomFacade[n];
 		for (int i = 0; i < n; i++) {
-			if(wholeScanner.remainingLength() < LOBBY_STRING_LENGTH){
+			if (wholeScanner.remainingLength() < LOBBY_STRING_LENGTH) {
 				System.err.format("Lobby string invalid (%s)\n", wholeScanner.readToEnd());
 				break;
 			}
@@ -36,7 +32,7 @@ public class GameRoomParser {
 		return facades;
 	}
 
-	private GameRoomFacade parseOne(String gameRoomString) throws SimpleScannerException{
+	private GameRoomFacade parseOne(String gameRoomString) throws SimpleScannerException {
 		this.singleScanner.setSourceString(gameRoomString);
 
 		short id = this.singleScanner.nextShort();

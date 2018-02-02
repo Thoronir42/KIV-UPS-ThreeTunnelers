@@ -15,18 +15,11 @@ import tunnelers.app.render.FxRenderContainer;
 import tunnelers.app.render.MapRenderer;
 import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.core.gameRoom.WarzoneRules;
-import tunnelers.core.model.entities.IntDimension;
-import tunnelers.core.model.entities.IntPoint;
-import tunnelers.core.model.entities.IntRectangle;
-import tunnelers.core.model.entities.Projectile;
-import tunnelers.core.model.entities.Tank;
+import tunnelers.core.model.entities.*;
 
-/**
- * TODO: This class is owed some refactorisation love. Unused arguments are
- * passed only to be passed more, etc...
- *
- * @author Stepan
- */
+
+// TODO: This class is owed some refactorization love. Unused arguments are
+//       passed only to be passed more, etc...
 public class PlayerAreaRenderer {
 
 	public static final int MIN_RENDERED_BLOCKS_ON_DIMENSION = 43;
@@ -72,7 +65,7 @@ public class PlayerAreaRenderer {
 
 	protected void draw(GraphicsContext g, Dimension2D bounds, Tank tank) {
 		if (this.renderer == null) {
-			System.err.println("Renderer was not previously set");
+			System.err.println("Renderer was not previously initialize");
 			return;
 		}
 		Affine defTransform = g.getTransform();
@@ -89,7 +82,7 @@ public class PlayerAreaRenderer {
 		Rectangle inBounds = new Rectangle(bounds.getWidth() * 0.8, bounds.getHeight() * 0.1);
 		inBounds.setX(bounds.getWidth() * 0.1);
 		inBounds.setY(bounds.getHeight() * 0.7);
-		renderStatusBar(g, inBounds, colors.getUiHitpoints(), tank.getHitpoints(), rules.getTankMaxHP());
+		renderStatusBar(g, inBounds, colors.getUiHitpoints(), tank.getHitPoints(), rules.getTankMaxHP());
 
 		inBounds.setY(bounds.getHeight() * 0.85);
 		renderStatusBar(g, inBounds, colors.getUiEnergy(), tank.getEnergy(), rules.getTankMaxEP());
@@ -203,7 +196,7 @@ public class PlayerAreaRenderer {
 		} else if (center.getX() + halfWidth > mapWidth) {
 			x = mapWidth - source.getWidth();
 		} else {
-			x = center.getX() - (int) halfWidth;
+			x = center.getX() - halfWidth;
 		}
 
 		if (center.getY() - halfHeight < 0) {
@@ -211,7 +204,7 @@ public class PlayerAreaRenderer {
 		} else if (center.getY() + halfHeight > mapHeight) {
 			y = mapHeight - source.getHeight();
 		} else {
-			y = center.getY() - (int) halfHeight;
+			y = center.getY() - halfHeight;
 		}
 
 		return new IntRectangle(x, y, source.getWidth(), source.getHeight());
@@ -246,9 +239,4 @@ public class PlayerAreaRenderer {
 				(int) Math.floor(viewWindow.getHeight() / blockSize.getHeight() - 1)
 		);
 	}
-
-	public Dimension2D getBlockSize() {
-		return blockSize;
-	}
-
 }

@@ -1,21 +1,19 @@
 package tunnelers.app.views.components.gameRoomTreeView;
 
-import java.util.Collection;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-import tunnelers.app.views.serverList.GameMode;
 import tunnelers.app.views.components.roomListing.IGameRoomListItem;
+import tunnelers.app.views.serverList.GameMode;
 
-/**
- *
- * @author Stepan
- */
+import java.util.Collection;
+
 public class GameRoomTreeTableView extends TreeTableView<IGameRoomListItem> {
 
-	final TreeItem<IGameRoomListItem> root;
+	private final TreeItem<IGameRoomListItem> root;
 
 	public GameRoomTreeTableView() {
 		this(new TreeItem<>(new GameRoomTreeViewRoot()));
@@ -48,7 +46,7 @@ public class GameRoomTreeTableView extends TreeTableView<IGameRoomListItem> {
 			IGameRoomListItem item = c.getValue().getValue();
 			return new ReadOnlyStringWrapper(item.getOccupancy());
 		});
-		
+
 		columnPlayers.setPrefWidth(72);
 		columnPlayers.setResizable(false);
 
@@ -57,10 +55,10 @@ public class GameRoomTreeTableView extends TreeTableView<IGameRoomListItem> {
 			IGameRoomListItem item = c.getValue().getValue();
 			return new ReadOnlyStringWrapper(item.describeFlags());
 		});
-		
+
 		Insets insets = this.getInsets();
 		double horizontalInsets = insets.getLeft() + insets.getRight() + 2;
-		
+
 		columnFlags.prefWidthProperty().bind(
 				this.widthProperty()
 						.subtract(columnName.widthProperty())
@@ -68,7 +66,10 @@ public class GameRoomTreeTableView extends TreeTableView<IGameRoomListItem> {
 						.subtract(horizontalInsets)
 		);
 
-		this.getColumns().addAll(columnName, columnPlayers, columnFlags);
+		ObservableList<TreeTableColumn<IGameRoomListItem, ?>> columns = this.getColumns();
+		columns.add(columnName);
+		columns.add(columnPlayers);
+		columns.add(columnFlags);
 
 	}
 

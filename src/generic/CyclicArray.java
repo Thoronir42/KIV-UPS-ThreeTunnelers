@@ -3,19 +3,16 @@ package generic;
 import java.lang.reflect.Array;
 import java.util.Iterator;
 
-/**
- *
- * @author Stepan
- * @param <Type> Specifies the generic type
- */
 public class CyclicArray<Type> implements Iterable<Type> {
 
 	private final Type[] array;
 	protected int top;
 
-	public CyclicArray(Class<Type> c, int n) {
+	public CyclicArray(Class<Type> c, int length) {
 		this.top = 0;
-		this.array = (Type[]) Array.newInstance(c, n + 1);
+
+		@SuppressWarnings("unchecked") final Type[] array = (Type[]) Array.newInstance(c, length);
+		this.array = array;
 	}
 
 	public void add(Type item) {
@@ -37,17 +34,17 @@ public class CyclicArray<Type> implements Iterable<Type> {
 	}
 
 	@Override
-	public CyclicIterator<Type> iterator() {
+	public CyclicIterator iterator() {
 		return new CyclicIterator(this);
 	}
 
-	public class CyclicIterator<Type> implements Iterator {
+	public class CyclicIterator implements Iterator<Type> {
 
-		private CyclicArray<Type> array;
+		private final CyclicArray<Type> array;
 		private final int startIndex;
 		private int curIndex;
 
-		public CyclicIterator(CyclicArray<Type> array) {
+		CyclicIterator(CyclicArray<Type> array) {
 			this.array = array;
 			this.startIndex = this.curIndex = array.top;
 		}
@@ -55,10 +52,7 @@ public class CyclicArray<Type> implements Iterable<Type> {
 		@Override
 		public boolean hasNext() {
 			int i = nextIndex();
-			if (i == startIndex) {
-				return false;
-			}
-			return array.get(i) != null;
+			return i != startIndex && array.get(i) != null;
 		}
 
 		@Override

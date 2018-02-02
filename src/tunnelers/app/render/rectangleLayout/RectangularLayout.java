@@ -1,17 +1,13 @@
 package tunnelers.app.render.rectangleLayout;
 
-import tunnelers.app.render.ARenderLayout;
-import tunnelers.app.render.RenderLayoutException;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
+import tunnelers.app.render.ARenderLayout;
 import tunnelers.app.render.FxRenderContainer;
+import tunnelers.app.render.RenderLayoutException;
 import tunnelers.core.model.entities.Tank;
 
-/**
- *
- * @author Stepan
- */
 public class RectangularLayout extends ARenderLayout {
 
 	public static ARenderLayout getLayoutFor(FxRenderContainer renderer, int playerCount, Dimension2D canvasArea) throws RenderLayoutException {

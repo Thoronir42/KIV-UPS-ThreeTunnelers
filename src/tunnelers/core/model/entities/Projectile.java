@@ -2,10 +2,6 @@ package tunnelers.core.model.entities;
 
 import tunnelers.core.player.Player;
 
-/**
- *
- * @author Stepan
- */
 public class Projectile extends GameEntity {
 
 	public Projectile(IntPoint location, Direction direction, Player player) {

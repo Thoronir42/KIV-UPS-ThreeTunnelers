@@ -6,16 +6,11 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
-/**
- *
- * @author Stepan
- */
 public class ImageTools {
 
 	/**
-	 *
 	 * @param src original image
-	 * @param c color to be applied over original image
+	 * @param c   color to be applied over original image
 	 * @return Original image with applied color
 	 */
 	public static Image recolor(Image src, Color c) {
@@ -43,7 +38,7 @@ public class ImageTools {
 	public static Image scale(Image src, int upscale) throws IndexOutOfBoundsException {
 		int width = (int) (src.getWidth() * upscale),
 				height = (int) (src.getHeight() * upscale);
-		
+
 		WritableImage fin = new WritableImage(width, height);
 		PixelReader pr = src.getPixelReader();
 		PixelWriter pw = fin.getPixelWriter();

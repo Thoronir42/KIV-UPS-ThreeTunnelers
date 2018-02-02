@@ -1,12 +1,8 @@
 package tunnelers.core.player.controls;
 
-/**
- *
- * @author Stepan
- */
 public final class Controls {
 
-	protected final byte schemeID;
+	private final byte schemeID;
 
 	private int state;
 
@@ -32,9 +28,8 @@ public final class Controls {
 	}
 
 	/**
-	 *
-	 * @param action Which input is being held
-	 * @param newValue what value is being set under mentioned input
+	 * @param action   Which input is being held
+	 * @param newValue what value is being initialize under mentioned input
 	 * @return true if the state on the input changed value
 	 */
 	public boolean set(InputAction action, boolean newValue) {
@@ -55,8 +50,8 @@ public final class Controls {
 		int mask = calcMask(action);
 		return (this.state & mask) > 0;
 	}
-	
-	private int calcMask(InputAction action){
+
+	private int calcMask(InputAction action) {
 		return 1 << action.intVal();
 	}
 

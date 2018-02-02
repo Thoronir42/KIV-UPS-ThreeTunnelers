@@ -1,18 +1,13 @@
 package tunnelers.app.render;
 
 import tunnelers.app.render.colors.AColorScheme;
-
 import tunnelers.core.model.entities.IntDimension;
-import tunnelers.core.model.map.Block;
 import tunnelers.core.model.entities.IntRectangle;
-import tunnelers.core.model.map.Map;
+import tunnelers.core.model.map.Block;
 import tunnelers.core.model.map.Chunk;
+import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 
-/**
- *
- * @author Stepan
- */
 public class MapRenderer extends ARenderer {
 
 	protected Map map;
@@ -21,17 +16,17 @@ public class MapRenderer extends ARenderer {
 	public MapRenderer(AColorScheme colorScheme) {
 		super(colorScheme);
 	}
-	
+
 	public void setMap(Map map) {
 		this.map = map;
 		this.chunkSize = map.getChunkSize();
 	}
 
 	public void drawMap(IntRectangle rendSrc) {
-		int yMin = (int) (rendSrc.getMinY()),
-				xMin = (int) (rendSrc.getMinX()),
-				xMax = (int) (rendSrc.getMinX() + rendSrc.getWidth()),
-				yMax = (int) (rendSrc.getMinY() + rendSrc.getHeight());
+		int yMin = rendSrc.getMinY(),
+				xMin = rendSrc.getMinX(),
+				xMax = rendSrc.getMinX() + rendSrc.getWidth(),
+				yMax = rendSrc.getMinY() + rendSrc.getHeight();
 
 		int chTop = Math.max(0, yMin / chunkSize),
 				chLeft = Math.max(0, xMin / chunkSize),
@@ -39,15 +34,15 @@ public class MapRenderer extends ARenderer {
 				chBottom = (int) Math.min(map.getHeight() - 1, Math.ceil((yMax + 1.0) / chunkSize));
 		for (int Y = chTop; Y <= chBottom; Y++) {
 			for (int X = chLeft; X < chRight; X++) {
-				IntRectangle chunkBounds =new IntRectangle(X * chunkSize, Y * chunkSize, chunkSize - 1, chunkSize - 1);
+				IntRectangle chunkBounds = new IntRectangle(X * chunkSize, Y * chunkSize, chunkSize - 1, chunkSize - 1);
 				renderChunk(map.getChunk(X, Y), chunkBounds, rendSrc, chunkSize);
 			}
 		}
 	}
 
-	void renderChunk(Chunk chunk, IntRectangle chunkBounds, IntRectangle renderBounds, int chunkSize) {
+	private void renderChunk(Chunk chunk, IntRectangle chunkBounds, IntRectangle renderBounds, int chunkSize) {
 		IntRectangle currentBounds = renderBounds.intersection(chunkBounds);
-		
+
 		for (int y = currentBounds.getMinY(); y <= currentBounds.getMaxY(); y++) {
 			for (int x = currentBounds.getMinX(); x <= currentBounds.getMaxX(); x++) {
 				Block b = chunk.getBlock(x % chunkSize, y % chunkSize);

@@ -5,15 +5,11 @@ import tunnelers.core.model.entities.IntDimension;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.player.Player;
 
-/**
- *
- * @author Stepan
- */
 public class Map {
 
-	protected final IntDimension chunksSize;
-	protected final IntDimension blockSize;
-	protected final int chunkSize;
+	private final IntDimension chunksSize;
+	private final IntDimension blockSize;
+	private final int chunkSize;
 
 	private final Chunk[] chunks;
 	private final IntPoint[] playerBaseChunks;
@@ -77,30 +73,22 @@ public class Map {
 	}
 
 	public Block getBlock(int x, int y) {
-		if(x < 0 || x >= this.blockSize.getWidth() ||
-				y < 0 || y > this.blockSize.getHeight()){
+		if (x < 0 || x >= this.blockSize.getWidth() ||
+				y < 0 || y > this.blockSize.getHeight()) {
 			return Block.Undefined;
 		}
 		Chunk chunk = this.getChunk(x / chunkSize, y / chunkSize);
 		return chunk.getBlock(x % chunkSize, y % chunkSize);
 	}
 
-	public boolean setBlock(int x, int y, Block block) {
+	public void setBlock(int x, int y, Block block) {
 		Chunk chunk = this.getChunk(x / chunkSize, y / chunkSize);
 		chunk.setBlock(x % chunkSize, y % chunkSize, block);
-
-		return true;
 	}
 
 	/**
 	 * Injects blocks into the chunk. Counts undefined blocks and returns true
 	 * if there were none
-	 *
-	 * @param x
-	 * @param y
-	 * @param chunkData
-	 * @return
-	 * @throws ChunkException
 	 */
 	public boolean updateChunk(int x, int y, Block[] chunkData) throws ChunkException {
 		int errors = 0;
@@ -112,7 +100,7 @@ public class Map {
 		for (int i = 0; i < chunkData.length; i++) {
 			if ((chunk.chunkData[i] = chunkData[i]) == Block.Undefined) {
 				errors++;
-			};
+			}
 		}
 
 		chunk.setStaleness(0);

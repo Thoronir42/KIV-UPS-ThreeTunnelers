@@ -8,3 +8,4 @@ doc/*
 !doc/*.tex
 !doc/*.pdf
 !doc/img
+out/

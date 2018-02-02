@@ -1,9 +1,5 @@
 package tunnelers.app.render;
 
-/**
- *
- * @author Stepan
- */
 public class RenderLayoutException extends IllegalStateException {
 
 	public RenderLayoutException(int playerAmount) {

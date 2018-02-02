@@ -1,6 +1,5 @@
 package tunnelers.app.views.components.keybinding;
 
-import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
@@ -13,10 +12,8 @@ import tunnelers.app.controls.FxControlsManager;
 import tunnelers.core.player.controls.ControlInput;
 import tunnelers.core.player.controls.InputAction;
 
-/**
- *
- * @author Stepan
- */
+import java.util.ArrayList;
+
 public class KeyConfigPane extends TableView<KeyTableRow> {
 
 	public static KeyConfigPane create(FxControlsManager controlSchemeManager) {
@@ -33,7 +30,7 @@ public class KeyConfigPane extends TableView<KeyTableRow> {
 		return kcp;
 	}
 
-	byte[] keyboardLayoutIds;
+	private final byte[] keyboardLayoutIds;
 
 	private KeyConfigPane(byte[] keyboardLayoutIds) {
 		super();
@@ -50,9 +47,7 @@ public class KeyConfigPane extends TableView<KeyTableRow> {
 		labelColumn.setEditable(false);
 		labelColumn.setSortable(false);
 		labelColumn.setResizable(false);
-		labelColumn.setCellValueFactory(column -> {
-			return new ReadOnlyObjectWrapper<>(column.getValue().inputAction.getLabel());
-		});
+		labelColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<>(column.getValue().inputAction.getLabel()));
 
 		ArrayList<TableColumn<KeyTableRow, KeyCode>> layoutColumns = new ArrayList<>();
 		KeyTableRow.inputColumnOffset = 1;
@@ -79,10 +74,10 @@ public class KeyConfigPane extends TableView<KeyTableRow> {
 		this.maxHeightProperty().bind(this.prefHeightProperty());
 	}
 
-	protected void refreshRowFor(ControlInput oldOccurence) {
-		InputAction action = oldOccurence.getInput();
+	protected void refreshRowFor(ControlInput oldOccurrence) {
+		InputAction action = oldOccurrence.getInput();
 
-		byte col = KeyTableRow.schemeIdToCol(oldOccurence.getControlScheme().getID());
+		byte col = KeyTableRow.schemeIdToCol(oldOccurrence.getControlScheme().getID());
 		ObservableList<KeyTableRow> rows = this.getItems();
 		for (int r = 0; r < rows.size(); r++) {
 			KeyTableRow row = rows.get(r);
@@ -93,9 +88,9 @@ public class KeyConfigPane extends TableView<KeyTableRow> {
 
 class KeyBindCellValueFactory implements Callback<TableColumn.CellDataFeatures<KeyTableRow, KeyCode>, ObservableValue<KeyCode>> {
 
-	final int columnId;
+	private final int columnId;
 
-	public KeyBindCellValueFactory(int columnId) {
+	KeyBindCellValueFactory(int columnId) {
 		this.columnId = columnId + KeyTableRow.inputColumnOffset;
 	}
 

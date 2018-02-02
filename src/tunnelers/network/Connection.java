@@ -1,40 +1,32 @@
 package tunnelers.network;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import tunnelers.network.codec.ICodec;
+import tunnelers.network.codec.NoCodec;
+
+import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import tunnelers.network.codec.ICodec;
-import tunnelers.network.codec.NoCodec;
 
-/**
- *
- * @author Stepan
- */
-public class Connection {
+public final class Connection {
 
-	protected final String hostname;
-	protected final int port;
-	
-	
+	private final String hostname;
+	private final int port;
+
 	private final ICodec codec;
-	protected InetAddress address;
-	
+	private InetAddress address;
+
 	private long latency;
 
 	private Socket socket;
-	protected BufferedReader reader;
-	protected BufferedWriter writer;
+	private BufferedReader reader;
+	private BufferedWriter writer;
 	protected long lastActive;
-	
-	private short lastMsgId;
+
+	private final short lastMsgId;
 	private int invalidMessageCounter;
-	
+
 
 	public Connection(String hostname, int port, int receiveBufferSize) {
 		this(hostname, port, receiveBufferSize, new NoCodec());
@@ -48,11 +40,12 @@ public class Connection {
 		this.lastMsgId = 0;
 		this.invalidMessageCounter = 0;
 	}
-	
-	public int invalidCounterIncrease(){
-		return  ++this.invalidMessageCounter;
+
+	public int invalidCounterIncrease() {
+		return ++this.invalidMessageCounter;
 	}
-	public void invalidCounterReset(){
+
+	public void invalidCounterReset() {
 		this.invalidMessageCounter = 0;
 	}
 
@@ -61,20 +54,19 @@ public class Connection {
 	}
 
 	/**
-	 * 
 	 * @param timeout Time to wait for connection in milliseconds
 	 * @throws UnknownHostException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void open(int timeout) throws UnknownHostException, IOException {
 		if (this.isOpen()) {
 			throw new IOException("Connection is already open");
 		}
 		this.address = InetAddress.getByName(this.hostname);
-		
+
 		this.socket = new Socket();
 		InetSocketAddress sockAddr = new InetSocketAddress(address, port);
-		
+
 		socket.connect(sockAddr, timeout);
 
 		this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -105,17 +97,16 @@ public class Connection {
 		this.writer.flush();
 	}
 
-	public String receive() throws IOException, InterruptedException {
+	public String receive() throws IOException {
 		if (reader == null) {
 			throw new IOException("Failed to receive message: Connection is not open");
 		}
 		String message = reader.readLine();
-		if(message == null){
+		if (message == null) {
 			return null;
 		}
 		this.lastActive = System.currentTimeMillis();
-		
-		
+
 
 		return this.codec.decode(message.trim());
 	}

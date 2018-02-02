@@ -3,62 +3,52 @@ package tunnelers.app.assets;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-/**
- *
- * @author Stepan
- */
 public class Assets {
 
-	public static int IMAGE_UPSCALE_MULT = 10;
+	public static final int IMAGE_UPSCALE_MULT = 10;
 
-	private final Image[] RESOURCES;
+	private final Image[] resources;
 
 	private final IAssetImagesProvider[] imageProviders;
 
 	public Assets() {
-		this(new IAssetImagesProvider[]{
-			new StandardImageProvider(),}
-		);
+		this(new StandardImageProvider());
 	}
 
 	public Assets(String imagesPath) {
-		this(new IAssetImagesProvider[]{
-			new FileSystemImageProvider(imagesPath),
-			new StandardImageProvider(),}
+		this(
+				new FileSystemImageProvider(imagesPath),
+				new StandardImageProvider()
 		);
 	}
 
-	private Assets(IAssetImagesProvider[] imageProviders) {
-		RESOURCES = new Image[IAssetImagesProvider.IMAGES_COUNT];
+	private Assets(IAssetImagesProvider... imageProviders) {
+		resources = new Image[Asset.count()];
 		this.imageProviders = imageProviders;
 	}
 
-	public Image getImage(int type) {
-		if (type < 0 || type >= IAssetImagesProvider.IMAGES_COUNT) {
-			throw new IllegalArgumentException("Unrecognised resource const: " + type);
-		}
-		return RESOURCES[type];
+	private Image getImage(Asset type) {
+		return resources[type.getOrder()];
 	}
 
-	public Image getImage(int type, Color c) {
+	public Image getImage(Asset type, Color c) {
 		return ImageTools.recolor(getImage(type), c);
 	}
 
 	public void init() {
-
-		for (int i = 0; i < IAssetImagesProvider.IMAGES_COUNT; i++) {
-			RESOURCES[i] = loadImage(i);
+		for (Asset a : Asset.values()) {
+			resources[a.getOrder()] = loadImage(a);
 		}
 	}
 
-	private Image loadImage(int type) {
+	private Image loadImage(Asset type) {
 		Image tmp = null;
 		for (IAssetImagesProvider provider : this.imageProviders) {
 			try {
 				tmp = provider.getImage(type);
 				break;
 			} catch (IllegalArgumentException e) {
-
+				System.err.println(e.toString());
 			}
 		}
 		if (tmp == null) {

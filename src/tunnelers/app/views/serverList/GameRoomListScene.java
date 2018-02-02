@@ -1,6 +1,5 @@
 package tunnelers.app.views.serverList;
 
-import tunnelers.app.views.components.gameRoomTreeView.GameRoomViewWrapper;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,12 +11,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.views.components.gameRoomTableView.GameRoomTableView;
+import tunnelers.app.views.components.gameRoomTreeView.GameRoomViewWrapper;
 import tunnelers.core.gameRoom.IGameRoomInfo;
 
-/**
- *
- * @author Stepan
- */
 public class GameRoomListScene extends ATunnelersScene {
 
 	public static GameRoomListScene getInstance(String host) {
@@ -32,20 +28,15 @@ public class GameRoomListScene extends ATunnelersScene {
 	private static void addComponents(BorderPane root, GameRoomListScene scene, String host) {
 		GridPane center = new GridPane();
 		center.setAlignment(Pos.CENTER);
-		
+
 		scene.gameRooms = new GameRoomTableView();
-		scene.gameRooms.setOnRoomSelected((event) -> {
-			scene.getEngine().joinRoom(event.getGameRoom());
-		});
-		
+		scene.gameRooms.setOnRoomSelected((event) -> scene.getEngine().joinRoom(event.getGameRoom()));
+
 		scene.gameRooms.setPrefWidth(640);
 
-		
 
 		Button but_goBack = new Button("Zpět..");
-		but_goBack.setOnAction((ActionEvent event) -> {
-			scene.getEngine().disconnect();
-		});
+		but_goBack.setOnAction((ActionEvent event) -> scene.getEngine().disconnect());
 
 //		Label hugeWarning = new Label("Pozor, následující pohledy nejsou součástí demonstrace");
 //		hugeWarning.setTextFill(Color.WHITE);
@@ -85,22 +76,19 @@ public class GameRoomListScene extends ATunnelersScene {
 		return top;
 	}
 
-	protected Button but_refreshList, but_createRoom;
+	private final Button but_refreshList;
+	private final Button but_createRoom;
 
-	protected GameRoomTableView gameRooms;
+	private GameRoomTableView gameRooms;
 
-	public GameRoomListScene(Region root, double width, double height) {
+	private GameRoomListScene(Region root, double width, double height) {
 		super(root, width, height, "Výpis serverů");
-		
+
 		this.but_refreshList = new Button("Obnovit seznam her");
-		this.but_refreshList.setOnAction((ActionEvent event) -> {
-			this.refreshServerList();
-		});
-		
+		this.but_refreshList.setOnAction((ActionEvent event) -> this.refreshServerList());
+
 		this.but_createRoom = new Button("Vytvořit novou místnost");
-		this.but_createRoom.setOnAction((event) -> {
-			this.getEngine().createRoom();
-		});
+		this.but_createRoom.setOnAction((event) -> this.getEngine().createRoom());
 	}
 
 	private void refreshServerList() {

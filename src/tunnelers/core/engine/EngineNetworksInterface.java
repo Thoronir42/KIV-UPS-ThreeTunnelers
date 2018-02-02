@@ -1,6 +1,5 @@
 package tunnelers.core.engine;
 
-import java.util.HashMap;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.chat.IChatParticipant;
 import tunnelers.core.colors.PlayerColorManager;
@@ -18,10 +17,10 @@ import tunnelers.network.NetClientStatus;
 import tunnelers.network.command.Command;
 import tunnelers.network.command.CommandType;
 
-/**
- *
- * @author Skoro
- */
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class EngineNetworksInterface {
 
 	protected final HashMap<CommandType, IAction> actions;
@@ -47,24 +46,21 @@ public class EngineNetworksInterface {
 			return;
 		}
 
-		String missing = "";
+		List<String> missing = new ArrayList<>();
 		int n = 0;
 		for (CommandType type : CommandType.values()) {
 			if (type == CommandType.Undefined) {
 				continue;
 			}
 			if (!this.actions.containsKey(type)) {
-				missing += type.toString() + ", ";
-				if (++n % 8 == 0) {
-					missing += "\n";
-				}
+				missing.add(((++n % 8 == 0) ? "\n" : "") + type.toString());
 			}
 
 		}
 
-		if (missing.length() > 0) {
+		if (missing.size() > 0) {
 			System.err.println("Engine does not implement handling of these "
-					+ "command types: " + missing.substring(0, missing.length() - 2));
+					+ "command types: " + String.join(", ", missing));
 		}
 	}
 
@@ -405,7 +401,7 @@ public class EngineNetworksInterface {
 			int energy = sc.nextByte();
 
 			if (this.engine.currentGameRoom.getState() != GameRoomState.Battle) {
-				System.err.println("Attempted to set tank info while state is not Battle");
+				System.err.println("Attempted to initialize tank info while state is not Battle");
 				return false;
 			}
 
@@ -430,7 +426,7 @@ public class EngineNetworksInterface {
 			Tank t = this.engine.currentGameRoom.getWarzone().getTank(playerRoomId);
 
 			this.engine.currentGameRoom.getWarzone().setProjectile(n, new IntPoint(x, y), direction, p);
-			t.setCooldown(this.engine.currentGameRoom.getWarzone().getRules().getTankCannonCooldown());
+			t.setCoolDown(this.engine.currentGameRoom.getWarzone().getRules().getTankCannonCooldown());
 
 			return true;
 		});

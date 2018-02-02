@@ -1,13 +1,9 @@
 package tunnelers.core.colors;
 
-/**
- *
- * @author Stepan
- */
-public abstract class PlayerColor implements IColorable{
+public abstract class PlayerColor implements IColorable {
 
 	protected final int value;
-	protected boolean inUse;
+	private boolean inUse;
 
 	public PlayerColor(int value) {
 		this.value = value;

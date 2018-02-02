@@ -2,10 +2,6 @@ package generic;
 
 import java.util.Random;
 
-/**
- *
- * @author Stepan
- */
 public class RNG {
 
 	private static final RNG INSTANCE = new RNG(420);
@@ -13,6 +9,7 @@ public class RNG {
 	public static int getRandInt(int i) {
 		return INSTANCE.getInt(i);
 	}
+
 
 	private final Random rand;
 

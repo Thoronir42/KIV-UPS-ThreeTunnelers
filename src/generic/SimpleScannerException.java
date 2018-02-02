@@ -1,10 +1,6 @@
 package generic;
 
-/**
- *
- * @author Skoro
- */
-public class SimpleScannerException extends Exception{
+public class SimpleScannerException extends Exception {
 
 	public SimpleScannerException() {
 	}

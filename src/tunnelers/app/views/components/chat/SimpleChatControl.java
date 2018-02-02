@@ -1,6 +1,5 @@
 package tunnelers.app.views.components.chat;
 
-import java.util.Iterator;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -11,19 +10,17 @@ import javafx.scene.web.WebView;
 import tunnelers.app.render.colors.FxPlayerColorManager;
 import tunnelers.core.chat.ChatMessage;
 
-/**
- *
- * @author Stepan
- */
-public class SimpleChat extends GridPane {
+import java.util.Iterator;
 
-	protected WebView chatBox;
-	protected TextField chatIn;
-	protected ChatPrinter printer;
+public class SimpleChatControl extends GridPane {
 
-	protected EventHandler<ChatEvent> onMessageSend;
+	private final WebView chatBox;
+	private final TextField chatIn;
+	private final ChatPrinter printer;
 
-	public SimpleChat(FxPlayerColorManager colors, boolean includeSendButton) {
+	private EventHandler<ChatEvent> onMessageSend;
+
+	public SimpleChatControl(FxPlayerColorManager colors, boolean includeSendButton) {
 		this.chatBox = new WebView();
 		this.chatIn = new TextField();
 		this.printer = new ChatPrinter(colors);
@@ -38,9 +35,7 @@ public class SimpleChat extends GridPane {
 		} else {
 			HBox box = new HBox();
 			Button btnSend = new Button("Odeslat");
-			btnSend.setOnAction((e) -> {
-				this.sendMessage();
-			});
+			btnSend.setOnAction((e) -> this.sendMessage());
 			this.chatIn.prefWidthProperty().bind(this.widthProperty().subtract(btnSend.widthProperty()));
 			box.getChildren().addAll(this.chatIn, btnSend);
 			actionArea = box;
@@ -49,9 +44,7 @@ public class SimpleChat extends GridPane {
 		this.add(this.chatBox, 0, 0);
 		this.add(actionArea, 0, 1);
 
-		this.chatIn.setOnAction(event -> {
-			this.sendMessage();
-		});
+		this.chatIn.setOnAction(event -> this.sendMessage());
 
 	}
 
@@ -63,7 +56,7 @@ public class SimpleChat extends GridPane {
 		this.chatBox.getEngine().loadContent(this.printer.getHtml(it));
 	}
 
-	public void sendMessage() {
+	private void sendMessage() {
 		String message = this.chatIn.getText();
 		if (message.length() > 0 && this.onMessageSend != null) {
 			this.onMessageSend.handle(new ChatEvent(message));

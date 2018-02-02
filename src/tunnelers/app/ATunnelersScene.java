@@ -2,8 +2,6 @@ package tunnelers.app;
 
 import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.Rectangle2D;
-import tunnelers.core.settings.Settings;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -17,24 +15,21 @@ import tunnelers.app.assets.Assets;
 import tunnelers.app.render.AfterFX;
 import tunnelers.app.views.components.flash.FlashAreaControl;
 import tunnelers.core.engine.EngineUserInterface;
+import tunnelers.core.settings.Settings;
 
-/**
- *
- * @author Stepan
- */
 public abstract class ATunnelersScene extends Scene implements IFlasher {
 
 	private static final Color NOISE_TINT = new Color(0.98, 0.98, 0.98, 0.1);
-	
+
 	protected static Assets ASSETS;
 
-	protected static Settings settings = Settings.getInstance();
+	protected static final Settings settings = Settings.getInstance();
 
 	protected String sceneName;
 
-	protected FlashAreaControl flash;
+	protected final FlashAreaControl flash;
 
-	protected Canvas canvas;
+	protected final Canvas canvas;
 
 	private AfterFX afterFx;
 	private final Dimension2D blockSize;
@@ -43,9 +38,7 @@ public abstract class ATunnelersScene extends Scene implements IFlasher {
 		super(new StackPane(), width, height);
 		this.sceneName = name;
 
-		this.setOnKeyPressed((KeyEvent event) -> {
-			handleKeyPressed(event.getCode());
-		});
+		this.setOnKeyPressed((KeyEvent event) -> handleKeyPressed(event.getCode()));
 
 		flash = FlashAreaControl.getInstance();
 
@@ -62,9 +55,8 @@ public abstract class ATunnelersScene extends Scene implements IFlasher {
 		content.prefWidthProperty().bind(root.widthProperty());
 		content.prefHeightProperty().bind(root.heightProperty());
 
-		flash.visibilityProperty().addListener((observable, oldValue, newValue) -> {
-			this.setFlashVisibility(newValue.floatValue());
-		});
+		flash.visibilityProperty().addListener((observable, oldValue, newValue)
+				-> this.setFlashVisibility(newValue.floatValue()));
 
 		root.getChildren().addAll(canvas, anchor);
 

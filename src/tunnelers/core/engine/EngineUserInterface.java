@@ -1,33 +1,26 @@
 package tunnelers.core.engine;
 
-import generic.SimpleScannerException;
-import temp.Mock;
 import tunnelers.core.gameRoom.GameRoom;
-import tunnelers.core.gameRoom.GameRoomFacade;
 import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.player.Player;
 import tunnelers.core.player.controls.InputAction;
 import tunnelers.network.command.Command;
 import tunnelers.network.command.CommandType;
 
-/**
- *
- * @author Skoro
- */
 public class EngineUserInterface {
 
 	private final Engine engine;
 
-	public EngineUserInterface(Engine engine) {
+	EngineUserInterface(Engine engine) {
 		this.engine = engine;
 	}
 
-	public void connect(String name, String addr, int port, boolean useSecret) {
+	public void connect(String name, String address, int port, boolean useSecret) {
 		engine.view.setConnectEnabled(false);
 		if (!useSecret) {
 			engine.connectionSecret.set("");
 		}
-		engine.netadapter.connectTo(engine.connectionSecret, addr, port);
+		engine.netadapter.connectTo(engine.connectionSecret, address, port);
 
 		engine.preferredName = name;
 	}
@@ -38,18 +31,8 @@ public class EngineUserInterface {
 	}
 
 	public void refreshServerList() {
-		boolean mock = false;
-		if (mock) {
-			try {
-				GameRoomFacade[] rooms = this.engine.networksInterface.gameRoomParser.parse(Mock.serverListString(12));
-				this.engine.view.appendGameRoomsToList(rooms);
-			} catch (NumberFormatException | SimpleScannerException ex) {
-				ex.printStackTrace();
-			}
-		} else {
-			Command lobbyList = engine.netadapter.createCommand(CommandType.RoomsList);
-			engine.netadapter.send(lobbyList);
-		}
+		Command lobbyList = engine.netadapter.createCommand(CommandType.RoomsList);
+		engine.netadapter.send(lobbyList);
 	}
 
 	public void createRoom() {
@@ -88,7 +71,7 @@ public class EngineUserInterface {
 		engine.netadapter.send(readyState);
 	}
 
-	public void beginGame() {
+	/*public void beginGame() {
 		Command mapPrep = engine.netadapter
 				.createCommand(CommandType.MapSpecification)
 				.append((byte) 20) // chunkSize
@@ -102,7 +85,7 @@ public class EngineUserInterface {
 
 		engine.setStage(Engine.Stage.Warzone);
 		engine.view.showScene(IView.Scene.Warzone);
-	}
+	}*/
 
 	public void handleInput(InputAction inp, int controlsID, boolean pressed) {
 		Player p = engine.localClient.getPlayer(controlsID);

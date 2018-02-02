@@ -1,33 +1,25 @@
 package tunnelers.app.views.settings;
 
-import tunnelers.app.views.components.keybinding.KeyConfigPane;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import tunnelers.app.controls.FxControlsManager;
-import tunnelers.core.settings.Settings;
 import tunnelers.app.ATunnelersScene;
+import tunnelers.app.controls.FxControlsManager;
+import tunnelers.app.views.components.keybinding.KeyConfigPane;
 import tunnelers.core.engine.IView;
+import tunnelers.core.settings.Settings;
 
-/**
- *
- * @author Stepan
- */
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 public class SettingsScene extends ATunnelersScene {
 
-	protected static final double RESOLVE_BUTTON_PREF_WIDTH = 160,
+	private static final double RESOLVE_BUTTON_PREF_WIDTH = 160,
 			RESOLVE_BUTTON_PREF_HEIGHT = 40;
-	
+
 	private static final double GRID_SPACING = 4;
 
 	public static SettingsScene getInstance(FxControlsManager controls) {
@@ -36,12 +28,12 @@ public class SettingsScene extends ATunnelersScene {
 		content.setBackground(new Background(new BackgroundFill(new Color(0.42, 0.87, 0.93, 0.25), CornerRadii.EMPTY, Insets.EMPTY)));
 
 		SettingsScene scene = new SettingsScene(content, settings.getWindowWidth(), settings.getWindowHeight(), controls);
-		addComponents(content, scene, settings);
+		addComponents(content, scene);
 
 		return scene;
 	}
 
-	private static void addComponents(GridPane root, SettingsScene scene, Settings settings) {
+	private static void addComponents(GridPane root, SettingsScene scene) {
 		root.setAlignment(Pos.CENTER);
 		root.setVgap(GRID_SPACING);
 		root.setHgap(GRID_SPACING);
@@ -52,21 +44,19 @@ public class SettingsScene extends ATunnelersScene {
 
 	private static ServerSelectSetterControl makeServerSettingPane(SettingsScene scene, Settings settings) {
 		ServerSelectSetterControl control = new ServerSelectSetterControl(GRID_SPACING);
-		control.setOnTestAction((event) -> {
-			scene.testServer(control.getAddress(), control.getPort());
-		});
+		control.setOnTestAction((event) -> scene.testServer(control.getAddress(), control.getPort()));
 		control.setOnSetDefaultsAction((event) -> {
 			// todo: use actual default values
 			control.setAddress(settings.getServerAddress());
 			control.setPort(settings.getServerPort());
 		});
-		
+
 		control.setStyle("-fx-background-color: rgba(245,245,245,0.95);"
 				+ " -fx-border-size: 2px;"
 				+ " -fx-border-style: solid;"
 				+ " -fx-border-color: black;"
 				+ " -fx-padding: 20px;");
-		
+
 		control.setDisable(true);
 
 		return control;
@@ -74,13 +64,9 @@ public class SettingsScene extends ATunnelersScene {
 
 	private static HBox makeResolveButtonRack(SettingsScene scene) {
 		Button btn_back = new Button("Zpět");
-		btn_back.setOnAction((ActionEvent event) -> {
-			scene.getStage().showScene(IView.Scene.MainMenu);
-		});
+		btn_back.setOnAction((ActionEvent event) -> scene.getStage().showScene(IView.Scene.MainMenu));
 		Button btn_saveChanges = new Button("Uložit nastavení");
-		btn_saveChanges.setOnAction((ActionEvent e) -> {
-			scene.saveSettings();
-		});
+		btn_saveChanges.setOnAction((ActionEvent e) -> scene.saveSettings());
 
 		btn_saveChanges.setPrefSize(RESOLVE_BUTTON_PREF_WIDTH, RESOLVE_BUTTON_PREF_HEIGHT);
 		btn_back.setPrefSize(RESOLVE_BUTTON_PREF_WIDTH, RESOLVE_BUTTON_PREF_HEIGHT);
@@ -94,7 +80,7 @@ public class SettingsScene extends ATunnelersScene {
 	private final ServerSelectSetterControl serverSelectSetterControl;
 	private final FxControlsManager controlSchemeManager;
 
-	public SettingsScene(Region root, double width, double height, FxControlsManager controls) {
+	private SettingsScene(Region root, double width, double height, FxControlsManager controls) {
 		super(root, width, height, "Nastavení");
 		this.controlSchemeManager = controls;
 		this.serverSelectSetterControl = makeServerSettingPane(this, settings);

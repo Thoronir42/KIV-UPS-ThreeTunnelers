@@ -1,12 +1,9 @@
 package tunnelers.app;
 
-import tunnelers.core.engine.IView;
-import tunnelers.core.settings.Settings;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import tunnelers.app.controls.FxControlsManager;
-import tunnelers.app.views.warzone.WarzoneScene;
 import tunnelers.app.assets.Assets;
+import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.render.FxRenderContainer;
 import tunnelers.app.render.colors.FxDefaultColorScheme;
 import tunnelers.app.render.colors.FxPlayerColorManager;
@@ -14,30 +11,26 @@ import tunnelers.app.views.lobby.LobbyScene;
 import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.app.views.serverList.GameRoomListScene;
 import tunnelers.app.views.settings.SettingsScene;
+import tunnelers.app.views.warzone.WarzoneScene;
 import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.engine.EngineUserInterface;
+import tunnelers.core.engine.IView;
 import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 import tunnelers.core.player.controls.AControlsManager;
 
-/**
- *
- * @author Stepan
- */
-public class TunnelersStage extends Stage implements IView {
+public final class TunnelersStage extends Stage implements IView {
 
-	public static final String GAME_NAME = "Three Tunnelers",
+	private static final String GAME_NAME = "Three Tunnelers",
 			TITLE_SEPARATOR = "|";
 
-	protected static final Settings SETTINGS = Settings.getInstance();
-
-	protected final FxControlsManager controlsManager;
-	protected final FxRenderContainer renderer;
+	private final FxControlsManager controlsManager;
+	private final FxRenderContainer renderer;
 
 	protected ATunnelersScene currentScene;
-	protected final FxDefaultColorScheme colorScheme;
+	private final FxDefaultColorScheme colorScheme;
 
 	protected final EngineUserInterface engine;
 	protected final Assets assets;
@@ -55,19 +48,17 @@ public class TunnelersStage extends Stage implements IView {
 		this.assets = assets;
 
 		colorScheme = new FxDefaultColorScheme(new FxPlayerColorManager());
-		colorScheme.setRandomizer((int x, int y) -> {
-			return ((int) Math.abs(Math.sin((x + 2) * 7) * 6 + Math.cos(y * 21) * 6));
-		});
+		colorScheme.setRandomizer((int x, int y) -> ((int) Math.abs(Math.sin((x + 2) * 7) * 6 + Math.cos(y * 21) * 6)));
 
 		this.controlsManager = new FxControlsManager(supportedControlSchemes);
-		this.controlsManager.setOnInputChanged((event) -> {
-			this.engine.handleInput(event.getInput(), event.getControlsId(), event.isPressed());
-		});
+		this.controlsManager.setOnInputChanged((event) ->
+				this.engine.handleInput(event.getInput(), event.getControlsId(), event.isPressed())
+		);
 
 		this.renderer = new FxRenderContainer(engine, colorScheme, assets);
 	}
 
-	protected void changeScene(ATunnelersScene scene) {
+	private void changeScene(ATunnelersScene scene) {
 		if (scene == null) {
 			return;
 		}
@@ -102,9 +93,7 @@ public class TunnelersStage extends Stage implements IView {
 	 */
 	@Override
 	public void showScene(Scene scene) {
-		Platform.runLater(() -> {
-			this.showSceneNow(scene);
-		});
+		Platform.runLater(() -> this.showSceneNow(scene));
 	}
 
 	public void showSceneNow(Scene scene) {
@@ -120,13 +109,11 @@ public class TunnelersStage extends Stage implements IView {
 				break;
 			case GameRoomList:
 				newScene = GameRoomListScene.getInstance(engine.getHostLocator());
-				afterChange = () -> {
-					engine.refreshServerList();
-				};
+				afterChange = engine::refreshServerList;
 				break;
 			case Lobby:
 				gr = this.engine.getGameRoom();
-				if(gr == null){
+				if (gr == null) {
 					System.err.println("Can't show Lobby scene, GameRoom is null");
 					return;
 				}
@@ -155,9 +142,7 @@ public class TunnelersStage extends Stage implements IView {
 
 	@Override
 	public void alert(String message) {
-		Platform.runLater(() -> {
-			this.currentScene.flashDisplay(message);
-		});
+		Platform.runLater(() -> this.currentScene.flashDisplay(message));
 	}
 
 	@Override
@@ -205,10 +190,8 @@ public class TunnelersStage extends Stage implements IView {
 
 	@Override
 	public void setLocalReadyState(boolean ready) {
-		if ((this.currentScene instanceof LobbyScene)) {
-			Platform.runLater(() -> {
-				((LobbyScene) this.currentScene).setLocalClientReady(ready);
-			});
+		if (this.currentScene instanceof LobbyScene) {
+			Platform.runLater(() -> ((LobbyScene) this.currentScene).setLocalClientReady(ready));
 
 		}
 	}
@@ -218,5 +201,5 @@ public class TunnelersStage extends Stage implements IView {
 //		Platform.exit();
 	}
 
-	
+
 }

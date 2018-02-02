@@ -1,22 +1,19 @@
 package tunnelers.app.views.components.gameRoomTreeView;
 
-import java.util.Collection;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import tunnelers.app.views.serverList.GameMode;
 import tunnelers.app.views.components.roomListing.IGameRoomListItem;
+import tunnelers.app.views.serverList.GameMode;
 
-/**
- *
- * @author Stepan
- */
+import java.util.Collection;
+
 public class GameRoomTreeView extends TreeView<IGameRoomListItem> {
 
 	public static GameRoomTreeView createInstance() {
 		return new GameRoomTreeView(new TreeItem<>(new GameRoomTreeViewRoot()));
 	}
 
-	TreeItem<IGameRoomListItem> root;
+	private final TreeItem<IGameRoomListItem> root;
 
 	private GameRoomTreeView(TreeItem<IGameRoomListItem> root) {
 		super(root);
@@ -39,10 +36,10 @@ public class GameRoomTreeView extends TreeView<IGameRoomListItem> {
 	}
 
 	public void add(IGameRoomListItem gr) {
-		TreeItem<IGameRoomListItem> result = root.getChildren().stream().filter(child -> child.getValue().getGameModeView() == gr.getGameModeView()).findFirst().get();
-		if (result != null) {
-			result.getChildren().add(new TreeItem<>(gr));
-		}
+		root.getChildren().stream()
+				.filter(child -> child.getValue().getGameModeView() == gr.getGameModeView())
+				.findFirst()
+				.ifPresent(item -> item.getChildren().add(new TreeItem<>(gr)));
 	}
 
 	public IGameRoomListItem getSelectedItem() {

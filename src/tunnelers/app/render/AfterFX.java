@@ -6,15 +6,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
 import tunnelers.app.render.colors.FxDefaultColorScheme;
 
-/**
- *
- * @author Skoro
- */
 public class AfterFX {
 
 	private final FxDefaultColorScheme colorScheme;
 
-	public AfterFX(FxDefaultColorScheme colorScheme) {
+	AfterFX(FxDefaultColorScheme colorScheme) {
 		this.colorScheme = colorScheme;
 	}
 
@@ -24,10 +20,10 @@ public class AfterFX {
 		renderStaticNoise(g, blockSize, opacity, render.getWidth(), render.getHeight());
 		g.setTransform(defaultTransform);
 	}
-	
+
 	public void renderStaticNoise(GraphicsContext g, Dimension2D blockSize, double opacity, double width, double height) {
 		for (int col = 0; col * blockSize.getWidth() < width; col++) {
-			for (int row = 0; row * blockSize.getHeight() < width; row++) {
+			for (int row = 0; row * blockSize.getHeight() < height; row++) {
 				g.setFill(colorScheme.getRandStatic(col, row, opacity));
 				g.fillRect(col * blockSize.getWidth(), row * blockSize.getHeight(),
 						blockSize.getWidth(), blockSize.getHeight());
@@ -36,6 +32,6 @@ public class AfterFX {
 	}
 
 	public float calculateStatic(int value, int maxValue) {
-		return 1 - ( 1.0f * value / maxValue);
+		return 1 - (1.0f * value / maxValue);
 	}
 }

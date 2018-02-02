@@ -1,28 +1,18 @@
 package tunnelers.app.views.lobby;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.render.colors.FxDefaultColorScheme;
-import tunnelers.app.views.components.chat.SimpleChat;
+import tunnelers.app.views.components.chat.SimpleChatControl;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.player.Player;
 
-/**
- *
- * @author Stepan
- */
 public class LobbyScene extends ATunnelersScene {
 
 	public static LobbyScene getInstance(Chat chat, FxDefaultColorScheme colors, int capacity) throws IllegalStateException {
@@ -56,20 +46,16 @@ public class LobbyScene extends ATunnelersScene {
 		center.setVgap(20);
 		center.setAlignment(Pos.CENTER);
 
-		SimpleChat chat = scene.chatView;
+		SimpleChatControl chat = scene.chatView;
 		chat.setPrefSize(400, 280);
 
-		chat.setOnMessageSend(event -> {
-			scene.getEngine().sendPlainText(event.getMessage());
-		});
+		chat.setOnMessageSend(event -> scene.getEngine().sendPlainText(event.getMessage()));
 		center.add(chat, 0, 0, 2, 1);
 
 		center.add(scene.btn_ready, 1, 1);
 
 		Button btnBAck = new Button("Opustit místnost");
-		btnBAck.setOnAction(event -> {
-			scene.getEngine().leaveRoom();
-		});
+		btnBAck.setOnAction(event -> scene.getEngine().leaveRoom());
 		center.add(btnBAck, 1, 2);
 
 		return center;
@@ -77,7 +63,7 @@ public class LobbyScene extends ATunnelersScene {
 
 	private final Chat chat;
 
-	protected final SimpleChat chatView;
+	private final SimpleChatControl chatView;
 	private final Label caption;
 	private final PlayerListView playerListView;
 
@@ -86,7 +72,7 @@ public class LobbyScene extends ATunnelersScene {
 	public LobbyScene(Region root, double width, double height, Chat chat, FxDefaultColorScheme colors, int capacity) {
 		super(root, width, height, "Příprava");
 		this.caption = new Label("");
-		this.chatView = new SimpleChat(colors.getPlayerColorManager(), true);
+		this.chatView = new SimpleChatControl(colors.getPlayerColorManager(), true);
 		this.playerListView = new PlayerListView(colors.getPlayerColorManager(), capacity);
 
 		this.chat = chat;
@@ -98,14 +84,10 @@ public class LobbyScene extends ATunnelersScene {
 	public void setLocalClientReady(boolean ready) {
 		if (!ready) {
 			btn_ready.setText("Tak jdem na to");
-			btn_ready.setOnAction((evt) -> {
-				this.getEngine().setReady(true);
-			});
+			btn_ready.setOnAction((evt) -> this.getEngine().setReady(true));
 		} else {
 			btn_ready.setText("Vydržte chviličku");
-			btn_ready.setOnAction((evt) -> {
-				this.getEngine().setReady(false);
-			});
+			btn_ready.setOnAction((evt) -> this.getEngine().setReady(false));
 		}
 	}
 

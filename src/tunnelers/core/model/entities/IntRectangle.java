@@ -1,9 +1,5 @@
 package tunnelers.core.model.entities;
 
-/**
- *
- * @author Stepan
- */
 public class IntRectangle {
 
 	protected final int x, y;
@@ -27,10 +23,10 @@ public class IntRectangle {
 		int yMax = Math.min(this.getMaxY(), other.getMaxY());
 
 //		System.out.format("min: [%d, %d], max: [%d, %d]\n", xMin, yMin, xMax, yMax);
-		if(xMax - xMin < 0 || yMax - yMin < 0){
+		if (xMax - xMin < 0 || yMax - yMin < 0) {
 			return new IntRectangle(0, 0, 0, 0);
 		}
-		
+
 		return new IntRectangle(xMin, yMin, xMax - xMin, yMax - yMin);
 
 	}
@@ -82,7 +78,7 @@ public class IntRectangle {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		
+
 		final IntRectangle other = (IntRectangle) obj;
 		return (this.x == other.x && this.y == other.y &&
 				this.width == other.width && this.height == other.height);
@@ -92,5 +88,5 @@ public class IntRectangle {
 	public String toString() {
 		return "IntRectangle{" + "x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + '}';
 	}
-	
+
 }

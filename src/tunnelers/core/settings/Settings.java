@@ -1,16 +1,13 @@
 package tunnelers.core.settings;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import tunnelers.core.settings.specifier.DefaultSettigsSpecifier;
+import tunnelers.core.settings.specifier.DefaultSettingsSpecifier;
 import tunnelers.core.settings.specifier.FileSettingsSpecifier;
 import tunnelers.core.settings.specifier.ISettingsSpecifier;
 
-/**
- *
- * @author Stepan
- */
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public final class Settings {
 
 	public static final int MAX_PLAYERS = 4;
@@ -31,17 +28,17 @@ public final class Settings {
 	private int tickRate;
 
 	private int chatMessageCapacity;
-	
+
 	private String connectionLogRelativePath;
 
 	private String serverAddress;
 	private int serverPort;
 
-	private List<ISettingsSpecifier> configurators;
+	private final List<ISettingsSpecifier> configurators;
 
 	private Settings() {
 		this.configurators = new ArrayList<>();
-		this.configurators.add(new DefaultSettigsSpecifier());
+		this.configurators.add(new DefaultSettingsSpecifier());
 	}
 
 	public Settings(String configFile) {
@@ -58,9 +55,7 @@ public final class Settings {
 	}
 
 	public void init() {
-		this.configurators.stream().forEach((configurator) -> {
-			configurator.set(this);
-		});
+		this.configurators.forEach((configurator) -> configurator.initialize(this));
 
 		this.configurators.clear();
 	}

@@ -3,10 +3,6 @@ package tunnelers.core.engine;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Stepan
- */
 public class PersistentStringTest {
 
 	private static final String TEST_TEXT = "Ahoj";

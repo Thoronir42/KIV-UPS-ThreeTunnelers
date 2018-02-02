@@ -1,9 +1,5 @@
 package tunnelers.app.views.serverList;
 
-/**
- *
- * @author Stepan
- */
 public enum GameMode {
 	FFA("FFA", 1),
 	Unspecified("N/A", 0);
@@ -11,7 +7,7 @@ public enum GameMode {
 	private final String label;
 	private final int value;
 
-	private GameMode(String label, int value) {
+	GameMode(String label, int value) {
 		this.label = label;
 		this.value = value;
 	}

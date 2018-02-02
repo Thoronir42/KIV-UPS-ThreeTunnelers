@@ -1,18 +1,14 @@
 package tunnelers.core.model.entities;
 
-import tunnelers.core.player.Player;
 import tunnelers.core.colors.IColorable;
+import tunnelers.core.player.Player;
 
-/**
- *
- * @author Stepan
- */
-public abstract class GameEntity  implements IColorable{
+public abstract class GameEntity implements IColorable {
 	protected Direction direction;
 	protected IntPoint location;
-	protected Player player;
+	protected final Player player;
 
-	public GameEntity(IntPoint location, Direction direction, Player player) {
+	GameEntity(IntPoint location, Direction direction, Player player) {
 		this.direction = direction;
 		this.player = player;
 		this.setLocation(location);
@@ -24,10 +20,10 @@ public abstract class GameEntity  implements IColorable{
 		return this.location;
 	}
 
-	public void setLocation(int x, int y){
+	public void setLocation(int x, int y) {
 		this.setLocation(new IntPoint(x, y));
 	}
-	
+
 	public void setLocation(IntPoint loc) {
 		this.location = loc;
 	}

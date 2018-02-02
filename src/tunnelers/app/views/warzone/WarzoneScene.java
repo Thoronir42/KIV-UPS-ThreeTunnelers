@@ -8,15 +8,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import tunnelers.app.ATunnelersScene;
 import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.render.ARenderLayout;
-import tunnelers.app.ATunnelersScene;
 import tunnelers.app.render.FxRenderContainer;
 
-/**
- *
- * @author Stepan
- */
 public class WarzoneScene extends ATunnelersScene {
 
 	public static WarzoneScene getInstance(FxControlsManager csmgr) {
@@ -27,17 +23,13 @@ public class WarzoneScene extends ATunnelersScene {
 		BorderPane root = new BorderPane();
 
 		root.setStyle("-fx-background-color: #" + Integer.toHexString(Color.DIMGRAY.hashCode()));
-		
+
 		WarzoneScene scene = new WarzoneScene(root, settings.getWindowWidth(), settings.getWindowHeight(), csmgr);
 
 		addComponents(root, scene);
 
-		scene.setOnKeyPressed((KeyEvent e) -> {
-			csmgr.keyPressSet(e.getCode(), true);
-		});
-		scene.setOnKeyReleased((KeyEvent e) -> {
-			csmgr.keyPressSet(e.getCode(), false);
-		});
+		scene.setOnKeyPressed((KeyEvent e) -> csmgr.keyPressSet(e.getCode(), true));
+		scene.setOnKeyReleased((KeyEvent e) -> csmgr.keyPressSet(e.getCode(), false));
 
 		return scene;
 	}
@@ -49,10 +41,10 @@ public class WarzoneScene extends ATunnelersScene {
 	protected TextArea ta_chatBox;
 	protected TextField tf_chatIn;
 	protected ARenderLayout layout;
-	
+
 	private final FxControlsManager csmgr;
 
-	public WarzoneScene(Region root, double width, double height, FxControlsManager csmgr) {
+	private WarzoneScene(Region root, double width, double height, FxControlsManager csmgr) {
 		super(root, width, height, "Bitevní zóna");
 		this.csmgr = csmgr;
 	}
@@ -60,16 +52,14 @@ public class WarzoneScene extends ATunnelersScene {
 	public WarzoneScene initLayout(int playerCount, FxRenderContainer renderer) {
 		Dimension2D availableArea = new Dimension2D(canvas.getWidth(), canvas.getHeight());
 		layout = ARenderLayout.choseIdeal(renderer, playerCount, availableArea);
-		
+
 		return this;
 	}
 
 	@Override
 	public void update(long tick) {
-		Platform.runLater(() -> {
-			layout.draw(canvas.getGraphicsContext2D());
-		});
+		Platform.runLater(() -> layout.draw(canvas.getGraphicsContext2D()));
 	}
-	
-	
+
+
 }

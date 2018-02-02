@@ -1,14 +1,10 @@
 package tunnelers.core.player;
 
+import tunnelers.core.chat.IChatParticipant;
 import tunnelers.core.colors.IColorable;
 import tunnelers.core.player.controls.Controls;
-import tunnelers.core.chat.IChatParticipant;
 import tunnelers.network.NetClient;
 
-/**
- *
- * @author Stepan
- */
 public final class Player implements IChatParticipant, IColorable {
 
 	private final NetClient client;

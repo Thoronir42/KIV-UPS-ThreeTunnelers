@@ -6,10 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Stepan
- */
 public class FileStorageTest {
 
 	private static final String TEST_FILE = "files/test.txt";
@@ -30,7 +26,7 @@ public class FileStorageTest {
 	public void testCreateFile() throws Exception {
 		File f = instance.createFile(TEST_FILE);
 
-		assertNotEquals(null, f);
+		assertNotNull(f);
 	}
 
 }

@@ -1,20 +1,13 @@
 package tunnelers.network;
 
+import tunnelers.core.engine.PersistentString;
+import tunnelers.network.command.*;
+
 import java.io.IOException;
 import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import tunnelers.core.engine.PersistentString;
-import tunnelers.network.command.Command;
-import tunnelers.network.command.CommandParser;
-import tunnelers.network.command.CommandType;
-import tunnelers.network.command.INetworkProcessor;
-import tunnelers.network.command.Signal;
 
-/**
- *
- * @author Stepan
- */
 public final class NetAdapter extends Thread {
 
 	private static final int BUFFER_SIZE = 512;
@@ -42,6 +35,7 @@ public final class NetAdapter extends Thread {
 		this.handler = handler;
 	}
 
+	// todo: implement
 	public boolean serverPresent(String address, int port) {
 		return false;
 	}
@@ -93,7 +87,7 @@ public final class NetAdapter extends Thread {
 	@Override
 	public void run() {
 		this.log("Starting");
-		
+
 		while (this.keepRunning) {
 			try {
 				if (!ensureConnectionValid(connection)) {
@@ -144,8 +138,8 @@ public final class NetAdapter extends Thread {
 	 * problems - no connection, connection creation not scheduled, returns
 	 * false.
 	 *
-	 * @param connection
-	 * @return
+	 * @param connection connection to be maintained open
+	 * @return result whether the connection could be maintained open
 	 */
 	private boolean ensureConnectionValid(Connection connection) {
 		if (connection == null) {
@@ -156,7 +150,7 @@ public final class NetAdapter extends Thread {
 		} else {
 			try {
 				connection.open(5000);
-				this.handler.signal(new Signal(Signal.Type.ConnectionEstabilished));
+				this.handler.signal(new Signal(Signal.Type.ConnectionEstablished));
 
 				Command introduction = this.createCommand(CommandType.LeadIntroduce);
 				String secret = this.connectionSecret.get();
@@ -176,7 +170,7 @@ public final class NetAdapter extends Thread {
 			} catch (NoRouteToHostException e) {
 				this.handler.signal(new Signal(Signal.Type.ConnectionNoRouteToHost));
 			} catch (IOException e) {
-				System.err.println(e.toString());
+				this.logError(e.toString());
 				this.handler.signal(new Signal(Signal.Type.ConnectingFailedUnexpectedError, e.getMessage()));
 			}
 			this.log("Closing connection");

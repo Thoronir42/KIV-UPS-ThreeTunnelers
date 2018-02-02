@@ -12,10 +12,6 @@ import tunnelers.core.model.entities.Tank;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 
-/**
- *
- * @author Stepan
- */
 public class FxRenderContainer {
 
 	private final EngineUserInterface engine;
@@ -35,8 +31,8 @@ public class FxRenderContainer {
 		this.assetsRenderer = new AssetsRenderer(colorScheme, assets);
 		this.afterFx = new AfterFX(colorScheme);
 	}
-	
-	public void prepareGame(Map map, Player[] players){
+
+	public void prepareGame(Map map, Player[] players) {
 		this.mapRenderer.setMap(map);
 		this.assetsRenderer.initGameAssets(players);
 	}
@@ -63,8 +59,8 @@ public class FxRenderContainer {
 	public AssetsRenderer getAssetsRenderer() {
 		return this.assetsRenderer;
 	}
-	
-	public AfterFX getAfterFX(){
+
+	public AfterFX getAfterFX() {
 		return this.afterFx;
 	}
 
@@ -79,7 +75,7 @@ public class FxRenderContainer {
 	public Tank[] getTanks() {
 		return this.engine.getGameRoom().getTanks();
 	}
-	
+
 	public WarzoneRules getWarzoneRules() {
 		// todo: gaze upon all those possible null pointer exceptions
 		return this.engine.getGameRoom().getWarzone().getRules();

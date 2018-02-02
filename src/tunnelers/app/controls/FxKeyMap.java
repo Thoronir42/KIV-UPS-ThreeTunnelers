@@ -1,16 +1,13 @@
 package tunnelers.app.controls;
 
+import javafx.scene.input.KeyCode;
 import tunnelers.core.player.controls.ControlInput;
 import tunnelers.core.player.controls.Controls;
 import tunnelers.core.player.controls.InputAction;
+
 import java.util.HashMap;
 import java.util.Map.Entry;
-import javafx.scene.input.KeyCode;
 
-/**
- *
- * @author Stepan
- */
 public class FxKeyMap {
 
 	public static String codeToStr(KeyCode kc) {
@@ -18,7 +15,7 @@ public class FxKeyMap {
 			return "N/A";
 		}
 		switch (kc) {
-
+			// todo: give keys specific names?
 		}
 		return kc.getName();
 	}
@@ -26,8 +23,8 @@ public class FxKeyMap {
 	private final HashMap<KeyCode, ControlInput> map;
 	private final FxControlsManager controlSchemeManager;
 
-	public FxKeyMap(FxControlsManager controlSchemeManager) {
-		map = new HashMap<>();
+	FxKeyMap(FxControlsManager controlSchemeManager) {
+		this.map = new HashMap<>();
 		this.controlSchemeManager = controlSchemeManager;
 	}
 

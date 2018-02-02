@@ -1,17 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package integration;
 
-/**
- *
- * @author Skoro
- */
 public class BuildRoomTest {
 	public void build(){
 		// TODO: implement test
+		// this used to serve for mocking reasons before
+		// net interface was actually implemented
+
 //		Command cmd = engine.netadapter.createCommand(CommandType.RoomsJoin)
 //				.append((byte) gameRoom.getId())
 //				.append((byte) 1) // localClientRID

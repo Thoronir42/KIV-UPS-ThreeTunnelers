@@ -1,17 +1,14 @@
 package tunnelers.app.controls;
 
-import java.util.Arrays;
-import tunnelers.core.player.controls.ControlInput;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import tunnelers.core.player.controls.AControlsManager;
+import tunnelers.core.player.controls.ControlInput;
 import tunnelers.core.player.controls.Controls;
 import tunnelers.core.player.controls.InputAction;
 
-/**
- *
- * @author Stepan
- */
+import java.util.Arrays;
+
 public class FxControlsManager extends AControlsManager {
 
 	private EventHandler<InputEvent> onInputChanged;
@@ -27,7 +24,7 @@ public class FxControlsManager extends AControlsManager {
 			this.keyMap.setSchemeDefault(i);
 		}
 	}
-	
+
 	public byte[] getKeyboardLayoutIDs() {
 		// TODO: optimize
 		byte[] ids = new byte[this.keyboardSchemes.length];
@@ -52,8 +49,7 @@ public class FxControlsManager extends AControlsManager {
 	}
 
 	public ControlInput getControlInputByKey(KeyCode code) {
-		ControlInput pi = this.keyMap.getInput(code);
-		return pi;
+		return this.keyMap.getInput(code);
 	}
 
 	public KeyCode getKeyCode(ControlInput plrInput) {
@@ -61,8 +57,7 @@ public class FxControlsManager extends AControlsManager {
 	}
 
 	public ControlInput replaceKeyInput(KeyCode kc, ControlInput plrInput) {
-		ControlInput oldOccurence = this.keyMap.set(kc, plrInput);
-		return oldOccurence;
+		return this.keyMap.set(kc, plrInput);
 	}
 
 	public void setOnInputChanged(EventHandler<InputEvent> onInputChanged) {

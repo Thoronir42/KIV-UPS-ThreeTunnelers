@@ -8,7 +8,7 @@ public enum CommandType {
 	ClientSetName(0x03),
 	LeadMarco(0x04),
 	LeadPolo(0x05),
-	
+
 	RoomsList(0x10),
 	RoomsCreate(0x12),
 	RoomsJoin(0x13),
@@ -43,11 +43,11 @@ public enum CommandType {
 
 	private final short value;
 
-	private CommandType(int v) {
+	CommandType(int v) {
 		this((short) v);
 	}
 
-	private CommandType(short v) {
+	CommandType(short v) {
 		this.value = v;
 	}
 

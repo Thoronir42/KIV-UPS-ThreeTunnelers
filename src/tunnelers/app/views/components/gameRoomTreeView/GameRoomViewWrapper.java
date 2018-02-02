@@ -1,13 +1,9 @@
 package tunnelers.app.views.components.gameRoomTreeView;
 
+import tunnelers.app.views.components.roomListing.IGameRoomListItem;
 import tunnelers.app.views.serverList.GameMode;
 import tunnelers.core.gameRoom.IGameRoomInfo;
-import tunnelers.app.views.components.roomListing.IGameRoomListItem;
 
-/**
- *
- * @author Stepan
- */
 public class GameRoomViewWrapper implements IGameRoomListItem {
 
 	private final Type type;
@@ -46,7 +42,7 @@ public class GameRoomViewWrapper implements IGameRoomListItem {
 	}
 
 	private void setGameMode(GameMode difficulty) {
-		if(difficulty == null){
+		if (difficulty == null) {
 			throw new IllegalArgumentException();
 		}
 		this.gameMode = difficulty;
@@ -159,14 +155,14 @@ public class GameRoomViewWrapper implements IGameRoomListItem {
 	public boolean isRunning() {
 		return (this.flags & FLAG_RUNNING) > 0;
 	}
-	
-	public boolean isGame(){
+
+	public boolean isGame() {
 		return this.type == Type.GameRoom;
 	}
 
 	private enum Type {
 		GameRoom, GameMode
-	};
-	
-	
+	}
+
+
 }

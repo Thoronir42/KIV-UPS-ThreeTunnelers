@@ -2,18 +2,18 @@ package tunnelers.core.model.entities;
 
 public class ShapeFactory {
 
-	public static final Shape TANK_BODY_UPRIGHT;
-	public static final Shape TANK_BODY_DIAGONAL;
+	private static final Shape TANK_BODY_UPRIGHT;
+	private static final Shape TANK_BODY_DIAGONAL;
 
-	public static final Shape TANK_BELT_NORTH;
-	public static final Shape TANK_BELT_NORTH_EAST;
-	public static final Shape TANK_BELT_EAST;
-	public static final Shape TANK_BELT_SOUTH_EAST;
+	private static final Shape TANK_BELT_NORTH;
+	private static final Shape TANK_BELT_NORTH_EAST;
+	private static final Shape TANK_BELT_EAST;
+	private static final Shape TANK_BELT_SOUTH_EAST;
 
-	public static final Shape PROJECTILE_NORTH;
-	public static final Shape PROJECTILE_NORTH_EAST;
-	public static final Shape PROJECTILE_EAST;
-	public static final Shape PROJECTILE_SOUTH_EAST;
+	private static final Shape PROJECTILE_NORTH;
+	private static final Shape PROJECTILE_NORTH_EAST;
+	private static final Shape PROJECTILE_EAST;
+	private static final Shape PROJECTILE_SOUTH_EAST;
 
 	static {
 		TANK_BODY_UPRIGHT = getTankBodyUpright();
@@ -42,7 +42,7 @@ public class ShapeFactory {
 			case Projectile:
 				return getProjectileShape(direction);
 			default:
-				return null;
+				throw new IllegalArgumentException("Shape " + type + " not recognized");
 		}
 	}
 
@@ -103,70 +103,75 @@ public class ShapeFactory {
 		int newWidth = src.getHeight();
 		int newHeight = src.getWidth();
 		boolean[] pixels = new boolean[newWidth * newHeight];
-		
+
 		for (int j = 0; j < src.getHeight(); j++) {
-        for (int i = 0; i < src.getWidth(); i++) {
-            int dest_offset = (i * newWidth) + (newWidth - 1 - j);
-            pixels[dest_offset] = src.isPixelSolid(i, j);
-        }
-    }
+			for (int i = 0; i < src.getWidth(); i++) {
+				int dest_offset = (i * newWidth) + (newWidth - 1 - j);
+				pixels[dest_offset] = src.isPixelSolid(i, j);
+			}
+		}
 
 		return new Shape(newWidth, newHeight, pixels);
 	}
 
 	private static Shape getTankBodyUpright() {
-		return new Shape(3, 5, new boolean[]{
-			true, true, true,
-			true, true, true,
-			true, true, true,
-			true, true, true,
-			false, false, false
-		});
+		return createShape(3, 5, "" +
+				"XXX" +
+				"XXX" +
+				"XXX" +
+				"XXX" +
+				"   ");
 	}
 
 	private static Shape getTankBodyDiagonal() {
-		return new Shape(5, 5, new boolean[]{
-			false, false, true, false, false,
-			false, true, true, true, false,
-			true, true, true, true, true,
-			false, true, true, true, false,
-			false, false, true, false, false
-		});
+		return createShape(5, 5, "" +
+				"  X  " +
+				" XXX " +
+				"XXXXX" +
+				" XXX " +
+				"  X  ");
 	}
 
 	private static Shape getTankBeltNorth() {
-		return new Shape(5, 7, new boolean[]{
-			false, false, false, false, false,
-			true, false, false, false, true,
-			true, false, false, false, true,
-			true, false, false, false, true,
-			true, false, false, false, true,
-			true, false, false, false, true,
-			true, false, false, false, true
-		});
+		return createShape(5, 7, "" +
+				"X   X" +
+				"X   X" +
+				"X   X" +
+				"X   X" +
+				"X   X" +
+				"X   X" +
+				"X   X");
 	}
 
 	private static Shape getTankBeltNorthEast() {
-		return new Shape(7, 7, new boolean[]{
-			false, false, false, true, false, false, false,
-			false, false, true, false, false, false, false,
-			false, true, false, false, false, false, false,
-			true, false, false, false, false, false, true,
-			false, false, false, false, false, true, false,
-			false, false, false, false, true, false, false,
-			false, false, false, true, false, false, false
-		});
+		return createShape(7, 7, "" +
+				"   X   " +
+				"  X    " +
+				" X     " +
+				"X     X" +
+				"     X " +
+				"    X  " +
+				"   X   ");
 	}
 
 	private static Shape getProjectileNorthEast() {
-		return new Shape(3, 3, new boolean[]{
-			false, false, true,
-			false, true, false,
-			true, false, false
-		});
+		return createShape(3, 3, ""
+				+ "  X"
+				+ " X "
+				+ "X  ");
 	}
 
-	public static enum Type {
+	private static Shape createShape(int width, int height, String definition) {
+		boolean bitmap[] = new boolean[width * height];
+
+		for (int i = 0; i < definition.length(); i++) {
+			bitmap[i] = definition.charAt(i) != ' ';
+		}
+
+		return new Shape(width, height, bitmap);
+	}
+
+	public enum Type {
 		TankBody, TankBelt, Projectile
 	}
 }

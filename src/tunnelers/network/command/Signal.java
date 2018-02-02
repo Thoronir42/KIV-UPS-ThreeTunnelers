@@ -1,13 +1,9 @@
 package tunnelers.network.command;
 
-/**
- *
- * @author Skoro
- */
 public class Signal {
 
-	private Type type;
-	private String message;
+	private final Type type;
+	private final String message;
 
 	public Signal(Type type) {
 		this(type, "");
@@ -26,15 +22,13 @@ public class Signal {
 		return message;
 	}
 
-	public static enum Type {
+	public enum Type {
 		ConnectingTimedOut,
 		ConnectionNoRouteToHost,
 		ConnectingFailedUnexpectedError,
-		
-		ConnectionEstabilished,
+
+		ConnectionEstablished,
 		ConnectionReset,
 		UnknownHost,
-		
-		
 	}
 }

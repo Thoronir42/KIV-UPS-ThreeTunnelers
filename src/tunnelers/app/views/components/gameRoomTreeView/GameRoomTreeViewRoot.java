@@ -1,30 +1,26 @@
 package tunnelers.app.views.components.gameRoomTreeView;
 
-import tunnelers.app.views.serverList.GameMode;
 import tunnelers.app.views.components.roomListing.IGameRoomListItem;
+import tunnelers.app.views.serverList.GameMode;
 
-/**
- *
- * @author Skoro
- */
-public class GameRoomTreeViewRoot implements IGameRoomListItem{
+public class GameRoomTreeViewRoot implements IGameRoomListItem {
 	private final static String TITLE = "Seznam aktivních her";
-	
+
 	@Override
 	public GameMode getGameModeView() {
 		return null;
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return TITLE;
 	}
-	
+
 	@Override
 	public String getTitle() {
 		return TITLE;
 	}
-	
+
 	@Override
 	public String getOccupancy() {
 		return "";

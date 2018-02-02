@@ -1,12 +1,7 @@
 package tunnelers.network;
 
-/**
- *
- * @author Skoro
- */
-public abstract class CommandException extends RuntimeException {
-
-	public CommandException(String message) {
+abstract class CommandException extends RuntimeException {
+	CommandException(String message) {
 		super(message);
 	}
 }

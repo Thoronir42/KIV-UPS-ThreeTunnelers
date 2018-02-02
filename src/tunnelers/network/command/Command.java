@@ -1,13 +1,9 @@
 package tunnelers.network.command;
 
-/**
- *
- * @author Stepan
- */
 public class Command {
 
 	protected final CommandType type;
-	protected String data;
+	private String data;
 
 	public Command(CommandType type) {
 		this(type, "");

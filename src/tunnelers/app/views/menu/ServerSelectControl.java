@@ -5,20 +5,12 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import tunnelers.app.views.StyleHelper;
 import tunnelers.app.views.components.inputs.PortTextField;
 
-/**
- *
- * @author Skoro
- */
 public final class ServerSelectControl extends GridPane {
 
 	private final NameManager names;
@@ -28,9 +20,10 @@ public final class ServerSelectControl extends GridPane {
 
 	private final Button btn_connect;
 
-	private EventHandler<ServerSelectEvent> onSelected;
+	private EventHandler<ServerSelectEvent> onSelected = (e) -> {
+	};
 
-	public ServerSelectControl(int spacing, NameManager names) {
+	ServerSelectControl(int spacing, NameManager names) {
 		this.names = names;
 
 		this.setHgap(spacing);
@@ -50,7 +43,7 @@ public final class ServerSelectControl extends GridPane {
 				+ " možné stávající klíč znovu použít."));
 
 		StyleHelper.inject(cb_startAnew);
-				
+
 		Label lbl_hostname = new Label("Adresa");
 		Label lbl_port = new Label("Port");
 		Label lbl_name = new Label("Jméno");
@@ -68,21 +61,16 @@ public final class ServerSelectControl extends GridPane {
 		lbl_name.prefWidthProperty().bind(prefLabelWidth);
 
 		btn_connect.prefWidthProperty().bind(prefControlWidth.add(prefLabelWidth));
-		btn_connect.setOnAction(e -> {
-			if (onSelected == null) {
-				return;
-			}
-			onSelected.handle(new ServerSelectEvent(this.getHostname(), this.getPort(), this.getUsername(), !this.cb_startAnew.isSelected()));
-		});
+		btn_connect.setOnAction(e ->
+				onSelected.handle(new ServerSelectEvent(this.getHostname(), this.getPort(), this.getUsername(), !this.cb_startAnew.isSelected()))
+		);
 
 		lbl_name.setCursor(Cursor.HAND);
 		lbl_name.setStyle("-fx-underline: true;");
 		lbl_name.setTextFill(Color.DODGERBLUE);
-		lbl_name.setOnMouseClicked(e -> {
-			this.setName(this.names.generateNext());
-		});
+		lbl_name.setOnMouseClicked(e -> this.setName(this.names.generateNext()));
 		lbl_name.getOnMouseClicked().handle(null);
-		
+
 		this.addColumn(0, lbl_hostname, lbl_port, lbl_name);
 		this.addColumn(1, this.tf_hostname, this.tf_port, this.tf_username);
 

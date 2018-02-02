@@ -1,9 +1,5 @@
 package generic;
 
-/**
- *
- * @author Stepan
- */
 public class SimpleScanner {
 
 	public static final int RADIX_DECIMAL = 10;
@@ -54,7 +50,7 @@ public class SimpleScanner {
 
 	public String read(int n) throws SimpleScannerException {
 		if (remainingLength() < n) {
-			throw new SimpleScannerException(String.format("Attemoted to read %d chars from processed data", n));
+			throw new SimpleScannerException(String.format("Attempted to read %d chars from processed data", n));
 		}
 
 		String data = source.substring(pointer, pointer + n);

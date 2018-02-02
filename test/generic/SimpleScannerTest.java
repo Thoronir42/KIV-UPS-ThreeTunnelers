@@ -3,10 +3,6 @@ package generic;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Stepan
- */
 public class SimpleScannerTest {
 
 	private static final int TESTED_RADIX = SimpleScanner.RADIX_HEXADECIMAL;

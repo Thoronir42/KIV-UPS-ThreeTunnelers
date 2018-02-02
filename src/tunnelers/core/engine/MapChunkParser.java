@@ -5,22 +5,18 @@ import generic.SimpleScannerException;
 import tunnelers.core.model.map.Block;
 import tunnelers.core.model.map.Chunk;
 
-/**
- *
- * @author Skoro
- */
 public class MapChunkParser {
-	
-	public MapChunkParser() {
+
+	MapChunkParser() {
 	}
 
 	public Block[] parseData(SimpleScanner source) throws SimpleScannerException {
 		Block[] data = new Block[source.remainingLength()];
 		for (int i = 0; i < data.length; i++) {
-			try{
+			try {
 				byte value = Byte.parseByte(source.read(1), 16);
 				data[i] = Block.fromByteValue(value);
-			} catch (NumberFormatException ex){
+			} catch (NumberFormatException ex) {
 				data[i] = Block.Undefined;
 			}
 		}

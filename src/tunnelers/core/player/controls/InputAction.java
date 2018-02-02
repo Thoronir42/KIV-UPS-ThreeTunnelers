@@ -14,11 +14,11 @@ public enum InputAction {
 	private final int intVal;
 	private final String label;
 
-	private InputAction(int intVal, String label) {
+	InputAction(int intVal, String label) {
 		this(intVal, label, null);
 	}
 
-	private InputAction(int intVal, String label, Direction dir) {
+	InputAction(int intVal, String label, Direction dir) {
 		this.dir = dir;
 		this.intVal = intVal;
 		this.label = label;
@@ -43,6 +43,6 @@ public enum InputAction {
 	public String getLabel() {
 		return label;
 	}
-	
+
 
 }

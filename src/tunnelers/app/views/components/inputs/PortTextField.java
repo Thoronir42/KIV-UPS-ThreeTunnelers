@@ -5,16 +5,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
 import tunnelers.core.settings.Settings;
 
-/**
- *
- * @author Stepan
- */
 public class PortTextField extends TextField {
 
-	public static final int MAX_PORT = 65535;
-	public static final int MIN_PORT = 0;
+	private static final int MAX_PORT = 65535, MIN_PORT = 0;
 
-	protected final SimpleIntegerProperty Port;
+	private final SimpleIntegerProperty Port;
 
 	public void setPort(int port) {
 		this.Port.set(port);

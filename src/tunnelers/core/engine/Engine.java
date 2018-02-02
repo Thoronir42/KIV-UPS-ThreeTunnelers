@@ -2,7 +2,6 @@ package tunnelers.core.engine;
 
 import generic.SimpleScanner;
 import generic.SimpleScannerException;
-import tunnelers.network.NetAdapter;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;
@@ -11,30 +10,25 @@ import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.GameRoomState;
 import tunnelers.core.player.controls.AControlsManager;
 import tunnelers.core.settings.Settings;
+import tunnelers.network.NetAdapter;
 import tunnelers.network.NetClient;
 import tunnelers.network.command.Command;
 import tunnelers.network.command.INetworkProcessor;
 import tunnelers.network.command.Signal;
 
-/**
- *
- * @author Stepan
- */
 public final class Engine extends Thread implements INetworkProcessor {
-
-	private final int version;
 
 	private final int tickRate;
 	private AEngineStage currentStage;
 
-	protected final EngineUserInterface guiInterface;
+	private final EngineUserInterface guiInterface;
 
 	protected NetClient localClient;
 	protected final NetAdapter netadapter;
 	protected final PersistentString connectionSecret;
 
-	protected final SimpleScanner commandScanner;
-	protected final EngineNetworksInterface networksInterface;
+	private final SimpleScanner commandScanner;
+	private final EngineNetworksInterface networksInterface;
 
 	protected GameRoom currentGameRoom;
 
@@ -47,7 +41,6 @@ public final class Engine extends Thread implements INetworkProcessor {
 	private boolean keepRunning;
 
 	public Engine(int version, Settings settings) {
-		this.version = version;
 		this.netadapter = new NetAdapter(this);
 
 		this.setStage(Stage.Menu);
@@ -59,11 +52,11 @@ public final class Engine extends Thread implements INetworkProcessor {
 		this.networksInterface = new EngineNetworksInterface(this, true);
 
 		this.preferredName = "";
-		
+
 		this.tickDelay = 1000 / settings.getTickRate();
 	}
 
-	public EngineUserInterface intefrace() {
+	public EngineUserInterface userInterface() {
 		return guiInterface;
 	}
 
@@ -131,7 +124,7 @@ public final class Engine extends Thread implements INetworkProcessor {
 		this.keepRunning = false;
 		this.netadapter.shutdown();
 		this.view.exit();
-		
+
 	}
 
 	public Chat getChat() {
@@ -154,7 +147,7 @@ public final class Engine extends Thread implements INetworkProcessor {
 		try {
 			return action.execute(commandScanner);
 		} catch (SimpleScannerException ex) {
-			System.err.println(ex);
+			System.err.println(ex.toString());
 			return false;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -168,7 +161,7 @@ public final class Engine extends Thread implements INetworkProcessor {
 		System.out.println("Engine: processing signal " + signal.getType());
 		view.setConnectEnabled(true);
 		switch (signal.getType()) {
-			case ConnectionEstabilished:
+			case ConnectionEstablished:
 				this.localClient = new NetClient();
 				view.showScene(IView.Scene.GameRoomList);
 				break;
@@ -192,7 +185,7 @@ public final class Engine extends Thread implements INetworkProcessor {
 		}
 	}
 
-	public static enum Stage {
+	public enum Stage {
 		Menu,
 		Warzone,
 	}

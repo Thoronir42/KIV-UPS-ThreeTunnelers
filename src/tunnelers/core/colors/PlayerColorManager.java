@@ -3,11 +3,6 @@ package tunnelers.core.colors;
 import generic.RNG;
 import tunnelers.core.chat.IChatParticipant;
 
-/**
- *
- * @author Stepan
- * @param <PCC> player color class
- */
 public class PlayerColorManager<PCC extends PlayerColor> {
 
 	protected final PCC[] colors;

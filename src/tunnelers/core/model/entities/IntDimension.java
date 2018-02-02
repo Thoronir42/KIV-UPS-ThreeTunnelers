@@ -2,10 +2,6 @@ package tunnelers.core.model.entities;
 
 import javafx.geometry.Dimension2D;
 
-/**
- *
- * @author Skoro
- */
 public class IntDimension {
 
 	private final int width;
@@ -32,8 +28,8 @@ public class IntDimension {
 		return !(x < 0 || x >= width || y < 0 || y >= height);
 	}
 
-	public boolean contains(IntPoint baseChunk) {
-		return this.contains(baseChunk.getX(), baseChunk.getY());
+	public boolean contains(IntPoint point) {
+		return this.contains(point.getX(), point.getY());
 	}
 
 }

@@ -1,23 +1,17 @@
 package tunnelers.app.render;
 
-import tunnelers.app.render.colors.AColorScheme;
-import java.util.HashMap;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import tunnelers.app.assets.Asset;
+import tunnelers.app.assets.AssetDirection;
 import tunnelers.app.assets.Assets;
-import tunnelers.app.assets.IAssetImagesProvider;
-import tunnelers.core.model.entities.Direction;
-import tunnelers.core.model.entities.IntDimension;
-import tunnelers.core.model.entities.Projectile;
-import tunnelers.core.model.entities.ShapeFactory;
-import tunnelers.core.model.entities.Tank;
+import tunnelers.app.render.colors.AColorScheme;
+import tunnelers.core.model.entities.*;
 import tunnelers.core.player.Player;
 
-/**
- *
- * @author Stepan
- */
+import java.util.HashMap;
+
 public class AssetsRenderer extends ARenderer {
 
 	// Center block offset
@@ -28,17 +22,17 @@ public class AssetsRenderer extends ARenderer {
 	private final Assets assets;
 
 	private final int[] directionRotations;
-	
-	final HashMap<Player, Image[]> tankBody;
 
-	final Image[] assetCannon;
+	private final HashMap<Player, Image[]> tankBody;
 
-	final Image[] assetProjectile;
+	private final Image[] assetCannon;
+
+	private final Image[] assetProjectile;
 
 	public AssetsRenderer(AColorScheme colorScheme, Assets assets) {
 		super(colorScheme);
 		tankBody = new HashMap<>();
-		
+
 		this.directionRotations = this.createRotationArray();
 
 		this.assets = assets;
@@ -46,23 +40,23 @@ public class AssetsRenderer extends ARenderer {
 		this.assetCannon = this.initCannonAssets(colorScheme.getCannonColor());
 		this.assetProjectile = this.initProjectileAssets(colorScheme.getProjectileColor());
 	}
-	
-	private int[] createRotationArray(){
+
+	private int[] createRotationArray() {
 		int[] rotations = new int[Direction.values().length];
-		
-		for(Direction d : Direction.values()){
+
+		for (Direction d : Direction.values()) {
 			int intVal = d.byteValue();
 			rotations[intVal] = (intVal - 1) / 2;
 		}
-		
+
 		return rotations;
 	}
 
 	private Image[] initCannonAssets(Color c) {
 		Image[] cannon = new Image[2];
 
-		cannon[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.TANK_CANNON, c);
-		cannon[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.TANK_CANNON_DIAG, c);
+		cannon[AssetDirection.Upward.getOrder()] = assets.getImage(Asset.TankCannon, c);
+		cannon[AssetDirection.Diagonal.getOrder()] = assets.getImage(Asset.TankBodyDiag, c);
 
 		return cannon;
 	}
@@ -70,8 +64,8 @@ public class AssetsRenderer extends ARenderer {
 	private Image[] initProjectileAssets(Color c) {
 		Image[] projectile = new Image[2];
 
-		projectile[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.PROJECTILE, c);
-		projectile[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.PROJECTILE_DIAG, c);
+		projectile[AssetDirection.Upward.getOrder()] = assets.getImage(Asset.Projectile, c);
+		projectile[AssetDirection.Diagonal.getOrder()] = assets.getImage(Asset.ProjectileDiag, c);
 
 		return projectile;
 	}
@@ -84,8 +78,8 @@ public class AssetsRenderer extends ARenderer {
 
 			Color c = colorScheme.playerColors().get(player).color();
 			Image[] tankImages = new Image[2];
-			tankImages[IAssetImagesProvider.IMG_REG] = assets.getImage(IAssetImagesProvider.TANK_BODY, c);
-			tankImages[IAssetImagesProvider.IMG_DIAG] = assets.getImage(IAssetImagesProvider.TANK_BODY_DIAG, c);
+			tankImages[AssetDirection.Upward.getOrder()] = assets.getImage(Asset.TankBody, c);
+			tankImages[AssetDirection.Diagonal.getOrder()] = assets.getImage(Asset.TankBodyDiag, c);
 			tankBody.put(player, tankImages);
 		}
 	}
@@ -103,7 +97,7 @@ public class AssetsRenderer extends ARenderer {
 	}
 
 	private Image imgDiagSwitch(Image[] img, boolean diagonal) {
-		return diagonal ? img[IAssetImagesProvider.IMG_DIAG] : img[IAssetImagesProvider.IMG_REG];
+		return diagonal ? img[AssetDirection.Diagonal.getOrder()] : img[AssetDirection.Upward.getOrder()];
 	}
 
 	public void drawTank(Tank t) {
@@ -162,13 +156,13 @@ public class AssetsRenderer extends ARenderer {
 				return CBO_3;
 		}
 	}
-	
+
 	private boolean isDiagonal(Direction direction) {
 		return direction.isDiagonal();
 	}
 
 	private int getRotation(Direction direction) {
-		if(direction == null){
+		if (direction == null) {
 			direction = Direction.Undefined;
 		}
 		return this.directionRotations[direction.byteValue()];

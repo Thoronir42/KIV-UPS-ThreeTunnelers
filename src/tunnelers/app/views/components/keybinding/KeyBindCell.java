@@ -67,13 +67,11 @@ class KeyBindCell extends TableCell<KeyTableRow, KeyCode> {
 				case ENTER:
 					commitEdit(lastKeyPressed);
 			}
-			commitEdit(pressed); 
-			if(true)
-				return;
-			lastKeyPressed = pressed;
-			
+			commitEdit(pressed);
+			/*lastKeyPressed = pressed; // todo: inspect this old code
+
 			tf_keyCode.setText(getKeyBindString(pressed));
-			event.consume();
+			event.consume();*/
 		});
 		return tf_keyCode;
 	}

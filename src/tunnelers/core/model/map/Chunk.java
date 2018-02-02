@@ -1,21 +1,18 @@
 package tunnelers.core.model.map;
 
-import java.util.Arrays;
 import tunnelers.core.player.Player;
 
-/**
- *
- * @author Stepan
- */
+import java.util.Arrays;
+
 public class Chunk {
 
 	private final int chunkSize;
 
-	protected Block[] chunkData;
+	protected final Block[] chunkData;
 	protected Player assignedPlayer;
 	protected Type type;
 
-	protected int staleness;
+	private int staleness;
 
 	public Chunk(int chunkSize) {
 		this.chunkSize = chunkSize;
@@ -65,7 +62,7 @@ public class Chunk {
 		this.staleness = staleness;
 	}
 
-	public static enum Type {
+	public enum Type {
 		Regular, PlayerBase
-	};
+	}
 }

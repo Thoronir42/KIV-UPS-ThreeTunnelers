@@ -4,17 +4,13 @@ import javafx.scene.layout.VBox;
 import tunnelers.app.render.colors.FxPlayerColorManager;
 import tunnelers.core.player.Player;
 
-/**
- *
- * @author Skoro
- */
 public class PlayerListView extends VBox {
 
 	private final FxPlayerColorManager colors;
 
 	private final PlayerView[] playerViews;
 
-	public PlayerListView(FxPlayerColorManager colors, int capacity) {
+	PlayerListView(FxPlayerColorManager colors, int capacity) {
 		this.colors = colors;
 		this.playerViews = this.createViews(capacity);
 
@@ -24,13 +20,13 @@ public class PlayerListView extends VBox {
 			this.getChildren().add(playerViews[i]);
 		}
 	}
-	
-	private PlayerView[] createViews(int n){
+
+	private PlayerView[] createViews(int n) {
 		PlayerView[] views = new PlayerView[n];
-		for(int i = 0; i < n; i++){
+		for (int i = 0; i < n; i++) {
 			views[i] = new PlayerView();
 		}
-		
+
 		return views;
 	}
 

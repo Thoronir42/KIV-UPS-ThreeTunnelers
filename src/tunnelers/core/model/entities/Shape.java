@@ -1,9 +1,5 @@
 package tunnelers.core.model.entities;
 
-/**
- *
- * @author Skoro
- */
 public class Shape {
 
 	private final boolean[] pixels;
@@ -14,10 +10,11 @@ public class Shape {
 	private final IntPoint min;
 	private final IntPoint max;
 
-	protected Shape(int width, int height, boolean[] pixels) {
+	Shape(int width, int height, boolean[] pixels) {
 		if (width * height != pixels.length) {
 			throw new IllegalArgumentException("Shape dimensions must match pixel count");
 		}
+
 		this.width = width;
 		this.height = height;
 		this.pixels = pixels;
@@ -28,9 +25,10 @@ public class Shape {
 
 	public boolean isPixelSolid(int x, int y) {
 		int offset = y * this.width + x;
-		if(offset < 0 || offset >= this.pixels.length){
+		if (offset < 0 || offset >= this.pixels.length) {
 			return false;
 		}
+
 		return this.pixels[offset];
 	}
 

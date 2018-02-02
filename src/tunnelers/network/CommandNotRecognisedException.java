@@ -1,18 +1,14 @@
 package tunnelers.network;
 
-/**
- *
- * @author Stepan
- */
-public class CommandNotRecognisedException extends CommandException{
-	
+public class CommandNotRecognisedException extends CommandException {
+
 	private final String data;
-	
+
 	public CommandNotRecognisedException(String data) {
 		this(data, "Received command was not recognised");
 	}
-	
-	public CommandNotRecognisedException(String data, String message){
+
+	public CommandNotRecognisedException(String data, String message) {
 		super(message);
 		this.data = data;
 	}
@@ -25,6 +21,6 @@ public class CommandNotRecognisedException extends CommandException{
 	public String toString() {
 		return super.toString() + ": " + data;
 	}
-	
-	
+
+
 }

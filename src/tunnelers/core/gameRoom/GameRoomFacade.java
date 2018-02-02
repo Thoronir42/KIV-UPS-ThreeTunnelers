@@ -79,21 +79,10 @@ public class GameRoomFacade implements IGameRoomInfo {
 			return false;
 		}
 		final GameRoomFacade other = (GameRoomFacade) obj;
-		if (this.id != other.id) {
-			return false;
-		}
-		if (this.maxPlayers != other.maxPlayers) {
-			return false;
-		}
-		if (this.curPlayers != other.curPlayers) {
-			return false;
-		}
-		if (this.flags != other.flags) {
-			return false;
-		}
-		if (this.gameMode != other.gameMode) {
-			return false;
-		}
-		return true;
+		return this.id == other.id &&
+				this.maxPlayers == other.maxPlayers &&
+				this.curPlayers == other.curPlayers &&
+				this.flags == other.flags &&
+				this.gameMode == other.gameMode;
 	}
 }

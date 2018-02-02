@@ -3,18 +3,14 @@ package tunnelers.app.views.components.keybinding;
 import javafx.scene.control.TableColumn;
 import javafx.scene.input.KeyCode;
 import tunnelers.app.controls.FxControlsManager;
+import tunnelers.core.player.controls.ControlInput;
 import tunnelers.core.player.controls.Controls;
 import tunnelers.core.player.controls.InputAction;
-import tunnelers.core.player.controls.ControlInput;
 
-/**
- *
- * @author Stepan
- */
 class KeyTableRow {
 
 	static int inputColumnOffset = 0;
-	static byte[] keyboardLayoutIds;
+	private static byte[] keyboardLayoutIds;
 
 	static void setKLIDs(byte[] kbLayoutIds) {
 		keyboardLayoutIds = kbLayoutIds;
@@ -29,11 +25,11 @@ class KeyTableRow {
 		return -1;
 	}
 
-	InputAction inputAction;
-	final ControlInput[] inputs;
-	FxControlsManager controlSchemeManager;
+	final InputAction inputAction;
+	private final ControlInput[] inputs;
+	private final FxControlsManager controlSchemeManager;
 
-	public KeyTableRow(InputAction input, byte[] keyboardLayoutIds, FxControlsManager csm) {
+	KeyTableRow(InputAction input, byte[] keyboardLayoutIds, FxControlsManager csm) {
 		this.inputAction = input;
 		this.controlSchemeManager = csm;
 

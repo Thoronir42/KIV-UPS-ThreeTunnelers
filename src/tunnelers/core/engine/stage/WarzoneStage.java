@@ -1,25 +1,15 @@
 package tunnelers.core.engine.stage;
 
-import generic.RNG;
 import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.Warzone;
 import tunnelers.core.gameRoom.WarzoneRules;
-import tunnelers.core.player.controls.Controls;
-import tunnelers.core.model.entities.Direction;
-import tunnelers.core.model.entities.IntPoint;
-import tunnelers.core.model.entities.Projectile;
-import tunnelers.core.model.entities.Shape;
-import tunnelers.core.model.entities.ShapeFactory;
-import tunnelers.core.model.entities.Tank;
+import tunnelers.core.model.entities.*;
 import tunnelers.core.model.map.Block;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
+import tunnelers.core.player.controls.Controls;
 import tunnelers.core.player.controls.InputAction;
 
-/**
- *
- * @author Stepan
- */
 public class WarzoneStage extends AEngineStage {
 
 	private final GameRoom gameRoom;
@@ -64,21 +54,21 @@ public class WarzoneStage extends AEngineStage {
 	}
 
 	private void updateTank(Tank tank, Controls c) {
-//		boolean readyToShoot = tank.cooldown(warzoneRules.getCooldownRate());
-//		if (true && c.get(InputAction.actShoot)) { // TODO: omezeni poctu strel
-//			if (readyToShoot) {
-//				int projectilePosition = findFreeProjectileSlot(this.warzone.getProjectiles());
-//				if (projectilePosition >= 0) {
-//					warzone.setProjectile(projectilePosition, tank.getLocation(), tank.getDirection(), tank.getPlayer());
-//				}
-//				tank.setCooldown(warzoneRules.getTankCannonCooldown());
-//			}
-//		}
+		/*boolean readyToShoot = tank.cooldown(warzoneRules.getCooldownRate());
+		if (true && c.get(InputAction.actShoot)) { // TODO: omezeni poctu strel
+			if (readyToShoot) {
+				int projectilePosition = findFreeProjectileSlot(this.warzone.getProjectiles());
+				if (projectilePosition >= 0) {
+					warzone.setProjectile(projectilePosition, tank.getLocation(), tank.getDirection(), tank.getPlayer());
+				}
+				tank.setCoolDown(warzoneRules.getTankCannonCooldown());
+			}
+		}*/
 
 		moveTank(tank, getDirection(c));
 	}
 
-	public Direction getDirection(Controls c) {
+	private Direction getDirection(Controls c) {
 		int x = getDir(c, InputAction.movLeft, InputAction.movRight),
 				y = getDir(c, InputAction.movUp, InputAction.movDown);
 		return Direction.getDirection(x, y);
@@ -94,7 +84,7 @@ public class WarzoneStage extends AEngineStage {
 		return 0;
 	}
 
-	private int findFreeProjectileSlot(Projectile[] projectiles) {
+	/*private int findFreeProjectileSlot(Projectile[] projectiles) {
 		for (int i = 0; i < projectiles.length; i++) {
 			if (projectiles[i] == null) {
 				return i;
@@ -102,9 +92,9 @@ public class WarzoneStage extends AEngineStage {
 		}
 
 		return -1;
-	}
+	}*/
 
-	protected boolean locationOccupable(int newX, int newY, Shape body, Shape belt) {
+	private boolean locationOccupable(Map map, int newX, int newY, Shape body, Shape belt) {
 		IntPoint min = belt.getMin();
 		IntPoint max = belt.getMax();
 		for (int sy = min.getY(); sy <= max.getY(); sy++) {
@@ -112,7 +102,7 @@ public class WarzoneStage extends AEngineStage {
 				if (!body.isPixelSolidRelative(sx, sy) || !belt.isPixelSolidRelative(sx, sy)) {
 					continue;
 				}
-				Block b = this.warzone.getMap().getBlock(newX + sx, newY + sy);
+				Block b = map.getBlock(newX + sx, newY + sy);
 				if (b.isObstacle()) {
 					return false;
 				}
@@ -122,7 +112,7 @@ public class WarzoneStage extends AEngineStage {
 		return true;
 	}
 
-	protected IntPoint moveTank(Tank tank, Direction d) {
+	private IntPoint moveTank(Tank tank, Direction d) {
 		Map map = this.warzone.getMap();
 
 		if (d == null || d == Direction.Undefined) {
@@ -136,7 +126,7 @@ public class WarzoneStage extends AEngineStage {
 		int newX = plr_loc.getX() + d.getX(),
 				newY = plr_loc.getY() + d.getY();
 
-		if (locationOccupable(newX, newY, shapeBody, shapeBelt)) {
+		if (locationOccupable(map, newX, newY, shapeBody, shapeBelt)) {
 			tank.setLocation(newX, newY);
 			tank.setDirection(d);
 		}

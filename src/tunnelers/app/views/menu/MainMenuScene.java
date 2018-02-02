@@ -6,28 +6,19 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.views.StyleHelper;
 import tunnelers.core.engine.IView;
 
-/**
- *
- * @author Stepan
- */
 public class MainMenuScene extends ATunnelersScene {
 
 	private static final double BTN_PREF_WIDTH = 180,
 			BTN_PREF_HEIGHT = 42;
 
 	public static MainMenuScene getInstance() {
-			return createInstance();
+		return createInstance();
 	}
 
 	private static MainMenuScene createInstance() {
@@ -41,12 +32,8 @@ public class MainMenuScene extends ATunnelersScene {
 		MainMenuScene scene = new MainMenuScene(content, settings.getWindowWidth(), settings.getWindowHeight());
 
 		Button[] buttons = new Button[]{
-			createButton("Nastavení", (ActionEvent event) -> {
-				scene.getStage().showScene(IView.Scene.Settings);
-			}),
-			createButton("Ukončit", (ActionEvent event) -> {
-				scene.getStage().close();
-			}),};
+				createButton("Nastavení", (ActionEvent event) -> scene.getStage().showScene(IView.Scene.Settings)),
+				createButton("Ukončit", (ActionEvent event) -> scene.getStage().close()),};
 
 		scene.serverSelect.setStyle("-fx-background-color: rgba(245,245,245,0.95);"
 				+ " -fx-border-size: 2px;"
@@ -75,14 +62,14 @@ public class MainMenuScene extends ATunnelersScene {
 //			scene.flashClear();
 //		});
 
-		
+
 		GridPane flashTester = new GridPane();
 //		flashTester.add(txt_flash, 0, 0, 2, 1);
 //		flashTester.add(but_flashDisplay, 0, 1);
 //		flashTester.add(but_flashClear, 1, 1);
 
 		content.add(flashTester, 1, 0, 1, 3);
-		 
+
 		return scene;
 
 	}
@@ -103,9 +90,9 @@ public class MainMenuScene extends ATunnelersScene {
 		serverSelectControl.setHostname(settings.getServerAddress());
 		serverSelectControl.setPort(settings.getServerPort());
 
-		serverSelectControl.setOnSelected((ServerSelectEvent e) -> {
-			this.getEngine().connect(e.getUsername(), e.getHostname(), e.getPort(), e.useReconnect());
-		});
+		serverSelectControl.setOnSelected((ServerSelectEvent e) ->
+				this.getEngine().connect(e.getUsername(), e.getHostname(), e.getPort(), e.useReconnect())
+		);
 
 		this.serverSelect = serverSelectControl;
 	}

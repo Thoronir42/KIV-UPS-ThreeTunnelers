@@ -3,10 +3,6 @@ package tunnelers.app.views.components.flash;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Stepan
- */
 public class LinearEaseFunctionTest {
 
 	private static final float TEST_SPEED = 0.1f;
@@ -46,8 +42,8 @@ public class LinearEaseFunctionTest {
 	}
 
 	private void compare(int step, float expected, float actual) {
-		//System.out.format("Step %d: expected: %.4f, got: %.4f\n", step, expected, actual);
-		assertEquals(expected, actual, TEST_DELTA);
+		String msg = String.format("Step %d: expected: %.4f, got: %.4f\n", step, expected, actual);
+		assertEquals(msg, expected, actual, TEST_DELTA);
 	}
 
 }

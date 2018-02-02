@@ -1,12 +1,8 @@
 package tunnelers.core.player.controls;
 
-/**
- *
- * @author Stepan
- */
 public class ControlInput {
 
-	protected final Controls controlScheme;
+	private final Controls controlScheme;
 	protected final InputAction input;
 
 	public ControlInput(Controls controlScheme, InputAction i) {
@@ -31,10 +27,7 @@ public class ControlInput {
 			return false;
 		}
 		final ControlInput other = (ControlInput) obj;
-		if (this.controlScheme != other.controlScheme) {
-			return false;
-		}
-		return this.input == other.input;
+		return this.controlScheme == other.controlScheme && this.input == other.input;
 	}
 
 	public Controls getControlScheme() {

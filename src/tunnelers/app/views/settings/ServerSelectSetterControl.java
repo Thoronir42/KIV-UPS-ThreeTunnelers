@@ -9,19 +9,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import tunnelers.app.views.components.inputs.PortTextField;
 
-/**
- *
- * @author Skoro
- */
 public class ServerSelectSetterControl extends GridPane {
 
-	protected TextField tf_adress;
-	protected PortTextField tf_port;
-	
+	private final TextField tf_adress;
+	private final PortTextField tf_port;
+
 	private final Button btn_testServer;
 	private final Button btn_setDefaults;
 
-	public ServerSelectSetterControl(double spacing) {
+	ServerSelectSetterControl(double spacing) {
 		this.setVgap(spacing);
 		this.setHgap(spacing);
 
@@ -38,9 +34,8 @@ public class ServerSelectSetterControl extends GridPane {
 
 		lblAdr.setAlignment(Pos.CENTER_RIGHT);
 		lblPort.setAlignment(Pos.CENTER_RIGHT);
-		
-		
-		
+
+
 		this.tf_adress = new TextField();
 		this.tf_port = new PortTextField();
 		this.addColumn(0, lblAdr, lblPort);
@@ -71,7 +66,6 @@ public class ServerSelectSetterControl extends GridPane {
 	public void setPort(int port) {
 		tf_port.setPort(port);
 	}
-	
-	
+
 
 }

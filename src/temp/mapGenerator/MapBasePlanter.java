@@ -10,7 +10,7 @@ public class MapBasePlanter implements IMapGeneratorStep {
 
 	private final RNG rng;
 
-	public MapBasePlanter(RNG rng) {
+	MapBasePlanter(RNG rng) {
 		this.rng = rng;
 
 	}
@@ -36,10 +36,12 @@ public class MapBasePlanter implements IMapGeneratorStep {
 
 	}
 
-	private Chunk plantBaseOn(Chunk chunk, int chunkSize) {
+	private void plantBaseOn(Chunk chunk, int chunkSize) {
 		int padding = 3;
+		int top, left, bottom, right;
 
-		int top = padding, left = top, bottom = chunkSize - padding, right = bottom;
+		top = left = padding;
+		bottom = right = chunkSize - padding;
 
 		for (int row = top; row <= bottom; row++) {
 			chunk.setBlock(left, row, Block.BaseWall);
@@ -70,7 +72,6 @@ public class MapBasePlanter implements IMapGeneratorStep {
 			}
 		}
 
-		return chunk;
 	}
 
 }

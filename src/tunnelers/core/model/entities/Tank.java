@@ -2,25 +2,21 @@ package tunnelers.core.model.entities;
 
 import tunnelers.core.player.Player;
 
-/**
- *
- * @author Stepan
- */
 public class Tank extends GameEntity {
 
-	protected Status status;
+	private Status status;
 
-	protected int hitpoints, energy;
+	private int hitPoints, energy;
 
-	protected int cannonCooldown;
+	private int cannonCoolDown;
 
 	public Tank(Player player, IntPoint initialLocation, int hitpoints, int energy) {
 		super(initialLocation, Direction.North, player);
 
 		this.status = Status.Operative;
-		this.hitpoints = hitpoints;
+		this.hitPoints = hitpoints;
 		this.energy = energy;
-		this.cannonCooldown = 0;
+		this.cannonCoolDown = 0;
 	}
 
 	@Override
@@ -32,22 +28,22 @@ public class Tank extends GameEntity {
 		this.direction = d;
 	}
 
-	public void setCooldown(int cooldown) {
-		this.cannonCooldown = cooldown;
+	public void setCoolDown(int coolDown) {
+		this.cannonCoolDown = coolDown;
 	}
 
-	public boolean cooldown(int cooldownRate) {
-		int newValue = this.cannonCooldown - cooldownRate;
-		this.cannonCooldown = newValue < 0 ? 0 : newValue;
-		return this.cannonCooldown == 0;
+	public boolean cooldown(int coolDownRate) {
+		int newValue = this.cannonCoolDown - coolDownRate;
+		this.cannonCoolDown = newValue < 0 ? 0 : newValue;
+		return this.cannonCoolDown == 0;
 	}
 
-	public int getHitpoints() {
-		return hitpoints;
+	public int getHitPoints() {
+		return hitPoints;
 	}
 
 	public void setHitPoints(int hitpoints) {
-		this.hitpoints = hitpoints;
+		this.hitPoints = hitpoints;
 	}
 
 	public int getEnergy() {
@@ -66,7 +62,7 @@ public class Tank extends GameEntity {
 		this.status = status;
 	}
 
-	public static enum Status {
+	public enum Status {
 		Operative, Destroyed;
 
 		public static Status get(int n) {

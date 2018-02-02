@@ -1,17 +1,14 @@
 package tunnelers.core.chat;
 
 import generic.CyclicArray;
+
 import java.util.Iterator;
 
-/**
- *
- * @author Stepan
- */
 public class Chat {
 
 	static {
 		PARTICIPANT_SERVER = new StaticChatParticipant("SRV", IChatParticipant.SYSTEM_ID);
-		PARTICIPANT_ERROR = new StaticChatParticipant("SRV", IChatParticipant.SYSTEM_ID);
+		PARTICIPANT_ERROR = new StaticChatParticipant("whoami", IChatParticipant.SYSTEM_ID);
 	}
 
 	private static final IChatParticipant PARTICIPANT_SERVER, PARTICIPANT_ERROR;

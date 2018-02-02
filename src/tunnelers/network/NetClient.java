@@ -2,14 +2,10 @@ package tunnelers.network;
 
 import tunnelers.core.player.Player;
 
-/**
- *
- * @author Stepan
- */
 public class NetClient {
 
 	public static int MAX_NAME_LENGTH = 12;
-	public static int PLAYER_CAPACITY = 2;
+	public static final int PLAYER_CAPACITY = 2;
 
 	private int latency;
 	private String name;

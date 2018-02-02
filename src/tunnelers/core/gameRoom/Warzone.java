@@ -7,10 +7,6 @@ import tunnelers.core.model.entities.Tank;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 
-/**
- *
- * @author Stepan
- */
 public class Warzone {
 
 	private final WarzoneRules rules;
@@ -19,7 +15,7 @@ public class Warzone {
 	private final Tank[] tanks;
 	private final Projectile[] projectiles;
 
-	public Warzone(WarzoneRules rules, int playerCapacity) {
+	Warzone(WarzoneRules rules, int playerCapacity) {
 		this.rules = rules;
 		this.tanks = new Tank[playerCapacity];
 		this.projectiles = new Projectile[tanks.length * rules.getProjectilesPerTank()];
