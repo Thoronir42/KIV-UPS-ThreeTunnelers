@@ -5,7 +5,7 @@ import generic.SimpleScannerException;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;
-import tunnelers.core.engine.stage.WarzoneStage;
+import tunnelers.core.engine.stage.WarZoneStage;
 import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.GameRoomState;
 import tunnelers.core.player.controls.AControlsManager;
@@ -40,7 +40,7 @@ public final class Engine extends Thread implements INetworkProcessor {
 	private long currentTick;
 	private boolean keepRunning;
 
-	public Engine(int version, Settings settings) {
+	public Engine(Settings settings) {
 		this.netadapter = new NetAdapter(this);
 
 		this.setStage(Stage.Menu);
@@ -78,7 +78,7 @@ public final class Engine extends Thread implements INetworkProcessor {
 				this.currentStage = new MenuStage();
 				break;
 			case Warzone:
-				this.currentStage = new WarzoneStage(currentGameRoom);
+				this.currentStage = new WarZoneStage(currentGameRoom);
 				break;
 		}
 	}
@@ -105,11 +105,27 @@ public final class Engine extends Thread implements INetworkProcessor {
 		try {
 			while (this.keepRunning) {
 				this.currentTick++;
-				this.currentStage.update(this.currentTick);
-				if (this.currentTick % (tickRate / 2) == 0) {
-					this.netadapter.update(this.currentTick);
+
+				try {
+					this.currentStage.update(this.currentTick);
+				} catch (Exception e) {
+					System.err.println("Engine stage update failed:");
+					e.printStackTrace();
 				}
-				this.view.update(this.currentTick);
+				try {
+					if (this.currentTick % (tickRate / 2) == 0) {
+						this.netadapter.update(this.currentTick);
+					}
+				} catch (Exception e) {
+					System.err.println("Network update failed:");
+					e.printStackTrace();
+				}
+				try {
+					this.view.update(this.currentTick);
+				} catch (Exception e) {
+					System.err.println("View update failed:");
+					e.printStackTrace();
+				}
 
 				sleep(tickDelay);
 			}

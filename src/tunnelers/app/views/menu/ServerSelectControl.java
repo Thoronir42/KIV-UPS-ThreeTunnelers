@@ -61,9 +61,7 @@ public final class ServerSelectControl extends GridPane {
 		lbl_name.prefWidthProperty().bind(prefLabelWidth);
 
 		btn_connect.prefWidthProperty().bind(prefControlWidth.add(prefLabelWidth));
-		btn_connect.setOnAction(e ->
-				onSelected.handle(new ServerSelectEvent(this.getHostname(), this.getPort(), this.getUsername(), !this.cb_startAnew.isSelected()))
-		);
+		btn_connect.setOnAction(e -> this.submit());
 
 		lbl_name.setCursor(Cursor.HAND);
 		lbl_name.setStyle("-fx-underline: true;");
@@ -77,6 +75,11 @@ public final class ServerSelectControl extends GridPane {
 		this.add(btn_connect, 0, 3, 2, 1);
 		this.add(this.cb_startAnew, 0, 4, 2, 1);
 
+	}
+
+	void submit() {
+		ServerSelectEvent event = new ServerSelectEvent(this.getHostname(), this.getPort(), this.getUsername(), !this.cb_startAnew.isSelected());
+		onSelected.handle(event);
 	}
 
 	public void setHostname(String hostname) {

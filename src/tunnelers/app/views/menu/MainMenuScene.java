@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import tunnelers.app.ATunnelersScene;
@@ -100,5 +101,17 @@ public class MainMenuScene extends ATunnelersScene {
 	public void setConnectEnabled(boolean value) {
 		serverSelect.setDisable(!value);
 		serverSelect.setCursor(value ? Cursor.DEFAULT : Cursor.WAIT);
+	}
+
+	@Override
+	public void handleKeyPressed(KeyCode code) {
+		switch (code){
+			case ENTER:
+				serverSelect.submit();
+				break;
+			default:
+				super.handleKeyPressed(code);
+		}
+
 	}
 }

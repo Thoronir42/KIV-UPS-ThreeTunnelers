@@ -36,7 +36,7 @@ public final class Settings {
 
 	private final List<ISettingsSpecifier> configurators;
 
-	private Settings() {
+	public Settings() {
 		this.configurators = new ArrayList<>();
 		this.configurators.add(new DefaultSettingsSpecifier());
 	}
@@ -54,10 +54,12 @@ public final class Settings {
 		}
 	}
 
-	public void init() {
+	public Settings init() {
 		this.configurators.forEach((configurator) -> configurator.initialize(this));
 
 		this.configurators.clear();
+
+		return this;
 	}
 
 	public String getServerAddress() {

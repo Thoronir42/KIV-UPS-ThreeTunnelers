@@ -21,7 +21,7 @@ import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 import tunnelers.core.player.controls.AControlsManager;
 
-public final class TunnelersStage extends Stage implements IView {
+public final class TunnelersStage extends Stage implements IView, IFlasher {
 
 	private static final String GAME_NAME = "Three Tunnelers",
 			TITLE_SEPARATOR = "|";
@@ -197,9 +197,18 @@ public final class TunnelersStage extends Stage implements IView {
 	}
 
 	@Override
+	public void flashDisplay(String message) {
+		this.currentScene.flashDisplay(message);
+	}
+
+	@Override
+	public void flashClear() {
+		this.currentScene.flashClear();
+	}
+
+	@Override
 	public void exit() {
 //		Platform.exit();
 	}
-
 
 }

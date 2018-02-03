@@ -1,6 +1,6 @@
 package tunnelers.core.gameRoom;
 
-public class WarzoneRules {
+public class WarZoneRules {
 
 	public int getTankMaxHP() {
 		return 20;

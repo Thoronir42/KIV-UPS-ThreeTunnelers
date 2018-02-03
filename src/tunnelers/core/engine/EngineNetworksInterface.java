@@ -5,6 +5,8 @@ import tunnelers.core.chat.IChatParticipant;
 import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.GameRoomState;
+import tunnelers.core.gameRoom.WarZone;
+import tunnelers.core.gameRoom.WarZoneRules;
 import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.Tank;
@@ -23,10 +25,10 @@ import java.util.List;
 
 public class EngineNetworksInterface {
 
-	protected final HashMap<CommandType, IAction> actions;
+	private final HashMap<CommandType, IAction> actions;
 	protected final Engine engine;
 
-	protected final GameRoomParser gameRoomParser;
+	private final GameRoomParser gameRoomParser;
 	private final MapChunkParser mapChunkParser;
 
 	private int remainingChunks;
@@ -35,7 +37,7 @@ public class EngineNetworksInterface {
 		this(engine, false);
 	}
 
-	public EngineNetworksInterface(Engine engine, boolean printUnimplementedActions) {
+	EngineNetworksInterface(Engine engine, boolean printUnimplementedActions) {
 		this.engine = engine;
 		this.actions = this.prepareActions();
 
@@ -130,7 +132,7 @@ public class EngineNetworksInterface {
 			int localClientRID = sc.nextByte();
 			int leaderClientRID = sc.nextByte();
 
-			this.engine.currentGameRoom = new GameRoom(leaderClientRID, 4, 12, 4 * 20);
+			this.engine.currentGameRoom = new GameRoom(leaderClientRID, 4, 12);
 			this.engine.currentGameRoom.setClient(localClientRID, this.engine.localClient);
 
 			PlayerColorManager playerColorManager = this.engine.view.getPlayerColorManager();
@@ -188,7 +190,7 @@ public class EngineNetworksInterface {
 					this.engine.view.alert("Wait for other players thx");
 					return true;
 				case Battle:
-					Map tMap = this.engine.currentGameRoom.getWarzone().getMap();
+					Map tMap = this.engine.currentGameRoom.getWarZone().getMap();
 					Player[] players = this.engine.currentGameRoom.getPlayers();
 					this.engine.view.setGameData(tMap, players);
 					this.engine.setStage(Engine.Stage.Warzone);
@@ -314,14 +316,16 @@ public class EngineNetworksInterface {
 			System.out.format("Initializing map for %d players\n", playerCount);
 
 			Map tunnelerMap = new Map(chunkSize, xChunks, yChunks, playerCount);
-			this.engine.currentGameRoom.setMap(tunnelerMap);
+			WarZone zone = new WarZone(new WarZoneRules(), playerCount);
+			zone.setMap(tunnelerMap);
+			this.engine.currentGameRoom.setWarZone(zone);
 
 			this.remainingChunks = xChunks * yChunks;
 			return true;
 		});
 
 		map.put(CommandType.MapBases, sc -> {
-			Map tunnelerMap = this.engine.currentGameRoom.getMap();
+			Map tunnelerMap = this.engine.currentGameRoom.getWarZone().getMap();
 			IntPoint[] bases;
 
 			int n = sc.nextByte();
@@ -333,7 +337,7 @@ public class EngineNetworksInterface {
 				short playerRID = sc.nextByte();
 				Player p = this.engine.currentGameRoom.getPlayer(playerRID);
 				IntPoint location = tunnelerMap.setPlayerBaseChunk(i, new IntPoint(x, y), p);
-				this.engine.currentGameRoom.getWarzone().initTank(playerRID, p, location);
+				this.engine.currentGameRoom.getWarZone().initTank(playerRID, p, location);
 			}
 
 			return true;
@@ -345,7 +349,7 @@ public class EngineNetworksInterface {
 			int checkSum = sc.nextByte();
 			Block[] chunkData = this.mapChunkParser.parseData(sc);
 			try {
-				if (!this.engine.currentGameRoom.getWarzone().getMap()
+				if (!this.engine.currentGameRoom.getWarZone().getMap()
 						.updateChunk(chunkX, chunkY, chunkData)) {
 					System.out.format("Errors occured while updating chunk x=%d, y=%d\n", chunkX, chunkY);
 				}
@@ -366,7 +370,7 @@ public class EngineNetworksInterface {
 		});
 
 		map.put(CommandType.MapBlocksChanges, sc -> {
-			Map tunnelerMap = this.engine.currentGameRoom.getWarzone().getMap();
+			Map tunnelerMap = this.engine.currentGameRoom.getWarZone().getMap();
 
 			int n = sc.nextByte();
 			for (int i = 0; i < n; i++) {
@@ -405,7 +409,7 @@ public class EngineNetworksInterface {
 				return false;
 			}
 
-			Tank t = this.engine.currentGameRoom.getWarzone().getTank(roomId);
+			Tank t = this.engine.currentGameRoom.getWarZone().getTank(roomId);
 			t.setStatus(status);
 			t.setLocation(x, y);
 			t.setDirection(direction);
@@ -423,17 +427,17 @@ public class EngineNetworksInterface {
 			Direction direction = Direction.fromByteValue((byte) sc.nextByte());
 
 			Player p = this.engine.currentGameRoom.getPlayer(playerRoomId);
-			Tank t = this.engine.currentGameRoom.getWarzone().getTank(playerRoomId);
+			Tank t = this.engine.currentGameRoom.getWarZone().getTank(playerRoomId);
 
-			this.engine.currentGameRoom.getWarzone().setProjectile(n, new IntPoint(x, y), direction, p);
-			t.setCoolDown(this.engine.currentGameRoom.getWarzone().getRules().getTankCannonCooldown());
+			this.engine.currentGameRoom.getWarZone().setProjectile(n, new IntPoint(x, y), direction, p);
+			t.setCoolDown(this.engine.currentGameRoom.getWarZone().getRules().getTankCannonCooldown());
 
 			return true;
 		});
 
 		map.put(CommandType.GameProjRem, sc -> {
 			int n = sc.nextByte();
-			this.engine.currentGameRoom.getWarzone().removeProjectile(n);
+			this.engine.currentGameRoom.getWarZone().removeProjectile(n);
 			return true;
 		});
 	}

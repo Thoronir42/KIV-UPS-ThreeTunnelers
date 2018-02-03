@@ -5,7 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import tunnelers.app.assets.Assets;
 import tunnelers.app.render.colors.FxDefaultColorScheme;
 import tunnelers.core.engine.EngineUserInterface;
-import tunnelers.core.gameRoom.WarzoneRules;
+import tunnelers.core.gameRoom.WarZoneRules;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.Projectile;
 import tunnelers.core.model.entities.Tank;
@@ -69,16 +69,16 @@ public class FxRenderContainer {
 	}
 
 	public Projectile[] getProjectiles() {
-		return this.engine.getGameRoom().getProjectiles();
+		return this.engine.getGameRoom().getWarZone().getProjectiles();
 	}
 
 	public Tank[] getTanks() {
-		return this.engine.getGameRoom().getTanks();
+		return this.engine.getGameRoom().getWarZone().getTanks();
 	}
 
-	public WarzoneRules getWarzoneRules() {
+	public WarZoneRules getWarzoneRules() {
 		// todo: gaze upon all those possible null pointer exceptions
-		return this.engine.getGameRoom().getWarzone().getRules();
+		return this.engine.getGameRoom().getWarZone().getRules();
 	}
 
 	public void offsetBlocks(GraphicsContext gc, double x, double y) {

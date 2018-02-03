@@ -14,7 +14,7 @@ import javafx.scene.transform.Affine;
 import tunnelers.app.render.FxRenderContainer;
 import tunnelers.app.render.MapRenderer;
 import tunnelers.app.render.colors.AColorScheme;
-import tunnelers.core.gameRoom.WarzoneRules;
+import tunnelers.core.gameRoom.WarZoneRules;
 import tunnelers.core.model.entities.*;
 
 
@@ -70,7 +70,7 @@ public class PlayerAreaRenderer {
 		}
 		Affine defTransform = g.getTransform();
 		AColorScheme colors = renderer.getColorScheme();
-		WarzoneRules rules = renderer.getWarzoneRules();
+		WarZoneRules rules = renderer.getWarzoneRules();
 
 		g.setFill(colors.playerColors().get(tank).color());
 		g.fillRect(0, 0, bounds.getWidth(), bounds.getHeight());

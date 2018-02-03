@@ -1,8 +1,8 @@
 package tunnelers.core.engine.stage;
 
 import tunnelers.core.gameRoom.GameRoom;
-import tunnelers.core.gameRoom.Warzone;
-import tunnelers.core.gameRoom.WarzoneRules;
+import tunnelers.core.gameRoom.WarZone;
+import tunnelers.core.gameRoom.WarZoneRules;
 import tunnelers.core.model.entities.*;
 import tunnelers.core.model.map.Block;
 import tunnelers.core.model.map.Map;
@@ -10,30 +10,27 @@ import tunnelers.core.player.Player;
 import tunnelers.core.player.controls.Controls;
 import tunnelers.core.player.controls.InputAction;
 
-public class WarzoneStage extends AEngineStage {
+public class WarZoneStage extends AEngineStage {
 
 	private final GameRoom gameRoom;
-	private final Warzone warzone;
-	private final WarzoneRules warzoneRules;
+	private final WarZone warZone;
 
-	public WarzoneStage(GameRoom gameRoom) {
+	public WarZoneStage(GameRoom gameRoom) {
 		this.gameRoom = gameRoom;
-		this.warzone = gameRoom.getWarzone();
-		this.warzoneRules = warzone.getRules();
+		this.warZone = gameRoom.getWarZone();
 	}
 
 	@Override
 	public void update(long tick) {
 		if (tick % 3 == 0) {
-			Player[] players = this.gameRoom.getPlayers();
-			Tank[] tanks = this.warzone.getTanks();
+			Tank[] tanks = this.warZone.getTanks();
 
-			for (int i = 0; i < players.length; i++) {
-				Player p = players[i];
+			for (int i = 0; i < tanks.length; i++) {
 				Tank t = tanks[i];
 				if (t == null) {
 					continue;
 				}
+				Player p = t.getPlayer();
 				if (p == null) {
 					System.err.println("No player assigned to tank " + i);
 					continue;
@@ -50,18 +47,18 @@ public class WarzoneStage extends AEngineStage {
 
 		}
 
-		this.updateProjectiles(this.warzone.getProjectiles(), tick);
+		this.updateProjectiles(this.warZone.getProjectiles(), tick);
 	}
 
 	private void updateTank(Tank tank, Controls c) {
-		/*boolean readyToShoot = tank.cooldown(warzoneRules.getCooldownRate());
+		/*boolean readyToShoot = tank.cooldown(warZoneRules.getCooldownRate());
 		if (true && c.get(InputAction.actShoot)) { // TODO: omezeni poctu strel
 			if (readyToShoot) {
-				int projectilePosition = findFreeProjectileSlot(this.warzone.getProjectiles());
+				int projectilePosition = findFreeProjectileSlot(this.warZone.getProjectiles());
 				if (projectilePosition >= 0) {
-					warzone.setProjectile(projectilePosition, tank.getLocation(), tank.getDirection(), tank.getPlayer());
+					warZone.setProjectile(projectilePosition, tank.getLocation(), tank.getDirection(), tank.getPlayer());
 				}
-				tank.setCoolDown(warzoneRules.getTankCannonCooldown());
+				tank.setCoolDown(warZoneRules.getTankCannonCooldown());
 			}
 		}*/
 
@@ -113,7 +110,7 @@ public class WarzoneStage extends AEngineStage {
 	}
 
 	private IntPoint moveTank(Tank tank, Direction d) {
-		Map map = this.warzone.getMap();
+		Map map = this.warZone.getMap();
 
 		if (d == null || d == Direction.Undefined) {
 			return null;
@@ -135,7 +132,7 @@ public class WarzoneStage extends AEngineStage {
 	}
 
 	private void updateProjectiles(Projectile[] projectiles, long tick) {
-		Map map = this.warzone.getMap();
+		Map map = this.warZone.getMap();
 
 		for (int i = 0; i < projectiles.length; i++) {
 			Projectile p = projectiles[i];

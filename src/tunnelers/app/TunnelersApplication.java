@@ -10,10 +10,6 @@ import tunnelers.core.settings.Settings;
 
 public final class TunnelersApplication extends Application {
 
-	public static final int VERSION = 00101;
-
-	private TunnelersStage currentStage;
-
 	@Override
 	public void start(Stage primaryStage) {
 		Settings settings = Settings.getInstance();
@@ -27,16 +23,16 @@ public final class TunnelersApplication extends Application {
 
 		assets.init();
 
-		Engine e = new Engine(VERSION, settings);
+		Engine e = new Engine(settings);
 
-		currentStage = new TunnelersStage(e.userInterface(), assets, 1);
+		TunnelersStage currentStage = new TunnelersStage(e.userInterface(), assets, 1);
 		e.setView(currentStage);
 
 		currentStage.setOnHidden((WindowEvent event) -> e.exit());
 
 		e.start();
 		currentStage.setResizable(false);
-		this.currentStage.show();
+		currentStage.show();
 
 		currentStage.showSceneNow(IView.Scene.MainMenu);
 

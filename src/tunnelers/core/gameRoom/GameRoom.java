@@ -1,9 +1,6 @@
 package tunnelers.core.gameRoom;
 
 import tunnelers.core.chat.Chat;
-import tunnelers.core.model.entities.Projectile;
-import tunnelers.core.model.entities.Tank;
-import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 import tunnelers.network.NetClient;
 
@@ -17,24 +14,19 @@ public class GameRoom {
 
 	private final Chat chat;
 
-	private Warzone warzone;
+	private WarZone warZone;
 
-	private final int projectileCapacity;
-
-	public GameRoom(int leaderRID, int capacity, int chatCapacity, int projectilesCapacity) {
+	public GameRoom(int leaderRID, int capacity, int chatCapacity) {
 		this.state = GameRoomState.Idle;
 
 		this.clients = new NetClient[capacity];
 		this.players = new Player[capacity];
 		this.chat = new Chat(chatCapacity);
-
-		this.projectileCapacity = projectilesCapacity;
 		this.leaderClientRID = leaderRID;
 	}
 
-	public void setMap(Map map) {
-		this.warzone = new Warzone(new WarzoneRules(), this.players.length);
-		this.warzone.setMap(map);
+	public void setWarZone(WarZone warZone) {
+		this.warZone = warZone;
 	}
 
 	public GameRoomState getState() {
@@ -105,8 +97,8 @@ public class GameRoom {
 	}
 
 	public void setPlayer(int roomId, Player player) {
-		if (roomId < 0 || roomId >= clients.length) {
-			throw new IndexNotInRangeException(0, clients.length - 1, roomId);
+		if (roomId < 0 || roomId >= players.length) {
+			throw new IndexNotInRangeException(0, players.length - 1, roomId);
 		}
 
 		this.players[roomId] = player;
@@ -119,8 +111,8 @@ public class GameRoom {
 		return p;
 	}
 
-	public Warzone getWarzone() {
-		return this.warzone;
+	public WarZone getWarZone() {
+		return this.warZone;
 	}
 
 	public Player[] getPlayers() {
@@ -129,18 +121,6 @@ public class GameRoom {
 
 	public Chat getChat() {
 		return this.chat;
-	}
-
-	public Map getMap() {
-		return this.warzone.getMap();
-	}
-
-	public Projectile[] getProjectiles() {
-		return this.warzone.getProjectiles();
-	}
-
-	public Tank[] getTanks() {
-		return this.warzone.getTanks();
 	}
 
 	public int getLeaderClientRID() {
