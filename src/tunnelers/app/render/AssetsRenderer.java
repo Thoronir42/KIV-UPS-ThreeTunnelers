@@ -41,7 +41,7 @@ public class AssetsRenderer extends ARenderer {
 		Image[] cannon = new Image[2];
 
 		cannon[AssetDirection.Upward.getOrder()] = assets.getImage(Asset.TankCannon, c);
-		cannon[AssetDirection.Diagonal.getOrder()] = assets.getImage(Asset.TankBodyDiag, c);
+		cannon[AssetDirection.Diagonal.getOrder()] = assets.getImage(Asset.TankCannonDiag, c);
 
 		return cannon;
 	}
@@ -70,8 +70,8 @@ public class AssetsRenderer extends ARenderer {
 		}
 	}
 
-	private Image getTankBodyImage(Player playerId, AssetDirection direction) {
-		return imgDiagSwitch(tankBody.get(playerId), direction);
+	private Image getTankBodyImage(Player player, AssetDirection direction) {
+		return imgDiagSwitch(tankBody.get(player), direction);
 	}
 
 	private Image getTankCannonImage(AssetDirection direction) {

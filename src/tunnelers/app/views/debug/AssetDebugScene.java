@@ -47,6 +47,10 @@ public class AssetDebugScene extends ATunnelersScene {
 		GraphicsContext g = canvas.getGraphicsContext2D();
 		g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
+		g.save();
+
+		g.translate(200, 60);
+
 		Affine transform = g.getTransform();
 
 		for (int i = 0; i < players.length; i++) {
@@ -61,8 +65,6 @@ public class AssetDebugScene extends ATunnelersScene {
 				t.setDirection(direction);
 				assetsRenderer.drawTank(g, t);
 				y += 8;
-
-
 			}
 		}
 
@@ -80,6 +82,6 @@ public class AssetDebugScene extends ATunnelersScene {
 			y += 8;
 		}
 
-		g.setTransform(transform);
+		g.restore();
 	}
 }
