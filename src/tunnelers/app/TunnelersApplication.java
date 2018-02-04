@@ -25,7 +25,7 @@ public final class TunnelersApplication extends Application {
 
 		Engine e = new Engine(settings);
 
-		TunnelersStage currentStage = new TunnelersStage(e.userInterface(), assets, 1);
+		TunnelersStage currentStage = new TunnelersStage(e.userInterface(), assets, settings);
 		e.setView(currentStage);
 
 		currentStage.setOnHidden((WindowEvent event) -> e.exit());

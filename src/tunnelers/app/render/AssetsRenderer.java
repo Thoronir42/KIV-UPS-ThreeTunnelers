@@ -16,13 +16,10 @@ import java.util.HashMap;
 public class AssetsRenderer extends ARenderer {
 
 	// Center block offset
-	private static final Point2D CBO_NONE = new Point2D(0, 0),
-			CBO_1 = new Point2D(1, 0),
-			CBO_2 = new Point2D(1, 1),
-			CBO_3 = new Point2D(0, 1);
-	private final Assets assets;
+	private static final Point2D[] centralBlockOffsets = createBlockOffsetArray();
+	private static final int[] directionRotations = createRotationArray();
 
-	private final int[] directionRotations;
+	private final Assets assets;
 
 	private final HashMap<Player, Image[]> tankBody;
 
@@ -32,25 +29,12 @@ public class AssetsRenderer extends ARenderer {
 
 	public AssetsRenderer(Assets assets, AColorScheme colorScheme) {
 		super(colorScheme);
-		tankBody = new HashMap<>();
-
-		this.directionRotations = this.createRotationArray();
 
 		this.assets = assets;
 
+		this.tankBody = new HashMap<>();
 		this.assetCannon = this.initCannonAssets(colorScheme.getCannonColor());
 		this.assetProjectile = this.initProjectileAssets(colorScheme.getProjectileColor());
-	}
-
-	private int[] createRotationArray() {
-		int[] rotations = new int[Direction.values().length];
-
-		for (Direction d : Direction.values()) {
-			int intVal = d.byteValue();
-			rotations[intVal] = (intVal - 1) / 2;
-		}
-
-		return rotations;
 	}
 
 	private Image[] initCannonAssets(Color c) {
@@ -78,6 +62,7 @@ public class AssetsRenderer extends ARenderer {
 			}
 
 			Color c = colorScheme.playerColors().get(player).color();
+
 			Image[] tankImages = new Image[2];
 			tankImages[AssetDirection.Upward.getOrder()] = assets.getImage(Asset.TankBody, c);
 			tankImages[AssetDirection.Diagonal.getOrder()] = assets.getImage(Asset.TankBodyDiag, c);
@@ -85,30 +70,30 @@ public class AssetsRenderer extends ARenderer {
 		}
 	}
 
-	public Image getTankBodyImage(Player playerId, boolean diagonal) {
-		return imgDiagSwitch(tankBody.get(playerId), diagonal);
+	private Image getTankBodyImage(Player playerId, AssetDirection direction) {
+		return imgDiagSwitch(tankBody.get(playerId), direction);
 	}
 
-	public Image getTankCannonImage(boolean diagonal) {
-		return imgDiagSwitch(assetCannon, diagonal);
+	private Image getTankCannonImage(AssetDirection direction) {
+		return imgDiagSwitch(assetCannon, direction);
 	}
 
-	public Image getProjectileImage(boolean diagonal) {
-		return imgDiagSwitch(assetProjectile, diagonal);
+	private Image getProjectileImage(AssetDirection direction) {
+		return imgDiagSwitch(assetProjectile, direction);
 	}
 
-	private Image imgDiagSwitch(Image[] img, boolean diagonal) {
-		return diagonal ? img[AssetDirection.Diagonal.getOrder()] : img[AssetDirection.Upward.getOrder()];
+	private Image imgDiagSwitch(Image[] img, AssetDirection direction) {
+		return img[direction.getOrder()];
 	}
 
 	public void drawTank(GraphicsContext g, Tank t) {
-		Image iv_body = this.getTankBodyImage(t.getPlayer(), this.isDiagonal(t.getDirection()));
-		Image iv_cannon = this.getTankCannonImage(this.isDiagonal(t.getDirection()));
+		Image iv_body = this.getTankBodyImage(t.getPlayer(), assetDirection(t.getDirection()));
+		Image iv_cannon = this.getTankCannonImage(assetDirection(t.getDirection()));
 
 		IntDimension size = ShapeFactory.get(Direction.NorthEast, ShapeFactory.Type.TankBelt).getSize();
 		double bw = blockSize.getWidth(), bh = blockSize.getHeight();
 
-		int rotation = this.getRotation(t.getDirection());
+		int rotation = getRotation(t.getDirection());
 		Point2D cbo = this.getCenterBlockOffset(rotation);
 
 		int dx = size.getWidth() / 2,
@@ -124,12 +109,12 @@ public class AssetsRenderer extends ARenderer {
 
 	}
 
-	public void drawProjectile(GraphicsContext g,Projectile p) {
-		Image imageProjectile = this.getProjectileImage(isDiagonal(p.getDirection()));
+	public void drawProjectile(GraphicsContext g, Projectile p) {
+		Image imageProjectile = this.getProjectileImage(assetDirection(p.getDirection()));
 
 		double bw = blockSize.getWidth(), bh = blockSize.getHeight();
 
-		int rotation = this.getRotation(p.getDirection());
+		int rotation = getRotation(p.getDirection());
 		Point2D cbo = this.getCenterBlockOffset(rotation);
 		IntDimension size = p.getSize();
 		int dx = size.getWidth() / 2,
@@ -144,28 +129,42 @@ public class AssetsRenderer extends ARenderer {
 
 	}
 
+	private static Point2D[] createBlockOffsetArray() {
+		return new Point2D[]{
+				new Point2D(0, 0),
+				new Point2D(1, 0),
+				new Point2D(1, 1),
+				new Point2D(0, 1),
+		};
+	}
+
 	private Point2D getCenterBlockOffset(int rotation) {
-		switch (rotation) {
-			case 0:
-			default:
-				return CBO_NONE;
-			case 1:
-				return CBO_1;
-			case 2:
-				return CBO_2;
-			case 3:
-				return CBO_3;
+		if(rotation < 0 || rotation > 3) {
+			rotation = 0;
 		}
+		return centralBlockOffsets[rotation];
 	}
 
-	private boolean isDiagonal(Direction direction) {
-		return direction.isDiagonal();
+
+	private static AssetDirection assetDirection(Direction direction) {
+		return direction.isDiagonal() ? AssetDirection.Diagonal : AssetDirection.Upward;
 	}
 
-	private int getRotation(Direction direction) {
+	private static int[] createRotationArray() {
+		int[] rotations = new int[Direction.values().length];
+
+		for (Direction d : Direction.values()) {
+			int intVal = d.byteValue();
+			rotations[intVal] = (intVal - 1) / 2;
+		}
+
+		return rotations;
+	}
+
+	private static int getRotation(Direction direction) {
 		if (direction == null) {
 			direction = Direction.Undefined;
 		}
-		return this.directionRotations[direction.byteValue()];
+		return directionRotations[direction.byteValue()];
 	}
 }

@@ -1,7 +1,6 @@
 package tunnelers.app.render;
 
 import javafx.geometry.Dimension2D;
-import javafx.scene.canvas.GraphicsContext;
 import tunnelers.app.render.colors.AColorScheme;
 
 abstract class ARenderer {
@@ -13,11 +12,11 @@ abstract class ARenderer {
 		this.setColorScheme(colorScheme);
 	}
 
-	void setBlockSize(Dimension2D blockSize) {
+	public void setBlockSize(Dimension2D blockSize) {
 		this.blockSize = blockSize;
 	}
 
-	void setColorScheme(AColorScheme colorScheme) {
+	public void setColorScheme(AColorScheme colorScheme) {
 		this.colorScheme = colorScheme;
 	}
 }

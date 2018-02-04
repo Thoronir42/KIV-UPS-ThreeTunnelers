@@ -7,6 +7,8 @@ import tunnelers.app.controls.FxControlsManager;
 import tunnelers.app.render.FxRenderContainer;
 import tunnelers.app.render.colors.FxDefaultColorScheme;
 import tunnelers.app.render.colors.FxPlayerColorManager;
+import tunnelers.app.views.debug.AssetDebugScene;
+import tunnelers.app.views.debug.DebugScene;
 import tunnelers.app.views.lobby.LobbyScene;
 import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.app.views.serverList.GameRoomListScene;
@@ -35,6 +37,7 @@ public final class TunnelersStage extends Stage implements IView, IFlasher {
 
 	protected final EngineUserInterface engine;
 	protected final Assets assets;
+	private final Settings settings;
 
 	public final void update(long tick) {
 		if (this.currentScene != null) {
@@ -42,16 +45,17 @@ public final class TunnelersStage extends Stage implements IView, IFlasher {
 		}
 	}
 
-	public TunnelersStage(EngineUserInterface engine, Assets assets, int supportedControlSchemes) {
+	public TunnelersStage(EngineUserInterface engine, Assets assets, Settings settings) {
 		super();
 
 		this.engine = engine;
 		this.assets = assets;
+		this.settings = settings;
 
 		colorScheme = new FxDefaultColorScheme(new FxPlayerColorManager());
 		colorScheme.setRandomizer((int x, int y) -> ((int) Math.abs(Math.sin((x + 2) * 7) * 6 + Math.cos(y * 21) * 6)));
 
-		this.controlsManager = new FxControlsManager(supportedControlSchemes);
+		this.controlsManager = new FxControlsManager(settings.getControlSchemesCount());
 		this.controlsManager.setOnInputChanged((event) ->
 				this.engine.handleInput(event.getInput(), event.getControlsId(), event.isPressed())
 		);
@@ -124,7 +128,7 @@ public final class TunnelersStage extends Stage implements IView, IFlasher {
 				};
 				break;
 			case Warzone:
-				newScene = new WarZoneScene(Settings.getInstance(), controlsManager)
+				newScene = new WarZoneScene(settings, controlsManager)
 						.initLayout(engine.getGameRoom().getPlayerCount(), this.renderer);
 				newScene.flashClear(true);
 				break;
@@ -138,6 +142,22 @@ public final class TunnelersStage extends Stage implements IView, IFlasher {
 		if (afterChange != null) {
 			afterChange.run();
 		}
+	}
+
+	public void showSceneNow(DebugScene scene) {
+		ATunnelersScene newScene = null;
+		switch (scene) {
+			case Assets:
+				newScene = new AssetDebugScene(settings, assets);
+				break;
+		}
+
+		if(newScene == null) {
+			System.err.println("Could not switch scene to " + scene);
+			return;
+		}
+
+		this.changeScene(newScene);
 	}
 
 	@Override

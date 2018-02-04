@@ -59,7 +59,9 @@ public class WarZone {
 	}
 
 	public void initTank(int playerRID, Player p, IntPoint location) {
-		this.tanks[playerRID] = new Tank(p, location,
-				rules.getTankMaxHP(), rules.getTankMaxEP());
+		this.tanks[playerRID] = new Tank(p, location)
+				.setHitPoints(rules.getTankMaxHP())
+				.setEnergy(rules.getTankMaxEP());
+
 	}
 }

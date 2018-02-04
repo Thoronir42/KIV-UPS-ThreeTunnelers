@@ -6,11 +6,10 @@ public enum AssetDirection {
 	private final int order;
 
 	AssetDirection(int order) {
-
 		this.order = order;
 	}
 
 	public int getOrder() {
-		return order;
+		return this.order;
 	}
 }

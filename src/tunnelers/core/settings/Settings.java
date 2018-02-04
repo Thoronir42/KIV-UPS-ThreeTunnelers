@@ -14,6 +14,7 @@ public final class Settings {
 	public static final int TUNNELER_DEFAULT_PORT = 4200;
 
 	private static Settings instance;
+	private int controlSchemesCount;
 
 	public static Settings getInstance() {
 		if (instance == null) {
@@ -122,5 +123,14 @@ public final class Settings {
 
 	public void setConnectionLogRelativePath(String connectionLogRelativePath) {
 		this.connectionLogRelativePath = connectionLogRelativePath;
+	}
+
+	public Settings setControlSchemesCount(int controlSchemesCount) {
+		this.controlSchemesCount = controlSchemesCount;
+		return this;
+	}
+
+	public int getControlSchemesCount() {
+		return controlSchemesCount;
 	}
 }

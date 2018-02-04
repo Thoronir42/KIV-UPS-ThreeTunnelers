@@ -27,7 +27,7 @@ public class WarzoneStageTest extends Application {
 		Engine e = new Engine(settings);
 		EngineDebugManipulator debugManipulator = new EngineDebugManipulator(e);
 
-		TunnelersStage currentStage = new TunnelersStage(e.userInterface(), assets, 1);
+		TunnelersStage currentStage = new TunnelersStage(e.userInterface(), assets, settings);
 
 		debugManipulator.setGameRoom(GameRoomMock.create(currentStage.getControlsManager(), currentStage.getPlayerColorManager()));
 

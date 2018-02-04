@@ -10,12 +10,10 @@ public class Tank extends GameEntity {
 
 	private int cannonCoolDown;
 
-	public Tank(Player player, IntPoint initialLocation, int hitpoints, int energy) {
+	public Tank(Player player, IntPoint initialLocation) {
 		super(initialLocation, Direction.North, player);
 
 		this.status = Status.Operative;
-		this.hitPoints = hitpoints;
-		this.energy = energy;
 		this.cannonCoolDown = 0;
 	}
 
@@ -42,16 +40,18 @@ public class Tank extends GameEntity {
 		return hitPoints;
 	}
 
-	public void setHitPoints(int hitpoints) {
-		this.hitPoints = hitpoints;
+	public Tank setHitPoints(int hitPoints) {
+		this.hitPoints = hitPoints;
+		return this;
 	}
 
 	public int getEnergy() {
 		return this.energy;
 	}
 
-	public void setEnergy(int energy) {
+	public Tank setEnergy(int energy) {
 		this.energy = energy;
+		return this;
 	}
 
 	public Status getStatus() {

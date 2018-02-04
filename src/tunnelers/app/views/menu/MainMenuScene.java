@@ -11,6 +11,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.views.StyleHelper;
+import tunnelers.app.views.debug.DebugScene;
 import tunnelers.core.engine.IView;
 
 public class MainMenuScene extends ATunnelersScene {
@@ -91,8 +92,18 @@ public class MainMenuScene extends ATunnelersScene {
 		serverSelectControl.setHostname(settings.getServerAddress());
 		serverSelectControl.setPort(settings.getServerPort());
 
-		serverSelectControl.setOnSelected((ServerSelectEvent e) ->
-				this.getEngine().connect(e.getUsername(), e.getHostname(), e.getPort(), e.useReconnect())
+		serverSelectControl.setOnSelected((ServerSelectEvent e) -> {
+			String hostname = e.getHostname();
+			int port = e.getPort();
+			if(hostname.equals("debug")) {
+				switch (port) {
+					case 1:
+						getStage().showSceneNow(DebugScene.Assets);
+						return;
+				}
+			}
+			this.getEngine().connect(e.getUsername(), hostname, port, e.useReconnect());
+				}
 		);
 
 		this.serverSelect = serverSelectControl;

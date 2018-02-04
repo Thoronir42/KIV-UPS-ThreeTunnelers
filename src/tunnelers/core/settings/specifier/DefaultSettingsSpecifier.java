@@ -12,6 +12,7 @@ public class DefaultSettingsSpecifier implements ISettingsSpecifier {
 		s.setServerPort(4200);
 		s.setServerAddress("192.168.56.101");
 		s.setConnectionLogRelativePath("files/connection.txt");
+		s.setControlSchemesCount(1);
 	}
 
 }
