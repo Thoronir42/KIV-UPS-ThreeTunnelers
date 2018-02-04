@@ -6,16 +6,11 @@ import tunnelers.app.render.colors.AColorScheme;
 
 abstract class ARenderer {
 
-	protected GraphicsContext g;
 	protected Dimension2D blockSize;
 	protected AColorScheme colorScheme;
 
 	ARenderer(AColorScheme colorScheme) {
 		this.setColorScheme(colorScheme);
-	}
-
-	void setGraphicsContext(GraphicsContext g) {
-		this.g = g;
 	}
 
 	void setBlockSize(Dimension2D blockSize) {

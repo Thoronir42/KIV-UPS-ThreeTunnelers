@@ -28,7 +28,7 @@ public class FxRenderContainer {
 		this.engine = engine;
 
 		this.mapRenderer = new MapRenderer(colorScheme);
-		this.assetsRenderer = new AssetsRenderer(colorScheme, assets);
+		this.assetsRenderer = new AssetsRenderer(assets, colorScheme);
 		this.afterFx = new AfterFX(colorScheme);
 	}
 
@@ -41,11 +41,6 @@ public class FxRenderContainer {
 		this.blockSize = blockSize;
 		this.mapRenderer.setBlockSize(blockSize);
 		this.assetsRenderer.setBlockSize(blockSize);
-	}
-
-	public void setGraphicsContext(GraphicsContext context) {
-		this.mapRenderer.setGraphicsContext(context);
-		this.assetsRenderer.setGraphicsContext(context);
 	}
 
 	public FxDefaultColorScheme getColorScheme() {

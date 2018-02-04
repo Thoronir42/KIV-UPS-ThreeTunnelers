@@ -1,5 +1,6 @@
 package tunnelers.app.render;
 
+import javafx.scene.canvas.GraphicsContext;
 import tunnelers.app.render.colors.AColorScheme;
 import tunnelers.core.model.entities.IntDimension;
 import tunnelers.core.model.entities.IntRectangle;
@@ -22,7 +23,7 @@ public class MapRenderer extends ARenderer {
 		this.chunkSize = map.getChunkSize();
 	}
 
-	public void drawMap(IntRectangle rendSrc) {
+	public void drawMap(GraphicsContext g, IntRectangle rendSrc) {
 		int yMin = rendSrc.getMinY(),
 				xMin = rendSrc.getMinX(),
 				xMax = rendSrc.getMinX() + rendSrc.getWidth(),
@@ -35,12 +36,12 @@ public class MapRenderer extends ARenderer {
 		for (int Y = chTop; Y <= chBottom; Y++) {
 			for (int X = chLeft; X < chRight; X++) {
 				IntRectangle chunkBounds = new IntRectangle(X * chunkSize, Y * chunkSize, chunkSize - 1, chunkSize - 1);
-				renderChunk(map.getChunk(X, Y), chunkBounds, rendSrc, chunkSize);
+				renderChunk(g, map.getChunk(X, Y), chunkBounds, rendSrc);
 			}
 		}
 	}
 
-	private void renderChunk(Chunk chunk, IntRectangle chunkBounds, IntRectangle renderBounds, int chunkSize) {
+	private void renderChunk(GraphicsContext g, Chunk chunk, IntRectangle chunkBounds, IntRectangle renderBounds) {
 		IntRectangle currentBounds = renderBounds.intersection(chunkBounds);
 
 		for (int y = currentBounds.getMinY(); y <= currentBounds.getMaxY(); y++) {

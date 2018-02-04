@@ -21,9 +21,8 @@ public abstract class ATunnelersScene extends Scene implements IFlasher {
 
 	private static final Color NOISE_TINT = new Color(0.98, 0.98, 0.98, 0.1);
 
-	protected static Assets ASSETS;
-
 	protected static final Settings settings = Settings.getInstance();
+	protected final Region content;
 
 	protected String sceneName;
 
@@ -36,13 +35,17 @@ public abstract class ATunnelersScene extends Scene implements IFlasher {
 
 	public ATunnelersScene(Region content, double width, double height, String name) {
 		super(new StackPane(), width, height);
-		this.sceneName = name;
+		StackPane root = ((StackPane) this.getRoot());
+
+		this.setName(name);
+		this.content = content;
+
 
 		this.setOnKeyPressed((KeyEvent event) -> handleKeyPressed(event.getCode()));
 
 		flash = FlashAreaControl.getInstance();
 
-		StackPane root = ((StackPane) this.getRoot());
+
 
 		canvas = new Canvas();
 		canvas.widthProperty().bind(root.widthProperty());

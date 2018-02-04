@@ -11,7 +11,7 @@ import tunnelers.app.views.lobby.LobbyScene;
 import tunnelers.app.views.menu.MainMenuScene;
 import tunnelers.app.views.serverList.GameRoomListScene;
 import tunnelers.app.views.settings.SettingsScene;
-import tunnelers.app.views.warzone.WarzoneScene;
+import tunnelers.app.views.warzone.WarZoneScene;
 import tunnelers.core.colors.PlayerColorManager;
 import tunnelers.core.engine.EngineUserInterface;
 import tunnelers.core.engine.IView;
@@ -20,6 +20,7 @@ import tunnelers.core.gameRoom.IGameRoomInfo;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 import tunnelers.core.player.controls.AControlsManager;
+import tunnelers.core.settings.Settings;
 
 public final class TunnelersStage extends Stage implements IView, IFlasher {
 
@@ -64,7 +65,6 @@ public final class TunnelersStage extends Stage implements IView, IFlasher {
 		}
 
 		this.setScene(this.currentScene = scene);
-		this.renderer.setGraphicsContext(scene.getGraphicsContext());
 		this.setTitle(String.format("%s %s %s", GAME_NAME, TITLE_SEPARATOR, scene.getName()));
 	}
 
@@ -124,7 +124,7 @@ public final class TunnelersStage extends Stage implements IView, IFlasher {
 				};
 				break;
 			case Warzone:
-				newScene = WarzoneScene.getInstance(controlsManager)
+				newScene = new WarZoneScene(Settings.getInstance(), controlsManager)
 						.initLayout(engine.getGameRoom().getPlayerCount(), this.renderer);
 				newScene.flashClear(true);
 				break;

@@ -127,7 +127,7 @@ public class PlayerAreaRenderer {
 		IntRectangle source = alignSourceWindow(sourceWindowSize, center, mr.getMapSize());
 		try {
 			this.renderer.offsetBlocks(g, -source.getMinX(), -source.getMinY());
-			mr.drawMap(source);
+			mr.drawMap(g, source);
 			this.drawProjectiles(g, source, projectiles);
 			this.drawTanks(g, source, tanks);
 
@@ -157,7 +157,7 @@ public class PlayerAreaRenderer {
 				continue;
 			}
 			renderer.offsetBlocks(g, projectile.getLocation());
-			renderer.getAssetsRenderer().drawProjectile(projectile);
+			renderer.getAssetsRenderer().drawProjectile(g, projectile);
 
 			g.setTransform(defTransform);
 			n++;
@@ -177,7 +177,7 @@ public class PlayerAreaRenderer {
 				continue;
 			}
 			renderer.offsetBlocks(g, tank.getLocation());
-			renderer.getAssetsRenderer().drawTank(tank);
+			renderer.getAssetsRenderer().drawTank(g, tank);
 
 			g.setTransform(defTransform);
 		}

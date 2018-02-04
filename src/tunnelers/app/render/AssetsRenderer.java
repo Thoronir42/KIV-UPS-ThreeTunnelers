@@ -1,6 +1,7 @@
 package tunnelers.app.render;
 
 import javafx.geometry.Point2D;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import tunnelers.app.assets.Asset;
@@ -29,7 +30,7 @@ public class AssetsRenderer extends ARenderer {
 
 	private final Image[] assetProjectile;
 
-	public AssetsRenderer(AColorScheme colorScheme, Assets assets) {
+	public AssetsRenderer(Assets assets, AColorScheme colorScheme) {
 		super(colorScheme);
 		tankBody = new HashMap<>();
 
@@ -100,7 +101,7 @@ public class AssetsRenderer extends ARenderer {
 		return diagonal ? img[AssetDirection.Diagonal.getOrder()] : img[AssetDirection.Upward.getOrder()];
 	}
 
-	public void drawTank(Tank t) {
+	public void drawTank(GraphicsContext g, Tank t) {
 		Image iv_body = this.getTankBodyImage(t.getPlayer(), this.isDiagonal(t.getDirection()));
 		Image iv_cannon = this.getTankCannonImage(this.isDiagonal(t.getDirection()));
 
@@ -123,7 +124,7 @@ public class AssetsRenderer extends ARenderer {
 
 	}
 
-	public void drawProjectile(Projectile p) {
+	public void drawProjectile(GraphicsContext g,Projectile p) {
 		Image imageProjectile = this.getProjectileImage(isDiagonal(p.getDirection()));
 
 		double bw = blockSize.getWidth(), bh = blockSize.getHeight();
