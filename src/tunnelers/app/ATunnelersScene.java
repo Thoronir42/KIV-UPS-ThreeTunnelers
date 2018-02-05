@@ -21,7 +21,6 @@ public abstract class ATunnelersScene extends Scene implements IFlasher {
 
 	private static final Color NOISE_TINT = new Color(0.98, 0.98, 0.98, 0.1);
 
-	protected static final Settings settings = Settings.getInstance();
 	protected final Region content;
 
 	protected String sceneName;

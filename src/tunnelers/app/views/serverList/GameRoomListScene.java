@@ -8,21 +8,44 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.views.components.gameRoomTableView.GameRoomTableView;
 import tunnelers.app.views.components.gameRoomTreeView.GameRoomViewWrapper;
 import tunnelers.core.gameRoom.IGameRoomInfo;
+import tunnelers.core.settings.Settings;
 
 public class GameRoomListScene extends ATunnelersScene {
 
-	public static GameRoomListScene getInstance(String host) {
-		BorderPane content = new BorderPane();
+	private final Button but_refreshList;
+	private final Button but_createRoom;
 
-		GameRoomListScene scene = new GameRoomListScene(content, settings.getWindowWidth(), settings.getWindowHeight());
-		addComponents(content, scene, host);
+	private GameRoomTableView gameRooms;
 
-		return scene;
+	public GameRoomListScene(Settings settings, String host) {
+		super(new BorderPane(), settings.getWindowWidth(), settings.getWindowHeight(), "Výpis serverů");
+		BorderPane content = (BorderPane) this.content;
+
+		this.but_refreshList = new Button("Obnovit seznam her");
+		this.but_refreshList.setOnAction((ActionEvent event) -> this.refreshServerList());
+
+		this.but_createRoom = new Button("Vytvořit novou místnost");
+		this.but_createRoom.setOnAction((event) -> this.getEngine().createRoom());
+
+		addComponents(content, this, host);
+	}
+
+	private void refreshServerList() {
+		gameRooms.clearItems();
+		this.getEngine().refreshServerList();
+	}
+
+	public void appendGameRooms(IGameRoomInfo[] gameRooms) {
+		for (IGameRoomInfo gri : gameRooms) {
+			if (gri == null) {
+				continue;
+			}
+			this.gameRooms.getItems().add(new GameRoomViewWrapper(gri));
+		}
 	}
 
 	private static void addComponents(BorderPane root, GameRoomListScene scene, String host) {
@@ -74,34 +97,5 @@ public class GameRoomListScene extends ATunnelersScene {
 		top.getChildren().addAll(topLabels, topButtons);
 
 		return top;
-	}
-
-	private final Button but_refreshList;
-	private final Button but_createRoom;
-
-	private GameRoomTableView gameRooms;
-
-	private GameRoomListScene(Region root, double width, double height) {
-		super(root, width, height, "Výpis serverů");
-
-		this.but_refreshList = new Button("Obnovit seznam her");
-		this.but_refreshList.setOnAction((ActionEvent event) -> this.refreshServerList());
-
-		this.but_createRoom = new Button("Vytvořit novou místnost");
-		this.but_createRoom.setOnAction((event) -> this.getEngine().createRoom());
-	}
-
-	private void refreshServerList() {
-		gameRooms.clearItems();
-		this.getEngine().refreshServerList();
-	}
-
-	public void appendGameRooms(IGameRoomInfo[] gameRooms) {
-		for (IGameRoomInfo gri : gameRooms) {
-			if (gri == null) {
-				continue;
-			}
-			this.gameRooms.getItems().add(new GameRoomViewWrapper(gri));
-		}
 	}
 }

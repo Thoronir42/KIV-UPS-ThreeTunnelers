@@ -12,55 +12,9 @@ import tunnelers.app.render.colors.FxDefaultColorScheme;
 import tunnelers.app.views.components.chat.SimpleChatControl;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.player.Player;
+import tunnelers.core.settings.Settings;
 
 public class LobbyScene extends ATunnelersScene {
-
-	public static LobbyScene getInstance(Chat chat, FxDefaultColorScheme colors, int capacity) throws IllegalStateException {
-		return createInstance(chat, colors, capacity);
-	}
-
-	private static LobbyScene createInstance(Chat chat, FxDefaultColorScheme colors, int capacity) {
-		BorderPane content = new BorderPane();
-
-		content.setBackground(new Background(new BackgroundFill(new Color(0.11, 0.17, 0.69, 0.2), CornerRadii.EMPTY, Insets.EMPTY)));
-
-		LobbyScene scene = new LobbyScene(content, settings.getWindowWidth(), settings.getWindowHeight(), chat, colors, capacity);
-
-		scene.caption.prefWidthProperty().bind(scene.widthProperty());
-		scene.caption.setAlignment(Pos.TOP_RIGHT);
-
-		scene.playerListView.setPrefWidth(200);
-		scene.playerListView.setAlignment(Pos.CENTER);
-
-		content.setTop(scene.caption);
-
-		content.setCenter(buildCenter(scene));
-		content.setLeft(scene.playerListView);
-
-		return scene;
-	}
-
-	private static GridPane buildCenter(LobbyScene scene) {
-		GridPane center = new GridPane();
-		center.setHgap(4);
-		center.setVgap(20);
-		center.setAlignment(Pos.CENTER);
-
-		SimpleChatControl chat = scene.chatView;
-		chat.setPrefSize(400, 280);
-
-		chat.setOnMessageSend(event -> scene.getEngine().sendPlainText(event.getMessage()));
-		center.add(chat, 0, 0, 2, 1);
-
-		center.add(scene.btn_ready, 1, 1);
-
-		Button btnBAck = new Button("Opustit místnost");
-		btnBAck.setOnAction(event -> scene.getEngine().leaveRoom());
-		center.add(btnBAck, 1, 2);
-
-		return center;
-	}
-
 	private final Chat chat;
 
 	private final SimpleChatControl chatView;
@@ -69,15 +23,29 @@ public class LobbyScene extends ATunnelersScene {
 
 	private final Button btn_ready;
 
-	public LobbyScene(Region root, double width, double height, Chat chat, FxDefaultColorScheme colors, int capacity) {
-		super(root, width, height, "Příprava");
+	public LobbyScene(Settings settings, Chat chat, FxDefaultColorScheme colors, int capacity) {
+		super(new BorderPane(), settings.getWindowWidth(), settings.getWindowHeight(), "Příprava");
+		BorderPane content = (BorderPane) this.content;
+
+		content.setBackground(new Background(new BackgroundFill(new Color(0.11, 0.17, 0.69, 0.2), CornerRadii.EMPTY, Insets.EMPTY)));
+
 		this.caption = new Label("");
 		this.chatView = new SimpleChatControl(colors.getPlayerColorManager(), true);
 		this.playerListView = new PlayerListView(colors.getPlayerColorManager(), capacity);
-
 		this.chat = chat;
-
 		this.btn_ready = new Button();
+
+		this.caption.prefWidthProperty().bind(this.widthProperty());
+		this.caption.setAlignment(Pos.TOP_RIGHT);
+
+		this.playerListView.setPrefWidth(200);
+		this.playerListView.setAlignment(Pos.CENTER);
+
+		content.setTop(this.caption);
+
+		content.setCenter(buildCenter(this));
+		content.setLeft(this.playerListView);
+
 		this.setLocalClientReady(false);
 	}
 
@@ -103,5 +71,27 @@ public class LobbyScene extends ATunnelersScene {
 		for (int i = 0; i < players.length; i++) {
 			this.playerListView.renderPlayer(i, players[i]);
 		}
+	}
+
+
+	private static GridPane buildCenter(LobbyScene scene) {
+		GridPane center = new GridPane();
+		center.setHgap(4);
+		center.setVgap(20);
+		center.setAlignment(Pos.CENTER);
+
+		SimpleChatControl chat = scene.chatView;
+		chat.setPrefSize(400, 280);
+
+		chat.setOnMessageSend(event -> scene.getEngine().sendPlainText(event.getMessage()));
+		center.add(chat, 0, 0, 2, 1);
+
+		center.add(scene.btn_ready, 1, 1);
+
+		Button btnBAck = new Button("Opustit místnost");
+		btnBAck.setOnAction(event -> scene.getEngine().leaveRoom());
+		center.add(btnBAck, 1, 2);
+
+		return center;
 	}
 }

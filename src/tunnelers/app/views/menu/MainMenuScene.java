@@ -7,106 +7,50 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import tunnelers.app.ATunnelersScene;
 import tunnelers.app.views.StyleHelper;
 import tunnelers.app.views.debug.DebugScene;
+import tunnelers.app.views.debug.FlashTester;
 import tunnelers.core.engine.IView;
+import tunnelers.core.settings.Settings;
 
 public class MainMenuScene extends ATunnelersScene {
 
 	private static final double BTN_PREF_WIDTH = 180,
 			BTN_PREF_HEIGHT = 42;
 
-	public static MainMenuScene getInstance() {
-		return createInstance();
-	}
-
-	private static MainMenuScene createInstance() {
-		GridPane content = new GridPane();
-		content.setHgap(4);
-		content.setVgap(8);
-		content.setAlignment(Pos.CENTER);
-
-		content.setBackground(new Background(new BackgroundFill(new Color(0.23, 0.74, .23, 0.21), CornerRadii.EMPTY, Insets.EMPTY)));
-
-		MainMenuScene scene = new MainMenuScene(content, settings.getWindowWidth(), settings.getWindowHeight());
-
-		Button[] buttons = new Button[]{
-				createButton("Nastavení", (ActionEvent event) -> scene.getStage().showScene(IView.Scene.Settings)),
-				createButton("Ukončit", (ActionEvent event) -> scene.getStage().close()),};
-
-		scene.serverSelect.setStyle("-fx-background-color: rgba(245,245,245,0.95);"
-				+ " -fx-border-size: 2px;"
-				+ " -fx-border-style: solid;"
-				+ " -fx-border-color: black;"
-				+ " -fx-padding: 20px;");
-
-		content.add(scene.serverSelect, 0, 0);
-		for (int i = 0; i < buttons.length; i++) {
-			buttons[i].prefWidthProperty().bind(scene.serverSelect.widthProperty());
-			content.add(buttons[i], 0, 1 + i);
-		}
-
-//		TextField txt_flash = new TextField();
-//		txt_flash.setPromptText("Zpráva k zobrazení");
-//		Button but_flashDisplay = new Button("Zobrazit");
-//		Button but_flashClear = new Button("Schovat");
-//
-//		but_flashDisplay.setOnAction(e -> {
-//			if (!"".equals(txt_flash.getText().trim())) {
-//				scene.flashDisplay(txt_flash.getText());
-//				txt_flash.setText("");
-//			}
-//		});
-//		but_flashClear.setOnAction(e -> {
-//			scene.flashClear();
-//		});
-
-
-		GridPane flashTester = new GridPane();
-//		flashTester.add(txt_flash, 0, 0, 2, 1);
-//		flashTester.add(but_flashDisplay, 0, 1);
-//		flashTester.add(but_flashClear, 1, 1);
-
-		content.add(flashTester, 1, 0, 1, 3);
-
-		return scene;
-
-	}
-
-	private static Button createButton(String caption, EventHandler<ActionEvent> callback) {
-		Button btn = new Button(caption);
-		StyleHelper.inject(btn);
-		btn.setOnAction(callback);
-		btn.setPrefSize(BTN_PREF_WIDTH, BTN_PREF_HEIGHT);
-		return btn;
-	}
+	private final Settings settings;
 
 	private final ServerSelectControl serverSelect;
 
-	public MainMenuScene(Region root, double width, double height) {
-		super(root, width, height, "Hlavní menu");
-		ServerSelectControl serverSelectControl = new ServerSelectControl(8, new NameManager(System.currentTimeMillis()));
-		serverSelectControl.setHostname(settings.getServerAddress());
-		serverSelectControl.setPort(settings.getServerPort());
+	public MainMenuScene(Settings settings) {
+		super(new GridPane(), settings.getWindowWidth(), settings.getWindowHeight(), "Hlavní menu");
+		this.settings = settings;
+		GridPane content = (GridPane) this.content;
+		content.setHgap(4);
+		content.setVgap(8);
+		content.setAlignment(Pos.CENTER);
+		content.setBackground(new Background(new BackgroundFill(new Color(0.23, 0.74, .23, 0.21), CornerRadii.EMPTY, Insets.EMPTY)));
 
-		serverSelectControl.setOnSelected((ServerSelectEvent e) -> {
-			String hostname = e.getHostname();
-			int port = e.getPort();
-			if(hostname.equals("debug")) {
-				switch (port) {
-					case 1:
-						getStage().showSceneNow(DebugScene.Assets);
-						return;
-				}
-			}
-			this.getEngine().connect(e.getUsername(), hostname, port, e.useReconnect());
-				}
-		);
+		this.serverSelect = createServerSelect(this, settings);
 
-		this.serverSelect = serverSelectControl;
+		Button[] buttons = new Button[]{
+				createButton("Nastavení", (ActionEvent event) -> this.getStage().showScene(IView.Scene.Settings)),
+				createButton("Ukončit", (ActionEvent event) -> this.getStage().close()),};
+
+		content.add(this.serverSelect, 0, 0);
+		for (int i = 0; i < buttons.length; i++) {
+			buttons[i].prefWidthProperty().bind(this.serverSelect.widthProperty());
+			content.add(buttons[i], 0, 1 + i);
+		}
+
+//		content.add(new FlashTester(this), 1, 0, 1, 3);
+
 	}
 
 	public void setConnectEnabled(boolean value) {
@@ -116,13 +60,49 @@ public class MainMenuScene extends ATunnelersScene {
 
 	@Override
 	public void handleKeyPressed(KeyCode code) {
-		switch (code){
+		switch (code) {
 			case ENTER:
 				serverSelect.submit();
 				break;
 			default:
 				super.handleKeyPressed(code);
 		}
+	}
 
+
+	private static ServerSelectControl createServerSelect(MainMenuScene scene, Settings settings) {
+		ServerSelectControl serverSelectControl = new ServerSelectControl(8, new NameManager(System.currentTimeMillis()));
+		serverSelectControl.setHostname(settings.getServerAddress());
+		serverSelectControl.setPort(settings.getServerPort());
+
+		serverSelectControl.setStyle("-fx-background-color: rgba(245,245,245,0.95);"
+				+ " -fx-border-size: 2px;"
+				+ " -fx-border-style: solid;"
+				+ " -fx-border-color: black;"
+				+ " -fx-padding: 20px;");
+
+		serverSelectControl.setOnSelected((ServerSelectEvent e) -> {
+					String hostname = e.getHostname();
+					int port = e.getPort();
+					if (hostname.equals("debug")) {
+						switch (port) {
+							case 1:
+								scene.getStage().showSceneNow(DebugScene.Assets);
+								return;
+						}
+					}
+					scene.getEngine().connect(e.getUsername(), hostname, port, e.useReconnect());
+				}
+		);
+
+		return serverSelectControl;
+	}
+
+	private static Button createButton(String caption, EventHandler<ActionEvent> callback) {
+		Button btn = new Button(caption);
+		StyleHelper.inject(btn);
+		btn.setOnAction(callback);
+		btn.setPrefSize(BTN_PREF_WIDTH, BTN_PREF_HEIGHT);
+		return btn;
 	}
 }

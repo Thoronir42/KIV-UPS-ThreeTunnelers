@@ -22,16 +22,48 @@ public class SettingsScene extends ATunnelersScene {
 
 	private static final double GRID_SPACING = 4;
 
-	public static SettingsScene getInstance(FxControlsManager controls) {
+	private final ServerSelectSetterControl serverSelectSetterControl;
+	private final FxControlsManager controlSchemeManager;
 
+	private final Settings settings;
+
+	public SettingsScene(Settings settings, FxControlsManager controls) {
+		super(new GridPane(), settings.getWindowWidth(), settings.getWindowHeight(), "Nastavení");
 		GridPane content = new GridPane();
 		content.setBackground(new Background(new BackgroundFill(new Color(0.42, 0.87, 0.93, 0.25), CornerRadii.EMPTY, Insets.EMPTY)));
 
-		SettingsScene scene = new SettingsScene(content, settings.getWindowWidth(), settings.getWindowHeight(), controls);
-		addComponents(content, scene);
-
-		return scene;
+		this.settings = settings;
+		this.controlSchemeManager = controls;
+		this.serverSelectSetterControl = makeServerSettingPane(this, settings);
+		addComponents(content, this);
 	}
+
+	private boolean testServer(String address, int port) {
+//		NetWorks nw = this.getNetworks();
+//		
+//		if (nw.serverPresent(address, port)) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+		return false;
+	}
+
+	private void saveSettings() {
+		try {
+			String hostname = this.serverSelectSetterControl.getAddress();
+			InetAddress.getByName(hostname);
+			int port = this.serverSelectSetterControl.getPort();
+
+			settings.setServerAddress(hostname);
+			settings.setServerPort(port);
+
+			this.flashDisplay(String.format("Adresa serveru %s:%d byla uložena.", hostname, port));
+		} catch (UnknownHostException e) {
+			System.err.format("Adresa serveru nemohla být ověřena");
+		}
+	}
+
 
 	private static void addComponents(GridPane root, SettingsScene scene) {
 		root.setAlignment(Pos.CENTER);
@@ -75,40 +107,5 @@ public class SettingsScene extends ATunnelersScene {
 		buttonRack.setAlignment(Pos.CENTER);
 		buttonRack.setPadding(new Insets(16));
 		return buttonRack;
-	}
-
-	private final ServerSelectSetterControl serverSelectSetterControl;
-	private final FxControlsManager controlSchemeManager;
-
-	private SettingsScene(Region root, double width, double height, FxControlsManager controls) {
-		super(root, width, height, "Nastavení");
-		this.controlSchemeManager = controls;
-		this.serverSelectSetterControl = makeServerSettingPane(this, settings);
-	}
-
-	private boolean testServer(String address, int port) {
-//		NetWorks nw = this.getNetworks();
-//		
-//		if (nw.serverPresent(address, port)) {
-//			return true;
-//		} else {
-//			return false;
-//		}
-		return false;
-	}
-
-	private void saveSettings() {
-		try {
-			String hostname = this.serverSelectSetterControl.getAddress();
-			InetAddress.getByName(hostname);
-			int port = this.serverSelectSetterControl.getPort();
-
-			settings.setServerAddress(hostname);
-			settings.setServerPort(port);
-
-			this.flashDisplay(String.format("Adresa serveru %s:%d byla uložena.", hostname, port));
-		} catch (UnknownHostException e) {
-			System.err.format("Adresa serveru nemohla být ověřena");
-		}
 	}
 }

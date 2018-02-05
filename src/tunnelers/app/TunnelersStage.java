@@ -106,13 +106,13 @@ public final class TunnelersStage extends Stage implements IView, IFlasher {
 		ATunnelersScene newScene = null;
 		switch (scene) {
 			case MainMenu:
-				newScene = MainMenuScene.getInstance();
+				newScene = new MainMenuScene(settings);
 				break;
 			case Settings:
-				newScene = SettingsScene.getInstance(controlsManager);
+				newScene = new SettingsScene(settings, controlsManager);
 				break;
 			case GameRoomList:
-				newScene = GameRoomListScene.getInstance(engine.getHostLocator());
+				newScene = new GameRoomListScene(settings, engine.getHostLocator());
 				afterChange = engine::refreshServerList;
 				break;
 			case Lobby:
@@ -121,7 +121,7 @@ public final class TunnelersStage extends Stage implements IView, IFlasher {
 					System.err.println("Can't show Lobby scene, GameRoom is null");
 					return;
 				}
-				newScene = LobbyScene.getInstance(gr.getChat(), this.renderer.getColorScheme(), gr.getCapacity());
+				newScene = new LobbyScene(settings, gr.getChat(), this.renderer.getColorScheme(), gr.getCapacity());
 				afterChange = () -> {
 					updateChat();
 					updateClients();
