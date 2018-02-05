@@ -30,7 +30,7 @@ public interface IView {
 
 	void updateClients();
 
-	void updatePlayers();
+	void updatePlayers(Player[] players);
 
 	void setLocalReadyState(boolean b);
 

@@ -19,23 +19,16 @@ import tunnelers.network.NetClientStatus;
 import tunnelers.network.command.Command;
 import tunnelers.network.command.CommandType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class EngineNetworksInterface {
 
-	private final HashMap<CommandType, IAction> actions;
+	private final CommandMap actions;
 	protected final Engine engine;
 
 	private final GameRoomParser gameRoomParser;
 	private final MapChunkParser mapChunkParser;
 
 	private int remainingChunks;
-
-	public EngineNetworksInterface(Engine engine) {
-		this(engine, false);
-	}
 
 	EngineNetworksInterface(Engine engine, boolean printUnimplementedActions) {
 		this.engine = engine;
@@ -44,25 +37,8 @@ public class EngineNetworksInterface {
 		this.gameRoomParser = new GameRoomParser();
 		this.mapChunkParser = new MapChunkParser();
 
-		if (!printUnimplementedActions) {
-			return;
-		}
-
-		List<String> missing = new ArrayList<>();
-		int n = 0;
-		for (CommandType type : CommandType.values()) {
-			if (type == CommandType.Undefined) {
-				continue;
-			}
-			if (!this.actions.containsKey(type)) {
-				missing.add(((++n % 8 == 0) ? "\n" : "") + type.toString());
-			}
-
-		}
-
-		if (missing.size() > 0) {
-			System.err.println("Engine does not implement handling of these "
-					+ "command types: " + String.join(", ", missing));
+		if (printUnimplementedActions) {
+			this.actions.printUnimplementedActions(System.err);
 		}
 	}
 
@@ -70,16 +46,16 @@ public class EngineNetworksInterface {
 		return this.actions.get(type);
 	}
 
-	private HashMap<CommandType, IAction> prepareActions() {
-		HashMap<CommandType, IAction> map = new HashMap<>();
+	private CommandMap prepareActions() {
+		CommandMap map = new CommandMap();
 		putSoloCommands(map);
 		putRoomPreparationCommands(map);
-		putRoomGameplayCommands(map);
+		putRoomGamePlayCommands(map);
 
 		return map;
 	}
 
-	private void putSoloCommands(HashMap<CommandType, IAction> map) {
+	private void putSoloCommands(CommandMap map) {
 		map.put(CommandType.LeadIntroduce, ((sc) -> {
 			int n = sc.nextByte();
 			String secret = sc.readToEnd();
@@ -154,7 +130,7 @@ public class EngineNetworksInterface {
 
 	}
 
-	private void putRoomPreparationCommands(HashMap<CommandType, IAction> map) {
+	private void putRoomPreparationCommands(CommandMap map) {
 		map.put(CommandType.MsgPlain, sc -> {
 			int id = sc.nextByte();
 			String message = sc.readToEnd();
@@ -256,7 +232,7 @@ public class EngineNetworksInterface {
 			this.engine.currentGameRoom.removePlayersOfClient(c);
 
 			this.engine.view.updateClients();
-			this.engine.view.updatePlayers();
+			this.engine.view.updatePlayers(engine.currentGameRoom.getPlayers());
 			return true;
 		});
 
@@ -282,7 +258,7 @@ public class EngineNetworksInterface {
 
 			this.engine.currentGameRoom.setPlayer(playerRoomId, p);
 
-			this.engine.view.updatePlayers();
+			this.engine.view.updatePlayers(engine.currentGameRoom.getPlayers());
 			return true;
 		});
 
@@ -301,12 +277,11 @@ public class EngineNetworksInterface {
 			int roomId = sc.nextByte();
 			int playerColor = sc.nextByte();
 
-			this.engine.currentGameRoom.getPlayer(roomId).setColor(playerColor);
-			return true;
+			return this.engine.currentGameRoom.setPlayerColor(roomId, playerColor);
 		});
 	}
 
-	private void putRoomGameplayCommands(HashMap<CommandType, IAction> map) {
+	private void putRoomGamePlayCommands(CommandMap map) {
 		map.put(CommandType.MapSpecification, sc -> {
 			int chunkSize = sc.nextByte();
 			int xChunks = sc.nextByte();

@@ -59,10 +59,6 @@ public class FxRenderContainer {
 		return this.afterFx;
 	}
 
-	public Player[] getPlayers() {
-		return this.engine.getGameRoom().getPlayers();
-	}
-
 	public Projectile[] getProjectiles() {
 		return this.engine.getGameRoom().getWarZone().getProjectiles();
 	}

@@ -185,19 +185,20 @@ public final class TunnelersStage extends Stage implements IView, IFlasher {
 	}
 
 	@Override
-	public void updatePlayers() {
+	public void updatePlayers(Player[] players) {
 		Platform.runLater(() -> {
-			if ((this.currentScene instanceof LobbyScene)) {
-				((LobbyScene) this.currentScene).setPlayers(this.engine.getGameRoom().getPlayers());
+			if (!(this.currentScene instanceof LobbyScene)) {
+				System.err.println("Can't update player list, current scene is " + this.currentScene.getClass());
 				return;
 			}
-			System.err.println("Can't update player list, current scene is " + this.currentScene.getClass());
+
+			((LobbyScene) this.currentScene).setPlayers(players);
 		});
 	}
 
 	@Override
 	public void updateClients() {
-		updatePlayers();
+		// todo: add client update logic?
 	}
 
 	@Override
