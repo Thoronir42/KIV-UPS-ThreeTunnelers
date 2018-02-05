@@ -36,13 +36,13 @@ public class GameRoomMock {
 		int playerCapacity = 4;
 		int chatCapacity = 20;
 
-		GameRoom c = new GameRoom(3, playerCapacity, chatCapacity);
+		GameRoom room = new GameRoom(3, playerCapacity, chatCapacity);
 
 		for (int i = 0; i < 4; i++) {
-			c.setPlayer(i, players[i]);
+			room.setPlayer(i, players[i]);
 		}
 
-		return c;
+		return room;
 	}
 
 	public static void controls(long seed) {

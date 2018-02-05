@@ -25,6 +25,10 @@ public class GameRoom {
 		this.leaderClientRID = leaderRID;
 	}
 
+	public WarZone getWarZone() {
+		return this.warZone;
+	}
+
 	public void setWarZone(WarZone warZone) {
 		this.warZone = warZone;
 	}
@@ -104,16 +108,24 @@ public class GameRoom {
 		this.players[roomId] = player;
 	}
 
+	public void initPlayer(int roomId, int clientRoomId, int playerClientId, int playerColor) {
+		if(clientRoomId < 0 || clientRoomId > clients.length || clients[clientRoomId] == null) {
+			throw new IllegalStateException("Client " + clientRoomId + " is not present");
+		}
+		NetClient client = clients[clientRoomId];
+
+		this.players[roomId] = new Player(client, playerColor);
+		client.setPlayer(playerClientId, roomId);
+	}
+
 	public Player removePlayer(int roomId) {
 		Player p = this.getPlayer(roomId);
 		this.setPlayer(roomId, null);
+		p.getClient().removePlayer(roomId);
 
 		return p;
 	}
 
-	public WarZone getWarZone() {
-		return this.warZone;
-	}
 
 	public Player[] getPlayers() {
 		return this.players;
@@ -131,16 +143,17 @@ public class GameRoom {
 		this.leaderClientRID = leaderClientRID;
 	}
 
-	public int getPlayerRID(Player p) {
-		for (int i = 0; i < this.players.length; i++) {
-			if (this.players[i] == p) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
 	public NetClient[] getClients() {
 		return this.clients;
+	}
+
+	public boolean setPlayerColor(int roomId, int color) {
+		if (roomId < 0 || roomId > this.players.length || this.players[roomId] == null) {
+			return false;
+		}
+
+		// todo: mark color as used
+		this.players[roomId].setColor(color);
+		return true;
 	}
 }

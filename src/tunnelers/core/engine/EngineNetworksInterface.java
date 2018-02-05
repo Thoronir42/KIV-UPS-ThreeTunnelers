@@ -138,7 +138,7 @@ public class EngineNetworksInterface {
 
 			}
 			NetClient client = this.engine.currentGameRoom.getClient(id);
-			IChatParticipant p = client.getAnyPlayer();
+			IChatParticipant p = this.engine.currentGameRoom.getPlayer(client.getAnyPlayerRID());
 			this.engine.getChat().addMessage(p != null ? p : Chat.error(), message);
 			this.engine.view.updateChat();
 
@@ -252,11 +252,7 @@ public class EngineNetworksInterface {
 			int clientRoomId = sc.nextByte();
 			int playerClientId = sc.nextByte();
 
-			NetClient c = this.engine.currentGameRoom.getClient(clientRoomId);
-			Player p = new Player(c, playerColor);
-			c.setPlayer(playerClientId, p);
-
-			this.engine.currentGameRoom.setPlayer(playerRoomId, p);
+			this.engine.currentGameRoom.initPlayer(playerRoomId, clientRoomId, playerClientId, playerColor);
 
 			this.engine.view.updatePlayers(engine.currentGameRoom.getPlayers());
 			return true;
@@ -268,8 +264,7 @@ public class EngineNetworksInterface {
 				return false;
 			}
 
-			Player p = this.engine.currentGameRoom.removePlayer(playerRID);
-			p.getClient().removePlayer(p);
+			this.engine.currentGameRoom.removePlayer(playerRID);
 			return true;
 		});
 

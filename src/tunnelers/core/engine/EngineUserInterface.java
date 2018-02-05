@@ -88,8 +88,8 @@ public class EngineUserInterface {
 	}*/
 
 	public void handleInput(InputAction inp, int controlsID, boolean pressed) {
-		Player p = engine.localClient.getPlayer(controlsID);
-		int playerRID = engine.currentGameRoom.getPlayerRID(p);
+		int playerRID = engine.localClient.getPlayer(controlsID);
+		Player p = engine.currentGameRoom.getPlayer(playerRID);
 
 		if (p.getControls().set(inp, pressed)) {
 			Command cmd = engine.netadapter.createCommand(CommandType.GameControlsSet)

@@ -1,26 +1,30 @@
 package tunnelers.network;
 
-import tunnelers.core.player.Player;
-
 public class NetClient {
 
 	public static int MAX_NAME_LENGTH = 12;
-	public static final int PLAYER_CAPACITY = 2;
 
 	private int latency;
 	private String name;
-	private final Player[] players;
+	private final int[] playerRids;
 	private int activePlayers;
 	private boolean ready;
 	private NetClientStatus status;
 
 	public NetClient() {
-		this("");
+		this("", 1);
 	}
 
-	public NetClient(String name) throws IllegalArgumentException {
+	public NetClient(String name) {
+		this(name, 1);
+	}
+
+	public NetClient(String name, int playerCapacity) throws IllegalArgumentException {
 		this.setName(name);
-		this.players = new Player[PLAYER_CAPACITY];
+		this.playerRids = new int[playerCapacity];
+		for (int i = 0; i < playerCapacity; i++) {
+			playerRids[i] = -1;
+		}
 		this.activePlayers = 0;
 		this.ready = false;
 		this.status = NetClientStatus.Connected;
@@ -30,14 +34,14 @@ public class NetClient {
 		return name;
 	}
 
-	public String getName(Player p) {
+	public String getName(int p) {
 		if (this.activePlayers < 2) {
 			return this.name;
 		}
 		int i = 0;
-		for (Player check : this.players) {
+		for (int check : this.playerRids) {
 			i++;
-			if (check.equals(p)) {
+			if (check == p) {
 				return String.format("%s[%d]", this.name, i);
 			}
 		}
@@ -48,45 +52,45 @@ public class NetClient {
 		this.name = name;
 	}
 
-	public void setPlayer(int n, Player p) {
-		this.players[n] = p;
+	public void setPlayer(int n, int p) {
+		this.playerRids[n] = p;
 
 		this.recountPlayers();
 	}
 
-	public Player getAnyPlayer() {
-		for (Player p : this.players) {
-			if (p != null) {
+	public int getAnyPlayerRID() {
+		for (int p : this.playerRids) {
+			if (p != -1) {
 				return p;
 			}
 		}
 
-		return null;
+		return -1;
 	}
 
-	public Player getPlayer(int n) {
-		return this.players[n];
+	public int getPlayer(int n) {
+		return this.playerRids[n];
 	}
 
-	public void removePlayer(Player p) {
-		for (int i = 0; i < this.players.length; i++) {
-			if (this.players[i] == p) {
-				this.setPlayer(i, null);
+	public void removePlayer(int p) {
+		for (int i = 0; i < this.playerRids.length; i++) {
+			if (this.playerRids[i] == p) {
+				this.setPlayer(i, -1);
 				return;
 			}
 		}
 	}
 
 	public void clearPlayers() {
-		for (int i = 0; i < this.players.length; i++) {
-			this.setPlayer(i, null);
+		for (int i = 0; i < this.playerRids.length; i++) {
+			this.setPlayer(i, -1);
 		}
 	}
 
 	private void recountPlayers() {
 		int count = 0;
-		for (Player player : this.players) {
-			if (player != null) {
+		for (int player : this.playerRids) {
+			if (player != -1) {
 				count++;
 			}
 		}
