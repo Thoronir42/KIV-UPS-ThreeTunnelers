@@ -1,6 +1,4 @@
-package tunnelers.network;
-
-import tunnelers.network.command.Command;
+package tunnelers.network.command;
 
 public class CommandTooShortException extends CommandException {
 

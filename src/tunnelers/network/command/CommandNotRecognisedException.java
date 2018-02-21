@@ -1,4 +1,4 @@
-package tunnelers.network;
+package tunnelers.network.command;
 
 public class CommandNotRecognisedException extends CommandException {
 

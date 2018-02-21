@@ -41,7 +41,7 @@ public class SettingsScene extends ATunnelersScene {
 	private boolean testServer(String address, int port) {
 //		NetWorks nw = this.getNetworks();
 //		
-//		if (nw.serverPresent(address, port)) {
+//		if (nw.testServer(address, port)) {
 //			return true;
 //		} else {
 //			return false;

@@ -1,14 +1,8 @@
-package tunnelers.network.command;
+package tunnelers.network;
 
-public interface INetworkProcessor {
+import tunnelers.network.command.Command;
 
-	/**
-	 * Used to signalizes processor of Connection status changes.
-	 *
-	 * @param signal signal to be processed
-	 */
-	void signal(Signal signal);
-
+public interface ICommandHandler {
 	/**
 	 * Processes given Command, returns value which indicates if the
 	 * command has been handled successfully.
@@ -20,6 +14,4 @@ public interface INetworkProcessor {
 	 * @return success of command handling
 	 */
 	boolean handle(Command cmd);
-
-
 }

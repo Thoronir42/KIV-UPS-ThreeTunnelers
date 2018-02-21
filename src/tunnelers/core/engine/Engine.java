@@ -2,7 +2,6 @@ package tunnelers.core.engine;
 
 import generic.SimpleScanner;
 import generic.SimpleScannerException;
-import tunnelers.core.chat.Chat;
 import tunnelers.core.engine.stage.AEngineStage;
 import tunnelers.core.engine.stage.MenuStage;
 import tunnelers.core.engine.stage.WarZoneStage;
@@ -10,10 +9,10 @@ import tunnelers.core.gameRoom.GameRoom;
 import tunnelers.core.gameRoom.GameRoomState;
 import tunnelers.core.player.controls.AControlsManager;
 import tunnelers.core.settings.Settings;
-import tunnelers.network.NetAdapter;
+import tunnelers.network.Networks;
 import tunnelers.network.NetClient;
 import tunnelers.network.command.Command;
-import tunnelers.network.command.INetworkProcessor;
+import tunnelers.network.INetworkProcessor;
 import tunnelers.network.command.Signal;
 
 public final class Engine extends Thread implements INetworkProcessor {
@@ -24,7 +23,7 @@ public final class Engine extends Thread implements INetworkProcessor {
 	private final EngineUserInterface guiInterface;
 
 	protected NetClient localClient;
-	protected final NetAdapter netadapter;
+	protected final Networks netadapter;
 	protected final PersistentString connectionSecret;
 
 	private final SimpleScanner commandScanner;
@@ -40,8 +39,8 @@ public final class Engine extends Thread implements INetworkProcessor {
 	private long currentTick;
 	private boolean keepRunning;
 
-	public Engine(Settings settings) {
-		this.netadapter = new NetAdapter(this);
+	public Engine(Settings settings, Networks adapter) {
+		this.netadapter = adapter;
 
 		this.setStage(Stage.Menu);
 		this.tickRate = settings.getTickRate();
@@ -141,13 +140,6 @@ public final class Engine extends Thread implements INetworkProcessor {
 		this.netadapter.shutdown();
 		this.view.exit();
 
-	}
-
-	public Chat getChat() {
-		if (this.currentGameRoom == null) {
-			return null;
-		}
-		return this.currentGameRoom.getChat();
 	}
 
 	@Override

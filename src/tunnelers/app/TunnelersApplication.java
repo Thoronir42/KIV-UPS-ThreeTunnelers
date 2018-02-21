@@ -7,6 +7,9 @@ import tunnelers.app.assets.Assets;
 import tunnelers.core.engine.Engine;
 import tunnelers.core.engine.IView;
 import tunnelers.core.settings.Settings;
+import tunnelers.network.Networks;
+import tunnelers.network.adapter.tcp.TcpAdapter;
+import tunnelers.network.codec.NoCodec;
 
 public final class TunnelersApplication extends Application {
 
@@ -23,7 +26,9 @@ public final class TunnelersApplication extends Application {
 
 		assets.init();
 
-		Engine e = new Engine(settings);
+		Networks networks = new Networks(new TcpAdapter(), new NoCodec());
+		Engine e = new Engine(settings, networks);
+		networks.setHandler(e);
 
 		TunnelersStage currentStage = new TunnelersStage(e.userInterface(), assets, settings);
 		e.setView(currentStage);

@@ -20,7 +20,7 @@ public class EngineUserInterface {
 		if (!useSecret) {
 			engine.connectionSecret.set("");
 		}
-		engine.netadapter.connectTo(engine.connectionSecret, address, port);
+		engine.netadapter.connectTo(address, port, engine.connectionSecret.get());
 
 		engine.preferredName = name;
 	}

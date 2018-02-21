@@ -2,8 +2,6 @@ package tunnelers.network.command;
 
 import generic.SimpleScanner;
 import generic.SimpleScannerException;
-import tunnelers.network.CommandNotRecognisedException;
-import tunnelers.network.CommandTooShortException;
 
 import java.util.HashMap;
 

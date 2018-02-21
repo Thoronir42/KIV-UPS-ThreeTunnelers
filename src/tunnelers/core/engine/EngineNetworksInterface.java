@@ -139,7 +139,7 @@ public class EngineNetworksInterface {
 			}
 			NetClient client = this.engine.currentGameRoom.getClient(id);
 			IChatParticipant p = this.engine.currentGameRoom.getPlayer(client.getAnyPlayerRID());
-			this.engine.getChat().addMessage(p != null ? p : Chat.error(), message);
+			this.engine.currentGameRoom.getChat().addMessage(p != null ? p : Chat.error(), message);
 			this.engine.view.updateChat();
 
 			return true;

@@ -10,6 +10,9 @@ import tunnelers.core.engine.Engine;
 import tunnelers.core.engine.EngineDebugManipulator;
 import tunnelers.core.engine.IView;
 import tunnelers.core.settings.Settings;
+import tunnelers.network.Networks;
+import tunnelers.network.adapter.tcp.TcpAdapter;
+import tunnelers.network.codec.NoCodec;
 
 public class WarzoneStageTest extends Application {
 	public static void main(String[] args) {
@@ -24,7 +27,7 @@ public class WarzoneStageTest extends Application {
 
 		assets.init();
 
-		Engine e = new Engine(settings);
+		Engine e = new Engine(settings, new Networks(new TcpAdapter(), new NoCodec()));
 		EngineDebugManipulator debugManipulator = new EngineDebugManipulator(e);
 
 		TunnelersStage currentStage = new TunnelersStage(e.userInterface(), assets, settings);
