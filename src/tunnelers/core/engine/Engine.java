@@ -12,7 +12,7 @@ import tunnelers.core.settings.Settings;
 import tunnelers.network.Networks;
 import tunnelers.network.NetClient;
 import tunnelers.network.command.Command;
-import tunnelers.network.INetworkProcessor;
+import tunnelers.network.handling.INetworkProcessor;
 import tunnelers.network.command.Signal;
 
 public final class Engine extends Thread implements INetworkProcessor {

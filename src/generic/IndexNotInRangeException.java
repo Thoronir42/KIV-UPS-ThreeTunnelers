@@ -1,4 +1,4 @@
-package tunnelers.core.gameRoom;
+package generic;
 
 public class IndexNotInRangeException extends IndexOutOfBoundsException {
 	public IndexNotInRangeException(int min, int max, int given) {

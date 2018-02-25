@@ -1,5 +1,6 @@
 package tunnelers.core.gameRoom;
 
+import generic.IndexNotInRangeException;
 import tunnelers.core.chat.Chat;
 import tunnelers.core.player.Player;
 import tunnelers.network.NetClient;

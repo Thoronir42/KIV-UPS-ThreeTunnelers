@@ -1,5 +1,6 @@
 package tunnelers.core.gameRoom;
 
+import generic.IndexNotInRangeException;
 import tunnelers.core.model.entities.Direction;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.model.entities.Projectile;

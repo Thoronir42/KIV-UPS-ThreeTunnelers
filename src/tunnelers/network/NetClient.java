@@ -9,7 +9,7 @@ public class NetClient {
 	private final int[] playerRids;
 	private int activePlayers;
 	private boolean ready;
-	private NetClientStatus status;
+	private Status status;
 
 	public NetClient() {
 		this("", 1);
@@ -27,7 +27,7 @@ public class NetClient {
 		}
 		this.activePlayers = 0;
 		this.ready = false;
-		this.status = NetClientStatus.Connected;
+		this.status = Status.Connected;
 	}
 
 	public String getName() {
@@ -105,11 +105,11 @@ public class NetClient {
 		this.latency = latency;
 	}
 
-	public NetClientStatus getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(NetClientStatus status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 
@@ -121,4 +121,19 @@ public class NetClient {
 		this.ready = ready;
 	}
 
+	public enum Status {
+		Connected, Playing, Disconnected;
+
+		public static Status getByNumber(int n) {
+			switch (n) {
+				case 1:
+					return Connected;
+				case 2:
+					return Playing;
+				default:
+				case 4:
+					return Disconnected;
+			}
+		}
+	}
 }

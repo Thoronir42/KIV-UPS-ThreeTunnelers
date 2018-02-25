@@ -103,23 +103,25 @@ public final class TunnelersStage extends Stage implements IView, IFlasher {
 	public void showSceneNow(Scene scene) {
 		GameRoom gr;
 		Runnable afterChange = null;
-		ATunnelersScene newScene = null;
+		ATunnelersScene newScene;
 		switch (scene) {
 			case MainMenu:
 				newScene = new MainMenuScene(settings);
 				break;
+
 			case Settings:
 				newScene = new SettingsScene(settings, controlsManager);
 				break;
+
 			case GameRoomList:
 				newScene = new GameRoomListScene(settings, engine.getHostLocator());
 				afterChange = engine::refreshServerList;
 				break;
+
 			case Lobby:
 				gr = this.engine.getGameRoom();
 				if (gr == null) {
-					System.err.println("Can't show Lobby scene, GameRoom is null");
-					return;
+					throw new IllegalStateException("Can't show Lobby scene, GameRoom is null");
 				}
 				newScene = new LobbyScene(settings, gr.getChat(), this.renderer.getColorScheme(), gr.getCapacity());
 				afterChange = () -> {
@@ -127,15 +129,16 @@ public final class TunnelersStage extends Stage implements IView, IFlasher {
 					updateClients();
 				};
 				break;
+
 			case Warzone:
 				newScene = new WarZoneScene(settings, controlsManager)
 						.initLayout(engine.getGameRoom().getPlayerCount(), this.renderer);
 				newScene.flashClear(true);
 				break;
-		}
-		if (newScene == null) {
-			System.err.println("Error switching scene to " + scene.toString());
-			return;
+
+			default:
+				System.err.println("Error switching scene to " + scene.toString());
+				return;
 		}
 		newScene.setAfterFX(renderer.getAfterFX());
 		this.changeScene(newScene);
@@ -152,7 +155,7 @@ public final class TunnelersStage extends Stage implements IView, IFlasher {
 				break;
 		}
 
-		if(newScene == null) {
+		if (newScene == null) {
 			System.err.println("Could not switch scene to " + scene);
 			return;
 		}

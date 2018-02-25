@@ -1,4 +1,4 @@
-package tunnelers.network;
+package tunnelers.network.handling;
 
 import tunnelers.network.command.Signal;
 

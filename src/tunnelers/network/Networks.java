@@ -1,8 +1,11 @@
 package tunnelers.network;
 
 import tunnelers.network.adapter.AAdapter;
+import tunnelers.network.adapter.ConnectionStatus;
 import tunnelers.network.codec.ICodec;
 import tunnelers.network.command.*;
+import tunnelers.network.handling.INetworkProcessor;
+import tunnelers.network.handling.ISignalHandler;
 
 import java.io.IOException;
 import java.net.UnknownHostException;

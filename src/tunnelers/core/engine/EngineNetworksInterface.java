@@ -15,7 +15,6 @@ import tunnelers.core.model.map.ChunkException;
 import tunnelers.core.model.map.Map;
 import tunnelers.core.player.Player;
 import tunnelers.network.NetClient;
-import tunnelers.network.NetClientStatus;
 import tunnelers.network.command.Command;
 import tunnelers.network.command.CommandType;
 
@@ -211,7 +210,7 @@ public class EngineNetworksInterface {
 
 		map.put(CommandType.RoomClientStatus, sc -> {
 			NetClient c = this.engine.currentGameRoom.getClient(sc.nextByte());
-			c.setStatus(NetClientStatus.getByNumber(sc.nextByte()));
+			c.setStatus(NetClient.Status.getByNumber(sc.nextByte()));
 			c.setLatency(sc.nextShort());
 
 			this.engine.view.updateClients();

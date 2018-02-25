@@ -1,7 +1,6 @@
 package tunnelers.network.adapter;
 
-import tunnelers.network.ConnectionStatus;
-import tunnelers.network.ISignalHandler;
+import tunnelers.network.handling.ISignalHandler;
 import tunnelers.network.command.Signal;
 
 import java.io.IOException;

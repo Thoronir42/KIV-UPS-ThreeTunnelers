@@ -1,6 +1,6 @@
 package tunnelers.core.model.map;
 
-import tunnelers.core.gameRoom.IndexNotInRangeException;
+import generic.IndexNotInRangeException;
 import tunnelers.core.model.entities.IntDimension;
 import tunnelers.core.model.entities.IntPoint;
 import tunnelers.core.player.Player;
